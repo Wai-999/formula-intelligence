@@ -1,0 +1,12 @@
+.map-page {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.map-canvas-area {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+}

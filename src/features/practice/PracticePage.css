@@ -1,0 +1,480 @@
+.prac-page {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0f0f1a;
+  overflow-y: auto;
+}
+
+.prac-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  background: rgba(12, 13, 24, 0.85);
+}
+
+.prac-controls select {
+  min-height: 34px;
+  padding: 0 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.prac-score {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.prac-score b {
+  color: #a78bfa;
+}
+
+.prac-new-btn {
+  padding: 0 16px;
+  min-height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  background: rgba(139, 92, 246, 0.12);
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.prac-new-btn:hover {
+  background: rgba(139, 92, 246, 0.24);
+}
+
+.prac-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 20px 40px;
+  overflow-y: auto;
+}
+
+.prac-empty {
+  text-align: center;
+  color: #4a4a6a;
+  padding: 60px 20px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.prac-card {
+  width: 100%;
+  max-width: 680px;
+  background: #12122a;
+  border: 1px solid #2a2a4a;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.prac-node-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.prac-ch-name {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.prac-hdr-sep {
+  font-size: 10px;
+  color: #4a4a6a;
+}
+
+.prac-node-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #c4b5fd;
+}
+
+.prac-scenario-lbl {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-faint);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.prac-scenario {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #a78bfa;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #c0c0d8;
+  line-height: 1.7;
+}
+
+.prac-zone {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #2a2a4a;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.prac-zone-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-faint);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.prac-id-q {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.prac-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 520px) {
+  .prac-opts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.prac-opt {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #2a2a4a;
+  background: rgba(255, 255, 255, 0.03);
+  color: #c0c0d8;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, border-color 0.2s;
+  line-height: 1.4;
+  font-family: inherit;
+}
+
+.prac-opt:hover:not(.disabled) {
+  border-color: #a78bfa;
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.prac-opt.correct {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+.prac-opt.wrong {
+  background: rgba(251, 113, 133, 0.09);
+  border-color: #f87171;
+  color: #fecdd3;
+  animation: prac-shake 0.35s ease;
+}
+
+.prac-opt.disabled {
+  cursor: default;
+}
+
+@keyframes prac-shake {
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.prac-why {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border-radius: 7px;
+  font-size: 11px;
+  line-height: 1.6;
+  display: none;
+}
+
+.prac-why.show {
+  display: block;
+}
+
+.prac-why.ok {
+  background: rgba(52, 211, 153, 0.07);
+  border: 1px solid rgba(52, 211, 153, 0.22);
+  color: #6ee7b7;
+}
+
+.prac-why.bad {
+  background: rgba(251, 113, 133, 0.07);
+  border: 1px solid rgba(251, 113, 133, 0.22);
+  color: #fecdd3;
+}
+
+.prac-solve-zone {
+  display: none;
+}
+
+.prac-solve-zone.show {
+  display: block;
+}
+
+.prac-formula-tag {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.07);
+  border: 1px solid rgba(251, 191, 36, 0.18);
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.prac-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.prac-step-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: #c0c0d8;
+  line-height: 1.6;
+}
+
+.prac-step-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-faint);
+  font-weight: 700;
+  flex-basis: 100%;
+  margin-bottom: 2px;
+}
+
+.prac-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #a0a0c0;
+}
+
+.prac-inp {
+  width: 72px;
+  padding: 4px 8px;
+  background: #1a1a3a;
+  border: 1px solid #3a3a5a;
+  border-radius: 5px;
+  color: #fbbf24;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.prac-inp:focus {
+  border-color: #a78bfa;
+}
+
+.prac-inp.inp-ok {
+  border-color: #10b981;
+  background: rgba(52, 211, 153, 0.08);
+  color: #6ee7b7;
+}
+
+.prac-inp.inp-err {
+  border-color: #f87171;
+  background: rgba(251, 113, 133, 0.08);
+  color: #fecdd3;
+}
+
+.prac-inp-hint {
+  font-size: 10px;
+  color: #f87171;
+  flex-basis: 100%;
+}
+
+.prac-check-btn {
+  padding: 7px 20px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(90deg, #7c3aed, #4f46e5);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.prac-check-btn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.prac-check-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.prac-solve-fb {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.prac-solve-fb.show {
+  display: block;
+}
+
+.prac-solve-fb.ok {
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.22);
+  color: #6ee7b7;
+}
+
+.prac-solve-fb.bad {
+  background: rgba(251, 113, 133, 0.07);
+  border: 1px solid rgba(251, 113, 133, 0.22);
+  color: #fecdd3;
+}
+
+.prac-interp-zone {
+  display: none;
+}
+
+.prac-interp-zone.show {
+  display: block;
+}
+
+.prac-interp-q {
+  font-size: 13px;
+  color: #c0c0d8;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.prac-blank-inp {
+  width: 80px;
+  padding: 2px 6px;
+  background: #1a1a3a;
+  border: none;
+  border-bottom: 2px solid #a78bfa;
+  color: #fbbf24;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+  vertical-align: middle;
+  transition: border-color 0.2s;
+}
+
+.prac-blank-inp:focus {
+  border-bottom-color: #22d3ee;
+}
+
+.prac-blank-inp.ok {
+  border-bottom-color: #10b981;
+  color: #6ee7b7;
+}
+
+.prac-blank-inp.err {
+  border-bottom-color: #f87171;
+  color: #fecdd3;
+}
+
+.prac-submit-btn {
+  padding: 7px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(34, 211, 238, 0.12);
+  color: #22d3ee;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.prac-submit-btn:hover:not(:disabled) {
+  background: rgba(34, 211, 238, 0.22);
+}
+
+.prac-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.prac-interp-fb {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.prac-interp-fb.show {
+  display: block;
+}
+
+.prac-interp-fb.ok {
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  color: #6ee7b7;
+}
+
+.prac-interp-fb.bad {
+  background: rgba(251, 113, 133, 0.07);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+  color: #fecdd3;
+}
+
+.prac-next-btn {
+  display: none;
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(90deg, #7c3aed, #4f46e5);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.prac-next-btn:hover {
+  opacity: 0.85;
+}
+
+.prac-next-btn.show {
+  display: block;
+}

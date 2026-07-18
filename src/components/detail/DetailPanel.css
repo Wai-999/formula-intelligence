@@ -1,0 +1,216 @@
+.detail-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background: rgba(13, 14, 26, 0.96);
+  border-left: 1px solid var(--border);
+  padding: 14px;
+  overflow-y: auto;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease;
+  z-index: 8;
+}
+
+.detail-panel.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.detail-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px;
+}
+
+.detail-close:hover {
+  color: var(--text-primary);
+}
+
+.detail-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-right: 20px;
+  margin-bottom: 6px;
+}
+
+.detail-chapter-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+}
+
+.detail-formula {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 9px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.detail-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-weight: 700;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+.detail-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.detail-usage {
+  font-size: 12px;
+  color: #c0c0d8;
+  line-height: 1.65;
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.16);
+  border-radius: var(--radius-sm);
+  padding: 8px 9px;
+}
+
+.detail-trace-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(139, 92, 246, 0.09);
+  color: #a78bfa;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.detail-trace-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.detail-trace-btn i {
+  font-size: 13px;
+}
+
+.detail-inventor {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 9px;
+}
+
+.detail-inventor-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.detail-inventor-year {
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.detail-inventor-note {
+  font-size: 11px;
+  color: var(--text-faint);
+  line-height: 1.55;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.detail-conn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.detail-conn span:last-child {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.detail-conn:hover span:last-child {
+  color: var(--text-primary);
+}
+
+.detail-conn-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.detail-mastery-row {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.detail-mastery-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.state-gold {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.state-green {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.state-blue {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.state-red {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.state-none {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-faint);
+}

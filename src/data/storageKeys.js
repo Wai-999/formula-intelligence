@@ -1,0 +1,16 @@
+export const STORAGE_KEYS = {
+  spacedRepetition: 'bluman_sr_v1',
+  quiz: 'bluman_quiz_v1',
+  sessions: 'bluman_sessions_v1',
+  visits: 'bluman_visits_v1',
+  sessionCounter: 'bluman_session_v1',
+  learningPath: 'bluman_lp_v1',
+  storyWalk: 'bluman_sw_v1',
+  recall: 'bluman_recall_v1',
+  recallStats: 'bluman_recallstats_v1',
+  practiceScore: 'bluman_prac_v1',
+  errorLog: 'bluman_errlog_v1',
+  journal: 'bluman_journal_v1',
+  journalTarget: 'bluman_jtarget_v1',
+  feynmanPrefix: 'feynman_',
+};
