@@ -1,5 +1,17 @@
-import MLPlaceholder from '../../../components/ml/MLPlaceholder.jsx';
+import MetricsPanel from './MetricsPanel.jsx';
+import BacktestAnimator from './BacktestAnimator.jsx';
+import ShapLimePanel from './ShapLimePanel.jsx';
+import ConceptDriftDemo from './ConceptDriftDemo.jsx';
+import '../mlPageShared.css';
+import './EvaluationPage.css';
 
 export default function EvaluationPage() {
-  return <MLPlaceholder icon="ti-chart-histogram" title="Evaluation & Explainability Lab" module={5} />;
+  return (
+    <div className="ml-page">
+      <MetricsPanel />
+      <BacktestAnimator />
+      <ShapLimePanel />
+      <ConceptDriftDemo />
+    </div>
+  );
 }

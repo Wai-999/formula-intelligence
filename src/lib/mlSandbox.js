@@ -123,6 +123,41 @@ export function meanSquaredError(points, predict) {
   return points.reduce((acc, p) => acc + (p.y - predict(p.x)) ** 2, 0) / points.length;
 }
 
+// A series whose generating relationship visibly shifts partway through —
+// Module 5's concept-drift demo. Before the break, y tracks x closely; after
+// it, the relationship's slope/offset changes, so a model trained only on
+// the first half degrades on the second.
+export function generateDriftSeries(n = 40, breakAt = 24, seed = 11) {
+  const rng = mulberry32(seed);
+  const points = [];
+  for (let t = 0; t < n; t++) {
+    const x = gaussianRandom(rng) * 1.2;
+    const y = t < breakAt ? 1.8 * x + 1 : -1.2 * x + 4; // slope flips sign post-break
+    points.push({ t, x, y: y + gaussianRandom(rng) * 0.5 });
+  }
+  return { points, breakAt };
+}
+
+// Full metrics panel (Module 5, research doc §5) computed against the same
+// fitted points Module 4 produces — no separate fitting path.
+export function computeMetrics(points, predict, numParams) {
+  const n = points.length;
+  const errors = points.map((p) => p.y - predict(p.x));
+  const mae = errors.reduce((a, e) => a + Math.abs(e), 0) / n;
+  const mse = errors.reduce((a, e) => a + e * e, 0) / n;
+  const rmse = Math.sqrt(mse);
+  const mape = (points.reduce((a, p) => a + Math.abs((p.y - predict(p.x)) / (p.y || 1e-6)), 0) / n) * 100;
+  const yMean = points.reduce((a, p) => a + p.y, 0) / n;
+  const ssTot = points.reduce((a, p) => a + (p.y - yMean) ** 2, 0);
+  const ssRes = errors.reduce((a, e) => a + e * e, 0);
+  const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+  // AIC/BIC from Gaussian-likelihood RSS approximation: standard for
+  // comparing least-squares fits of differing complexity.
+  const aic = n * Math.log(ssRes / n) + 2 * numParams;
+  const bic = n * Math.log(ssRes / n) + numParams * Math.log(n);
+  return { mae, rmse, mape, r2, aic, bic };
+}
+
 // Precomputes train/validation MSE across the full complexity range, for
 // the train-vs-validation-error-curve chart (the classic bias-variance
 // diagram) — independent of whatever single complexity the slider is

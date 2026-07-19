@@ -130,3 +130,23 @@ One entry per module: what was built, files touched, decisions made and why, ver
 - Console: 0 errors across every check, including through the false alarm.
 
 ---
+
+## Module 5: Evaluation & Explainability Lab
+
+**Built:** Four sub-panels on one page, per the research doc §5. `MetricsPanel.jsx` — MAE/RMSE/MAPE/R²/AIC/BIC computed live against a model/complexity choice, reusing Module 4's `fitPolynomial`/`fitTree` directly (added `computeMetrics()` to `mlSandbox.js` rather than a separate metrics path, so "the same fits" is literal, not just similar). `BacktestAnimator.jsx` — two timelines over the same 30-step series: a fixed naive random 70/30 split (deliberately time-order-blind, so train cells visibly land after test cells) versus an animated walk-forward window with Play/Pause/scrub/Reset, sliding the train/test boundary forward over time. `ShapLimePanel.jsx` — a static SHAP-style global importance bar chart (5 features, matching Module 6's gold drivers so this previews that lab rather than using an unrelated example) and a static LIME-style waterfall for one prediction (base value → per-feature push → final prediction), both clearly labeled synthetic per Section C.4 since no real SHAP/LIME library was run (Module 5's own spec explicitly permits this substitution). `ConceptDriftDemo.jsx` — a model trained only on the pre-break half of a series whose generating relationship's slope flips sign partway through; a scrubbable rolling-error chart against a retrain threshold, with a live "Drift detected — retrain?" flag once enough post-break error accumulates.
+
+**Files touched:** `src/lib/mlSandbox.js` (added `computeMetrics`, `generateDriftSeries`), `src/data/ml/evaluation.js` (new), `src/features/ml/evaluation/{EvaluationPage,MetricsPanel,BacktestAnimator,ShapLimePanel,ConceptDriftDemo}.jsx` + `.css` (new; replaces the Module 1 placeholder).
+
+**Decisions (rule 1):**
+- SHAP feature set deliberately matches Module 6's gold drivers (real yields/DXY/geopolitical risk/central-bank demand/inflation) rather than a generic example, so this module previews the flagship domain lab instead of teaching the concept in isolation — consistent with the research doc's own note that Gold should be the connective thread.
+- The naive-split row uses a *fixed* pre-computed random assignment (seeded, not re-randomized on every render) so the "train appears after test" leakage is a stable, inspectable fact of that specific split rather than a flickering coincidence — deliberately not disguising how obviously wrong it looks once you see it laid out on a timeline.
+- AIC/BIC use the standard Gaussian-likelihood RSS approximation (`n·ln(RSS/n) + k·penalty`) rather than a full likelihood computation per model family, since the playground's fitters don't produce a proper likelihood — noted here rather than silently presenting it as more rigorous than it is; still directionally correct and comparable across complexities, which is what the module needs it for.
+
+**Verification:**
+- `npm run build`: pass; `mlSandbox.js` split into its own shared chunk once a second page (`EvaluationPage`) started importing it alongside `PlaygroundPage` — confirms the "share the fitting code" decision actually took effect at the bundler level, not just in source.
+- `npm run lint`: pass, 0 warnings.
+- Interaction smoke test: all four sub-panels render with correct content on load; metrics table updates when switching model/complexity; walk-forward Play button confirmed genuinely animating (origin advanced from t=8 to t=12 over ~2s, matching the 550ms step interval); concept-drift scrubber driven to its maximum correctly flipped the flag from "tracking within normal range" to "Drift detected — retrain?", cross-checked against the raw rolling-error numbers (0.3–0.6 pre-break, jumping to 9.5→32 immediately post-break) to confirm the threshold crossing is a real signal, not a coincidence of the demo data.
+- Two testing false alarms, both resolved and neither a real defect: (1) reusing the same browser tab across `preview_stop`/`preview_start` for a new module showed stale content from the previous module until an explicit hard `navigate()` — noting this as a standing procedure for the remaining modules rather than re-discovering it each time; (2) a slider-drag script using `scrub.max` as the target value silently failed to stick on the first attempt (reverted to its default) but succeeded immediately on a second, identical attempt with the value hard-coded instead of read from the DOM in the same expression — logged as a timing quirk in stale-element references, not reproduced consistently enough to chase further.
+- Console: 0 errors throughout, including through both false alarms.
+
+---
