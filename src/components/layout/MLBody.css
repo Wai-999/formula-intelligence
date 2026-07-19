@@ -1,0 +1,45 @@
+.ml-main {
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ml-main-header {
+  flex-shrink: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(12, 13, 24, 0.5);
+}
+
+.ml-main-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.ml-main-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.ml-main-content .app-tab-keepalive {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.ml-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: var(--text-faint);
+  font-size: 13px;
+}

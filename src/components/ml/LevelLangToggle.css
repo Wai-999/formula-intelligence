@@ -1,0 +1,36 @@
+.ll-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ll-toggle {
+  display: flex;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  gap: 2px;
+}
+
+.ll-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ll-btn:hover {
+  color: var(--text-primary);
+}
+
+.ll-btn.active {
+  background: rgba(34, 211, 238, 0.18);
+  color: var(--accent);
+}

@@ -1,0 +1,69 @@
+# Build Log — ML Mode
+
+One entry per module: what was built, files touched, decisions made and why, verification results.
+
+---
+
+## Phase 0: Discovery
+
+**Stack:** React 19 + Vite 8, plain JavaScript (JSX, no TypeScript — `@types/react*` devDependencies are unused Vite-template vestiges). Package manager: npm (`package-lock.json` present).
+
+**Router:** None. No `react-router-dom` or equivalent in `package.json`. Navigation is 100% client-state: `useUIStore.activeTab` selects which tab renders; `AppShell.jsx` keep-alive-mounts every tab's page component simultaneously and toggles `display: flex|none` — this is why switching tabs never loses state (scroll position, in-progress form input, D3 zoom/pan). There is no URL sync today (no hash routing, no query params) for any of the 9 existing tabs.
+
+**Existing "Stats mode" implementation** (this *is* the whole app today — there is no existing multi-mode concept to find):
+- Entry: `src/App.jsx` → `src/components/layout/AppShell.jsx` (renders header + `IconRail` + the active tab's page, all keep-alive mounted).
+- Nav: `src/components/layout/IconRail.jsx`, driven by the `TABS` array exported from `src/store/useUIStore.js`.
+- The graph/map itself: `src/components/graph/GraphCanvas.jsx` (D3 v7: force-free hierarchical layout via `src/components/graph/hierarchicalLayout.js`, zoom/pan via `d3.zoom()`, node select/drag via `d3.drag()`) + `src/components/detail/DetailPanel.jsx` (slide-in node detail).
+- Data/schema: `src/data/nodes.js` (94 formula nodes: `{id, ch, name, short, formula, desc, use, tags}`), `src/data/links.js` (117 edges: `{s, t, type}` where type ∈ prereq/extends/applies/nonparam/family), `src/data/chapters.js` (13 chapters, each with an id/name/color — this *is* the app's existing color-coding-by-category convention). Plus `bridgeText.js` (real-world usage), `inventors.js`, `prereqChains.js`, `storylines.js`, `practiceProblems.js` — all keyed by node id.
+- `hierarchicalLayout.js` is already a **pure, generic function**: `computeHierarchicalLayout(nodes, links) → {positions, chapterRowY, bounds}`. It only assumes `node.ch` (a row-grouping key) and `link.s/t` (source/target ids) — nothing Stats-specific. This is directly reusable for the ML model graph (Module 3) by treating "model family" as the row-grouping key instead of "chapter."
+- `GraphCanvas.jsx` itself is **not** generic — it hard-imports `nodes, links, CHAPTERS, chapterColorMap` from `../../data/index.js` at module scope (not via props), and its click handler, `DetailPanel` wiring, and `useMasteryStore` integration all assume the Stats node shape (`formula`, `desc`, `use`, prereq-chain tracing). See Phase 1 §1 for the resulting sibling-component decision.
+
+**State management:** Zustand (`^5.0.14`), one store per concern (`useUIStore`, `useMasteryStore`, `useSRStore`, `usePracticeStore`, `useJournalStore`, `useLearningPathStore`, `useStoryWalkStore`, `useErrorLogStore`, `useToastStore`), each a flat `create((set, get) => ({...}))` object with state + actions co-located, most persisting to `localStorage` via `src/lib/storage.js` (`loadJSON`/`saveJSON`) keyed through `src/data/storageKeys.js`.
+
+**Styling:** Plain CSS, one `.css` file per component (co-located, imported directly in the `.jsx` file — no CSS Modules, no Tailwind, no styled-components). Design tokens live as CSS custom properties in `src/index.css` `:root`: `--primary: #8b5cf6` (violet, the app's core identity color), `--primary-2: #6366f1`, `--accent: #22d3ee` (cyan, already used for the graph's "Extends" edge type and elsewhere as the secondary/technical accent), `--success/--warning/--danger`, `--surface/--surface-2/--surface-glass`, `--border/--border-strong`, `--text-primary/--text-muted/--text-faint`, `--radius-sm/md/lg`, `--font-sans/--font-mono`. Dark-only (`color-scheme: dark`, no light theme).
+
+**Charting/visualization:** D3 v7 (`d3`) for the graph; `framer-motion` for transitions (used sparingly today — e.g. toasts). No KaTeX/MathJax — formulas are hand-typeset Unicode strings (e.g. `"X̄ = ΣX / n"`), not rendered LaTeX. ML mode will follow the same convention for consistency rather than introducing a math-typesetting dependency.
+
+**i18n/localization:** None exists today — the app is English-only, and there is no beginner/researcher depth toggle anywhere in Stats mode. Module 11's bilingual + audience-depth layer will be genuinely new infrastructure, built as a small shared utility (`src/lib/mlContent.js`) rather than adopting a heavyweight i18n library, consistent with rule 5 (prefer no new dependency).
+
+**Verification commands:** `npm run build` (`vite build`), `npm run lint` (`oxlint`), `npm run dev` / `npm run preview`. No `typecheck` script (no TypeScript in this repo) and no `test` script exist — neither will be added; `npm run build` + `npm run lint` are this repo's real ceiling for automated verification, exactly as rule 7 anticipates ("if `typecheck`/lint-equivalent don't exist... note it"). Confirmed both pass cleanly on the pre-ML-mode codebase (0 errors, 0 lint warnings) before starting.
+
+**Local run:** Confirmed working via `npm run dev` (port 5174, per `.claude/launch.json` at the parent-folder level) and `npm run preview` (port 5175) earlier this session.
+
+**Decision:** Per the prompt's own fallback clause, since there is no separate "Stats page" to *find* (the whole app *is* Stats mode), the plan is: promote the existing experience to live under an explicit `mode: 'stats'` state, add a sibling `mode: 'ml'` experience, and add a persistent mode switcher in `app-header`. This is a light, additive change to `AppShell.jsx`/`useUIStore.js`, not a rewrite.
+
+---
+
+## Phase 1: Architecture
+
+**1. Shared rendering engine, separate content.** `hierarchicalLayout.js` is reused as-is for the ML model graph (it's already generic). `GraphCanvas.jsx` is **not** parameterized in place — it's tightly coupled to the Stats node shape and to `useMasteryStore`/`DetailPanel` in ways that would risk regressing Stats mode for uncertain benefit. Per the prompt's explicit escape hatch ("acceptable to build a sibling component that visually and behaviorally matches it — document why"), Module 3 builds `src/components/mlgraph/MLRelationshipMap.jsx`: same interaction paradigm (D3 pan/zoom/click-to-expand, same hierarchical layout algorithm, same visual language/CSS tokens), separate component, separate detail panel tailored to the model-card shape (`howItWorks/advantages/weaknesses/usageAreas/compass`). Both graphs are thin D3-in-React wrappers around the *same* `computeHierarchicalLayout` function, so this is "share the engine, not the component" rather than a fork.
+
+**2. Routing.** No router is installed and the existing 9 Stats tabs have no URL sync at all today — adding a router *only* for ML mode would be an inconsistent, foreign pattern, and rule 5 says prefer no new dependency. Decision: extend the *existing* convention (Zustand-driven `activeTab`/keep-alive mount) with a new top-level `mode: 'stats' | 'ml'` field, **plus** a small dependency-free hash-sync utility (`src/lib/hashRoute.js`) that mirrors `mode` + the active tab into `location.hash` (e.g. `#ml/pipeline`, `#stats/map`) and restores it on load/`hashchange`. This delivers the spec's actual goal — ML mode is linkable/bookmarkable/shareable — without adding a router dependency or touching Stats mode's existing lack of URL sync beyond opting it into the same hash format. ML feature pages are also `React.lazy`-loaded so Stats mode's bundle doesn't grow.
+
+**3. State.** `useUIStore.mode` + `useUIStore.mlActiveTab` (mirroring `activeTab`, so each mode remembers its own last-open tab across a switch — "preserve where it makes sense"). `selectedNodeId`/`traceChain` reset on mode switch (they're Stats-graph-specific and don't map onto the ML graph's different id space — "reset gracefully where it doesn't"). New ML-only stores, one per concern, mirroring the existing one-store-per-feature convention: `useMLUIStore` (selected ML node, beginner/researcher level, EN/MY language — cross-cutting, lives at the ML-shell level), `useMLPlaygroundStore`, `useMLDomainStore` (driver-panel + scenario-preset state, shared shape reused by Gold/Macro/Micro/Politics so it's one store, not four). Cross-mode concept (Module 10's bridge, Module 9's geo-risk↔Gold cross-link) uses a tiny shared slice on `useUIStore`: `linkedConceptId` + `navigateToLinkedConcept()`.
+
+**4. Data strategy.** Every figure/finding in `ML-Research-Reference.md` (now at `docs/research/ML-Research-Reference.md`) is treated as the real, citable content. Full historical series (e.g. a 5-year gold price line) don't exist in the doc as a full series — those are generated as synthetic-but-realistic series calibrated to the doc's stylized facts (current $4,000–$4,030/oz level, the doc's stated drivers' directional relationships, GARCH-style volatility clustering) and visibly labeled in-UI as illustrative. `docs/DATA_SOURCES.md` tracks real vs. synthetic per module, per Module 12.
+
+**5. Design language.** No new accent color invented. ML mode uses the *existing* `--accent` (cyan `#22d3ee`) as its mode-identity color (Stats mode's implicit identity is `--primary` violet, used for its header dot/active-tab states) — cyan is already in the palette and already carries a "technical/data" association in this app (the graph's "Extends" edge type, several chapter colors). New CSS custom properties are added only for concepts that don't exist yet (e.g. `--ml-edge-competes`, `--ml-edge-combines` for the new edge-type colors in Module 3) and are placed in `:root` alongside the existing tokens, not hard-coded per-component.
+
+---
+
+## Module 1: Shared Shell & Mode Switcher
+
+**Built:** `Stats | ML` segmented toggle in the app header; `mode`/`mlActiveTab`/`linkedConcept` state on `useUIStore`; a new `useMLUIStore` (Beginner/Researcher level, EN/MY language, selected model id — persisted to `localStorage` under `ml_mode_prefs_v1`, added to the central `STORAGE_KEYS` registry); `src/lib/mlContent.js` (`bl()`/`useT()` bilingual-content helper, built now rather than deferred to Module 11 since every module from here on needs it — see rule 1 rationale below); `src/lib/hashRoute.js` (dependency-free `#mode/tab` sync, restores on load, updates on navigation); `MLIconRail`/`MLBody`/`ModeSwitcher`/`LevelLangToggle` components; `StatsBody.jsx` (Stats mode's existing IconRail+tabs markup extracted verbatim, zero behavior change); 9 lazy-loaded placeholder pages under `src/features/ml/*` (one per upcoming module, swapped for real content as each module is built).
+
+**Files touched:** `src/store/useUIStore.js` (added mode state), `src/store/useMLUIStore.js` (new), `src/data/storageKeys.js` (added `mlModePrefs` key), `src/lib/mlContent.js` (new), `src/lib/hashRoute.js` (new), `src/components/layout/{AppShell,StatsBody,MLBody,MLIconRail,ModeSwitcher}.jsx` + matching `.css`, `src/components/ml/{LevelLangToggle,MLPlaceholder}.jsx` + `.css`, `src/features/ml/*/{Pipeline,ModelMap,Playground,Evaluation,GoldLab,MacroLab,MicroLab,PoliticsLab,Bridge}Page.jsx` (9 placeholders).
+
+**Decisions (rule 1 — logged, not asked):**
+- Built the bilingual/level content helper (`mlContent.js`) now instead of waiting for Module 11, since retrofitting it into 9 already-written modules would mean touching every module twice. Module 11 becomes "verify every module actually uses it correctly" rather than "add it."
+- ML tab icons picked from tabler-icons' common/stable glyph set (`ti-route`, `ti-share-2`, `ti-coin`, etc.) without a dependency check against the exact pinned CDN version — visually confirmed all render correctly in-browser, so no further action needed.
+- `MLIconRail` imports `IconRail.css` directly rather than duplicating its rules, so the two rails can never visually drift apart.
+
+**Verification:**
+- `npm run build`: pass (665 modules, each ML feature page confirmed in its own lazy chunk — code-splitting working).
+- `npm run lint` (oxlint): pass, 0 warnings.
+- Visual smoke test: mode switch both directions confirmed instant; Stats mode confirmed pixel-identical to pre-Module-1 (94 nodes, 13 chapters, all sidebar content, graph rendering); hash sync confirmed round-trip (`#ml/gold` → reload → restores ML mode on the Gold tab); all 9 ML tabs reachable and each shows its own distinct placeholder (verified scoped to the visible keep-alive pane — the accessibility tree/DOM contains all 9 simultaneously, so an unscoped query returns the first, not the visible, one — a known false-positive trap from this session's earlier Stats-mode testing).
+- Responsive check at 360/768/1280/1920px: found and fixed a real header overlap at ≤560px (title/subtitle wrapping to multiple lines and colliding with the new mode switcher) — this pre-dated Module 1 in Stats mode's header, but since Module 1 is what added a competing element to that same header, fixed it there (subtitle now truncates with ellipsis and hides entirely under 560px; ML tab header now wraps onto two rows instead of overlapping). No other Stats-mode layout was touched.
+- Console: 0 errors/warnings across every check above.
+
+---
