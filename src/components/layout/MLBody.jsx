@@ -3,6 +3,8 @@ import MLIconRail from './MLIconRail.jsx';
 import { useUIStore } from '../../store/useUIStore.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
 import LevelLangToggle from '../ml/LevelLangToggle.jsx';
+import UnderstandingTrackerBadge from '../ml/learning/UnderstandingTrackerBadge.jsx';
+import MixedReviewPanel from '../ml/learning/MixedReviewPanel.jsx';
 import { useT } from '../../lib/mlContent.js';
 import './MLBody.css';
 
@@ -45,7 +47,10 @@ export default function MLBody() {
       <main className="app-main ml-main">
         <div className="ml-main-header">
           <span className="ml-main-title">{tabTitle}</span>
-          <LevelLangToggle />
+          <div className="ml-main-header-controls">
+            <UnderstandingTrackerBadge />
+            <LevelLangToggle />
+          </div>
         </div>
         <div className="ml-main-content">
           {Object.entries(FEATURES).map(([id, Feature]) => (
@@ -57,6 +62,7 @@ export default function MLBody() {
           ))}
         </div>
       </main>
+      <MixedReviewPanel />
     </>
   );
 }

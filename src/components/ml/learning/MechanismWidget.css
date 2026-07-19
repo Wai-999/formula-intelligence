@@ -1,0 +1,29 @@
+.mechanism-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 2px;
+}
+
+.mechanism-widget-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mechanism-widget-output {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+}
+
+.mechanism-widget-output-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}

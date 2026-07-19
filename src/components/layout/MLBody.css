@@ -23,6 +23,13 @@
   white-space: nowrap;
 }
 
+.ml-main-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .ml-main-content {
   flex: 1;
   min-height: 0;

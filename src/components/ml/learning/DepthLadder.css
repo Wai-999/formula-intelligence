@@ -1,0 +1,77 @@
+.depth-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.depth-ladder-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.depth-ladder-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  font-family: inherit;
+  text-align: left;
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  min-width: 108px;
+}
+
+.depth-ladder-tab i {
+  font-size: 14px;
+  margin-bottom: 1px;
+}
+
+.depth-ladder-tab-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.depth-ladder-tab-sub {
+  font-size: 9.5px;
+  color: var(--text-faint);
+}
+
+.depth-ladder-tab:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.depth-ladder-tab.active {
+  border-color: var(--primary);
+  background: rgba(139, 92, 246, 0.14);
+  color: var(--text-primary);
+}
+
+.depth-ladder-tab.active i {
+  color: var(--primary);
+}
+
+.depth-ladder-jumped-note {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--accent);
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+}
+
+.depth-ladder-content {
+  min-height: 80px;
+}

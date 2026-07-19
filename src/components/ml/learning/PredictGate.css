@@ -1,0 +1,124 @@
+.predict-gate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.predict-gate-body {
+  transition: opacity 0.15s;
+}
+
+.predict-gate-body-dimmed {
+  opacity: 0.25;
+  pointer-events: none;
+  filter: blur(1.5px);
+}
+
+.predict-gate-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.predict-gate-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.predict-gate-inline .predict-gate-card {
+  padding: 10px 12px;
+}
+
+.predict-gate-lbl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--warning);
+  margin-bottom: 6px;
+}
+
+.predict-gate-question {
+  font-size: 12.5px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.predict-gate-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.predict-gate-opt {
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.predict-gate-opt:hover {
+  border-color: var(--primary);
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.predict-gate-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11.5px;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+}
+
+.predict-gate-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.predict-gate-explain {
+  color: var(--text-faint);
+  padding-left: 20px;
+  line-height: 1.5;
+}
+
+.predict-gate-correct {
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.predict-gate-correct .predict-gate-compare-row i {
+  color: var(--success);
+}
+
+.predict-gate-wrong {
+  border-color: rgba(251, 113, 133, 0.35);
+  background: rgba(251, 113, 133, 0.08);
+}
+
+.predict-gate-wrong .predict-gate-compare-row i {
+  color: var(--danger);
+}

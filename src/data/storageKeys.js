@@ -14,4 +14,5 @@ export const STORAGE_KEYS = {
   journalTarget: 'bluman_jtarget_v1',
   feynmanPrefix: 'feynman_',
   mlModePrefs: 'ml_mode_prefs_v1',
+  mlUnderstanding: 'ml_understanding_v1',
 };
