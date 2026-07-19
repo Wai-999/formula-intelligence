@@ -1,22 +1,30 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useMLDomainStore } from '../../../store/useMLDomainStore.js';
+import { useUnderstandingStore } from '../../../store/useUnderstandingStore.js';
 import { demandGapContributions, MICRO_REFERENCE } from './demandModel.js';
 import {
   MICRO_CONTEXT, MICRO_MODELS, MICRO_SCENARIOS, MICRO_TRACE_INTRO, MICRO_GAP_LABELS,
   MICRO_PRICE_LABEL, MICRO_PROMO_LABEL, MICRO_SEASON_LABEL, MICRO_PAGE_TITLE, MICRO_PRICE_SECTION_TITLE,
   MICRO_MODELS_TITLE, MICRO_MODELS_SUB, MICRO_TRACE_TITLE,
+  MICRO_PREDICT_Q, MICRO_PREDICT_SMOOTH, MICRO_PREDICT_KINK, MICRO_PREDICT_EXPLAIN,
+  MICRO_SPARK_ANALOGY, MICRO_MECHANISM_NOTE, MICRO_FORMALISM_WORKED, MICRO_FORMALISM_FADED,
+  MICRO_CF_ANALOGY_BREAK, MICRO_CF_CAVEAT, MICRO_CF_RETRIEVAL_Q, MICRO_CF_RETRIEVAL_A,
 } from '../../../data/ml/domains/micro.js';
-import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE } from '../../../data/ml/uiStrings.js';
+import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE, UI_WORKED_EXAMPLE_LBL, UI_NOW_YOU_TRY_LBL, UI_ANALOGY_BREAKS_LBL, UI_REAL_CAVEAT_LBL } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import ScenarioPresets from '../../../components/ml/domain/ScenarioPresets.jsx';
 import TracePanel from '../../../components/ml/domain/TracePanel.jsx';
 import DemandCurveChart from './DemandCurveChart.jsx';
+import DepthLadder from '../../../components/ml/learning/DepthLadder.jsx';
+import PredictGate from '../../../components/ml/learning/PredictGate.jsx';
+import RetrievalCheck from '../../../components/ml/learning/RetrievalCheck.jsx';
 import '../mlPageShared.css';
 import '../domainLabShared.css';
 import './MicroLabPage.css';
 
 const DOMAIN = 'micro';
+const NODE_ID = 'micro-lab';
 
 function ModelNote({ model }) {
   const name = useT(model.name);
@@ -25,6 +33,44 @@ function ModelNote({ model }) {
     <div className="dl-model-note" style={{ borderLeftColor: model.color }}>
       <p className="dl-model-note-name" style={{ color: model.color }}>{name}</p>
       <p className="ml-body-text">{note}</p>
+    </div>
+  );
+}
+
+function SparkLayer() {
+  const analogy = useT(MICRO_SPARK_ANALOGY);
+  return <div className="dl-depth-layer"><p className="ml-body-text">{analogy}</p></div>;
+}
+function MechanismLayer() {
+  const note = useT(MICRO_MECHANISM_NOTE);
+  return <div className="dl-depth-layer"><p className="ml-body-text">{note}</p></div>;
+}
+function FormalismLayer() {
+  const worked = useT(MICRO_FORMALISM_WORKED);
+  const faded = useT(MICRO_FORMALISM_FADED);
+  const workedLbl = useT(UI_WORKED_EXAMPLE_LBL);
+  const nowYouTryLbl = useT(UI_NOW_YOU_TRY_LBL);
+  return (
+    <div className="dl-depth-layer">
+      <p className="ml-lbl">{workedLbl}</p>
+      <p className="ml-body-text">{worked}</p>
+      <p className="ml-lbl">{nowYouTryLbl}</p>
+      <p className="ml-body-text">{faded}</p>
+    </div>
+  );
+}
+function CriticalFrontierLayer() {
+  const analogyBreak = useT(MICRO_CF_ANALOGY_BREAK);
+  const caveat = useT(MICRO_CF_CAVEAT);
+  const breaksLbl = useT(UI_ANALOGY_BREAKS_LBL);
+  const caveatLbl = useT(UI_REAL_CAVEAT_LBL);
+  return (
+    <div className="dl-depth-layer">
+      <p className="ml-lbl">{breaksLbl}</p>
+      <p className="ml-body-text">{analogyBreak}</p>
+      <p className="ml-lbl">{caveatLbl}</p>
+      <p className="ml-body-text">{caveat}</p>
+      <RetrievalCheck nodeId={NODE_ID} question={MICRO_CF_RETRIEVAL_Q} answer={MICRO_CF_RETRIEVAL_A} />
     </div>
   );
 }
@@ -43,6 +89,8 @@ export default function MicroLabPage() {
   const setDriver = useMLDomainStore((s) => s.setDriver);
   const applyScenario = useMLDomainStore((s) => s.applyScenario);
   const resetDomain = useMLDomainStore((s) => s.resetDomain);
+  const markDomainVisited = useUnderstandingStore((s) => s.markDomainVisited);
+  useEffect(() => { markDomainVisited(DOMAIN); }, [markDomainVisited]);
   const context = useT(MICRO_CONTEXT);
   const traceIntro = useT(MICRO_TRACE_INTRO);
   const priceLabel = useT(MICRO_PRICE_LABEL);
@@ -102,10 +150,16 @@ export default function MicroLabPage() {
       <div className="ml-section">
         <p className="ml-section-title">{modelsTitle}</p>
         <p className="ml-section-sub">{modelsSub}</p>
-        <DemandCurveChart price={price} promoOn={promoOn} peakSeason={peakSeason} models={MICRO_MODELS} reference={MICRO_REFERENCE} />
-        <div className="dl-model-notes">
-          {MICRO_MODELS.map((m) => <ModelNote key={m.key} model={m} />)}
-        </div>
+        <PredictGate
+          predictId="micro-curve-shape-predict" nodeId={NODE_ID} layer="mechanism"
+          question={MICRO_PREDICT_Q} options={[MICRO_PREDICT_SMOOTH, MICRO_PREDICT_KINK]} correctIndex={1}
+          explain={MICRO_PREDICT_EXPLAIN}
+        >
+          <DemandCurveChart price={price} promoOn={promoOn} peakSeason={peakSeason} models={MICRO_MODELS} reference={MICRO_REFERENCE} />
+          <div className="dl-model-notes">
+            {MICRO_MODELS.map((m) => <ModelNote key={m.key} model={m} />)}
+          </div>
+        </PredictGate>
         <div className="ml-citation-row"><MLCitation section="6.3" /></div>
       </div>
 
@@ -114,6 +168,16 @@ export default function MicroLabPage() {
         <p className="ml-section-sub">{traceIntro}</p>
         <TracePanel contributions={contributions} driversByKey={MICRO_GAP_LABELS} unit=" units" unitPosition="suffix" decimals={0} />
         <div className="ml-citation-row"><MLCitation synthetic /></div>
+      </div>
+
+      <div className="ml-section">
+        <DepthLadder
+          nodeId={NODE_ID}
+          spark={<SparkLayer />}
+          mechanism={<MechanismLayer />}
+          formalism={<FormalismLayer />}
+          criticalFrontier={<CriticalFrontierLayer />}
+        />
       </div>
     </div>
   );

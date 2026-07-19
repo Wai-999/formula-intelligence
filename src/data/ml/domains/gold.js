@@ -98,3 +98,65 @@ export const GOLD_MODELS_SUB = blSame(
   'Move a driver above and watch all four react — differently.',
   'အထက်ပါ driver တစ်ခုကို ရွှေ့ပြီး လေးခုလုံး ဘယ်လိုတုံ့ပြန်လဲ ကြည့်ပါ — ကွဲပြားစွာဖြစ်သည်။'
 );
+
+// Learning Design System retrofit (Module 6): Constructive Thought Loop on
+// the driver panel + one consolidated Depth Ladder whose Critical Frontier
+// is the mission's assigned "bank-forecast-spread disagreement" teaching
+// moment. The worked example's numbers are computed from the exact same
+// computeModelForecasts() formulas the chart above uses (geoRisk=1.0, all
+// other drivers 0) — not fabricated, independently re-derivable by anyone
+// who pushes that same slider and reads the trace panel.
+export const GOLD_PREDICT_Q = blSame(
+  'Push geopolitical risk to its maximum, everything else at zero. Do the four models\' point forecasts move by the same dollar amount, or different amounts?',
+  'ပထဝီရေးအန္တရာယ်ကို အမြင့်ဆုံးအထိ တွန်းပါ၊ ကျန်တာအားလုံး သုညထား။ မော်ဒယ်လေးခု၏ point forecast များသည် ဒေါ်လာပမာဏ တူညီစွာ ရွှေ့မလား၊ ကွဲပြားစွာ ရွှေ့မလား?'
+);
+export const GOLD_PREDICT_SAME = blSame(
+  'The same amount — they all see the same drivers',
+  'ပမာဏတူညီသည် — ၎င်းတို့အားလုံးသည် driver တူညီစွာ မြင်ကြသည်'
+);
+export const GOLD_PREDICT_DIFFERENT = blSame(
+  'Different amounts — each model weighs the same evidence differently',
+  'ပမာဏကွဲပြားသည် — မော်ဒယ်တစ်ခုစီသည် သက်သေအထောက်အထားတူညီကို မတူညီစွာ ချိန်ဆသည်'
+);
+export const GOLD_PREDICT_EXPLAIN = blSame(
+  'Check the forecast chart and trace panel after pushing geopolitical risk — ARIMA and GARCH share a point forecast but GARCH\'s band is far wider, while LSTM and XGBoost land at different dollar figures entirely. Same evidence, four different reactions.',
+  'ပထဝီရေးအန္တရာယ်ကို တွန်းပြီးနောက် forecast chart နှင့် trace panel ကို စစ်ကြည့်ပါ — ARIMA နှင့် GARCH သည် point forecast တူညီသော်လည်း GARCH ၏ band ပိုကျယ်သည်၊ LSTM နှင့် XGBoost သည် လုံးဝကွဲပြားသော ဒေါ်လာဂဏန်းများသို့ ရောက်သည်။ သက်သေအထောက်အထားတူညီ၊ တုံ့ပြန်မှုကွဲပြား လေးမျိုး။'
+);
+
+export const GOLD_SPARK_ANALOGY = bl(
+  "Ask five weather forecasters for tomorrow's high temperature and you'll get five slightly different numbers — not because someone's wrong, but because each reads slightly different evidence and weighs it differently. Ask five investment banks where gold will be next year and the same thing happens, just with far higher stakes.",
+  'ရာသီဥတု ခန့်မှန်းသူ ငါးယောက်ကို မနက်ဖြန် အပူချိန်အမြင့်ဆုံး မေးကြည့်ပါ၊ အနည်းငယ် ကွဲပြားသော ဂဏန်း ငါးလုံး ရလိမ့်မည် — တစ်ယောက်ယောက် မှားလို့ မဟုတ်ပါ၊ တစ်ဦးစီက အနည်းငယ်ကွဲပြားသော သက်သေအထောက်အထားကို ဖတ်ပြီး မတူညီစွာ ချိန်ဆလို့ ဖြစ်သည်။ ရင်းနှီးမြှုပ်နှံမှု ဘဏ်ငါးခုကို လာမည့်နှစ် ရွှေ ဘယ်နေရာရောက်မလဲ မေးကြည့်ပါ၊ အလားတူဖြစ်ပေါ်မည်၊ အရေးပါမှု ပိုမြင့်ရုံသာ ကွဲပြားသည်။'
+);
+
+export const GOLD_MECHANISM_NOTE = blSame(
+  "You already ran this mechanism above — every push of a driver slider re-computes all four models' forecasts live from the same driver state. Push geopolitical risk toward its extreme and watch the forecast band chart and trace panel react in real time.",
+  'အထက်ပါ mechanism ကို သင် run လုပ်ပြီးသားပါ — driver slider ကို တွန်းတိုင်း မော်ဒယ်လေးခုစလုံး၏ forecast ကို driver state တူညီမှ live ပြန်တွက်သည်။ ပထဝီရေးအန္တရာယ်ကို အစွန်းဆုံးဆီသို့ တွန်းပြီး forecast band chart နှင့် trace panel ဘယ်လို real time တုံ့ပြန်လဲ ကြည့်ပါ။'
+);
+
+export const GOLD_FORMALISM_WORKED = bl(
+  "Worked example: push geoRisk to 1.0 (its coefficient is +110), everything else at 0. Linear baseline move = +$110. ARIMA (0.7× damping) lands at +$77; LSTM (full response, only one driver active so no amplification yet) also lands at +$110; XGBoost's tanh saturation gives +$88; GARCH shares ARIMA's +$77 point but its band balloons to $153 (vs ARIMA's unchanged $90) because geopolitical risk is specifically the variable GARCH's band responds to. Four different numbers from one identical push.",
+  "Worked example: push geoRisk to 1.0 (its coefficient is +110), everything else at 0. Linear baseline move = +$110. ARIMA (0.7× damping) lands at +$77; LSTM (full response, only one driver active so no amplification yet) also lands at +$110; XGBoost's tanh saturation gives +$88; GARCH shares ARIMA's +$77 point but its band balloons to $153 (vs ARIMA's unchanged $90) because geopolitical risk is specifically the variable GARCH's band responds to. Four different numbers from one identical push.",
+  'ဖြေရှင်းချက်ဥပမာ: geoRisk ကို 1.0 (coefficient +110) သို့ တွန်းပါ၊ ကျန်တာအားလုံး 0။ Linear baseline move = +$110။ ARIMA (0.7× damping) သည် +$77 ရောက်သည်; LSTM (full response, driver တစ်ခုတည်းသာ active ဖြစ်၍ amplification မရှိသေး) သည်လည်း +$110 ရောက်သည်; XGBoost ၏ tanh saturation က +$88 ပေးသည်; GARCH သည် ARIMA ၏ +$77 point ကို မျှဝေသော်လည်း ၎င်း၏ band သည် $153 အထိ ကျယ်ထွက်သွားသည် (ARIMA ၏ မပြောင်းလဲသေးသော $90 နှင့်နှိုင်းယှဉ်) — ပထဝီရေးအန္တရာယ်သည် GARCH ၏ band တုံ့ပြန်ရာ variable အတိအကျဖြစ်သောကြောင့်ဖြစ်သည်။ တွန်းအားတူညီတစ်ခုမှ ဂဏန်းလေးမျိုး ကွဲပြားထွက်လာသည်။',
+  'ဖြေရှင်းချက်ဥပမာ: geoRisk ကို 1.0 (coefficient +110) သို့ တွန်းပါ၊ ကျန်တာအားလုံး 0။ Linear baseline move = +$110။ ARIMA (0.7× damping) သည် +$77 ရောက်သည်; LSTM (full response, driver တစ်ခုတည်းသာ active ဖြစ်၍ amplification မရှိသေး) သည်လည်း +$110 ရောက်သည်; XGBoost ၏ tanh saturation က +$88 ပေးသည်; GARCH သည် ARIMA ၏ +$77 point ကို မျှဝေသော်လည်း ၎င်း၏ band သည် $153 အထိ ကျယ်ထွက်သွားသည် (ARIMA ၏ မပြောင်းလဲသေးသော $90 နှင့်နှိုင်းယှဉ်) — ပထဝီရေးအန္တရာယ်သည် GARCH ၏ band တုံ့ပြန်ရာ variable အတိအကျဖြစ်သောကြောင့်ဖြစ်သည်။ တွန်းအားတူညီတစ်ခုမှ ဂဏန်းလေးမျိုး ကွဲပြားထွက်လာသည်။'
+);
+export const GOLD_FORMALISM_FADED = blSame(
+  'Now you try: set every driver to 0 except real yields at −1.0 (its coefficient is −180). Step 1 — what\'s the linear baseline move (coefficient × driver value)? Step 2 — which of the four models do you expect to land furthest from that baseline this time, and why: _____. Check your answer against the trace panel and forecast chart above.',
+  'အခု သင့်အလှည့်: real yields ကို −1.0 (coefficient −180) ထား၊ ကျန် driver အားလုံး 0 ထား။ အဆင့် ၁ — linear baseline move (coefficient × driver value) ဘယ်လောက်လဲ? အဆင့် ၂ — ဒီတစ်ကြိမ် ဘယ်မော်ဒယ်က baseline နှင့် အဝေးဆုံးရောက်မယ်လို့ မျှော်လင့်လဲ၊ ဘာကြောင့်လဲ: _____။ အထက်ပါ trace panel နှင့် forecast chart နှင့် စစ်ဆေးပါ။'
+);
+
+export const GOLD_CF_ANALOGY_BREAK = blSame(
+  "The weather-forecaster analogy breaks down on accountability: a weather forecaster is graded again tomorrow, every single day, so bad judgment gets corrected fast. A 2026 gold price forecast won't be checked for months — leaving far more room for a bank's own trading position, marketing incentive, or institutional house-view to quietly shape a number before reality ever grades it.",
+  'ရာသီဥတု ခန့်မှန်းသူ ဆင်တူပုံရိပ်သည် တာဝန်ခံမှုတွင် ပျက်စီးသည်: ရာသီဥတု ခန့်မှန်းသူသည် မနက်ဖြန် နေ့တိုင်း ထပ်စစ်ဆေးခံရသောကြောင့် ညံ့ဖျင်းသော ဆုံးဖြတ်ချက်ကို မြန်မြန် ပြင်ရသည်။ ၂၀၂၆ ရွှေဈေးနှုန်း ခန့်မှန်းချက်ကို လများကြာ မစစ်ဆေးရသေးပါ — ဘဏ်တစ်ခု၏ ကိုယ်ပိုင် trading position, marketing motivation, သို့မဟုတ် institutional house-view က တကယ့်ရလဒ်က မစစ်ဆေးမီ ဂဏန်းတစ်ခုကို တိတ်တဆိတ် ပုံဖော်ရန် နေရာပိုများစေသည်။'
+);
+export const GOLD_CF_CAVEAT = blSame(
+  'A real caveat: this page\'s own context noted Goldman Sachs (~$5,800), JPMorgan (~$5,500), and UBS ($6,000+) — three serious institutions, over $1,200 apart, looking at broadly the same evidence. That real spread is the same phenomenon this page\'s four toy model-lenses illustrate when they react differently to one identical driver push — a wide spread is not proof someone is incompetent, it is a signal of how much genuine uncertainty the evidence actually contains.',
+  'တကယ့် caveat: ဒီစာမျက်နှာ၏ ကိုယ်ပိုင် context က Goldman Sachs (~$5,800), JPMorgan (~$5,500), UBS ($6,000+) ကို မှတ်သားခဲ့သည် — ခိုင်မာသော institution သုံးခု၊ $1,200 ကျော် ကွဲပြားပြီး၊ အကြမ်းဖျင်းအားဖြင့် သက်သေအထောက်အထားတူညီကို ကြည့်နေကြသည်။ ထိုတကယ့် spread သည် ဒီစာမျက်နှာ၏ toy model-lens လေးခုက တွန်းအားတူညီတစ်ခုကို မတူညီစွာ တုံ့ပြန်သောအခါ ပြသသော ဖြစ်စဉ်တူညီပင်ဖြစ်သည် — spread ကျယ်ခြင်းသည် တစ်စုံတစ်ယောက် ကျွမ်းကျင်မှုမရှိကြောင်း သက်သေမဟုတ်ဘဲ၊ သက်သေအထောက်အထားတွင် တကယ်ပါဝင်သော uncertainty ပမာဏကို ညွှန်ပြခြင်းဖြစ်သည်။'
+);
+export const GOLD_CF_RETRIEVAL_Q = blSame(
+  'If two reputable banks publish gold forecasts $1,000+ apart, does that necessarily mean one of them made a mistake?',
+  'ဂုဏ်သတင်းကောင်းသော ဘဏ်နှစ်ခုက ရွှေဈေးနှုန်း ခန့်မှန်းချက် $1,000+ ကွာဟစွာ ထုတ်ပြန်လျှင် တစ်ခုခုက မှားယွင်းသည်ဟု လုံးလုံးဆိုလိုပါသလား?'
+);
+export const GOLD_CF_RETRIEVAL_A = blSame(
+  "No — it more likely means they're weighting the same uncertain evidence differently (how much of a rate-cut path to assume, how much further central-bank buying to project forward), the same way this page's four model lenses reacted differently to one identical driver push. A large forecast spread is genuine, informative signal about how much real uncertainty the underlying evidence contains — not proof that someone made an error.",
+  'မဟုတ်ပါ — သူတို့သည် မသေချာသော သက်သေအထောက်အထားတူညီကို မတူညီစွာ ချိန်ဆနေခြင်း (အတိုးလျှော့ချမည့် လမ်းကြောင်း မည်မျှယူဆမလဲ၊ ဗဟိုဘဏ် ဝယ်ယူမှု ရှေ့ဆက်မည်မျှ ထင်မြင်မလဲ) ဖြစ်နိုင်ခြေပိုများသည်၊ ဒီစာမျက်နှာ၏ မော်ဒယ် lens လေးခုက တွန်းအားတူညီတစ်ခုကို မတူညီစွာ တုံ့ပြန်သကဲ့သို့ပင်ဖြစ်သည်။ Forecast spread ကျယ်ခြင်းသည် underlying သက်သေအထောက်အထားတွင် တကယ်ပါဝင်သော uncertainty ပမာဏအကြောင်း စစ်မှန်၍ အသိပေးနိုင်သော signal ဖြစ်ပြီး၊ တစ်စုံတစ်ယောက် မှားယွင်းကြောင်း သက်သေမဟုတ်ပါ။'
+);

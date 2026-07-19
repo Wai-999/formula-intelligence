@@ -140,3 +140,65 @@ export const MACRO_MODELS_SUB = blSame(
 );
 export const MACRO_TRACE_TITLE = blSame('Why did the nowcast move?', 'Nowcast ဒါက ဘာကြောင့် ရွေ့သွားတာလဲ?');
 export const MACRO_SIMPLICITY_TITLE = blSame('Simplicity can win', 'ရိုးရှင်းမှုက အနိုင်ရနိုင်သည်');
+
+// Learning Design System retrofit (Module 7): Constructive Thought Loop on
+// the signals panel + one consolidated Depth Ladder whose Critical Frontier
+// formalizes the "fancier isn't always better" moment the page already had
+// informally (MACRO_SIMPLICITY_CALLOUT above, kept as-is on the page — this
+// content extends rather than duplicates it). The worked example is
+// computed from the exact computeMacroForecasts() formulas the chart above
+// uses (yieldCurve=1.0, all else 0), independently re-derivable live.
+export const MACRO_PREDICT_Q = blSame(
+  'Push every signal to its strongest positive reading. Which model do you expect to be most accurate in the real world — the fanciest one, or the simplest one?',
+  'Signal တိုင်းကို အပေါင်းဆုံး တန်ဖိုးဆီသို့ တွန်းပါ။ လက်တွေ့ကမ္ဘာမှာ ဘယ်မော်ဒယ်က အတိကျဆုံးဖြစ်လိမ့်မယ်လို့ မျှော်လင့်လဲ — ရှုပ်ထွေးဆုံးတစ်ခု၊ ဒါမှမဟုတ် ရိုးရှင်းဆုံးတစ်ခု?'
+);
+export const MACRO_PREDICT_FANCY = blSame(
+  'The fanciest one (Random Forest) — more sophistication should mean more accuracy',
+  'ရှုပ်ထွေးဆုံးတစ်ခု (Random Forest) — ပိုကျွမ်းကျင်လေ ပိုတိကျလေ ဖြစ်သင့်သည်'
+);
+export const MACRO_PREDICT_DEPENDS = blSame(
+  'It depends — the simplest one (LASSO) sometimes wins when data is rich and high-frequency',
+  'အခြေအနေပေါ် မူတည်သည် — ဒေတာ ကြွယ်ဝပြီး high-frequency ဖြစ်သောအခါ ရိုးရှင်းဆုံးတစ်ခု (LASSO) တစ်ခါတစ်ရံ အနိုင်ရသည်'
+);
+export const MACRO_PREDICT_EXPLAIN = blSame(
+  "There's no universal winner visible in the chart alone — but the callout below the models explains why the answer is genuinely \"it depends,\" not a trick question.",
+  'Chart တစ်ခုတည်းကြည့်ရုံနှင့် universal အနိုင်ရသူ မမြင်ရပါ — သို့သော် မော်ဒယ်များအောက်ရှိ callout က အဖြေက "အခြေအနေပေါ် မူတည်သည်" ဆိုတာ genuinely ဘာကြောင့်ဖြစ်သလဲ၊ လှည့်ဖျားမေးခွန်းမဟုတ်ကြောင်း ရှင်းပြသည်။'
+);
+
+export const MACRO_SPARK_ANALOGY = bl(
+  "A master chef with forty ingredients can make a worse dish than a home cook with five, if the chef adds ingredients that don't actually belong. More model complexity is the same bet: it only pays off if the extra machinery is capturing something real, not just extra noise.",
+  'ပါရဂူ စားဖိုမှူးတစ်ဦးသည် ပါဝင်ပစ္စည်း ၄၀ ဖြင့် အိမ်တွင်းချက်တစ်ဦးထက် ဆိုးရွားသော ဟင်းလျာတစ်ခု ချက်နိုင်သည်၊ မလိုအပ်သော ပါဝင်ပစ္စည်း ထည့်လိုက်လျှင်။ Model complexity ပိုများခြင်းသည် လောင်းကစားတူညီသည် — extra machinery က real သောအရာကို ဖမ်းယူနေမှသာ အကျိုးရှိမည်၊ extra noise သာ ဖမ်းယူနေလျှင် မဟုတ်ပါ။'
+);
+
+export const MACRO_MECHANISM_NOTE = blSame(
+  "You already ran this mechanism above — push any signal and all three models react from the identical driver state. Watch DFM's damped, cautious move versus LASSO's full, undamped one on the exact same push.",
+  'အထက်ပါ mechanism ကို run လုပ်ပြီးသားပါ — signal တစ်ခုကို တွန်းလိုက်ပါ၊ မော်ဒယ်သုံးခုစလုံးသည် driver state တူညီမှ တုံ့ပြန်သည်။ DFM ၏ damped, သတိထားသော ရွေ့လျားမှုကို LASSO ၏ တွန်းအားတူညီပေါ်ရှိ full, undamped ရွေ့လျားမှုနှင့် နှိုင်းယှဉ်ကြည့်ပါ။'
+);
+
+export const MACRO_FORMALISM_WORKED = bl(
+  "Worked example: push yield curve to 1.0 (coefficient +0.35), everything else at 0. Linear baseline = +0.35pp. DFM's 0.5× damping gives +0.175pp; LASSO takes the full, undamped +0.35pp; Random Forest's tanh saturation lands at roughly +0.28pp — between the two. With only one signal active, LASSO isn't \"cutting corners,\" it's just not damping or saturating a response the data may genuinely warrant.",
+  "Worked example: push yield curve to 1.0 (coefficient +0.35), everything else at 0. Linear baseline = +0.35pp. DFM's 0.5× damping gives +0.175pp; LASSO takes the full, undamped +0.35pp; Random Forest's tanh saturation lands at roughly +0.28pp — between the two. With only one signal active, LASSO isn't \"cutting corners,\" it's just not damping or saturating a response the data may genuinely warrant.",
+  'ဖြေရှင်းချက်ဥပမာ: yield curve ကို 1.0 (coefficient +0.35) သို့ တွန်းပါ၊ ကျန်တာအားလုံး 0။ Linear baseline = +0.35pp။ DFM ၏ 0.5× damping က +0.175pp ပေးသည်; LASSO က full, undamped +0.35pp ယူသည်; Random Forest ၏ tanh saturation သည် ခန့်မှန်း +0.28pp ရောက်သည် — နှစ်ခုကြားတွင်။ Signal တစ်ခုတည်းသာ active ဖြစ်နေစဉ်၊ LASSO သည် "အတိုကောက်လုပ်" နေခြင်း မဟုတ်ပါ၊ ဒေတာက တကယ်ခွင့်ပြုနိုင်သော တုံ့ပြန်မှုကို damping (သို့) saturation မလုပ်ခြင်းသာဖြစ်သည်။',
+  'ဖြေရှင်းချက်ဥပမာ: yield curve ကို 1.0 (coefficient +0.35) သို့ တွန်းပါ၊ ကျန်တာအားလုံး 0။ Linear baseline = +0.35pp။ DFM ၏ 0.5× damping က +0.175pp ပေးသည်; LASSO က full, undamped +0.35pp ယူသည်; Random Forest ၏ tanh saturation သည် ခန့်မှန်း +0.28pp ရောက်သည် — နှစ်ခုကြားတွင်။ Signal တစ်ခုတည်းသာ active ဖြစ်နေစဉ်၊ LASSO သည် "အတိုကောက်လုပ်" နေခြင်း မဟုတ်ပါ၊ ဒေတာက တကယ်ခွင့်ပြုနိုင်သော တုံ့ပြန်မှုကို damping (သို့) saturation မလုပ်ခြင်းသာဖြစ်သည်။'
+);
+export const MACRO_FORMALISM_FADED = blSame(
+  'Now you try: set every signal to 1.0 at once (a "broad-based expansion"). Step 1 — what\'s the simple sum of all five coefficients (the LASSO/undamped answer)? Step 2 — will DFM\'s damped answer be closer to or further from that sum than it was with only one signal active, and why: _____.',
+  'အခု သင့်အလှည့်: signal ငါးခုလုံးကို 1.0 တစ်ပြိုင်နက်ထား ("broad-based expansion")။ အဆင့် ၁ — coefficient ငါးခု၏ ရိုးရှင်းသော ပေါင်းလဒ် (LASSO/undamped အဖြေ) ဘယ်လောက်လဲ? အဆင့် ၂ — DFM ၏ damped အဖြေသည် signal တစ်ခုတည်းသာ active ဖြစ်စဉ်ကထက် ထိုပေါင်းလဒ်နှင့် ပိုနီးမလား ပိုဝေးမလား၊ ဘာကြောင့်လဲ: _____။'
+);
+
+export const MACRO_CF_ANALOGY_BREAK = blSame(
+  "The chef analogy breaks down on measurability: a bad ingredient ruins a dish in a way every diner can taste immediately. A model that's \"too fancy\" for its data doesn't announce itself — it can look impressively sophisticated in a demo and only reveal its overfitting months later, on data it hasn't seen yet. That's exactly why this simplicity finding required real comparative studies to establish, not a single convincing-looking example.",
+  'စားဖိုမှူး ဆင်တူပုံရိပ်သည် တိုင်းတာနိုင်မှုတွင် ပျက်စီးသည်: ပါဝင်ပစ္စည်း ဆိုးတစ်ခုသည် စားသုံးသူတိုင်း ချက်ချင်း မြည်းစမ်းနိုင်သည့်ပုံစံဖြင့် ဟင်းလျာကို ဖျက်စီးသည်။ ၎င်း၏ data အတွက် "ရှုပ်ထွေးလွန်း" သော မော်ဒယ်တစ်ခုသည် ကိုယ်တိုင် ကြေညာသွားခြင်း မရှိပါ — demo တစ်ခုတွင် ရှုပ်ထွေးစွာ ခန့်ညားစွာ မြင်ရနိုင်ပြီး၊ မမြင်ဖူးသေးသော data ပေါ်တွင် လများကြာမှသာ ၎င်း၏ overfitting ကို ဖော်ပြလိမ့်မည်။ ဒါကြောင့်ပဲ ဒီရိုးရှင်းမှု ရလဒ်ကို တည်ထောင်ရန် real comparative study များ လိုအပ်ခဲ့ခြင်းဖြစ်ပြီး၊ စိတ်ဝင်စားဖွယ် ဥပမာတစ်ခုတည်းနှင့် မဟုတ်ပါ။'
+);
+export const MACRO_CF_CAVEAT = blSame(
+  'A real caveat: "simplicity can win" is not "simplicity always wins." The callout above is specific — LASSO tends to outperform when data is rich and high-frequency. With scarce or noisy data, DFM\'s structural anchoring and caution are exactly what keeps it from chasing noise the way an undamped linear model might.',
+  'တကယ့် caveat: "ရိုးရှင်းမှုက အနိုင်ရနိုင်သည်" ဆိုသည်မှာ "ရိုးရှင်းမှုက အမြဲအနိုင်ရသည်" မဟုတ်ပါ။ အထက်ပါ callout သည် တိကျသည် — ဒေတာ ကြွယ်ဝပြီး high-frequency ဖြစ်သောအခါ LASSO က ပိုကောင်းလေ့ရှိသည်။ ဒေတာ ရှားပါး (သို့) noise များသောအခါ DFM ၏ structural anchoring နှင့် သတိထားမှုသည် undamped linear model တစ်ခုကဲ့သို့ noise ကို လိုက်ဖမ်းမနေအောင် တားဆီးပေးသည့်အရာအတိအကျဖြစ်သည်။'
+);
+export const MACRO_CF_RETRIEVAL_Q = blSame(
+  'A colleague says "always use the most complex model available, it can only help." What is the one-sentence rebuttal this page supports?',
+  'လုပ်ဖော်ကိုင်ဖက်တစ်ဦးက "ရနိုင်သမျှ အရှုပ်ထွေးဆုံးမော်ဒယ်ကို အမြဲသုံးပါ၊ ကူညီရုံသာရှိမည်" ဟုပြောသည်။ ဒီစာမျက်နှာက ထောက်ခံသော တစ်ကြောင်းတည်း ငြင်းချက်က ဘာလဲ?'
+);
+export const MACRO_CF_RETRIEVAL_A = blSame(
+  "More complexity only helps if the extra machinery captures a real pattern the data actually contains — otherwise it's just extra capacity to overfit noise, which is exactly why the simplest model here (LASSO) frequently outperforms both the classic econometric model and the fancier ML model in real nowcasting comparisons.",
+  'Complexity ပိုများခြင်းသည် extra machinery က data တွင် တကယ်ပါဝင်သော pattern တစ်ခုကို ဖမ်းယူမှသာ ကူညီသည် — မဟုတ်လျှင် noise ကို overfit လုပ်ရန် extra capacity သာဖြစ်သည်၊ ဒါကြောင့်ပဲ ဒီနေရာမှာ အရိုးရှင်းဆုံးမော်ဒယ် (LASSO) သည် real nowcasting comparison များတွင် ရိုးရာ econometric မော်ဒယ်နှင့် ပိုရှုပ်ထွေးသော ML မော်ဒယ် နှစ်မျိုးလုံးကို မကြာခဏ ကျော်လွန်လေ့ရှိသည်။'
+);

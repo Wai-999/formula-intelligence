@@ -55,3 +55,11 @@
   color: var(--accent);
   margin-right: 4px;
 }
+
+/* Learning Design System retrofit (Modules 6-9): each domain lab's
+   consolidated Depth Ladder layers share this one wrapper. */
+.dl-depth-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

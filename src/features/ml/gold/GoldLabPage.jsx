@@ -1,23 +1,31 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMLDomainStore } from '../../../store/useMLDomainStore.js';
 import { useUIStore } from '../../../store/useUIStore.js';
+import { useUnderstandingStore } from '../../../store/useUnderstandingStore.js';
 import { computeModelForecasts, driverContributions } from '../../../lib/domainModel.js';
 import {
   GOLD_BASE_PRICE, GOLD_BASE_BAND, GOLD_CONTEXT, GOLD_DRIVERS, GOLD_MODELS, GOLD_SCENARIOS, GOLD_TRACE_INTRO,
   GOLD_LINK_BANNER, GOLD_PAGE_TITLE, GOLD_DRIVERS_TITLE, GOLD_MODELS_TITLE, GOLD_MODELS_SUB, GOLD_TRACE_TITLE,
+  GOLD_PREDICT_Q, GOLD_PREDICT_SAME, GOLD_PREDICT_DIFFERENT, GOLD_PREDICT_EXPLAIN,
+  GOLD_SPARK_ANALOGY, GOLD_MECHANISM_NOTE, GOLD_FORMALISM_WORKED, GOLD_FORMALISM_FADED,
+  GOLD_CF_ANALOGY_BREAK, GOLD_CF_CAVEAT, GOLD_CF_RETRIEVAL_Q, GOLD_CF_RETRIEVAL_A,
 } from '../../../data/ml/domains/gold.js';
-import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE } from '../../../data/ml/uiStrings.js';
+import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE, UI_WORKED_EXAMPLE_LBL, UI_NOW_YOU_TRY_LBL, UI_ANALOGY_BREAKS_LBL, UI_REAL_CAVEAT_LBL } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import DriverPanel from '../../../components/ml/domain/DriverPanel.jsx';
 import ScenarioPresets from '../../../components/ml/domain/ScenarioPresets.jsx';
 import ForecastBandChart from '../../../components/ml/domain/ForecastBandChart.jsx';
 import TracePanel from '../../../components/ml/domain/TracePanel.jsx';
+import DepthLadder from '../../../components/ml/learning/DepthLadder.jsx';
+import PredictGate from '../../../components/ml/learning/PredictGate.jsx';
+import RetrievalCheck from '../../../components/ml/learning/RetrievalCheck.jsx';
 import '../mlPageShared.css';
 import '../domainLabShared.css';
 import './GoldLabPage.css';
 
 const DOMAIN = 'gold';
+const NODE_ID = 'gold-lab';
 const driversByKey = Object.fromEntries(GOLD_DRIVERS.map((d) => [d.key, d]));
 
 function ModelNote({ model }) {
@@ -31,6 +39,44 @@ function ModelNote({ model }) {
   );
 }
 
+function SparkLayer() {
+  const analogy = useT(GOLD_SPARK_ANALOGY);
+  return <div className="dl-depth-layer"><p className="ml-body-text">{analogy}</p></div>;
+}
+function MechanismLayer() {
+  const note = useT(GOLD_MECHANISM_NOTE);
+  return <div className="dl-depth-layer"><p className="ml-body-text">{note}</p></div>;
+}
+function FormalismLayer() {
+  const worked = useT(GOLD_FORMALISM_WORKED);
+  const faded = useT(GOLD_FORMALISM_FADED);
+  const workedLbl = useT(UI_WORKED_EXAMPLE_LBL);
+  const nowYouTryLbl = useT(UI_NOW_YOU_TRY_LBL);
+  return (
+    <div className="dl-depth-layer">
+      <p className="ml-lbl">{workedLbl}</p>
+      <p className="ml-body-text">{worked}</p>
+      <p className="ml-lbl">{nowYouTryLbl}</p>
+      <p className="ml-body-text">{faded}</p>
+    </div>
+  );
+}
+function CriticalFrontierLayer() {
+  const analogyBreak = useT(GOLD_CF_ANALOGY_BREAK);
+  const caveat = useT(GOLD_CF_CAVEAT);
+  const breaksLbl = useT(UI_ANALOGY_BREAKS_LBL);
+  const caveatLbl = useT(UI_REAL_CAVEAT_LBL);
+  return (
+    <div className="dl-depth-layer">
+      <p className="ml-lbl">{breaksLbl}</p>
+      <p className="ml-body-text">{analogyBreak}</p>
+      <p className="ml-lbl">{caveatLbl}</p>
+      <p className="ml-body-text">{caveat}</p>
+      <RetrievalCheck nodeId={NODE_ID} question={GOLD_CF_RETRIEVAL_Q} answer={GOLD_CF_RETRIEVAL_A} />
+    </div>
+  );
+}
+
 export default function GoldLabPage() {
   const driverState = useMLDomainStore((s) => s.driverState[DOMAIN]);
   const setDriver = useMLDomainStore((s) => s.setDriver);
@@ -38,6 +84,8 @@ export default function GoldLabPage() {
   const resetDomain = useMLDomainStore((s) => s.resetDomain);
   const linkedConcept = useUIStore((s) => s.linkedConcept);
   const clearLinkedConcept = useUIStore((s) => s.clearLinkedConcept);
+  const markDomainVisited = useUnderstandingStore((s) => s.markDomainVisited);
+  useEffect(() => { markDomainVisited(DOMAIN); }, [markDomainVisited]);
   const context = useT(GOLD_CONTEXT);
   const traceIntro = useT(GOLD_TRACE_INTRO);
   const linkBannerText = useT(GOLD_LINK_BANNER);
@@ -85,14 +133,20 @@ export default function GoldLabPage() {
             </button>
           </div>
         )}
-        <DriverPanel drivers={GOLD_DRIVERS} state={driverState} onChange={(key, v) => setDriver(DOMAIN, key, v)} />
-        <div className="dl-scenario-row">
-          <p className="ml-lbl">{scenarioPresetsLabel}</p>
-          <ScenarioPresets scenarios={GOLD_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
-          <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
-            <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
-          </button>
-        </div>
+        <PredictGate
+          predictId="gold-driver-predict" nodeId={NODE_ID} layer="mechanism"
+          question={GOLD_PREDICT_Q} options={[GOLD_PREDICT_SAME, GOLD_PREDICT_DIFFERENT]} correctIndex={1}
+          explain={GOLD_PREDICT_EXPLAIN}
+        >
+          <DriverPanel drivers={GOLD_DRIVERS} state={driverState} onChange={(key, v) => setDriver(DOMAIN, key, v)} />
+          <div className="dl-scenario-row">
+            <p className="ml-lbl">{scenarioPresetsLabel}</p>
+            <ScenarioPresets scenarios={GOLD_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
+            <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
+              <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
+            </button>
+          </div>
+        </PredictGate>
       </div>
 
       <div className="ml-section">
@@ -109,6 +163,16 @@ export default function GoldLabPage() {
         <p className="ml-section-sub">{traceIntro}</p>
         <TracePanel contributions={contributions} driversByKey={driversByKey} />
         <div className="ml-citation-row"><MLCitation synthetic /></div>
+      </div>
+
+      <div className="ml-section">
+        <DepthLadder
+          nodeId={NODE_ID}
+          spark={<SparkLayer />}
+          mechanism={<MechanismLayer />}
+          formalism={<FormalismLayer />}
+          criticalFrontier={<CriticalFrontierLayer />}
+        />
       </div>
     </div>
   );

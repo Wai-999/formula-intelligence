@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useMLDomainStore } from '../../../store/useMLDomainStore.js';
 import { useUIStore } from '../../../store/useUIStore.js';
+import { useUnderstandingStore } from '../../../store/useUnderstandingStore.js';
 import {
   computeElection, electionContributions, computeGeoRisk, geoRiskToGoldZ, ELECTION_REFERENCE, GEO_REFERENCE,
 } from './politicsModel.js';
@@ -10,8 +11,12 @@ import {
   GEO_CONTEXT, GEO_DRIVERS, GEO_SCENARIOS, GEO_TO_GOLD_LABEL,
   POLITICS_PAGE_TITLE, ELECTION_SECTION_TITLE, GEO_SECTION_TITLE, GEO_RISK_METER_LABEL,
   ELECTION_DAYS_RELATION, ELECTION_TRACE_LABEL,
+  ELECTION_PREDICT_Q, ELECTION_PREDICT_FUNDAMENTALS, ELECTION_PREDICT_POLLS, ELECTION_PREDICT_EXPLAIN,
+  GEO_PREDICT_Q, GEO_PREDICT_YES, GEO_PREDICT_NO, GEO_PREDICT_EXPLAIN,
+  POLITICS_SPARK_ANALOGY, POLITICS_MECHANISM_NOTE, POLITICS_FORMALISM_WORKED, POLITICS_FORMALISM_FADED,
+  POLITICS_CF_CONCRETE_EXAMPLE, POLITICS_CF_RETRIEVAL_Q, POLITICS_CF_RETRIEVAL_A,
 } from '../../../data/ml/domains/politics.js';
-import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE } from '../../../data/ml/uiStrings.js';
+import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE, UI_WORKED_EXAMPLE_LBL, UI_NOW_YOU_TRY_LBL } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import DriverPanel from '../../../components/ml/domain/DriverPanel.jsx';
@@ -19,12 +24,50 @@ import ScenarioPresets from '../../../components/ml/domain/ScenarioPresets.jsx';
 import TracePanel from '../../../components/ml/domain/TracePanel.jsx';
 import ProbabilityGauge from './ProbabilityGauge.jsx';
 import GeoRiskMeter from './GeoRiskMeter.jsx';
+import DepthLadder from '../../../components/ml/learning/DepthLadder.jsx';
+import PredictGate from '../../../components/ml/learning/PredictGate.jsx';
+import RetrievalCheck from '../../../components/ml/learning/RetrievalCheck.jsx';
+import MisconceptionCallout from '../../../components/ml/learning/MisconceptionCallout.jsx';
 import '../mlPageShared.css';
 import '../domainLabShared.css';
 import './PoliticsLabPage.css';
 
 const DOMAIN = 'politics';
+const NODE_ID = 'politics-lab';
 const electionDriversByKey = Object.fromEntries(ELECTION_DRIVERS.map((d) => [d.key, d]));
+
+function SparkLayer() {
+  const analogy = useT(POLITICS_SPARK_ANALOGY);
+  return <div className="dl-depth-layer"><p className="ml-body-text">{analogy}</p></div>;
+}
+function MechanismLayer() {
+  const note = useT(POLITICS_MECHANISM_NOTE);
+  return <div className="dl-depth-layer"><p className="ml-body-text">{note}</p></div>;
+}
+function FormalismLayer() {
+  const worked = useT(POLITICS_FORMALISM_WORKED);
+  const faded = useT(POLITICS_FORMALISM_FADED);
+  const workedLbl = useT(UI_WORKED_EXAMPLE_LBL);
+  const nowYouTryLbl = useT(UI_NOW_YOU_TRY_LBL);
+  return (
+    <div className="dl-depth-layer">
+      <p className="ml-lbl">{workedLbl}</p>
+      <p className="ml-body-text">{worked}</p>
+      <p className="ml-lbl">{nowYouTryLbl}</p>
+      <p className="ml-body-text">{faded}</p>
+    </div>
+  );
+}
+function CriticalFrontierLayer() {
+  const concrete = useT(POLITICS_CF_CONCRETE_EXAMPLE);
+  return (
+    <div className="dl-depth-layer">
+      <MisconceptionCallout misconceptionId="lessBiasedThanHumans" />
+      <p className="ml-body-text">{concrete}</p>
+      <RetrievalCheck nodeId={NODE_ID} question={POLITICS_CF_RETRIEVAL_Q} answer={POLITICS_CF_RETRIEVAL_A} />
+    </div>
+  );
+}
 
 export default function PoliticsLabPage() {
   const driverState = useMLDomainStore((s) => s.driverState[DOMAIN]);
@@ -32,6 +75,8 @@ export default function PoliticsLabPage() {
   const applyScenario = useMLDomainStore((s) => s.applyScenario);
   const resetDomain = useMLDomainStore((s) => s.resetDomain);
   const navigateToLinkedConcept = useUIStore((s) => s.navigateToLinkedConcept);
+  const markDomainVisited = useUnderstandingStore((s) => s.markDomainVisited);
+  useEffect(() => { markDomainVisited(DOMAIN); }, [markDomainVisited]);
 
   const politicsContext = useT(POLITICS_CONTEXT);
   const electionContext = useT(ELECTION_CONTEXT);
@@ -100,26 +145,32 @@ export default function PoliticsLabPage() {
           <p className="dp-relation">{daysRelation}</p>
         </div>
 
-        <DriverPanel
-          drivers={ELECTION_DRIVERS}
-          state={{ fundamentalsLean, pollsLean }}
-          onChange={(key, v) => setDriver(DOMAIN, key, v)}
-        />
+        <PredictGate
+          predictId="politics-election-predict" nodeId={NODE_ID} layer="mechanism"
+          question={ELECTION_PREDICT_Q} options={[ELECTION_PREDICT_FUNDAMENTALS, ELECTION_PREDICT_POLLS]} correctIndex={1}
+          explain={ELECTION_PREDICT_EXPLAIN}
+        >
+          <DriverPanel
+            drivers={ELECTION_DRIVERS}
+            state={{ fundamentalsLean, pollsLean }}
+            onChange={(key, v) => setDriver(DOMAIN, key, v)}
+          />
 
-        <ProbabilityGauge
-          winProbability={election.winProbability}
-          credibleWidth={election.credibleWidth}
-          incumbentLabel={incumbentLabel}
-          challengerLabel={challengerLabel}
-        />
+          <ProbabilityGauge
+            winProbability={election.winProbability}
+            credibleWidth={election.credibleWidth}
+            incumbentLabel={incumbentLabel}
+            challengerLabel={challengerLabel}
+          />
 
-        <div className="dl-scenario-row">
-          <p className="ml-lbl">{scenarioPresetsLabel}</p>
-          <ScenarioPresets scenarios={ELECTION_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
-          <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
-            <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
-          </button>
-        </div>
+          <div className="dl-scenario-row">
+            <p className="ml-lbl">{scenarioPresetsLabel}</p>
+            <ScenarioPresets scenarios={ELECTION_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
+            <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
+              <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
+            </button>
+          </div>
+        </PredictGate>
 
         <p className="ml-lbl politics-trace-lbl">{traceLabel}</p>
         <p className="ml-body-text">{electionTraceIntro}</p>
@@ -131,15 +182,31 @@ export default function PoliticsLabPage() {
         <p className="ml-section-title">{geoSectionTitle}</p>
         <p className="ml-section-sub">{geoContext}</p>
 
-        <DriverPanel drivers={GEO_DRIVERS} state={{ military, diplomatic, sanctions }} onChange={(key, v) => setDriver(DOMAIN, key, v)} />
+        <PredictGate
+          predictId="politics-geo-predict" nodeId={NODE_ID} layer="mechanism"
+          question={GEO_PREDICT_Q} options={[GEO_PREDICT_YES, GEO_PREDICT_NO]} correctIndex={1}
+          explain={GEO_PREDICT_EXPLAIN}
+        >
+          <DriverPanel drivers={GEO_DRIVERS} state={{ military, diplomatic, sanctions }} onChange={(key, v) => setDriver(DOMAIN, key, v)} />
 
-        <GeoRiskMeter riskScore={riskScore} label={riskMeterLabel} onSendToGold={handleSendToGold} buttonLabel={goldLinkLabel} />
+          <GeoRiskMeter riskScore={riskScore} label={riskMeterLabel} onSendToGold={handleSendToGold} buttonLabel={goldLinkLabel} />
 
-        <div className="dl-scenario-row">
-          <p className="ml-lbl">{scenarioPresetsLabel}</p>
-          <ScenarioPresets scenarios={GEO_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
-        </div>
+          <div className="dl-scenario-row">
+            <p className="ml-lbl">{scenarioPresetsLabel}</p>
+            <ScenarioPresets scenarios={GEO_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
+          </div>
+        </PredictGate>
         <div className="ml-citation-row"><MLCitation section="6.4" /></div>
+      </div>
+
+      <div className="ml-section">
+        <DepthLadder
+          nodeId={NODE_ID}
+          spark={<SparkLayer />}
+          mechanism={<MechanismLayer />}
+          formalism={<FormalismLayer />}
+          criticalFrontier={<CriticalFrontierLayer />}
+        />
       </div>
     </div>
   );
