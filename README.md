@@ -18,6 +18,10 @@ An interactive relationship map for Bluman's *Elementary Statistics* — 94 form
 
 All progress is stored locally in the browser (`localStorage`) — no account or backend required.
 
+## ML mode
+
+A second, parallel mode — switch via the toggle in the header. Nine tabs covering the ML pipeline, a full model relationship map, a bias-variance playground, an evaluation/explainability lab, and four real-world forecasting labs (Gold, Macro, Micro, Politics) linked back to Stats mode through an explicit Stats↔ML Bridge. Every page supports independent Beginner/Researcher depth and English/Burmese language toggles. No live data — every figure is either cited to `docs/research/ML-Research-Reference.md` or explicitly disclosed as illustrative; see [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md). Architecture and extension guide: [`docs/ML_MODE_README.md`](docs/ML_MODE_README.md).
+
 ## Tech stack
 
 - [React 19](https://react.dev/) + [Vite](https://vite.dev/)

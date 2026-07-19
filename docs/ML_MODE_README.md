@@ -1,0 +1,82 @@
+# ML Mode — Architecture & Extension Guide
+
+ML mode is a second, parallel mode alongside the app's original Stats mode (Bluman's *Elementary Statistics*), reachable via the Stats/ML switcher in the top header. Where Stats mode is a relationship map of 94 formulas, ML mode is nine modules covering the ML pipeline, the model landscape, a hands-on bias-variance sandbox, an evaluation/explainability lab, four real-world forecasting labs (Gold/Macro/Micro/Politics), and an explicit Stats↔ML conceptual bridge. Every claim of fact in it traces to `docs/research/ML-Research-Reference.md` or is disclosed as illustrative — see `docs/DATA_SOURCES.md` for the full breakdown. Nothing in ML mode calls a live API; every figure is frozen at build time.
+
+This document is for whoever adds the next thing to ML mode — most concretely, a 13th domain lab alongside Gold/Macro/Micro/Politics. `src/lib/domainModel.js`'s own header comment points here for exactly that reason.
+
+## The nine modules, and where their code lives
+
+| # | Module | Tab id | Page component | Data file |
+|---|---|---|---|---|
+| 2 | Pipeline | `pipeline` | `src/features/ml/pipeline/PipelinePage.jsx` | `src/data/ml/pipeline.js`, `estimationPredictionCausal.js` |
+| 3 | Model Map | `modelmap` | `src/features/ml/modelmap/ModelMapPage.jsx` | `src/data/ml/models.js` |
+| 4 | Playground | `playground` | `src/features/ml/playground/PlaygroundPage.jsx` | `src/data/ml/playground.js` |
+| 5 | Evaluation | `evaluation` | `src/features/ml/evaluation/EvaluationPage.jsx` | `src/data/ml/evaluation.js` |
+| 6 | Gold | `gold` | `src/features/ml/gold/GoldLabPage.jsx` | `src/data/ml/domains/gold.js` |
+| 7 | Macro | `macro` | `src/features/ml/macro/MacroLabPage.jsx` | `src/data/ml/domains/macro.js` |
+| 8 | Micro | `micro` | `src/features/ml/micro/MicroLabPage.jsx` | `src/data/ml/domains/micro.js`, `src/features/ml/micro/demandModel.js` |
+| 9 | Politics | `politics` | `src/features/ml/politics/PoliticsLabPage.jsx` | `src/data/ml/domains/politics.js`, `src/features/ml/politics/politicsModel.js` |
+| 10 | Bridge | `bridge` | `src/features/ml/bridge/BridgePage.jsx` | `src/data/ml/bridge.js` |
+
+(Module numbering starts at 2 because Module 1 is the shared shell/mode-switcher itself — `src/components/layout/AppShell.jsx`, `MLBody.jsx`, `MLIconRail.jsx` — not a tab.)
+
+Modules 6–9 (the four domain labs) share one architecture, described below. Modules 2–5 and 10 are each structurally bespoke — read the existing page for the closest analog before inventing a new pattern.
+
+## The bilingual + depth-toggle system — read this before writing any new string
+
+Every visible string in ML mode goes through one system, defined in `src/lib/mlContent.js`:
+
+```js
+bl(enBeginner, enResearcher, myBeginner, myResearcher)   // forks by depth AND language
+blSame(en, my)                                            // same text at both depths, forks only by language
+useT(content)                                              // hook: resolves a bl()/blSame() object to the current string
+```
+
+`bl()`/`blSame()` return a `{ en: { beginner, researcher }, my: { beginner, researcher } }` object. `useT()` reads the current level (`beginner`/`researcher`) and language (`en`/`my`) from `useMLUIStore` and resolves it. Every data file constant that's ever rendered as text — not just paragraph content, but **section titles, field labels, button text, chart legends, and SVG axis/annotation text** — must be wrapped this way and resolved via `useT()` in the component. Never put a raw string literal in ML-mode JSX.
+
+**This is not a hypothetical warning.** Module 11 of this build was an entire pass dedicated to discovering and fixing exactly this mistake: page chrome (titles, labels, legends) had been passed as raw English literals since Module 2, while body content was correctly wrapped the whole time — the pattern was never *wrong*, it was just never applied to chrome, and every new module copied the same gap from the last one. Two follow-on sweeps after the "complete" pass still found more (`MLCitation`'s own text, `TracePanel`'s empty-state message, the app banner's subtitle, a bespoke chart's axis label) — each missed for a different mechanical reason (living outside the searched directories, or exceeding a regex length cap during verification). The lesson: wrap every string as you write it, the first time. Retrofitting is real, repeated, tedious work, and a grep sweep after the fact is not a substitute for getting it right when the string is first typed. See `BUILD_LOG.md`'s Module 11 entry and its addendum for the full account.
+
+A few established conventions worth following rather than re-deciding:
+- **Short ML/stats terms of art stay English loanwords in the Burmese variant** — model names (ARIMA, XGBoost, Random Forest…), metric abbreviations (MAE, RMSE, MSE), and words like "train"/"test"/"Underfitting" are `blSame('X', 'X')`, not translated. This matches how Burmese technical writing actually treats these terms in practice, and how the research doc's own vocabulary is used throughout the app.
+- **Dynamic values are interpolated separately from their label**, never baked into a template string per possible value: `` `${label}: ${value}` ``, not one `bl()` entry per value. The one exception is a value embedded *inside* a sentence (not at a fixed prefix) where English and Burmese word order diverge — there, store one full-sentence template per language with literal `{token}` placeholders and `.replace()` them in, so word order stays grammatical in both languages. `EV_WF_SUB_TEMPLATE` in `evaluation.js` is the worked example.
+- **`aria-label` attributes are out of scope** for the bilingual requirement — they're screen-reader-only, not visible content. Don't spend time on them; don't feel obligated to "fix" one you notice.
+- Titles/labels almost never need to fork by depth level (`bl()`'s beginner/researcher axis) — use `blSame()` unless the wording genuinely needs to differ, which is far more common in body/explanatory text (a `howItWorks` field, a model `note`) than in a title or button.
+
+## The domain-lab template (Gold/Macro/Micro/Politics)
+
+Gold is the reference implementation — read `src/features/ml/gold/GoldLabPage.jsx` and `src/data/ml/domains/gold.js` side by side before building a new domain; everything below names its exact pieces.
+
+### Shared infrastructure (reuse, don't reinvent)
+
+- **`useMLDomainStore`** (`src/store/useMLDomainStore.js`) — one Zustand store for every domain lab's slider/scenario state, keyed by domain id: `driverState: { gold: {}, macro: {}, ... }`. Actions: `setDriver(domain, key, value)`, `applyScenario(domain, state)` (replaces the whole domain's state at once), `resetDomain(domain)`.
+- **`DriverPanel`** (`src/components/ml/domain/DriverPanel.jsx`) — generic slider row list. Props: `drivers` (array of `{key, label, relation}`), `state`, `onChange`, optional `min`/`max` (default ±2, a rough z-score range).
+- **`ScenarioPresets`** (`.../ScenarioPresets.jsx`) — generic preset-button row. Props: `scenarios` (array of `{id, label, state}`), `onApply`. Clicking a preset overwrites the *entire* domain state at once via `applyScenario` — always specify every field a preset should set, even ones that happen to match the current value, or an omitted field will silently reset to its `?? 0` fallback (a real bug caught in Module 9).
+- **`ForecastBandChart`** + **`TracePanel`** (`.../ForecastBandChart.jsx`, `.../TracePanel.jsx`) — the "N drivers → 4 model lenses, each reacting differently" chart and its accompanying per-driver decomposition panel. Both accept `unit`/`unitPosition`/`decimals` props (defaults: `'$'`/`'prefix'`/`0`, i.e. Gold's whole-dollar formatting) — pass `unitPosition="suffix"` and `decimals > 0` for a percentage-point-scale or otherwise non-dollar domain, or the chart will round your values to indistinguishable integers (a real latent bug, exposed by Macro in Module 7).
+- **`computeModelForecasts(baseValue, drivers, driverState, baseBandWidth)`** + **`driverContributions(drivers, driverState)`** (`src/lib/domainModel.js`) — the generic 4-lens math (econometric/deep-learning/tree-ensemble/volatility), if your domain's four models' *qualitative* behavior matches the doc's comparative findings closely enough to reuse (see the file's own header comment for what each lens represents and why). If it doesn't, write a bespoke compute function next to your domain (see `computeMacroForecasts` in the same file, or Micro/Politics's own model files, for the alternative).
+- **`MLCitation`** (`src/components/ml/MLCitation.jsx`) — `<MLCitation section="6.1" />` for a doc-cited figure, `<MLCitation synthetic />` for an illustrative one. Every section of a domain page ends with one or the other. Both are already bilingual — no action needed from a new domain beyond using the component.
+- **`useMLUIStore`**'s `ML_TABS` array — the tab registry consumed by both the icon rail and the page header.
+
+### Step by step
+
+1. **Register the tab.** Add an entry to `ML_TABS` in `src/store/useMLUIStore.js`: `{ id, label (plain string, aria/title only), title (blSame() — the visible header), icon (a Tabler icon class), module (the number) }`.
+2. **Add the domain's default slice.** Add `mydomain: {}` to `useMLDomainStore`'s initial `driverState`.
+3. **Write the data file**, `src/data/ml/domains/mydomain.js`: a base value + band (if using the standard chart), `..._CONTEXT` (`bl()`, the section-1 intro paragraph — cite the real doc figures here if any exist for your domain, disclose as illustrative if not), `..._DRIVERS` (array of `{key, coefficient, label, relation}`, one `volDriver: true` flag on whichever driver should widen the GARCH-style lens's band, if your domain has a natural "risk" driver), `..._MODELS` (array of `{key, name, color, note}`), `..._SCENARIOS` (array of `{id, label, state}` — full-state snapshots, per the caveat above), `..._TRACE_INTRO` (`bl()`), and the page-chrome constants (`..._PAGE_TITLE`, `..._DRIVERS_TITLE`, `..._MODELS_TITLE`, `..._MODELS_SUB`, `..._TRACE_TITLE` — all `blSame()`, wired in from the start per the bilingual section above).
+4. **Write the page**, `src/features/ml/mydomain/MyDomainLabPage.jsx`: a `DOMAIN` id constant, a `driversByKey` lookup built once at module scope, the four `useMLDomainStore` hooks, `useT()` for every chrome constant up front, `useMemo`'d `computeModelForecasts`/`driverContributions` calls, then four `ml-section` blocks in the established order — context+citation, drivers+scenarios+reset, models+chart+notes, trace+citation. Copy `GoldLabPage.jsx`'s structure directly; the differences between Gold/Macro/Micro/Politics are all in the data file and (for Micro/Politics) the chart, not this scaffold.
+5. **Register the page**, in `src/components/layout/MLBody.jsx`: add a `lazy(() => import(...))` line and a `FEATURES` map entry keyed by your tab id. This is also what makes the page keep-alive-mounted (kept in the DOM, `display:none` when its tab isn't active) rather than unmounted on tab switch — every ML page's own state survives a tab switch for free via this pattern, with no extra work required.
+6. **If cross-linking to/from another domain** (the way Politics sets Gold's `geoRisk`, or Bridge routes into both Stats mode's Map and Politics): call `useUIStore().navigateToLinkedConcept(mode, tab, payload)` to send, and consume with a `useEffect` that checks `linkedConcept?.tab === 'mydomain'` before acting on it — because every ML page mounts simultaneously (step 5's keep-alive pattern), every page's effects run on every `linkedConcept` change, not just the one addressed to them. Call `clearLinkedConcept()` from *inside* whatever timeout/callback consumes the payload, not synchronously in the effect body — doing it synchronously when `linkedConcept` is that same effect's own dependency cancels any pending timer before it fires (a real bug caught in Module 10).
+7. **Verify**: `npm run build`, `npm run lint`, then in-browser: toggle Beginner/Researcher and EN/Burmese and confirm every string on the page actually changes (not just compiles); check the console for errors (this app has no error boundaries — see below — so a single bad lookup white-screens everything, and the browser console is the only way to see why); check 360/768/1920px if your page has an SVG chart wider than its container (wrap it with `useHorizontalScrollHint`, `src/lib/useHorizontalScrollHint.js`, the way `ForecastBandChart` and `DemandCurveChart` both do, rather than leaving it silently clipped on narrow viewports). Write a `BUILD_LOG.md` entry following the existing Built/Files touched/Decisions/Verification structure.
+
+### When the standard chart doesn't fit — deviate deliberately, not by accident
+
+- **A continuous single driver instead of N discrete ones** (Micro's price): don't force it through `DriverPanel`'s multi-slider grid. `DriverPanel`, `ScenarioPresets`, and `TracePanel` are all genuinely shape-agnostic — none of them cares whether a "driver key" is a z-score-scaled macro signal or a dollar price — so you can still reuse them; only the chart itself (`DemandCurveChart.jsx`) needs to be bespoke. Write your own D3 SVG, but still route every piece of on-chart text through `useT()`, including axis-unit labels — this specific blind spot (a bespoke chart's own internal text) was missed twice in this build's own bilingual pass.
+- **Two independent sub-mechanisms sharing one page** (Politics' election model + geo-risk score): give each its own `DriverPanel`/`ScenarioPresets`/`TracePanel` instance and its own compute function, but let them share one domain's `driverState` slice (they can still coexist as different keys in the same object) rather than inventing a second store.
+- **A single composite score, not a forecast band** (Politics' geo-risk meter, the election-probability gauge): a full coordinate-system chart is the wrong tool for one number. Follow `CompassMeter`'s precedent (Module 3) — a compact, lightweight CSS meter, not an SVG chart.
+- **Doesn't fit "forecasting lab" at all** (Bridge, a comparison/cross-link hub): don't force it into this template. Bridge has its own bespoke `ComparisonCard`/`StatsNodeLink` pattern for exactly this reason — some content is not a domain lab, and pretending otherwise produces a worse fit than just writing new components.
+
+## A note on this specific development/verification environment
+
+If you verify a new module's chart against this project's browser-automation test harness (rather than a real browser), be aware: the harness never grants a tab genuine OS-level foreground focus (`document.visibilityState` stays `"hidden"` even after explicitly selecting the tab), which silently throttles `requestAnimationFrame`-driven work — smooth-scroll animations, some `ResizeObserver` notifications — indefinitely, while synchronous script-dispatched events and `setTimeout`s continue to work normally. If a scroll-hint or smooth-scroll interaction appears to "not work" during testing, don't assume it's broken — add temporary instrumentation (a `window.__debug` trace array inside the effect) and check whether the underlying call fired correctly on a valid target before concluding otherwise. This pattern recurred three times across Modules 6, 7, and 10 in this build and was mis-diagnosable as a real bug each time until directly instrumented.
+
+## Known limitation, not fixed here
+
+**This app has no error boundary anywhere in its component tree.** A single bad prop, a `undefined.property` access, or a key-mismatch lookup — several of which were real bugs caught during this build (Module 9's `electionContributions()` key mismatch, Module 10's array-vs-string `bl()` bug) — unmounts the *entire* app to a blank page, not just the offending component, with the only diagnostic trail being a console error. This was flagged repeatedly during the build (Modules 9, 10, 11) as a hardening candidate and deliberately not fixed in any of them, since it's cross-cutting infrastructure (a single top-level `ErrorBoundary` wrapping `AppShell`, most likely) that touches both Stats and ML mode equally and doesn't belong inside any one module's diff. Whoever picks this up next: it's a small, contained, high-value fix — a good first task for anyone extending this app further.
