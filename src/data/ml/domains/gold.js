@@ -85,3 +85,16 @@ export const GOLD_LINK_BANNER = blSame(
   "Geopolitical risk was just set from the Politics lab's risk index.",
   'ပထဝီရေးအန္တရာယ်ကို Politics lab ၏ risk index မှ အခုလေးတင် သတ်မှတ်လိုက်သည်။'
 );
+
+// Module 11 audit: section titles were hardcoded English in GoldLabPage.jsx
+// (missed during Module 6 — every module built since repeated the same
+// gap, see BUILD_LOG.md Module 11). Titles don't fork by depth level, only
+// language, hence blSame().
+export const GOLD_PAGE_TITLE = blSame('Gold Price Forecasting Lab', 'ရွှေဈေးနှုန်း ခန့်မှန်းချက် Lab');
+export const GOLD_DRIVERS_TITLE = blSame('Drivers', 'Driver များ');
+export const GOLD_MODELS_TITLE = blSame('Four models, one set of drivers', 'မော်ဒယ် လေးခု၊ Driver အစုံတစ်ခု');
+export const GOLD_TRACE_TITLE = blSame('Why did this move?', 'ဒါက ဘာကြောင့် ရွှေ့သွားတာလဲ?');
+export const GOLD_MODELS_SUB = blSame(
+  'Move a driver above and watch all four react — differently.',
+  'အထက်ပါ driver တစ်ခုကို ရွှေ့ပြီး လေးခုလုံး ဘယ်လိုတုံ့ပြန်လဲ ကြည့်ပါ — ကွဲပြားစွာဖြစ်သည်။'
+);

@@ -1,11 +1,14 @@
 import * as d3 from 'd3';
 import { trueFunction } from '../../../lib/mlSandbox.js';
+import { PG_TRUE_FUNCTION } from '../../../data/ml/playground.js';
+import { useT } from '../../../lib/mlContent.js';
 
 const W = 460;
 const H = 260;
 const MARGIN = { top: 12, right: 12, bottom: 28, left: 36 };
 
 export default function ScatterFitChart({ dataset, predict }) {
+  const trueFunctionLbl = useT(PG_TRUE_FUNCTION);
   const x = d3.scaleLinear().domain([dataset.xMin, dataset.xMax]).range([MARGIN.left, W - MARGIN.right]);
   const allY = [...dataset.train, ...dataset.val].map((p) => p.y);
   const yExtent = d3.extent(allY);
@@ -28,7 +31,7 @@ export default function ScatterFitChart({ dataset, predict }) {
         <circle key={`v${i}`} cx={x(p.x)} cy={y(p.y)} r={2.6} className="sf-point sf-point-val" />
       ))}
       <text x={W - MARGIN.right} y={MARGIN.top + 8} textAnchor="end" className="sf-legend-text">
-        <tspan className="sf-legend-truth">— true function</tspan>
+        <tspan className="sf-legend-truth">— {trueFunctionLbl}</tspan>
       </text>
     </svg>
   );

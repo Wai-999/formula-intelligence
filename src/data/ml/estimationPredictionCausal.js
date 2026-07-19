@@ -1,4 +1,15 @@
-import { bl } from '../../lib/mlContent.js';
+import { bl, blSame } from '../../lib/mlContent.js';
+
+// Module 11 audit (see gold.js's identical note in domains/).
+export const EPC_TITLE = blSame(
+  'Estimation vs. Prediction vs. Causal Inference',
+  'ခန့်မှန်းခြင်း vs. ကြိုတင်ဟောကိန်း vs. အကြောင်းရင်း ခြေရာခံခြင်း'
+);
+export const EPC_GOAL_LBL = blSame('Goal', 'ရည်မှန်းချက်');
+export const EPC_OUTPUT_LBL = blSame('Typical output', 'ပုံမှန် Output');
+export const EPC_EXAMPLE_LBL = blSame('Example', 'ဥပမာ');
+export const EPC_METHODS_LBL = blSame('Method family', 'နည်းလမ်းအုပ်စု');
+export const EPC_FAILURE_LBL = blSame('Failure mode if confused', 'ရှုပ်ထွေးမိလျှင် မှားယွင်းနိုင်ပုံ');
 
 // Source: docs/research/ML-Research-Reference.md §2. The single most
 // important conceptual hinge between Stats mode and ML mode — built as its
@@ -126,4 +137,34 @@ export const EPC_BRIDGE_NOTE = bl(
   'Why this matters for the mode switch: the same underlying object supports two questions — the Stats lens asks whether a coefficient is statistically significant, the ML lens asks how well the fitted model generalizes out-of-sample. Module 10 makes this a live, side-by-side interaction on identical data.',
   'Mode switch အတွက် ဘာကြောင့်အရေးကြီးလဲဆိုတော့: မော်ဒယ်တစ်ခုတည်း (ဥပမာ "ရွှေစျေးနှုန်းကို real yields ပေါ် linear regression") ကို မှန်ဘီလူးနှစ်မျိုးဖြင့် ကြည့်နိုင်သည်။ Stats က "ဒီ coefficient ကို ဘယ်လောက်ယုံကြည်လဲ" ဟု မေးပြီး ML က "ဒါက လာမယ့်သုံးလပတ် ရွှေစျေးနှုန်းအတွက် ဘယ်လောက်ကောင်းစွာ အလုပ်လုပ်မလဲ" ဟု မေးသည်။ Module 10 ၏ Stats↔ML Bridge တွင် စမ်းကြည့်ပါ။',
   'Mode switch အတွက် အရေးကြီးသည့်အကြောင်းရင်း: underlying object တစ်ခုတည်းသည် မေးခွန်းနှစ်ခုကို ဖြေဆိုနိုင်သည် — Stats မှန်ဘီလူးက coefficient သည် statistically significant ဖြစ်မဖြစ် မေးပြီး၊ ML မှန်ဘီလူးက fit လုပ်ပြီးသား မော်ဒယ်သည် out-of-sample တွင် မည်မျှ generalize ဖြစ်သည်ကို မေးသည်။ Module 10 တွင် တူညီသော data ပေါ်၌ side-by-side live interaction အဖြစ် ပြသထားသည်။'
+);
+
+// Module 11 audit: the three per-column demo components (Estimation/
+// Prediction/Causal) also had hardcoded English labels and body text.
+export const EST_DEMO_LBL = blSame('Same coefficient, Stats-mode lens', 'Coefficient တူတူ၊ Stats-mode Lens');
+export const EST_DEMO_TEXT = blSame(
+  "A frequentist confidence interval like Stats mode's own t CI for the mean treats the parameter as fixed and the interval as random. A posterior distribution flips that: the parameter itself is treated as uncertain. Same-looking interval, different meaning underneath.",
+  'Stats mode ၏ mean အတွက် t CI ကဲ့သို့သော frequentist confidence interval သည် parameter ကို ပုံသေထားပြီး interval ကို ကျပန်းအဖြစ် သတ်မှတ်သည်။ Posterior distribution က ဒါကို ပြောင်းပြန်လှန်သည်: parameter ကိုယ်တိုင်ကို မသေချာဟု သတ်မှတ်သည်။ ပုံစံတူ interval ဖြစ်သော်လည်း အဓိပ္ပာယ် မတူပါ။'
+);
+export const EST_DEMO_BTN = blSame(
+  'See this compared side-by-side in the Stats ↔ ML Bridge',
+  'ဒါကို Stats ↔ ML Bridge တွင် side-by-side နှိုင်းယှဉ်ကြည့်ရန်'
+);
+
+export const PRED_DEMO_LBL = blSame('Point forecast + prediction interval', 'Point Forecast + Prediction Interval');
+export const PRED_DEMO_TEXT = blSame(
+  '"Gold will trade at $4,180 ± $150 next month" — a single best guess (the dot) plus a band of plausible outcomes (the shaded range), not a claim about a fixed, knowable parameter.',
+  '"ရွှေက လာမယ့်လမှာ $4,180 ± $150 မှာ ရောင်းဝယ်လိမ့်မယ်" — အကောင်းဆုံး ခန့်မှန်းချက်တစ်ခု (အစက်) ပေါင်း ဖြစ်နိုင်ချေရှိသော ရလဒ်အပိုင်းအခြား (အရိပ်ရှိသော range) ဖြစ်ပြီး၊ ပုံသေ၊ သိနိုင်သော parameter အကြောင်း ဆိုလိုချက်မဟုတ်ပါ။'
+);
+
+export const CONF_DEMO_LBL = blSame('The classic confounder pitfall', 'Classic Confounder အမှား');
+export const CONF_DEMO_TEXT = blSame(
+  "A model can predict gold accurately using DXY as a feature — but DXY doesn't cause gold to move. Both react to the same underlying driver (Fed policy). Predictive power alone never tells you which arrows in this diagram are real.",
+  'မော်ဒယ်တစ်ခုသည် DXY ကို feature အဖြစ်သုံးပြီး ရွှေကို တိကျစွာ ခန့်မှန်းနိုင်သည် — သို့သော် DXY သည် ရွှေကို မရွှေ့စေပါ။ နှစ်ခုစလုံးသည် underlying driver တစ်ခုတည်း (Fed မူဝါဒ) ကို တုံ့ပြန်နေခြင်းသာဖြစ်သည်။ Predictive power တစ်ခုတည်းက ဒီပုံထဲက မြားများထဲက ဘယ်ဟာက စစ်မှန်သလဲဆိုတာ ဘယ်တော့မှ မပြောပြနိုင်ပါ။'
+);
+export const CONF_FED_LABEL = blSame('Fed policy (the real driver)', 'Fed မူဝါဒ (တကယ့် Driver)');
+export const CONF_DXY_LABEL = blSame('DXY', 'DXY');
+export const CONF_GOLD_LABEL = blSame('Gold price', 'ရွှေဈေးနှုန်း');
+export const CONF_PREDICTS_LABEL = blSame('predicts well —', 'ကောင်းစွာ ခန့်မှန်းနိုင် —');
+export const CONF_BUTDOESNT_LABEL = blSame("but doesn't cause", 'ဒါပေမဲ့ မဖြစ်စေပါ'
 );

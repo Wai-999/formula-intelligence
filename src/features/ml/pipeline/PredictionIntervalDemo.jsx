@@ -1,5 +1,10 @@
+import { PRED_DEMO_LBL, PRED_DEMO_TEXT } from '../../../data/ml/estimationPredictionCausal.js';
+import { useT } from '../../../lib/mlContent.js';
+
 // Point forecast + interval — the concrete visual for the Prediction column.
 export default function PredictionIntervalDemo() {
+  const lbl = useT(PRED_DEMO_LBL);
+  const text = useT(PRED_DEMO_TEXT);
   const point = 4180;
   const margin = 150;
   const lo = point - margin;
@@ -10,7 +15,7 @@ export default function PredictionIntervalDemo() {
 
   return (
     <div className="epc-demo">
-      <p className="ml-lbl">Point forecast + prediction interval</p>
+      <p className="ml-lbl">{lbl}</p>
       <div className="epc-interval">
         <div className="epc-interval-track">
           <div
@@ -25,10 +30,7 @@ export default function PredictionIntervalDemo() {
           <span>${hi.toLocaleString()}</span>
         </div>
       </div>
-      <p className="ml-body-text">
-        "Gold will trade at $4,180 ± $150 next month" — a single best guess (the dot) plus a band of
-        plausible outcomes (the shaded range), not a claim about a fixed, knowable parameter.
-      </p>
+      <p className="ml-body-text">{text}</p>
     </div>
   );
 }

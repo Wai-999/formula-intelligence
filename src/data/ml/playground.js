@@ -1,4 +1,4 @@
-import { bl } from '../../lib/mlContent.js';
+import { bl, blSame } from '../../lib/mlContent.js';
 
 export const PLAYGROUND_INTRO = bl(
   'Pick a model and drag the complexity slider to its extremes. Watch the fitted curve — and the gap between the two error lines below it — change.',
@@ -32,3 +32,28 @@ export const FIT_ZONES = {
     'Overfitting (variance မြင့်): မော်ဒယ်သည် training set ရှိ noise ကို fit လုပ်ရန် စွမ်းရည်လုံလောက်သည်; train error ဆက်ကျနေစဉ် validation error တက်လာပြီး generalization gap ကျယ်လာသည်။'
   ),
 };
+
+// Module 11 audit: page-chrome strings (title/labels/legend) that were
+// previously hardcoded English in PlaygroundPage.jsx.
+export const PG_TITLE = blSame('Model Playground', 'မော်ဒယ် Playground');
+export const PG_MODEL_LBL = blSame('Model', 'မော်ဒယ်');
+export const PG_NOISE_LBL = blSame('Noise level', 'Noise ပမာဏ');
+export const PG_NEW_SAMPLE_BTN = blSame('New sample', 'နမူနာအသစ်');
+export const PG_FIT_LBL = blSame('Fit', 'Fit');
+export const PG_TRAINING_POINTS = blSame('training points', 'training အချက်များ');
+export const PG_VALIDATION_POINTS = blSame('validation points', 'validation အချက်များ');
+export const PG_TRUE_FUNCTION = blSame('true function', 'စစ်မှန်သော function');
+export const PG_ERROR_CURVE_LBL = blSame(
+  'Train vs. validation error across all complexities',
+  'ရှုပ်ထွေးမှု အပိုင်းအခြားတစ်ခုလုံးရှိ Train vs. validation error'
+);
+export const PG_TRAINING_ERROR = blSame('training error', 'training error');
+export const PG_VALIDATION_ERROR = blSame('validation error', 'validation error');
+export const PG_BEST_ON_VAL = blSame('best on validation', 'validation ပေါ်တွင် အကောင်းဆုံး');
+export const PG_UNDERFITTING = blSame('Underfitting', 'Underfitting');
+export const PG_OVERFITTING = blSame('Overfitting', 'Overfitting');
+export const PG_GOOD_FIT = blSame('Good fit', 'Good Fit');
+export const PG_TRAIN_MSE_LBL = blSame('train MSE', 'train MSE');
+export const PG_VAL_MSE_LBL = blSame('validation MSE', 'validation MSE');
+export const PG_LOW_COMPLEXITY = blSame('low complexity', 'ရှုပ်ထွေးမှု နိမ့်');
+export const PG_HIGH_COMPLEXITY = blSame('high complexity', 'ရှုပ်ထွေးမှု မြင့်');

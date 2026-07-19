@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PIPELINE_STAGES } from '../../../data/ml/pipeline.js';
+import { PIPELINE_STAGES, PIPELINE_TITLE, PIPELINE_INTRO, PIPELINE_WHAT_LBL, PIPELINE_GOLD_LBL } from '../../../data/ml/pipeline.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import './PipelineVisualizer.css';
@@ -9,13 +9,16 @@ function StageDetail({ stage }) {
   const what = useT(stage.what);
   const goldExample = useT(stage.goldExample);
 
+  const whatLbl = useT(PIPELINE_WHAT_LBL);
+  const goldLbl = useT(PIPELINE_GOLD_LBL);
+
   return (
     <div className="pv-detail">
       <p className="pv-detail-q">{question}</p>
-      <p className="ml-lbl">What happens</p>
+      <p className="ml-lbl">{whatLbl}</p>
       <p className="ml-body-text">{what}</p>
       <p className="ml-lbl pv-gold-lbl">
-        <i className="ti ti-coin" aria-hidden="true" /> Gold worked example
+        <i className="ti ti-coin" aria-hidden="true" /> {goldLbl}
       </p>
       <p className="ml-body-text pv-gold-text">{goldExample}</p>
     </div>
@@ -25,13 +28,13 @@ function StageDetail({ stage }) {
 export default function PipelineVisualizer() {
   const [openId, setOpenId] = useState(PIPELINE_STAGES[0].id);
   const openStage = PIPELINE_STAGES.find((s) => s.id === openId);
+  const title = useT(PIPELINE_TITLE);
+  const intro = useT(PIPELINE_INTRO);
 
   return (
     <div className="ml-section">
-      <p className="ml-section-title">The ML Pipeline: From Data to Decision</p>
-      <p className="ml-section-sub">
-        Every ML system moves through the same seven stages — click any stage to see what happens there, worked through with gold price forecasting as a running example (previewing Module 6).
-      </p>
+      <p className="ml-section-title">{title}</p>
+      <p className="ml-section-sub">{intro}</p>
       <div className="pv-track">
         {PIPELINE_STAGES.map((stage, i) => (
           <div className="pv-track-item" key={stage.id}>

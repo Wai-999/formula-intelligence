@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { generateDataset, fitPolynomial, fitTree, computeMetrics } from '../../../lib/mlSandbox.js';
-import { METRICS_INTRO, METRIC_DEFS } from '../../../data/ml/evaluation.js';
+import {
+  METRICS_INTRO, METRIC_DEFS, EV_METRICS_TITLE, EV_POLY_BTN, EV_TREE_BTN, EV_COMPLEXITY_LBL,
+} from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 
@@ -23,6 +25,10 @@ export default function MetricsPanel() {
   const [modelId, setModelId] = useState('poly');
   const [complexity, setComplexity] = useState(4);
   const intro = useT(METRICS_INTRO);
+  const title = useT(EV_METRICS_TITLE);
+  const polyBtn = useT(EV_POLY_BTN);
+  const treeBtn = useT(EV_TREE_BTN);
+  const complexityLbl = useT(EV_COMPLEXITY_LBL);
 
   const dataset = useMemo(() => generateDataset(0.8, 42), []);
   const fitted = useMemo(
@@ -33,15 +39,15 @@ export default function MetricsPanel() {
 
   return (
     <div className="ml-section">
-      <p className="ml-section-title">Evaluation Metrics</p>
+      <p className="ml-section-title">{title}</p>
       <p className="ml-section-sub">{intro}</p>
       <div className="mp-controls">
         <div className="pg-model-toggle">
-          <button type="button" className={`pg-model-btn${modelId === 'poly' ? ' active' : ''}`} onClick={() => setModelId('poly')}>Polynomial</button>
-          <button type="button" className={`pg-model-btn${modelId === 'tree' ? ' active' : ''}`} onClick={() => setModelId('tree')}>Decision Tree</button>
+          <button type="button" className={`pg-model-btn${modelId === 'poly' ? ' active' : ''}`} onClick={() => setModelId('poly')}>{polyBtn}</button>
+          <button type="button" className={`pg-model-btn${modelId === 'tree' ? ' active' : ''}`} onClick={() => setModelId('tree')}>{treeBtn}</button>
         </div>
         <div className="mp-complexity">
-          <span className="ml-lbl">Complexity: {complexity}</span>
+          <span className="ml-lbl">{complexityLbl}: {complexity}</span>
           <input type="range" min="1" max={modelId === 'tree' ? 8 : 12} value={complexity} onChange={(e) => setComplexity(Number(e.target.value))} className="pg-slider" />
         </div>
       </div>

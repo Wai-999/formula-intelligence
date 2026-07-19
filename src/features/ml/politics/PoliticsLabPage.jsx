@@ -8,7 +8,10 @@ import {
   POLITICS_CONTEXT, ELECTION_CONTEXT, ELECTION_DRIVERS, ELECTION_SCENARIOS, ELECTION_TRACE_INTRO,
   ELECTION_INCUMBENT_LABEL, ELECTION_CHALLENGER_LABEL, ELECTION_DAYS_LABEL,
   GEO_CONTEXT, GEO_DRIVERS, GEO_SCENARIOS, GEO_TO_GOLD_LABEL,
+  POLITICS_PAGE_TITLE, ELECTION_SECTION_TITLE, GEO_SECTION_TITLE, GEO_RISK_METER_LABEL,
+  ELECTION_DAYS_RELATION, ELECTION_TRACE_LABEL,
 } from '../../../data/ml/domains/politics.js';
+import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import DriverPanel from '../../../components/ml/domain/DriverPanel.jsx';
@@ -38,6 +41,14 @@ export default function PoliticsLabPage() {
   const daysLabel = useT(ELECTION_DAYS_LABEL);
   const geoContext = useT(GEO_CONTEXT);
   const goldLinkLabel = useT(GEO_TO_GOLD_LABEL);
+  const pageTitle = useT(POLITICS_PAGE_TITLE);
+  const electionSectionTitle = useT(ELECTION_SECTION_TITLE);
+  const geoSectionTitle = useT(GEO_SECTION_TITLE);
+  const riskMeterLabel = useT(GEO_RISK_METER_LABEL);
+  const daysRelation = useT(ELECTION_DAYS_RELATION);
+  const traceLabel = useT(ELECTION_TRACE_LABEL);
+  const scenarioPresetsLabel = useT(UI_SCENARIO_PRESETS);
+  const resetLabel = useT(UI_RESET_TO_BASELINE);
 
   const fundamentalsLean = driverState.fundamentalsLean ?? 0;
   const pollsLean = driverState.pollsLean ?? 0;
@@ -67,13 +78,13 @@ export default function PoliticsLabPage() {
   return (
     <div className="ml-page">
       <div className="ml-section">
-        <p className="ml-section-title"><i className="ti ti-flag" aria-hidden="true" /> Political & Geopolitical Forecasting</p>
+        <p className="ml-section-title"><i className="ti ti-flag" aria-hidden="true" /> {pageTitle}</p>
         <p className="ml-section-sub">{politicsContext}</p>
         <div className="ml-citation-row"><MLCitation section="6.4" /></div>
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Election forecasting</p>
+        <p className="ml-section-title">{electionSectionTitle}</p>
         <p className="ml-section-sub">{electionContext}</p>
 
         <div className="politics-days-row">
@@ -86,7 +97,7 @@ export default function PoliticsLabPage() {
             onChange={(e) => setDriver(DOMAIN, 'daysUntilElection', Number(e.target.value))}
             className="pg-slider dp-slider"
           />
-          <p className="dp-relation">Closer to election day → real polls outweigh the structural prior, and the credible interval narrows.</p>
+          <p className="dp-relation">{daysRelation}</p>
         </div>
 
         <DriverPanel
@@ -103,29 +114,29 @@ export default function PoliticsLabPage() {
         />
 
         <div className="dl-scenario-row">
-          <p className="ml-lbl">Scenario presets</p>
+          <p className="ml-lbl">{scenarioPresetsLabel}</p>
           <ScenarioPresets scenarios={ELECTION_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
           <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
-            <i className="ti ti-refresh" aria-hidden="true" /> Reset to baseline
+            <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
           </button>
         </div>
 
-        <p className="ml-lbl politics-trace-lbl">Why this estimate?</p>
+        <p className="ml-lbl politics-trace-lbl">{traceLabel}</p>
         <p className="ml-body-text">{electionTraceIntro}</p>
         <TracePanel contributions={electionContribs} driversByKey={electionDriversByKey} unit="" decimals={2} />
         <div className="ml-citation-row"><MLCitation section="6.4" /></div>
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Geopolitical risk index</p>
+        <p className="ml-section-title">{geoSectionTitle}</p>
         <p className="ml-section-sub">{geoContext}</p>
 
         <DriverPanel drivers={GEO_DRIVERS} state={{ military, diplomatic, sanctions }} onChange={(key, v) => setDriver(DOMAIN, key, v)} />
 
-        <GeoRiskMeter riskScore={riskScore} label="Composite risk score" onSendToGold={handleSendToGold} buttonLabel={goldLinkLabel} />
+        <GeoRiskMeter riskScore={riskScore} label={riskMeterLabel} onSendToGold={handleSendToGold} buttonLabel={goldLinkLabel} />
 
         <div className="dl-scenario-row">
-          <p className="ml-lbl">Scenario presets</p>
+          <p className="ml-lbl">{scenarioPresetsLabel}</p>
           <ScenarioPresets scenarios={GEO_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
         </div>
         <div className="ml-citation-row"><MLCitation section="6.4" /></div>

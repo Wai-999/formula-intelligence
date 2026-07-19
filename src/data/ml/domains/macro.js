@@ -128,3 +128,15 @@ export const MACRO_SIMPLICITY_CALLOUT = bl(
   'အံ့ဩစရာ ဒါပေမဲ့ မှန်တယ် — ဒီစာမျက်နှာမှာ အရိုးရှင်းဆုံး မော်ဒယ်ဖြစ်တဲ့ LASSO/Elastic Net သည် fast-moving ဒေတာ လုံလောက်စွာ ရရှိလာသည်နှင့် ရိုးရာ econometric မော်ဒယ်နှင့် ပိုရှုပ်ထွေးသော machine-learning မော်ဒယ် နှစ်မျိုးလုံးကို မကြာခဏ အနိုင်ယူလေ့ရှိသည်။ ပိုရှုပ်ထွေးလေ ပိုတိကျလေ မဟုတ်ပါ။',
   'ဒေတာ ကြွယ်ဝပြီး high-frequency ဖြစ်သောအခါ LASSO/Elastic Net (linear ML) သည် ရိုးရာ econometric မော်ဒယ်များနှင့် ပိုရှုပ်ထွေးသော ML နည်းလမ်းများ နှစ်မျိုးလုံးကို မကြာခဏ ကျော်လွန်လေ့ရှိသည် — ၎င်းသည် nowcasting သုတေသနစာပေတွင် ကောင်းစွာ မှတ်တမ်းတင်ထားသော "ရိုးရှင်းမှု အနိုင်ရ" ရလဒ်ဖြစ်ပြီး ဤသရုပ်ဖော်မှု၏ မတော်တဆမှု မဟုတ်ပါ။'
 );
+
+// Module 11 audit (see gold.js's identical note).
+export const MACRO_PAGE_TITLE = blSame('Macro Economics Lab — Nowcasting', 'Macro စီးပွားရေး Lab — Nowcasting');
+export const MACRO_GAP_SECTION_TITLE = blSame('The information gap', 'သတင်းအချက်အလက် ကွာဟမှု');
+export const MACRO_SIGNALS_TITLE = blSame('High-frequency signals', 'High-frequency အချက်ပြမှုများ');
+export const MACRO_MODELS_TITLE = blSame('Three models, three different jobs', 'မော်ဒယ် သုံးခု၊ အလုပ် သုံးမျိုး');
+export const MACRO_MODELS_SUB = blSame(
+  'Move a signal above and watch the nowcast move — but not by the same amount, or for the same reason.',
+  'အထက်ပါ signal တစ်ခုကို ရွှေ့ပြီး nowcast ဘယ်လိုရွေ့လဲ ကြည့်ပါ — ပမာဏတူ၊ အကြောင်းရင်းတူ မဟုတ်ပါ။'
+);
+export const MACRO_TRACE_TITLE = blSame('Why did the nowcast move?', 'Nowcast ဒါက ဘာကြောင့် ရွေ့သွားတာလဲ?');
+export const MACRO_SIMPLICITY_TITLE = blSame('Simplicity can win', 'ရိုးရှင်းမှုက အနိုင်ရနိုင်သည်');

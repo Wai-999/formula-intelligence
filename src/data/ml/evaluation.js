@@ -68,3 +68,43 @@ export const DRIFT_INTRO = bl(
   'မနှစ်ကမှန်ခဲ့သော မော်ဒယ်တစ်ခုသည် သင်ယူထားသည့် ဆက်စပ်မှု ရပ်တန့်သွားလျှင် ယခုနှစ်တွင် တိတ်တဆိတ် မှားလာနိုင်သည်။ Play နှိပ်ပြီး regime ပြောင်းလဲသည့်အခိုက် အမှား ရုတ်တရက်မြင့်တက်ပုံကို ကြည့်ပါ။',
   'Concept drift — feature များနှင့် target ကြား ဆက်စပ်မှုသည် အချိန်နှင့်အမျှ ပြောင်းလဲသည် (ဥပမာ ရွှေ၏ real yields နှင့် ဆက်စပ်မှုသည် ဗဟိုဘဏ် အဆက်မပြတ် ဝယ်ယူမှုကဲ့သို့ regime ပြောင်းလဲမှုနောက် ပြောင်းသွားသည်)။ Production system များသည် feature/prediction distribution ကို training-time baseline နှင့် နှိုင်းယှဉ်စောင့်ကြည့်ပြီး drift သည် threshold ကျော်လွန်လျှင် ပြန်လေ့ကျင့်ရန် လှုံ့ဆော်သည်။'
 );
+
+// Module 11 audit: page-chrome strings (titles/labels/legend/buttons) that
+// were previously hardcoded English across the five Evaluation components.
+export const EV_METRICS_TITLE = blSame('Evaluation Metrics', 'အကဲဖြတ်မှု Metrics');
+export const EV_POLY_BTN = blSame('Polynomial', 'Polynomial');
+export const EV_TREE_BTN = blSame('Decision Tree', 'Decision Tree');
+export const EV_COMPLEXITY_LBL = blSame('Complexity', 'ရှုပ်ထွေးမှု');
+
+export const EV_WALKFORWARD_TITLE = blSame('Walk-Forward vs. Naive Split', 'Walk-Forward နှင့် Naive Split နှိုင်းယှဉ်ချက်');
+export const EV_NAIVE_SPLIT_LBL = blSame('Naive random split', 'Naive ကျပန်း split');
+export const EV_NAIVE_SPLIT_SUB = blSame(
+  'fixed — notice train (blue) cells appearing after test (amber) cells',
+  'fixed — train (အပြာရောင်) cell များသည် test (အဝါရောင်) cell များနောက်တွင် ပေါ်လာသည်ကို သတိပြုပါ'
+);
+export const EV_WALKFORWARD_LBL = blSame('Walk-forward backtest', 'Walk-forward backtest');
+// {origin} and {steps} are replaced with live numbers by the component —
+// kept as a full-sentence template (not concatenated fragments) so Burmese
+// word order stays grammatical.
+export const EV_WF_SUB_TEMPLATE = blSame(
+  'origin t={origin} — train up to origin, test the next {steps} steps, then roll forward',
+  'origin t={origin} — origin အထိ train လုပ်ပြီး နောက် {steps} steps ကို test လုပ်သည်, ပြီးရင် ရှေ့ဆက်ရွှေ့သည်'
+);
+export const EV_PLAY_BTN = blSame('Play', 'ဖွင့်ပါ');
+export const EV_PAUSE_BTN = blSame('Pause', 'ခဏရပ်ပါ');
+export const EV_RESET_BTN = blSame('Reset', 'ပြန်လည်သတ်မှတ်ပါ');
+export const EV_TRAIN_LEGEND = blSame('train', 'train');
+export const EV_TEST_LEGEND = blSame('test', 'test');
+export const EV_UNUSED_LEGEND = blSame('not yet used', 'မသုံးရသေး');
+
+export const EV_SHAP_TITLE = blSame('Global Feature Importance (SHAP-style)', 'Global Feature အရေးပါမှု (SHAP-style)');
+export const EV_LIME_TITLE = blSame('Local Explanation (LIME-style)', 'Local ရှင်းလင်းချက် (LIME-style)');
+export const EV_BASE_VALUE_LBL = blSame('Base value (average forecast)', 'အခြေခံတန်ဖိုး (ပျမ်းမျှ ခန့်မှန်းချက်)');
+export const EV_THIS_PREDICTION_LBL = blSame('This prediction', 'ဒီခန့်မှန်းချက်');
+
+export const EV_DRIFT_TITLE = blSame('Concept Drift', 'Concept Drift');
+export const EV_RETRAIN_THRESHOLD_LBL = blSame('retrain threshold', 'ပြန်လေ့ကျင့်ရန် threshold');
+export const EV_REGIME_CHANGE_LBL = blSame('regime change', 'regime ပြောင်းလဲမှု');
+export const EV_TIME_PROGRESS_LBL = blSame('Time progress', 'အချိန် တိုးတက်မှု');
+export const EV_DRIFT_ALERT = blSame('Drift detected — retrain?', 'Drift တွေ့ရှိသည် — ပြန်လေ့ကျင့်မလား?');
+export const EV_DRIFT_OK = blSame('Model tracking within normal error range', 'မော်ဒယ်သည် ပုံမှန် အမှားအကွာအဝေးအတွင်း လိုက်နေသည်');

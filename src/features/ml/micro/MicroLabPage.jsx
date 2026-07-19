@@ -3,8 +3,10 @@ import { useMLDomainStore } from '../../../store/useMLDomainStore.js';
 import { demandGapContributions, MICRO_REFERENCE } from './demandModel.js';
 import {
   MICRO_CONTEXT, MICRO_MODELS, MICRO_SCENARIOS, MICRO_TRACE_INTRO, MICRO_GAP_LABELS,
-  MICRO_PRICE_LABEL, MICRO_PROMO_LABEL, MICRO_SEASON_LABEL,
+  MICRO_PRICE_LABEL, MICRO_PROMO_LABEL, MICRO_SEASON_LABEL, MICRO_PAGE_TITLE, MICRO_PRICE_SECTION_TITLE,
+  MICRO_MODELS_TITLE, MICRO_MODELS_SUB, MICRO_TRACE_TITLE,
 } from '../../../data/ml/domains/micro.js';
+import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import ScenarioPresets from '../../../components/ml/domain/ScenarioPresets.jsx';
@@ -46,6 +48,13 @@ export default function MicroLabPage() {
   const priceLabel = useT(MICRO_PRICE_LABEL);
   const promoLabel = useT(MICRO_PROMO_LABEL);
   const seasonLabel = useT(MICRO_SEASON_LABEL);
+  const pageTitle = useT(MICRO_PAGE_TITLE);
+  const priceSectionTitle = useT(MICRO_PRICE_SECTION_TITLE);
+  const modelsTitle = useT(MICRO_MODELS_TITLE);
+  const modelsSub = useT(MICRO_MODELS_SUB);
+  const traceTitle = useT(MICRO_TRACE_TITLE);
+  const scenarioPresetsLabel = useT(UI_SCENARIO_PRESETS);
+  const resetLabel = useT(UI_RESET_TO_BASELINE);
 
   const price = driverState.price ?? MICRO_REFERENCE.referencePrice;
   const promoOn = Boolean(driverState.promoOn);
@@ -59,13 +68,13 @@ export default function MicroLabPage() {
   return (
     <div className="ml-page">
       <div className="ml-section">
-        <p className="ml-section-title"><i className="ti ti-shopping-cart" aria-hidden="true" /> Micro Economics Lab — Price Elasticity</p>
+        <p className="ml-section-title"><i className="ti ti-shopping-cart" aria-hidden="true" /> {pageTitle}</p>
         <p className="ml-section-sub">{context}</p>
         <div className="ml-citation-row"><MLCitation section="6.3" /></div>
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Set the price</p>
+        <p className="ml-section-title">{priceSectionTitle}</p>
         <div className="micro-price-row">
           <div className="micro-price-head">
             <span className="dp-driver-label">{priceLabel}</span>
@@ -82,17 +91,17 @@ export default function MicroLabPage() {
           <ToggleButton label={seasonLabel} active={peakSeason} onClick={() => setDriver(DOMAIN, 'peakSeason', peakSeason ? 0 : 1)} />
         </div>
         <div className="dl-scenario-row">
-          <p className="ml-lbl">Scenario presets</p>
+          <p className="ml-lbl">{scenarioPresetsLabel}</p>
           <ScenarioPresets scenarios={MICRO_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
           <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
-            <i className="ti ti-refresh" aria-hidden="true" /> Reset to baseline
+            <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
           </button>
         </div>
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Two models, one price axis</p>
-        <p className="ml-section-sub">The dashed line assumes one constant % relationship everywhere. The solid line learns whatever shape the data actually has.</p>
+        <p className="ml-section-title">{modelsTitle}</p>
+        <p className="ml-section-sub">{modelsSub}</p>
         <DemandCurveChart price={price} promoOn={promoOn} peakSeason={peakSeason} models={MICRO_MODELS} reference={MICRO_REFERENCE} />
         <div className="dl-model-notes">
           {MICRO_MODELS.map((m) => <ModelNote key={m.key} model={m} />)}
@@ -101,7 +110,7 @@ export default function MicroLabPage() {
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Why do the curves disagree here?</p>
+        <p className="ml-section-title">{traceTitle}</p>
         <p className="ml-section-sub">{traceIntro}</p>
         <TracePanel contributions={contributions} driversByKey={MICRO_GAP_LABELS} unit=" units" unitPosition="suffix" decimals={0} />
         <div className="ml-citation-row"><MLCitation synthetic /></div>

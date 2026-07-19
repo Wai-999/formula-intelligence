@@ -3,7 +3,8 @@ import { useUIStore } from '../../../store/useUIStore.js';
 import {
   BRIDGE_CONTEXT, REG_EXAMPLE_INTRO, REG_STATS_CARD, REG_ML_CARD, REG_STATS_NODES,
   EST_EXAMPLE_INTRO, EST_STATS_CARD, EST_BAYES_CARD, EST_STATS_NODES, EST_TO_POLITICS_LABEL,
-  VIEW_ON_STATS_MAP_LABEL,
+  VIEW_ON_STATS_MAP_LABEL, BRIDGE_PAGE_TITLE, REG_SECTION_TITLE, EST_SECTION_TITLE,
+  REG_NODES_LABEL, EST_NODES_LABEL,
 } from '../../../data/ml/bridge.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
@@ -44,6 +45,11 @@ export default function BridgePage() {
   const estIntro = useT(EST_EXAMPLE_INTRO);
   const toPoliticsLabel = useT(EST_TO_POLITICS_LABEL);
   const viewOnMapLabel = useT(VIEW_ON_STATS_MAP_LABEL);
+  const pageTitle = useT(BRIDGE_PAGE_TITLE);
+  const regSectionTitle = useT(REG_SECTION_TITLE);
+  const estSectionTitle = useT(EST_SECTION_TITLE);
+  const regNodesLabel = useT(REG_NODES_LABEL);
+  const estNodesLabel = useT(EST_NODES_LABEL);
 
   const regRef = useRef(null);
   const estRef = useRef(null);
@@ -81,18 +87,18 @@ export default function BridgePage() {
   return (
     <div className="ml-page">
       <div className="ml-section">
-        <p className="ml-section-title"><i className="ti ti-arrows-right-left" aria-hidden="true" /> Stats ↔ ML Bridge</p>
+        <p className="ml-section-title"><i className="ti ti-arrows-right-left" aria-hidden="true" /> {pageTitle}</p>
         <p className="ml-section-sub">{context}</p>
       </div>
 
       <div className="ml-section" ref={regRef}>
-        <p className="ml-section-title">Regression: two lenses, one line</p>
+        <p className="ml-section-title">{regSectionTitle}</p>
         <p className="ml-section-sub">{regIntro}</p>
         <div className="bridge-card-row">
           <ComparisonCard card={REG_STATS_CARD} accent="#8b5cf6" />
           <ComparisonCard card={REG_ML_CARD} accent="#22d3ee" />
         </div>
-        <p className="ml-lbl bridge-nodes-lbl">Real Stats-mode content behind the Stats-lens numbers</p>
+        <p className="ml-lbl bridge-nodes-lbl">{regNodesLabel}</p>
         <div className="bridge-node-row">
           {REG_STATS_NODES.map((n) => <StatsNodeLink key={n.id} node={n} onView={viewOnStatsMap} />)}
         </div>
@@ -101,13 +107,13 @@ export default function BridgePage() {
       </div>
 
       <div className="ml-section" ref={estRef}>
-        <p className="ml-section-title">Estimation philosophy: frequentist vs. Bayesian</p>
+        <p className="ml-section-title">{estSectionTitle}</p>
         <p className="ml-section-sub">{estIntro}</p>
         <div className="bridge-card-row">
           <ComparisonCard card={EST_STATS_CARD} accent="#8b5cf6" />
           <ComparisonCard card={EST_BAYES_CARD} accent="#fbbf24" />
         </div>
-        <p className="ml-lbl bridge-nodes-lbl">Real Stats-mode content behind the frequentist numbers</p>
+        <p className="ml-lbl bridge-nodes-lbl">{estNodesLabel}</p>
         <div className="bridge-node-row">
           {EST_STATS_NODES.map((n) => <StatsNodeLink key={n.id} node={n} onView={viewOnStatsMap} />)}
         </div>

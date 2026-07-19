@@ -4,8 +4,9 @@ import { useUIStore } from '../../../store/useUIStore.js';
 import { computeModelForecasts, driverContributions } from '../../../lib/domainModel.js';
 import {
   GOLD_BASE_PRICE, GOLD_BASE_BAND, GOLD_CONTEXT, GOLD_DRIVERS, GOLD_MODELS, GOLD_SCENARIOS, GOLD_TRACE_INTRO,
-  GOLD_LINK_BANNER,
+  GOLD_LINK_BANNER, GOLD_PAGE_TITLE, GOLD_DRIVERS_TITLE, GOLD_MODELS_TITLE, GOLD_MODELS_SUB, GOLD_TRACE_TITLE,
 } from '../../../data/ml/domains/gold.js';
+import { UI_SCENARIO_PRESETS, UI_RESET_TO_BASELINE } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import DriverPanel from '../../../components/ml/domain/DriverPanel.jsx';
@@ -40,6 +41,13 @@ export default function GoldLabPage() {
   const context = useT(GOLD_CONTEXT);
   const traceIntro = useT(GOLD_TRACE_INTRO);
   const linkBannerText = useT(GOLD_LINK_BANNER);
+  const pageTitle = useT(GOLD_PAGE_TITLE);
+  const driversTitle = useT(GOLD_DRIVERS_TITLE);
+  const modelsTitle = useT(GOLD_MODELS_TITLE);
+  const modelsSub = useT(GOLD_MODELS_SUB);
+  const traceTitle = useT(GOLD_TRACE_TITLE);
+  const scenarioPresetsLabel = useT(UI_SCENARIO_PRESETS);
+  const resetLabel = useT(UI_RESET_TO_BASELINE);
   const [showLinkBanner, setShowLinkBanner] = useState(false);
 
   // Consumes Module 9's Politics → Gold cross-link. All ML pages mount
@@ -61,13 +69,13 @@ export default function GoldLabPage() {
   return (
     <div className="ml-page">
       <div className="ml-section">
-        <p className="ml-section-title"><i className="ti ti-coin" aria-hidden="true" /> Gold Price Forecasting Lab</p>
+        <p className="ml-section-title"><i className="ti ti-coin" aria-hidden="true" /> {pageTitle}</p>
         <p className="ml-section-sub">{context}</p>
         <div className="ml-citation-row"><MLCitation section="6.1" /></div>
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Drivers</p>
+        <p className="ml-section-title">{driversTitle}</p>
         {showLinkBanner && (
           <div className="gold-link-banner">
             <i className="ti ti-arrow-bear-right-2" aria-hidden="true" />
@@ -79,17 +87,17 @@ export default function GoldLabPage() {
         )}
         <DriverPanel drivers={GOLD_DRIVERS} state={driverState} onChange={(key, v) => setDriver(DOMAIN, key, v)} />
         <div className="dl-scenario-row">
-          <p className="ml-lbl">Scenario presets</p>
+          <p className="ml-lbl">{scenarioPresetsLabel}</p>
           <ScenarioPresets scenarios={GOLD_SCENARIOS} onApply={(state) => applyScenario(DOMAIN, state)} />
           <button type="button" className="dl-reset-btn" onClick={() => resetDomain(DOMAIN)}>
-            <i className="ti ti-refresh" aria-hidden="true" /> Reset to baseline
+            <i className="ti ti-refresh" aria-hidden="true" /> {resetLabel}
           </button>
         </div>
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Four models, one set of drivers</p>
-        <p className="ml-section-sub">Move a driver above and watch all four react — differently.</p>
+        <p className="ml-section-title">{modelsTitle}</p>
+        <p className="ml-section-sub">{modelsSub}</p>
         <ForecastBandChart models={GOLD_MODELS} forecasts={forecasts} baseValue={GOLD_BASE_PRICE} />
         <div className="dl-model-notes">
           {GOLD_MODELS.map((m) => <ModelNote key={m.key} model={m} />)}
@@ -97,7 +105,7 @@ export default function GoldLabPage() {
       </div>
 
       <div className="ml-section">
-        <p className="ml-section-title">Why did this move?</p>
+        <p className="ml-section-title">{traceTitle}</p>
         <p className="ml-section-sub">{traceIntro}</p>
         <TracePanel contributions={contributions} driversByKey={driversByKey} />
         <div className="ml-citation-row"><MLCitation synthetic /></div>

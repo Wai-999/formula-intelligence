@@ -1,4 +1,13 @@
-import { bl } from '../../lib/mlContent.js';
+import { bl, blSame } from '../../lib/mlContent.js';
+
+// Module 11 audit (see gold.js's identical note in domains/).
+export const PIPELINE_TITLE = blSame('The ML Pipeline: From Data to Decision', 'ML Pipeline: ဒေတာမှ ဆုံးဖြတ်ချက်သို့');
+export const PIPELINE_INTRO = blSame(
+  'Every ML system moves through the same seven stages — click any stage to see what happens there, worked through with gold price forecasting as a running example (previewing Module 6).',
+  'ML စနစ်တိုင်းသည် အဆင့်ခုနစ်ဆင့်တူတူကို ဖြတ်သန်းသည် — အဆင့်တစ်ခုခုကို နှိပ်ပြီး ဘာဖြစ်လဲကြည့်ပါ၊ ရွှေဈေးနှုန်း ခန့်မှန်းခြင်းကို ဥပမာအဖြစ် ထားသည် (Module 6 ကို ကြိုတင်ပြသခြင်း)။'
+);
+export const PIPELINE_WHAT_LBL = blSame('What happens', 'ဘာဖြစ်လဲ');
+export const PIPELINE_GOLD_LBL = blSame('Gold worked example', 'ရွှေ ဥပမာ');
 
 // Source: docs/research/ML-Research-Reference.md §1. The Gold worked example
 // threads through every stage so this module previews Module 6 (research

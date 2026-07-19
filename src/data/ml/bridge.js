@@ -154,3 +154,16 @@ export const EST_TO_POLITICS_LABEL = bl(
 );
 
 export const VIEW_ON_STATS_MAP_LABEL = blSame('View on Stats map →', 'Stats map တွင်ကြည့်ရန် →');
+
+// Module 11 audit (see gold.js's identical note).
+export const BRIDGE_PAGE_TITLE = blSame('Stats ↔ ML Bridge', 'Stats ↔ ML Bridge');
+export const REG_SECTION_TITLE = blSame('Regression: two lenses, one line', 'Regression: Lens နှစ်ခု၊ Line တစ်ခု');
+export const EST_SECTION_TITLE = blSame('Estimation philosophy: frequentist vs. Bayesian', 'ခန့်မှန်းခြင်း အတွေးအခေါ်: Frequentist vs. Bayesian');
+export const REG_NODES_LABEL = blSame(
+  'Real Stats-mode content behind the Stats-lens numbers',
+  'Stats-lens ဂဏန်းများနောက်ကွယ်ရှိ Stats-mode ၏ တကယ့်အကြောင်းအရာ'
+);
+export const EST_NODES_LABEL = blSame(
+  'Real Stats-mode content behind the frequentist numbers',
+  'Frequentist ဂဏန်းများနောက်ကွယ်ရှိ Stats-mode ၏ တကယ့်အကြောင်းအရာ'
+);

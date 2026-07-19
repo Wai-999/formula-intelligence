@@ -71,3 +71,13 @@ export const MICRO_TRACE_INTRO = bl(
 export const MICRO_PRICE_LABEL = blSame('Price', 'ဈေးနှုန်း');
 export const MICRO_PROMO_LABEL = blSame('Promotion active', 'ပရိုမိုးရှင်း လုပ်ဆောင်နေဆဲ');
 export const MICRO_SEASON_LABEL = blSame('Peak season', 'အထွက်နှုန်းအမြင့်ဆုံး ရာသီ');
+
+// Module 11 audit (see gold.js's identical note).
+export const MICRO_PAGE_TITLE = blSame('Micro Economics Lab — Price Elasticity', 'Micro စီးပွားရေး Lab — ဈေးနှုန်း Elasticity');
+export const MICRO_PRICE_SECTION_TITLE = blSame('Set the price', 'ဈေးနှုန်း သတ်မှတ်ပါ');
+export const MICRO_MODELS_TITLE = blSame('Two models, one price axis', 'မော်ဒယ် နှစ်ခု၊ ဈေးနှုန်း axis တစ်ခု');
+export const MICRO_MODELS_SUB = blSame(
+  'The dashed line assumes one constant % relationship everywhere. The solid line learns whatever shape the data actually has.',
+  'အစက်ရွေးမျဉ်းက ရာခိုင်နှုန်းဆက်နွယ်မှု တစ်နေရာလုံးတွင် တူညီသည်ဟု ယူဆသည်။ အမြဲမျဉ်းက ဒေတာ၏ တကယ့်ပုံသဏ္ဍာန်ကို သင်ယူသည်။'
+);
+export const MICRO_TRACE_TITLE = blSame('Why do the curves disagree here?', 'ဒီနေရာမှာ curve တွေ ဘာကြောင့် သဘောထားကွဲနေတာလဲ?');

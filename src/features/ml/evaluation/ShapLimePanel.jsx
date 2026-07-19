@@ -1,4 +1,7 @@
-import { SHAP_INTRO, SHAP_FEATURES, LIME_INTRO, LIME_EXAMPLE } from '../../../data/ml/evaluation.js';
+import {
+  SHAP_INTRO, SHAP_FEATURES, LIME_INTRO, LIME_EXAMPLE,
+  EV_SHAP_TITLE, EV_LIME_TITLE, EV_BASE_VALUE_LBL, EV_THIS_PREDICTION_LBL,
+} from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 
@@ -35,13 +38,17 @@ function LimeBar({ contrib, scale }) {
 export default function ShapLimePanel() {
   const shapIntro = useT(SHAP_INTRO);
   const limeIntro = useT(LIME_INTRO);
+  const shapTitle = useT(EV_SHAP_TITLE);
+  const limeTitle = useT(EV_LIME_TITLE);
+  const baseValueLbl = useT(EV_BASE_VALUE_LBL);
+  const thisPredictionLbl = useT(EV_THIS_PREDICTION_LBL);
   const maxImportance = Math.max(...SHAP_FEATURES.map((f) => f.importance));
   const maxAbsContrib = Math.max(...LIME_EXAMPLE.contributions.map((c) => Math.abs(c.value)));
 
   return (
     <div className="sl-grid">
       <div className="ml-section">
-        <p className="ml-section-title">Global Feature Importance (SHAP-style)</p>
+        <p className="ml-section-title">{shapTitle}</p>
         <p className="ml-section-sub">{shapIntro}</p>
         <div className="shap-list">
           {SHAP_FEATURES.map((f) => (
@@ -51,15 +58,15 @@ export default function ShapLimePanel() {
         <div className="ml-citation-row"><MLCitation synthetic /></div>
       </div>
       <div className="ml-section">
-        <p className="ml-section-title">Local Explanation (LIME-style)</p>
+        <p className="ml-section-title">{limeTitle}</p>
         <p className="ml-section-sub">{limeIntro}</p>
-        <p className="lime-base">Base value (average forecast): <b>${LIME_EXAMPLE.baseValue.toLocaleString()}</b></p>
+        <p className="lime-base">{baseValueLbl}: <b>${LIME_EXAMPLE.baseValue.toLocaleString()}</b></p>
         <div className="lime-list">
           {LIME_EXAMPLE.contributions.map((c) => (
             <LimeBar key={c.key} contrib={c} scale={maxAbsContrib} />
           ))}
         </div>
-        <p className="lime-final">This prediction: <b>${LIME_EXAMPLE.finalPrediction.toLocaleString()}</b></p>
+        <p className="lime-final">{thisPredictionLbl}: <b>${LIME_EXAMPLE.finalPrediction.toLocaleString()}</b></p>
         <div className="ml-citation-row"><MLCitation synthetic /></div>
       </div>
     </div>

@@ -508,3 +508,42 @@ export const ML_LINKS = [
   // 3.10
   { s: 'qlearning', t: 'actorcritic', type: 'extends' },
 ];
+
+// Module 11 audit (see gold.js's identical note in domains/). Covers both
+// ModelMapPage.jsx's legend and MLModelDetailPanel.jsx's labels.
+export const MM_LEGEND_TITLE = blSame('Connections', 'ဆက်စပ်မှုများ');
+export const MM_LEGEND_EXTENDS = blSame('Extends (same family)', 'ဆက်ခံသည် (မိသားစုတူ)');
+export const MM_LEGEND_COMPETES = blSame('Competes with', 'ယှဉ်ပြိုင်သည်');
+export const MM_LEGEND_COMBINES = blSame('Combines with', 'ပေါင်းစပ်သည်');
+
+export const MM_EDGE_TYPE_LABEL = {
+  extends: blSame('Extends', 'ဆက်ခံသည်'),
+  competes: blSame('Competes with', 'ယှဉ်ပြိုင်သည်'),
+  combines: blSame('Combines with', 'ပေါင်းစပ်သည်'),
+};
+
+export const MM_HOW_IT_WORKS_LBL = blSame('How it works', 'ဘယ်လိုအလုပ်လုပ်လဲ');
+export const MM_ADVANTAGES_LBL = blSame('Advantages', 'အားသာချက်များ');
+export const MM_WEAKNESSES_LBL = blSame('Weaknesses', 'အားနည်းချက်များ');
+export const MM_USAGE_AREAS_LBL = blSame('Best usage areas', 'သင့်လျော်ဆုံး အသုံးပြုမှုနယ်ပယ်များ');
+export const MM_COMPASS_LBL = blSame('Model selection compass', 'Model ရွေးချယ်ရေး Compass');
+export const MM_CONNECTIONS_LBL = blSame('Connections', 'ဆက်စပ်မှုများ');
+
+// CompassMeter.jsx's three axes (research doc §4).
+export const COMPASS_AXES = [
+  {
+    key: 'interpretability',
+    label: blSame('Interpretability', 'ရှင်းပြနိုင်မှု'),
+    hint: blSame('High = easy to explain a single prediction', 'မြင့်လျှင် = ခန့်မှန်းချက်တစ်ခုကို ရှင်းပြရလွယ်ကူသည်'),
+  },
+  {
+    key: 'dataHunger',
+    label: blSame('Data hunger', 'ဒေတာ လိုအင်'),
+    hint: blSame('High = needs years of history to work well', 'မြင့်လျှင် = ကောင်းစွာအလုပ်လုပ်ရန် နှစ်ပေါင်းများစွာ history လိုအပ်သည်'),
+  },
+  {
+    key: 'nonlinearity',
+    label: blSame('Nonlinearity capture', 'Nonlinearity ဖမ်းယူနိုင်မှု'),
+    hint: blSame('High = can learn complex, curved relationships', 'မြင့်လျှင် = ရှုပ်ထွေး၊ ကွေးသော ဆက်နွယ်မှုများကို သင်ယူနိုင်သည်'),
+  },
+];

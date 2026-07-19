@@ -1,4 +1,6 @@
 import * as d3 from 'd3';
+import { PG_LOW_COMPLEXITY, PG_HIGH_COMPLEXITY } from '../../../data/ml/playground.js';
+import { useT } from '../../../lib/mlContent.js';
 
 const W = 460;
 const H = 200;
@@ -8,6 +10,8 @@ const MARGIN = { top: 12, right: 12, bottom: 28, left: 40 };
 // complexity grows, validation error is U-shaped — the gap between them
 // past the minimum IS overfitting, made visible rather than asserted.
 export default function ErrorCurveChart({ curve, currentComplexity }) {
+  const lowComplexityLbl = useT(PG_LOW_COMPLEXITY);
+  const highComplexityLbl = useT(PG_HIGH_COMPLEXITY);
   const x = d3.scaleLinear().domain(d3.extent(curve, (d) => d.complexity)).range([MARGIN.left, W - MARGIN.right]);
   const maxErr = d3.max(curve, (d) => Math.max(d.trainError, d.valError));
   const y = d3.scaleLinear().domain([0, maxErr * 1.08]).range([H - MARGIN.bottom, MARGIN.top]);
@@ -30,8 +34,8 @@ export default function ErrorCurveChart({ curve, currentComplexity }) {
         className="ec-current-line"
       />
       <circle cx={x(currentComplexity)} cy={y(curve.find((d) => d.complexity === currentComplexity)?.valError ?? 0)} r={4} className="ec-current-dot" />
-      <text x={MARGIN.left} y={H - 6} className="ec-axis-label">low complexity</text>
-      <text x={W - MARGIN.right} y={H - 6} textAnchor="end" className="ec-axis-label">high complexity</text>
+      <text x={MARGIN.left} y={H - 6} className="ec-axis-label">{lowComplexityLbl}</text>
+      <text x={W - MARGIN.right} y={H - 6} textAnchor="end" className="ec-axis-label">{highComplexityLbl}</text>
     </svg>
   );
 }

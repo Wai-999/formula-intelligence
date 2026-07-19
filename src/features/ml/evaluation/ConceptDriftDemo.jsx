@@ -1,7 +1,10 @@
 import { useMemo, useState } from 'react';
 import * as d3 from 'd3';
 import { generateDriftSeries, fitPolynomial, meanSquaredError } from '../../../lib/mlSandbox.js';
-import { DRIFT_INTRO } from '../../../data/ml/evaluation.js';
+import {
+  DRIFT_INTRO, EV_DRIFT_TITLE, EV_RETRAIN_THRESHOLD_LBL, EV_REGIME_CHANGE_LBL,
+  EV_TIME_PROGRESS_LBL, EV_DRIFT_ALERT, EV_DRIFT_OK,
+} from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 
@@ -13,6 +16,12 @@ const THRESHOLD = 3.5;
 export default function ConceptDriftDemo() {
   const [progress, setProgress] = useState(24);
   const intro = useT(DRIFT_INTRO);
+  const title = useT(EV_DRIFT_TITLE);
+  const retrainThresholdLbl = useT(EV_RETRAIN_THRESHOLD_LBL);
+  const regimeChangeLbl = useT(EV_REGIME_CHANGE_LBL);
+  const timeProgressLbl = useT(EV_TIME_PROGRESS_LBL);
+  const driftAlert = useT(EV_DRIFT_ALERT);
+  const driftOk = useT(EV_DRIFT_OK);
   const { points, breakAt } = useMemo(() => generateDriftSeries(), []);
 
   // A model trained ONLY on the pre-break regime — its error against every
@@ -36,14 +45,14 @@ export default function ConceptDriftDemo() {
 
   return (
     <div className="ml-section">
-      <p className="ml-section-title">Concept Drift</p>
+      <p className="ml-section-title">{title}</p>
       <p className="ml-section-sub">{intro}</p>
 
       <svg viewBox={`0 0 ${W} ${H}`} className="drift-chart" role="img" aria-label="Rolling model error over time, spiking after a regime change">
         <line x1={MARGIN.left} x2={W - MARGIN.right} y1={y(THRESHOLD)} y2={y(THRESHOLD)} className="drift-threshold-line" />
-        <text x={W - MARGIN.right} y={y(THRESHOLD) - 4} textAnchor="end" className="drift-threshold-label">retrain threshold</text>
+        <text x={W - MARGIN.right} y={y(THRESHOLD) - 4} textAnchor="end" className="drift-threshold-label">{retrainThresholdLbl}</text>
         <line x1={x(breakAt)} x2={x(breakAt)} y1={MARGIN.top} y2={H - MARGIN.bottom} className="drift-break-line" />
-        <text x={x(breakAt) + 4} y={MARGIN.top + 10} className="drift-break-label">regime change</text>
+        <text x={x(breakAt) + 4} y={MARGIN.top + 10} className="drift-break-label">{regimeChangeLbl}</text>
         <path d={line(visible)} className="drift-error-line" />
         {visible.length > 0 && (
           <circle cx={x(visible[visible.length - 1].t)} cy={y(visible[visible.length - 1].error)} r={4} className="drift-current-dot" />
@@ -55,17 +64,17 @@ export default function ConceptDriftDemo() {
         onChange={(e) => setProgress(Number(e.target.value))}
         className="pg-slider drift-scrub"
       />
-      <p className="ml-lbl">Time progress: t = {progress}</p>
+      <p className="ml-lbl">{timeProgressLbl}: t = {progress}</p>
 
       {driftDetected ? (
         <div className="drift-flag drift-flag-alert">
           <i className="ti ti-alert-triangle" aria-hidden="true" />
-          Drift detected — retrain?
+          {driftAlert}
         </div>
       ) : (
         <div className="drift-flag drift-flag-ok">
           <i className="ti ti-circle-check" aria-hidden="true" />
-          Model tracking within normal error range
+          {driftOk}
         </div>
       )}
       <div className="ml-citation-row"><MLCitation synthetic /></div>

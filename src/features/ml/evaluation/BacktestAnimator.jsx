@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { BACKTEST_INTRO } from '../../../data/ml/evaluation.js';
+import {
+  BACKTEST_INTRO, EV_WALKFORWARD_TITLE, EV_NAIVE_SPLIT_LBL, EV_NAIVE_SPLIT_SUB, EV_WALKFORWARD_LBL,
+  EV_WF_SUB_TEMPLATE, EV_PLAY_BTN, EV_PAUSE_BTN, EV_RESET_BTN, EV_TRAIN_LEGEND, EV_TEST_LEGEND, EV_UNUSED_LEGEND,
+} from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 
@@ -46,6 +49,18 @@ export default function BacktestAnimator() {
   const [playing, setPlaying] = useState(false);
   const timerRef = useRef(null);
   const intro = useT(BACKTEST_INTRO);
+  const title = useT(EV_WALKFORWARD_TITLE);
+  const naiveSplitLbl = useT(EV_NAIVE_SPLIT_LBL);
+  const naiveSplitSub = useT(EV_NAIVE_SPLIT_SUB);
+  const walkForwardLbl = useT(EV_WALKFORWARD_LBL);
+  const wfSubTemplate = useT(EV_WF_SUB_TEMPLATE);
+  const playBtn = useT(EV_PLAY_BTN);
+  const pauseBtn = useT(EV_PAUSE_BTN);
+  const resetBtn = useT(EV_RESET_BTN);
+  const trainLegend = useT(EV_TRAIN_LEGEND);
+  const testLegend = useT(EV_TEST_LEGEND);
+  const unusedLegend = useT(EV_UNUSED_LEGEND);
+  const wfSublabel = wfSubTemplate.replace('{origin}', origin).replace('{steps}', TEST_WINDOW);
 
   useEffect(() => {
     if (!playing) return undefined;
@@ -67,16 +82,16 @@ export default function BacktestAnimator() {
 
   return (
     <div className="ml-section">
-      <p className="ml-section-title">Walk-Forward vs. Naive Split</p>
+      <p className="ml-section-title">{title}</p>
       <p className="ml-section-sub">{intro}</p>
 
-      <TimelineRow label="Naive random split" sublabel="fixed — notice train (blue) cells appearing after test (amber) cells" roleOf={naiveRole} />
-      <TimelineRow label="Walk-forward backtest" sublabel={`origin t=${origin} — train up to origin, test the next ${TEST_WINDOW} steps, then roll forward`} roleOf={wfRole} />
+      <TimelineRow label={naiveSplitLbl} sublabel={naiveSplitSub} roleOf={naiveRole} />
+      <TimelineRow label={walkForwardLbl} sublabel={wfSublabel} roleOf={wfRole} />
 
       <div className="bt-controls">
         <button type="button" className="pg-regen-btn" onClick={() => setPlaying((p) => !p)}>
           <i className={`ti ${playing ? 'ti-player-pause' : 'ti-player-play'}`} aria-hidden="true" />
-          {playing ? 'Pause' : 'Play'}
+          {playing ? pauseBtn : playBtn}
         </button>
         <input
           type="range" min={MIN_TRAIN} max={N - TEST_WINDOW} value={origin}
@@ -84,14 +99,14 @@ export default function BacktestAnimator() {
           className="pg-slider bt-scrub"
         />
         <button type="button" className="pg-regen-btn" onClick={() => { setPlaying(false); setOrigin(MIN_TRAIN); }}>
-          <i className="ti ti-rewind-backward-10" aria-hidden="true" /> Reset
+          <i className="ti ti-rewind-backward-10" aria-hidden="true" /> {resetBtn}
         </button>
       </div>
 
       <div className="bt-legend">
-        <span><i className="bt-dot bt-dot-train" /> train</span>
-        <span><i className="bt-dot bt-dot-test" /> test</span>
-        <span><i className="bt-dot bt-dot-unused" /> not yet used</span>
+        <span><i className="bt-dot bt-dot-train" /> {trainLegend}</span>
+        <span><i className="bt-dot bt-dot-test" /> {testLegend}</span>
+        <span><i className="bt-dot bt-dot-unused" /> {unusedLegend}</span>
       </div>
       <div className="ml-citation-row"><MLCitation section="1" /></div>
     </div>

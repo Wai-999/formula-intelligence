@@ -99,3 +99,14 @@ export const GEO_TO_GOLD_LABEL = bl(
   'ဒါက ရွှေဈေးနှုန်းကို ဘယ်လိုရွှေ့စေလဲ ကြည့်ရန် →',
   'ဒီ risk score ကို ရွှေ lab ၏ ပထဝီရေးအန္တရာယ် driver သို့ အသုံးချရန် →'
 );
+
+// Module 11 audit (see gold.js's identical note).
+export const POLITICS_PAGE_TITLE = blSame('Political & Geopolitical Forecasting', 'နိုင်ငံရေး နှင့် ပထဝီရေး ခန့်မှန်းချက်');
+export const ELECTION_SECTION_TITLE = blSame('Election forecasting', 'ရွေးကောက်ပွဲ ခန့်မှန်းချက်');
+export const GEO_SECTION_TITLE = blSame('Geopolitical risk index', 'ပထဝီရေးအန္တရာယ် Index');
+export const GEO_RISK_METER_LABEL = blSame('Composite risk score', 'ပေါင်းစပ် Risk Score');
+export const ELECTION_DAYS_RELATION = blSame(
+  'Closer to election day → real polls outweigh the structural prior, and the credible interval narrows.',
+  'ရွေးကောက်ပွဲနေ့နှင့် နီးလာလေ → တကယ့် poll များက structural prior ထက် အလေးချိန်ပိုလာလေ၊ credible interval ကျဉ်းလာလေဖြစ်သည်။'
+);
+export const ELECTION_TRACE_LABEL = blSame('Why this estimate?', 'ဒီခန့်မှန်းချက်ဟာ ဘာကြောင့်လဲ?');
