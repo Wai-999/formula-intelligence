@@ -5,6 +5,7 @@ import { ML_TABS } from '../../store/useMLUIStore.js';
 import LevelLangToggle from '../ml/LevelLangToggle.jsx';
 import UnderstandingTrackerBadge from '../ml/learning/UnderstandingTrackerBadge.jsx';
 import MixedReviewPanel from '../ml/learning/MixedReviewPanel.jsx';
+import EntryMisconceptionBanner from '../ml/learning/EntryMisconceptionBanner.jsx';
 import { useT } from '../../lib/mlContent.js';
 import './MLBody.css';
 
@@ -63,6 +64,7 @@ export default function MLBody() {
         </div>
       </main>
       <MixedReviewPanel />
+      <EntryMisconceptionBanner />
     </>
   );
 }

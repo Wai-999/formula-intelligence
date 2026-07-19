@@ -15,4 +15,5 @@ export const STORAGE_KEYS = {
   feynmanPrefix: 'feynman_',
   mlModePrefs: 'ml_mode_prefs_v1',
   mlUnderstanding: 'ml_understanding_v1',
+  mlEntryBannerSeen: 'ml_entry_banner_seen_v1',
 };

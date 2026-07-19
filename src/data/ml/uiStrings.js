@@ -86,3 +86,7 @@ export const UI_MIXED_REVIEW_LBL = blSame('Mixed review', 'ရောနှော
 export const UI_NEXT_QUESTION_BTN = blSame('Next question', 'နောက်မေးခွန်း');
 export const UI_MIXED_REVIEW_COLLAPSE = blSame('Collapse', 'ခေါက်ပါ');
 export const UI_MIXED_REVIEW_EXPAND = blSame('Cross-domain question available', 'Domain ဖြတ်ကျော် မေးခွန်း ရနိုင်သည်');
+
+// Module 1: one-time ML-mode entry banner (D.3, "User-Trained Model").
+export const UI_ENTRY_BANNER_TITLE = blSame('Before you start clicking around', 'စမ်းသပ်စတင်ခြင်းမတိုင်မီ');
+export const UI_ENTRY_BANNER_DISMISS = blSame("Got it — let's go", 'နားလည်ပြီ — စလိုက်ကြရအောင်');

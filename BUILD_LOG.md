@@ -333,3 +333,20 @@ Re-verified fresh rather than assumed from the prior build:
 Building the shared components first (this entry's own commit), then retrofitting module by module in the mission's Section E order, each its own commit, each logged the same Built/Files touched/Decisions/Verification way as every module above.
 
 ---
+
+## Module 1 additions: entry misconception banner + Understanding Tracker
+
+**Built:** `EntryMisconceptionBanner.jsx` — a one-time, prominent, must-dismiss modal shown the first time a learner opens ML mode, using the shared `userTrainedModel` misconception entry (D.3's "User-Trained Model"). Persisted via a new `STORAGE_KEYS.mlEntryBannerSeen` flag, same `loadJSON`/`saveJSON` pattern as everywhere else in the app, so it genuinely shows once, not once per session. `UnderstandingTrackerBadge` (built in the shared-infrastructure commit) wired into `MLBody`'s header, next to `LevelLangToggle`.
+
+**Files touched:** `src/components/ml/learning/EntryMisconceptionBanner.jsx` + `.css` (new), `src/data/storageKeys.js` (added key), `src/data/ml/uiStrings.js` (banner chrome strings).
+
+**Decisions (rule 1):**
+- **A modal, not an inline banner** — "prominent" plus "the learner must actively register this before touching anything" argued for a must-dismiss overlay over a passive strip that could be scrolled past unread, which an inline card risks.
+- **Reused `MisconceptionCallout.css`'s belief/truth classes directly** (imported into the banner component) rather than duplicating the same visual rules, since the content shape is identical to the inline component — only the wrapping chrome (modal backdrop, title, dismiss button) differs.
+
+**Verification:**
+- `npm run build`/`npm run lint`: pass.
+- Browser-verified: cleared the `localStorage` flag, reloaded, confirmed the banner renders with the full misconception text (`document.querySelector('.entry-banner-card').innerText`), clicked dismiss, confirmed it's gone. `UnderstandingTrackerBadge` confirmed showing "Novice" (translated) with zero engagement, consistent with a fresh session.
+- Console: 0 errors.
+
+---
