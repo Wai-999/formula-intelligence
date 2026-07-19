@@ -1,0 +1,62 @@
+.pgauge {
+  padding: 4px 0;
+}
+
+.pgauge-track {
+  position: relative;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 7px;
+  margin: 10px 0;
+}
+
+.pgauge-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(139, 92, 246, 0.28);
+  border-radius: 7px;
+  transition: left 0.2s, width 0.2s;
+}
+
+.pgauge-midline {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: var(--border-strong);
+}
+
+.pgauge-marker {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: left 0.2s;
+}
+
+.pgauge-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.pgauge-readout {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pgauge-interval {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}

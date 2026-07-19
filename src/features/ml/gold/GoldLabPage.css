@@ -1,0 +1,34 @@
+.gold-link-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 9px 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.gold-link-banner i:first-child {
+  color: var(--primary);
+  font-size: 15px;
+}
+
+.gold-link-banner span {
+  flex: 1;
+}
+
+.gold-link-banner button {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  display: flex;
+  padding: 2px;
+}
+
+.gold-link-banner button:hover {
+  color: var(--text-primary);
+}

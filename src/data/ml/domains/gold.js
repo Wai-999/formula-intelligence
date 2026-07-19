@@ -76,3 +76,12 @@ export const GOLD_TRACE_INTRO = bl(
   'အထက်ပါ driver တစ်ခုခုကို ရွှေ့ပြီး ဒီ panel ကို စစ်ကြည့်ပါ — driver ဘယ်ဟာက ခန့်မှန်းချက်ကို ဘယ်လိုတွန်းအားပေးလဲ၊ ဘယ်လောက်လဲ တိတိကျကျ ပြသသည်။',
   'Linear-response baseline သို့ driver တစ်ခုစီ၏ ဒေါ်လာ contribution ကို ပမာဏအလိုက် စီထားသည် — Module 5 ၏ LIME panel အတွေးအခေါ်တူညီသည်၊ live အသုံးချထားသည်။'
 );
+
+// Module 9's Politics lab computes a composite geopolitical risk score and
+// can send it here to set the geoRisk driver directly (navigateToLinkedConcept
+// → GoldLabPage's linkedConcept consumer). This is the banner shown when
+// that just happened.
+export const GOLD_LINK_BANNER = blSame(
+  "Geopolitical risk was just set from the Politics lab's risk index.",
+  'ပထဝီရေးအန္တရာယ်ကို Politics lab ၏ risk index မှ အခုလေးတင် သတ်မှတ်လိုက်သည်။'
+);
