@@ -77,3 +77,33 @@
     padding: 8px 10px;
   }
 }
+
+.mm-misconception-card {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 5;
+  max-width: 320px;
+}
+
+.mm-misconception-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px;
+}
+
+.mm-misconception-close:hover {
+  color: var(--text-primary);
+}
+
+@media (max-width: 480px) {
+  .mm-misconception-card {
+    max-width: calc(100vw - 60px);
+  }
+}

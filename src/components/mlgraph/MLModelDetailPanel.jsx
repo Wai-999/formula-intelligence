@@ -2,8 +2,18 @@ import {
   mlNodeById, ML_LINKS, mlFamilyColorMap, ML_FAMILIES, MM_EDGE_TYPE_LABEL,
   MM_HOW_IT_WORKS_LBL, MM_ADVANTAGES_LBL, MM_WEAKNESSES_LBL, MM_USAGE_AREAS_LBL, MM_COMPASS_LBL, MM_CONNECTIONS_LBL,
 } from '../../data/ml/models.js';
+import { MODEL_DEPTH_LADDER } from '../../data/ml/modelDepthLadder.js';
+import {
+  UI_WORKED_EXAMPLE_LBL, UI_NOW_YOU_TRY_LBL, UI_ANALOGY_BREAKS_LBL, UI_REAL_CAVEAT_LBL,
+} from '../../data/ml/uiStrings.js';
 import { useMLUIStore } from '../../store/useMLUIStore.js';
 import { useT } from '../../lib/mlContent.js';
+import DepthLadder from '../ml/learning/DepthLadder.jsx';
+import PredictGate from '../ml/learning/PredictGate.jsx';
+import MechanismWidget from '../ml/learning/MechanismWidget.jsx';
+import MechanismLiveLink from '../ml/learning/MechanismLiveLink.jsx';
+import MisconceptionCallout from '../ml/learning/MisconceptionCallout.jsx';
+import RetrievalCheck from '../ml/learning/RetrievalCheck.jsx';
 import CompassMeter from '../ml/CompassMeter.jsx';
 import './MLModelDetailPanel.css';
 
@@ -11,10 +21,79 @@ function EdgeTypeLabel({ type }) {
   return <span className="ml-detail-conn-type">{useT(MM_EDGE_TYPE_LABEL[type])}</span>;
 }
 
+function SparkLayer({ ladder, nodeId }) {
+  const analogy = useT(ladder.spark.analogy);
+  return (
+    <div className="ml-detail-layer">
+      <p className="ml-body-text">{analogy}</p>
+      <PredictGate
+        predictId={`model-${nodeId}-spark`} nodeId={nodeId} layer="spark" variant="inline"
+        question={ladder.spark.predict.question} options={ladder.spark.predict.options}
+        correctIndex={ladder.spark.predict.correctIndex}
+      />
+    </div>
+  );
+}
+
+function MechanismLayer({ ladder, nodeId }) {
+  const m = ladder.mechanism;
+  if (m.kind === 'live-link') {
+    return <div className="ml-detail-layer"><MechanismLiveLink mechanism={m} nodeId={nodeId} /></div>;
+  }
+  return (
+    <div className="ml-detail-layer">
+      <PredictGate
+        predictId={`model-${nodeId}-mechanism`} nodeId={nodeId} variant="inline"
+        question={m.predict.question} options={m.predict.options} correctIndex={m.predict.correctIndex}
+      >
+        <MechanismWidget
+          paramLabel={m.paramLabel} paramMin={m.paramMin} paramMax={m.paramMax} paramDefault={m.paramDefault}
+          paramStep={m.paramStep} paramDecimals={m.paramDecimals} compute={m.compute} outputLabel={m.outputLabel}
+          outputDecimals={m.outputDecimals} outputSuffix={m.outputSuffix}
+        />
+      </PredictGate>
+    </div>
+  );
+}
+
+function FormalismLayer({ ladder }) {
+  const worked = useT(ladder.formalism.worked);
+  const faded = useT(ladder.formalism.faded);
+  const workedLbl = useT(UI_WORKED_EXAMPLE_LBL);
+  const nowYouTryLbl = useT(UI_NOW_YOU_TRY_LBL);
+  return (
+    <div className="ml-detail-layer">
+      <p className="ml-lbl">{workedLbl}</p>
+      <p className="ml-body-text">{worked}</p>
+      <p className="ml-lbl">{nowYouTryLbl}</p>
+      <p className="ml-body-text">{faded}</p>
+    </div>
+  );
+}
+
+function CriticalFrontierLayer({ ladder, nodeId }) {
+  const cf = ladder.criticalFrontier;
+  const analogyBreakdown = useT(cf.analogyBreakdown);
+  const caveat = useT(cf.caveat);
+  const breaksLbl = useT(UI_ANALOGY_BREAKS_LBL);
+  const caveatLbl = useT(UI_REAL_CAVEAT_LBL);
+  return (
+    <div className="ml-detail-layer">
+      {cf.misconceptionId && <MisconceptionCallout misconceptionId={cf.misconceptionId} />}
+      <p className="ml-lbl">{breaksLbl}</p>
+      <p className="ml-body-text">{analogyBreakdown}</p>
+      <p className="ml-lbl">{caveatLbl}</p>
+      <p className="ml-body-text">{caveat}</p>
+      <RetrievalCheck nodeId={nodeId} question={cf.retrieval.question} answer={cf.retrieval.answer} />
+    </div>
+  );
+}
+
 export default function MLModelDetailPanel() {
   const selectedModelId = useMLUIStore((s) => s.selectedModelId);
   const selectModel = useMLUIStore((s) => s.selectModel);
   const node = selectedModelId ? mlNodeById[selectedModelId] : null;
+  const ladder = node ? MODEL_DEPTH_LADDER[node.id] : null;
 
   const howItWorks = useT(node?.howItWorks);
   const advantages = useT(node?.advantages);
@@ -61,6 +140,16 @@ export default function MLModelDetailPanel() {
 
       <p className="ml-lbl">{compassLbl}</p>
       <CompassMeter compass={node.compass} />
+
+      {ladder && (
+        <DepthLadder
+          nodeId={node.id}
+          spark={<SparkLayer ladder={ladder} nodeId={node.id} />}
+          mechanism={<MechanismLayer ladder={ladder} nodeId={node.id} />}
+          formalism={<FormalismLayer ladder={ladder} />}
+          criticalFrontier={<CriticalFrontierLayer ladder={ladder} nodeId={node.id} />}
+        />
+      )}
 
       {relatedLinks.length > 0 && (
         <>

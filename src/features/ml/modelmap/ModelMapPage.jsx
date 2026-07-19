@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import MLRelationshipMap from '../../../components/mlgraph/MLRelationshipMap.jsx';
 import MLModelDetailPanel from '../../../components/mlgraph/MLModelDetailPanel.jsx';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
+import MisconceptionCallout from '../../../components/ml/learning/MisconceptionCallout.jsx';
 import { MM_LEGEND_TITLE, MM_LEGEND_EXTENDS, MM_LEGEND_COMPETES, MM_LEGEND_COMBINES } from '../../../data/ml/models.js';
 import { useT } from '../../../lib/mlContent.js';
 import './ModelMapPage.css';
 
 export default function ModelMapPage() {
+  const [showMisconception, setShowMisconception] = useState(true);
   const legendTitle = useT(MM_LEGEND_TITLE);
   const legendExtends = useT(MM_LEGEND_EXTENDS);
   const legendCompetes = useT(MM_LEGEND_COMPETES);
@@ -16,6 +19,14 @@ export default function ModelMapPage() {
       <div className="mm-canvas-area">
         <MLRelationshipMap />
         <MLModelDetailPanel />
+        {showMisconception && (
+          <div className="mm-misconception-card">
+            <button type="button" className="mm-misconception-close" onClick={() => setShowMisconception(false)} aria-label="Dismiss">
+              <i className="ti ti-x" aria-hidden="true" />
+            </button>
+            <MisconceptionCallout misconceptionId="programmedBehavior" />
+          </div>
+        )}
         <div className="mm-legend">
           <p className="mm-legend-title">{legendTitle}</p>
           <div className="mm-legend-row"><span className="mm-legend-line mm-line-extends" />{legendExtends}</div>

@@ -1,0 +1,26 @@
+.mechanism-live-link {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 2px;
+}
+
+.mechanism-live-link-btn {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(90deg, var(--primary-2), var(--primary));
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.mechanism-live-link-btn:hover {
+  filter: brightness(1.08);
+}
