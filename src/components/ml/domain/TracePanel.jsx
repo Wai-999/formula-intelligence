@@ -1,3 +1,4 @@
+import { UI_TRACE_EMPTY } from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import './TracePanel.css';
 
@@ -37,8 +38,9 @@ function TraceRow({ driver, contribution, maxAbs, unit, unitPosition, decimals }
 export default function TracePanel({
   contributions, driversByKey, unit = '$', unitPosition = 'prefix', decimals = 0,
 }) {
+  const emptyText = useT(UI_TRACE_EMPTY);
   if (!contributions.length) {
-    return <p className="tp-empty">All drivers are at baseline — move one above to see its effect traced here.</p>;
+    return <p className="tp-empty">{emptyText}</p>;
   }
   const maxAbs = Math.max(...contributions.map((c) => Math.abs(c.contribution)));
   return (

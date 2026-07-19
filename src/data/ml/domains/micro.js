@@ -81,3 +81,8 @@ export const MICRO_MODELS_SUB = blSame(
   'အစက်ရွေးမျဉ်းက ရာခိုင်နှုန်းဆက်နွယ်မှု တစ်နေရာလုံးတွင် တူညီသည်ဟု ယူဆသည်။ အမြဲမျဉ်းက ဒေတာ၏ တကယ့်ပုံသဏ္ဍာန်ကို သင်ယူသည်။'
 );
 export const MICRO_TRACE_TITLE = blSame('Why do the curves disagree here?', 'ဒီနေရာမှာ curve တွေ ဘာကြောင့် သဘောထားကွဲနေတာလဲ?');
+
+// Found during the same verification pass as the note above: DemandCurveChart's
+// own SVG y-axis title, missed by the file-by-file audit since it's a bespoke
+// chart component's internal text, not page chrome.
+export const MICRO_UNITS_LABEL = blSame('units/week', 'unit/အပတ်');

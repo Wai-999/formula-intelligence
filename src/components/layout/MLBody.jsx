@@ -3,6 +3,7 @@ import MLIconRail from './MLIconRail.jsx';
 import { useUIStore } from '../../store/useUIStore.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
 import LevelLangToggle from '../ml/LevelLangToggle.jsx';
+import { useT } from '../../lib/mlContent.js';
 import './MLBody.css';
 
 // Lazy-loaded so Stats mode's bundle doesn't grow for users who never open
@@ -36,13 +37,14 @@ function MLLoading() {
 export default function MLBody() {
   const mlActiveTab = useUIStore((s) => s.mlActiveTab);
   const tabMeta = ML_TABS.find((t) => t.id === mlActiveTab);
+  const tabTitle = useT(tabMeta?.title);
 
   return (
     <>
       <MLIconRail />
       <main className="app-main ml-main">
         <div className="ml-main-header">
-          <span className="ml-main-title">{tabMeta?.label}</span>
+          <span className="ml-main-title">{tabTitle}</span>
           <LevelLangToggle />
         </div>
         <div className="ml-main-content">

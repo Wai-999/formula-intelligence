@@ -14,3 +14,13 @@ export const UI_ILLUSTRATIVE_DATA = blSame(
   'သရုပ်ဖော်ဒေတာ — လက်တွေ့ pattern များနှင့် ကိုက်ညီအောင် ချိန်ညှိထားသည်'
 );
 export const UI_SOURCE_LBL = blSame('Source', 'ရင်းမြစ်');
+
+// TracePanel's empty state, shown on every domain lab (Gold/Macro/Micro/
+// Politics) before any driver is touched — found hardcoded during the same
+// verification pass as the two strings above; missed by the file-by-file
+// audit because it's over 60 characters and the sweep's regex capped match
+// length there.
+export const UI_TRACE_EMPTY = blSame(
+  'All drivers are at baseline — move one above to see its effect traced here.',
+  'Driver အားလုံး baseline တွင်ရှိသည် — ၎င်း၏ သက်ရောက်မှုကို ဤနေရာတွင် ခြေရာခံကြည့်ရန် တစ်ခုခုကို ရွှေ့ပါ။'
+);

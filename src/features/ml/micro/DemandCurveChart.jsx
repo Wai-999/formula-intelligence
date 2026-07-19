@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { useT } from '../../../lib/mlContent.js';
 import { useHorizontalScrollHint } from '../../../lib/useHorizontalScrollHint.js';
 import { logLogQuantity, mlQuantity } from './demandModel.js';
+import { MICRO_UNITS_LABEL } from '../../../data/ml/domains/micro.js';
 import './DemandCurveChart.css';
 
 const W = 640;
@@ -26,6 +27,7 @@ export default function DemandCurveChart({ price, promoOn, peakSeason, models, r
   const [econModel, mlModel] = models;
   const econName = useT(econModel.name);
   const mlName = useT(mlModel.name);
+  const unitsLabel = useT(MICRO_UNITS_LABEL);
 
   const x = d3.scaleLinear().domain([reference.priceMin, reference.priceMax]).range([MARGIN.left, W - MARGIN.right]);
   const y = d3.scaleLinear().domain([0, Y_MAX]).range([H - MARGIN.bottom, MARGIN.top]);
@@ -67,7 +69,7 @@ export default function DemandCurveChart({ price, promoOn, peakSeason, models, r
           <circle cx={x(price)} cy={y(currentLogLogQ)} r={5} fill={econModel.color} className="dcc-dot" />
           <circle cx={x(price)} cy={y(currentMlQ)} r={5} fill={mlModel.color} className="dcc-dot" />
 
-          <text x={MARGIN.left + 4} y={MARGIN.top + 2} className="dcc-y-title">units/week</text>
+          <text x={MARGIN.left + 4} y={MARGIN.top + 2} className="dcc-y-title">{unitsLabel}</text>
         </svg>
       </div>
       {canScrollRight && (
