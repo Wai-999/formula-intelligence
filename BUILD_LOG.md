@@ -350,3 +350,22 @@ Building the shared components first (this entry's own commit), then retrofittin
 - Console: 0 errors.
 
 ---
+
+## Module 2 retrofit: Pipeline Depth Ladder + 3-bucket sort + 2 misconceptions
+
+**Built:** Full Depth Ladder (spark/mechanism/formalism/criticalFrontier) on all 7 pipeline stages, and the mission-required 3-bucket sort as the E/P/C panel's Predict step. Every stage's Spark layer has a genuine analogy plus a 2-4-option predict prompt (via `PredictGate`); Mechanism is a `MechanismWidget` with a stage-specific `compute()` (e.g. Estimation: years-of-data → toy parameter stability; Evaluation: months-since-deployment → toy error rate, spiking at an illustrative regime-shift point), itself wrapped in its own directional predict-gate; Formalism carries a fully worked numeric example (several reusing the real $4,015/−180/−90-coefficient figures already established in Module 6) plus a partially-faded second example; Critical Frontier carries an analogy-breakdown, a real caveat, and a `RetrievalCheck` question. `programmedBehavior` is refuted on the Estimation stage, `autonomousDataAcquisition` on Data Collection, per the mission's assignment table. The Estimation/Prediction/Causal panel gained `EstimationPredictionSort.jsx` — six real gold-forecasting questions the learner sorts into the correct bucket, click-based (not drag-and-drop, for touch/reliability) with per-item and aggregate scoring, before the existing tab exploration.
+
+**Files touched:** `src/data/ml/pipeline.js` (7 stages extended, `stageName` translation added — a pre-existing hardcoded-English gap found and fixed in passing), `src/features/ml/pipeline/PipelineVisualizer.jsx` (rewritten to compose `DepthLadder`), `src/features/ml/pipeline/PipelineVisualizer.css` (new layer classes), `src/data/ml/estimationPredictionCausal.js` (sort-exercise data), `src/features/ml/pipeline/EstimationPredictionSort.jsx` + `.css` (new), `src/features/ml/pipeline/EstimationPredictionCausal.jsx` (wired in), `src/data/ml/uiStrings.js` (Depth Ladder content-layer chrome, reused by every later module).
+
+**Decisions (rule 1):**
+- **Found and fixed a real bug during verification**: `PredictGate` hardcoded `markLayerEngaged(nodeId, 'mechanism')` regardless of which Depth-Ladder layer it was actually being used inside — since Spark's predict prompt also uses `PredictGate`, answering it was mis-recording "Mechanism engaged" in the Understanding Tracker instead of "Spark engaged". Fixed by adding a `layer` prop (defaulting to `'mechanism'` for existing call sites), with the Pipeline's Spark usage passing `layer="spark"` explicitly. Caught by inspecting `localStorage`'s `ml_understanding_v1` directly after a real interaction, not assumed correct from the UI alone.
+- **The E/P/C panel's own misconception is inherited, not duplicated**: the mission's table assigns "Programmed Behavior" to "Pipeline module (estimation step) *and* Model Relationship Map," and the E/P/C panel sits directly beside the Estimation stage in the same module — it doesn't need its own separate `MisconceptionCallout`, since forcing a second copy of the same refutation onto an adjacent component would be redundant, not additive.
+- **Mechanism widgets reuse real numbers where a stage already has them** (Estimation's worked example reuses Gold's actual −180/−90-style coefficients) rather than inventing disconnected illustrative figures, so a learner who's already spent time in Module 6 sees continuity, not a parallel unrelated example.
+
+**Verification:**
+- `npm run build`/`npm run lint`: pass at each of three checkpoints (initial Depth Ladder, the `layer`-prop bug fix, the sort exercise).
+- Browser-verified end-to-end: Spark's predict-gate resolves correctly and now records the right layer; Mechanism's slider + widget compute correctly (verified `compute(5) === 1` matches the displayed output for the framing stage); Formalism and Critical Frontier tabs render full content with no missing text; the sort exercise's per-item correct/wrong marking and aggregate score both verified against known input (defaulting every item to "Estimation" scored exactly 2/6, matching the 2 estimation-bucket items in the data).
+- Understanding Tracker confirmed progressing Novice → Advanced Beginner after the first real engagement, consistent with the documented threshold.
+- Console: 0 errors across every check.
+
+---

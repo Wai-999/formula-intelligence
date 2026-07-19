@@ -90,3 +90,9 @@ export const UI_MIXED_REVIEW_EXPAND = blSame('Cross-domain question available', 
 // Module 1: one-time ML-mode entry banner (D.3, "User-Trained Model").
 export const UI_ENTRY_BANNER_TITLE = blSame('Before you start clicking around', 'စမ်းသပ်စတင်ခြင်းမတိုင်မီ');
 export const UI_ENTRY_BANNER_DISMISS = blSame("Got it — let's go", 'နားလည်ပြီ — စလိုက်ကြရအောင်');
+
+// Depth Ladder content-layer chrome, reused across every module.
+export const UI_WORKED_EXAMPLE_LBL = blSame('Worked example', 'အဆင့်ဆင့် ဖြေရှင်းချက်');
+export const UI_NOW_YOU_TRY_LBL = blSame('Now you try', 'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ');
+export const UI_ANALOGY_BREAKS_LBL = blSame('Where the analogy breaks down', 'ဆင်တူပုံရိပ် ပျက်စီးရာနေရာ');
+export const UI_REAL_CAVEAT_LBL = blSame('A real caveat', 'တကယ့် သတိပေးချက်');

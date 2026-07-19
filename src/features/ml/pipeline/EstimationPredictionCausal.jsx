@@ -8,6 +8,7 @@ import MLCitation from '../../../components/ml/MLCitation.jsx';
 import EstimationDemo from './EstimationDemo.jsx';
 import PredictionIntervalDemo from './PredictionIntervalDemo.jsx';
 import ConfounderDemo from './ConfounderDemo.jsx';
+import EstimationPredictionSort from './EstimationPredictionSort.jsx';
 import './EstimationPredictionCausal.css';
 
 const DEMOS = {
@@ -88,6 +89,7 @@ export default function EstimationPredictionCausal() {
     <div className="ml-section epc-section">
       <p className="ml-section-title">{title}</p>
       <p className="ml-section-sub">{intro}</p>
+      <EstimationPredictionSort />
       <div className="epc-tabs" role="tablist">
         {EPC_COLUMNS.map((col) => (
           <EPCTabButton key={col.id} column={col} isOpen={openId === col.id} onClick={() => setOpenId(col.id)} />

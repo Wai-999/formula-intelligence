@@ -100,3 +100,13 @@
   border: 1px solid rgba(251, 191, 36, 0.18);
   border-radius: var(--radius-sm);
 }
+
+.pv-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pv-faded-lbl {
+  margin-top: 6px;
+}

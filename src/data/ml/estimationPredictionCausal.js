@@ -168,3 +168,64 @@ export const CONF_GOLD_LABEL = blSame('Gold price', 'ရွှေဈေးနှ
 export const CONF_PREDICTS_LABEL = blSame('predicts well —', 'ကောင်းစွာ ခန့်မှန်းနိုင် —');
 export const CONF_BUTDOESNT_LABEL = blSame("but doesn't cause", 'ဒါပေမဲ့ မဖြစ်စေပါ'
 );
+
+// Module 2 Learning Design System retrofit: the three-bucket sorting
+// exercise the mission requires as this panel's Predict step, before the
+// tab exploration. Six items spanning all three buckets, drawn from real
+// gold-forecasting questions this module and Module 6 both use.
+export const EPC_SORT_TITLE = blSame(
+  'Sort each question into the right bucket',
+  'မေးခွန်းတစ်ခုစီကို မှန်ကန်သော container ထဲ ခွဲထည့်ပါ'
+);
+export const EPC_SORT_INTRO = blSame(
+  'Before exploring the three columns below, try this: each question below is really asking one of Estimation, Prediction, or Causal Inference — sort all six, then check your answers.',
+  'အောက်ပါ ကော်လံသုံးခုကို မစူးစမ်းမီ ဒါကို စမ်းကြည့်ပါ: အောက်ပါ မေးခွန်းတစ်ခုစီသည် Estimation, Prediction, သို့မဟုတ် Causal Inference တစ်ခုခုကို တကယ်မေးနေခြင်းဖြစ်သည် — ခြောက်ခုလုံးကို ခွဲထည့်ပြီး အဖြေများကို စစ်ဆေးပါ။'
+);
+export const EPC_SORT_CHECK_BTN = blSame('Check my answers', 'ကျွန်ုပ်၏ အဖြေများကို စစ်ဆေးပါ');
+export const EPC_SORT_CORRECT_LBL = blSame('Correct', 'မှန်ကန်သည်');
+export const EPC_SORT_ACTUAL_TEMPLATE = blSame('Actually: {bucket}', 'တကယ်တမ်း: {bucket}');
+
+export const EPC_SORT_ITEMS = [
+  {
+    id: 'next-month-price',
+    text: blSame('What will gold cost next month?', 'ရွှေက လာမယ့်လမှာ ဘယ်လောက်ဖြစ်မလဲ?'),
+    correctBucket: 'prediction',
+  },
+  {
+    id: 'coefficient-significant',
+    text: blSame(
+      "Is the coefficient on real yields in the gold-price regression statistically significant?",
+      'ရွှေဈေးနှုန်း regression ရှိ real yields ၏ coefficient သည် statistically significant ဖြစ်ပါသလား?'
+    ),
+    correctBucket: 'estimation',
+  },
+  {
+    id: 'rate-cut-cause',
+    text: blSame(
+      'Would a Fed rate cut actually cause the price of gold to rise, or would they just move together anyway?',
+      'Fed အတိုးနှုန်းလျှော့ချမှုသည် ရွှေဈေးကို တကယ်ပင် မြင့်တက်စေမည်လား၊ ဒါမှမဟုတ် ဘာဖြစ်ဖြစ် အတူတကွ ရွေ့လျားနေမည်လား?'
+    ),
+    correctBucket: 'causal',
+  },
+  {
+    id: 'ci-width',
+    text: blSame(
+      'How confident are we that the true effect of real yields on gold is somewhere between −400 and −224?',
+      'Real yields ၏ ရွှေအပေါ် စစ်မှန်သောသက်ရောက်မှုသည် −400 နှင့် −224 ကြားရှိသည်ဟု ဘယ်လောက်ယုံကြည်ကြသလဲ?'
+    ),
+    correctBucket: 'estimation',
+  },
+  {
+    id: 'tomorrow-direction',
+    text: blSame("Will tomorrow's gold price be higher or lower than today's?", 'မနက်ဖြန် ရွှေဈေးက ဒီနေ့ထက် မြင့်မလား နိမ့်မလား?'),
+    correctBucket: 'prediction',
+  },
+  {
+    id: 'cb-buying-stops',
+    text: blSame(
+      'If central banks stopped buying gold entirely, would the price actually fall as a direct result?',
+      'ဗဟိုဘဏ်များ ရွှေဝယ်ယူမှု လုံးဝရပ်လိုက်ရင် ဈေးနှုန်း တိုက်ရိုက်ရလဒ်အနေဖြင့် တကယ်ကျမည်လား?'
+    ),
+    correctBucket: 'causal',
+  },
+];

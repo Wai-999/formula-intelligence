@@ -13,7 +13,7 @@ import './PredictGate.css';
 // children are always mounted (never unmount/remount on answer) so any
 // slider/chart state underneath survives the reveal.
 export default function PredictGate({
-  predictId, nodeId, question, options, correctIndex, explain, variant = 'card', children,
+  predictId, nodeId, layer = 'mechanism', question, options, correctIndex, explain, variant = 'card', children,
 }) {
   const level = useMLUIStore((s) => s.level);
   const lang = useMLUIStore((s) => s.lang);
@@ -33,7 +33,7 @@ export default function PredictGate({
   function choose(index) {
     const correct = index === correctIndex;
     recordPrediction(predictId, index, correct);
-    if (nodeId) markLayerEngaged(nodeId, 'mechanism');
+    if (nodeId) markLayerEngaged(nodeId, layer);
     setJustAnswered({ guessIndex: index, correct });
   }
 
