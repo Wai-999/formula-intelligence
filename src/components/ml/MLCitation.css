@@ -1,0 +1,18 @@
+.ml-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.ml-citation i {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.ml-citation-synthetic {
+  color: var(--warning);
+  opacity: 0.85;
+}

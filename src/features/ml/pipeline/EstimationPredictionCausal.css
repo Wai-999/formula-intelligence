@@ -1,0 +1,225 @@
+.epc-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 640px) {
+  .epc-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.epc-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.epc-tab:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.epc-tab.active {
+  background: color-mix(in srgb, var(--epc-accent) 14%, transparent);
+  border-color: var(--epc-accent);
+}
+
+.epc-tab-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.epc-tab.active .epc-tab-label {
+  color: var(--epc-accent);
+}
+
+.epc-tab-territory {
+  font-size: 10.5px;
+  color: var(--text-faint);
+}
+
+.epc-detail {
+  margin-top: 12px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.epc-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+@media (max-width: 640px) {
+  .epc-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.epc-example {
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.epc-failure {
+  grid-column: 1 / -1;
+  padding: 8px 9px;
+  background: rgba(251, 113, 133, 0.06);
+  border: 1px solid rgba(251, 113, 133, 0.18);
+  border-radius: var(--radius-sm);
+}
+
+.epc-failure-lbl {
+  color: var(--danger) !important;
+}
+
+.epc-demo {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Prediction interval demo */
+.epc-interval {
+  padding: 12px 4px 4px;
+}
+
+.epc-interval-track {
+  position: relative;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 8px;
+}
+
+.epc-interval-band {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 4px;
+  background: rgba(34, 211, 238, 0.35);
+}
+
+.epc-interval-point {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.epc-interval-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
+.epc-interval-mid {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Confounder demo */
+.epc-confounder-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+.epc-confounder-label {
+  font-size: 11px;
+  fill: var(--text-primary);
+  font-weight: 600;
+}
+
+.epc-confounder-top {
+  fill: var(--text-muted);
+  font-weight: 700;
+}
+
+.epc-confounder-box {
+  fill: rgba(255, 255, 255, 0.05);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.epc-confounder-danger-label {
+  font-size: 9.5px;
+  fill: var(--danger);
+}
+
+/* Estimation demo */
+.epc-coef-card {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-sm);
+}
+
+.epc-coef-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.epc-coef-ci {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.epc-bridge-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 7px 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.epc-bridge-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.epc-bridge-note {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+  font-style: italic;
+}

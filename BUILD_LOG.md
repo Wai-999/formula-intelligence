@@ -67,3 +67,23 @@ One entry per module: what was built, files touched, decisions made and why, ver
 - Console: 0 errors/warnings across every check above.
 
 ---
+
+## Module 2: ML Pipeline Visualizer
+
+**Built:** `src/data/ml/pipeline.js` — all 7 stages from the research doc §1 table, each with a question/what-happens pair plus a dedicated Gold-price worked example, fully bilingual/two-depth via `bl()`. `PipelineVisualizer.jsx` — a horizontally-scrollable 7-node stepper (numbered circles + connectors), click any stage to expand its detail below (accordion, one open at a time). `src/data/ml/estimationPredictionCausal.js` — the full §2 table (Estimation/Prediction/Causal Inference × Goal/Output/Example/Methods/Failure mode), bilingual/two-depth. `EstimationPredictionCausal.jsx` — the 3-tab interactive panel; each tab, beyond the table content, renders a concrete demo: **Estimation** shows a coefficient+CI card and a working button that jumps straight into Module 10's Bridge tab (`useUIStore.navigateToLinkedConcept`); **Prediction** shows a live point-forecast+interval bar (`PredictionIntervalDemo.jsx`); **Causal Inference** shows an SVG confounder diagram — DXY predicting gold well without causing it, both driven by Fed policy (`ConfounderDemo.jsx`). `src/features/ml/mlPageShared.css` — the shared page-chrome conventions (`.ml-page`, `.ml-section`, `.ml-lbl`, etc.) every subsequent module reuses. `MLCitation.jsx` — the citation/synthetic-data-label component mandated by Section F.5, used here and reused everywhere from now on.
+
+**Files touched:** `src/data/ml/{pipeline,estimationPredictionCausal}.js` (new), `src/features/ml/pipeline/{PipelinePage,PipelineVisualizer,EstimationPredictionCausal,EstimationDemo,PredictionIntervalDemo,ConfounderDemo}.jsx` + matching `.css` (new; `PipelinePage.jsx` replaces its Module 1 placeholder), `src/features/ml/mlPageShared.css` (new), `src/components/ml/MLCitation.jsx` + `.css` (new).
+
+**Decisions (rule 1):**
+- Caught and fixed a real Rules-of-Hooks violation while writing this module: `useT()` was initially called inside an `EPC_COLUMNS.map()` callback in the parent component. Extracted a small `EPCTabButton` subcomponent so the hook call happens at a stable component top-level instead — the correct React pattern, not just a lint-silencer.
+- The pipeline stepper is a horizontally-scrolling row rather than a fixed 7-column grid, so it degrades to "swipe sideways" at 360px instead of needing per-breakpoint label truncation — the same resilience-over-cleverness choice as the Stats map's own responsive handling.
+- `--danger` (existing token) reused for the confounder diagram's "predicts well but doesn't cause" arrow and for the EPC "failure mode" callout box — no new red was invented.
+
+**Verification:**
+- `npm run build`: pass; `PipelinePage` confirmed in its own ~46KB lazy chunk (its content is now real, not a placeholder).
+- `npm run lint`: pass, 0 warnings (including after the Rules-of-Hooks fix above).
+- Visual smoke test: all 7 pipeline stages open correctly with distinct content; all 3 EPC tabs verified with their demos (coefficient card, interval bar reading exactly $4,030–$4,330 around a $4,180 point per the $4,180±$150 example text, confounder SVG diagram); Beginner→Researcher toggle confirmed changing displayed text; EN→Burmese toggle confirmed changing displayed text (spot-checked the framing-stage question and researcher-depth body text, both matched the authored Burmese exactly); Burmese glyphs render cleanly (no tofu boxes) under the existing `--font-sans` stack; Estimation→Bridge cross-link button confirmed landing on Module 10's tab (`Stats ↔ ML` both in the header and the active icon-rail button).
+- Encountered and diagnosed two false alarms during testing, both testing-harness artifacts rather than app bugs (logged here so future verification passes don't waste time rediscovering them): (1) an HMR-triggered full reload during active file editing transiently reset mode/tab state — resolved by a clean re-navigation, not a code fix; (2) rapid chained click scripts without settling time between them produced confusing intermediate reads — resolved by spacing interactions across separate tool calls, consistent with this session's established testing pattern.
+- Console: 0 errors across the entire session, including through both false-alarm investigations.
+
+---

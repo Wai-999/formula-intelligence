@@ -1,5 +1,12 @@
-import MLPlaceholder from '../../../components/ml/MLPlaceholder.jsx';
+import PipelineVisualizer from './PipelineVisualizer.jsx';
+import EstimationPredictionCausal from './EstimationPredictionCausal.jsx';
+import '../mlPageShared.css';
 
 export default function PipelinePage() {
-  return <MLPlaceholder icon="ti-route" title="ML Pipeline Visualizer" module={2} />;
+  return (
+    <div className="ml-page">
+      <PipelineVisualizer />
+      <EstimationPredictionCausal />
+    </div>
+  );
 }
