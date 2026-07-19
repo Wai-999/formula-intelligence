@@ -5,11 +5,61 @@ import {
   EST_EXAMPLE_INTRO, EST_STATS_CARD, EST_BAYES_CARD, EST_STATS_NODES, EST_TO_POLITICS_LABEL,
   VIEW_ON_STATS_MAP_LABEL, BRIDGE_PAGE_TITLE, REG_SECTION_TITLE, EST_SECTION_TITLE,
   REG_NODES_LABEL, EST_NODES_LABEL,
+  CAUSAL_SECTION_TITLE, CAUSAL_EXAMPLE_INTRO, CAUSAL_PREDICTIVE_CARD, CAUSAL_ACTUAL_CARD,
+  CAUSAL_PREDICT_Q, CAUSAL_PREDICT_YES, CAUSAL_PREDICT_NOT_SAFE, CAUSAL_PREDICT_EXPLAIN,
+  CAUSAL_SPARK_ANALOGY, CAUSAL_MECHANISM_NOTE, CAUSAL_FORMALISM_WORKED, CAUSAL_FORMALISM_FADED,
+  CAUSAL_CF_ANALOGY_BREAK, CAUSAL_CF_CAVEAT, CAUSAL_CF_RETRIEVAL_Q, CAUSAL_CF_RETRIEVAL_A,
 } from '../../../data/ml/bridge.js';
+import {
+  UI_WORKED_EXAMPLE_LBL, UI_NOW_YOU_TRY_LBL, UI_ANALOGY_BREAKS_LBL, UI_REAL_CAVEAT_LBL,
+} from '../../../data/ml/uiStrings.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
+import DepthLadder from '../../../components/ml/learning/DepthLadder.jsx';
+import PredictGate from '../../../components/ml/learning/PredictGate.jsx';
+import RetrievalCheck from '../../../components/ml/learning/RetrievalCheck.jsx';
 import '../mlPageShared.css';
 import './BridgePage.css';
+
+const NODE_ID = 'bridge-causal';
+
+function CausalSparkLayer() {
+  const analogy = useT(CAUSAL_SPARK_ANALOGY);
+  return <div className="bridge-depth-layer"><p className="ml-body-text">{analogy}</p></div>;
+}
+function CausalMechanismLayer() {
+  const note = useT(CAUSAL_MECHANISM_NOTE);
+  return <div className="bridge-depth-layer"><p className="ml-body-text">{note}</p></div>;
+}
+function CausalFormalismLayer() {
+  const worked = useT(CAUSAL_FORMALISM_WORKED);
+  const faded = useT(CAUSAL_FORMALISM_FADED);
+  const workedLbl = useT(UI_WORKED_EXAMPLE_LBL);
+  const nowYouTryLbl = useT(UI_NOW_YOU_TRY_LBL);
+  return (
+    <div className="bridge-depth-layer">
+      <p className="ml-lbl">{workedLbl}</p>
+      <p className="ml-body-text">{worked}</p>
+      <p className="ml-lbl">{nowYouTryLbl}</p>
+      <p className="ml-body-text">{faded}</p>
+    </div>
+  );
+}
+function CausalCriticalFrontierLayer() {
+  const analogyBreak = useT(CAUSAL_CF_ANALOGY_BREAK);
+  const caveat = useT(CAUSAL_CF_CAVEAT);
+  const breaksLbl = useT(UI_ANALOGY_BREAKS_LBL);
+  const caveatLbl = useT(UI_REAL_CAVEAT_LBL);
+  return (
+    <div className="bridge-depth-layer">
+      <p className="ml-lbl">{breaksLbl}</p>
+      <p className="ml-body-text">{analogyBreak}</p>
+      <p className="ml-lbl">{caveatLbl}</p>
+      <p className="ml-body-text">{caveat}</p>
+      <RetrievalCheck nodeId={NODE_ID} question={CAUSAL_CF_RETRIEVAL_Q} answer={CAUSAL_CF_RETRIEVAL_A} />
+    </div>
+  );
+}
 
 function ComparisonCard({ card, accent }) {
   const title = useT(card.title);
@@ -50,6 +100,8 @@ export default function BridgePage() {
   const estSectionTitle = useT(EST_SECTION_TITLE);
   const regNodesLabel = useT(REG_NODES_LABEL);
   const estNodesLabel = useT(EST_NODES_LABEL);
+  const causalSectionTitle = useT(CAUSAL_SECTION_TITLE);
+  const causalIntro = useT(CAUSAL_EXAMPLE_INTRO);
 
   const regRef = useRef(null);
   const estRef = useRef(null);
@@ -122,6 +174,32 @@ export default function BridgePage() {
           <i className="ti ti-flag" aria-hidden="true" /> {toPoliticsLabel}
         </button>
         <div className="ml-citation-row"><MLCitation synthetic /></div>
+      </div>
+
+      <div className="ml-section">
+        <p className="ml-section-title">{causalSectionTitle}</p>
+        <p className="ml-section-sub">{causalIntro}</p>
+        <PredictGate
+          predictId="bridge-causal-predict" nodeId={NODE_ID} layer="mechanism"
+          question={CAUSAL_PREDICT_Q} options={[CAUSAL_PREDICT_YES, CAUSAL_PREDICT_NOT_SAFE]} correctIndex={1}
+          explain={CAUSAL_PREDICT_EXPLAIN}
+        >
+          <div className="bridge-card-row">
+            <ComparisonCard card={CAUSAL_PREDICTIVE_CARD} accent="#22d3ee" />
+            <ComparisonCard card={CAUSAL_ACTUAL_CARD} accent="#fbbf24" />
+          </div>
+        </PredictGate>
+        <div className="ml-citation-row"><MLCitation synthetic /></div>
+      </div>
+
+      <div className="ml-section">
+        <DepthLadder
+          nodeId={NODE_ID}
+          spark={<CausalSparkLayer />}
+          mechanism={<CausalMechanismLayer />}
+          formalism={<CausalFormalismLayer />}
+          criticalFrontier={<CausalCriticalFrontierLayer />}
+        />
       </div>
     </div>
   );
