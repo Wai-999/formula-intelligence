@@ -389,3 +389,21 @@ Building the shared components first (this entry's own commit), then retrofittin
 - Console: 0 errors across every check.
 
 ---
+
+## Module 4 retrofit: Productive Failure sequencing
+
+**Built:** Restructured Playground's interaction order around Productive Failure (docs/research/ML-Mode-Pedagogy-Research.md §1: attempt-before-instruction beats instruction-first for conceptual understanding) rather than just adding content. A new `revealed` state gates the page into two real phases: **before** — only the scatter-fit chart, the model/noise/complexity controls, and a plain "try to find the best fit, no error numbers yet" prompt are visible; the error-curve chart, the Underfitting/Overfitting/Good-fit zone banner, and the Depth Ladder are all absent, not just dimmed. **After** clicking "Reveal my result" — both charts, the zone banner, and a full `DepthLadder` (Spark analogy revisiting *why* their attempt landed where it did, Mechanism pointing back at the interactive they already used, Formalism with a worked MSE calculation, Critical Frontier with a retrieval question) all appear together, anchored to the specific complexity they'd already committed to rather than a generic explanation shown up front.
+
+**Files touched:** `src/data/ml/playground.js` (new Depth Ladder + sequencing content), `src/features/ml/playground/PlaygroundPage.jsx` (staged reveal, `DepthLadder` wiring), `src/features/ml/playground/PlaygroundPage.css` (new prompt/button/layer classes).
+
+**Decisions (rule 1):**
+- **`revealed` resets on a new sample or a model switch, but not on adjusting noise or complexity mid-attempt** — a fresh dataset or model family is genuinely a new "try to find the best fit" challenge (worth re-hiding the answer for), while nudging sliders on the *same* challenge is the learner's own exploration, not a new one; resetting on every slider tick would have fought against letting them actually explore once revealed.
+- **The Depth Ladder's Mechanism layer doesn't duplicate a new widget** — the interactive the learner already used (the chart + sliders above) *is* the mechanism; the tab is a short note pointing back at it now that they have the vocabulary to interpret it, not a second redundant interactive.
+- **Reused the existing zone-banner/error-chart components unchanged**, only gating *when* they mount — the productive-failure requirement is about sequencing, not about replacing content that was already correct.
+
+**Verification:**
+- `npm run build`/`npm run lint`: pass.
+- Browser-verified the full state machine end-to-end, each check scoped to `document.querySelectorAll('.app-tab-keepalive')`'s currently-`display`-visible pane specifically (an unscoped first attempt falsely "found" a `.depth-ladder` from Model Map's still-mounted pane, the same cross-pane query mistake flagged in Module 3's entry): pre-reveal shows the prompt with no error chart and no Depth Ladder; clicking reveal shows both charts, the zone banner, and all 4 Depth Ladder tabs; clicking "New sample" correctly resets back to the pre-reveal state.
+- Console: 0 errors.
+
+---
