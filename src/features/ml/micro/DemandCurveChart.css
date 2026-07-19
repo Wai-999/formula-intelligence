@@ -1,0 +1,96 @@
+.dcc-outer {
+  position: relative;
+}
+
+.dcc-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dcc-chart {
+  width: 100%;
+  min-width: 420px;
+  height: auto;
+}
+
+.dcc-scroll-hint {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 40px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 2px;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.3) 65%);
+  color: var(--text-faint);
+  font-size: 15px;
+}
+
+.dcc-gridline {
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1;
+}
+
+.dcc-axis-label {
+  font-size: 9.5px;
+  fill: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
+.dcc-y-title {
+  font-size: 9px;
+  fill: var(--text-faint);
+}
+
+.dcc-curve {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.dcc-price-marker {
+  stroke: var(--text-faint);
+  stroke-width: 1;
+  stroke-dasharray: 3, 2;
+}
+
+.dcc-dot {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.dcc-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.dcc-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dcc-legend-item strong {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.dcc-swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.dcc-swatch-dashed {
+  height: 0;
+  border-top: 2px dashed;
+  background: none;
+}
