@@ -1,0 +1,23 @@
+.macro-simplicity-callout {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(52, 211, 153, 0.07);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  border-radius: var(--radius-md);
+}
+
+.macro-simplicity-callout > i {
+  color: var(--success);
+  font-size: 18px;
+  margin-top: 1px;
+}
+
+.macro-simplicity-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--success);
+  margin-bottom: 3px;
+}

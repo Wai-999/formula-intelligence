@@ -1,0 +1,82 @@
+.igt-outer {
+  position: relative;
+}
+
+.igt-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.igt-chart {
+  width: 100%;
+  min-width: 420px;
+  height: auto;
+}
+
+.igt-scroll-hint {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 2px;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.3) 65%);
+  color: var(--text-faint);
+  font-size: 15px;
+}
+
+.igt-gap-zone {
+  fill: rgba(251, 191, 36, 0.1);
+  stroke: rgba(251, 191, 36, 0.35);
+  stroke-width: 1;
+  stroke-dasharray: 4, 3;
+}
+
+.igt-gap-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--warning);
+}
+
+.igt-baseline {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+.igt-point-muted {
+  fill: var(--surface);
+  stroke: var(--text-faint);
+  stroke-width: 1.5;
+}
+
+.igt-point-today {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.igt-today-line {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 3, 2;
+}
+
+.igt-point-text {
+  font-size: 10.5px;
+  fill: var(--text-muted);
+}
+
+.igt-today-text {
+  fill: var(--text-primary);
+  font-weight: 700;
+}
+
+.igt-nowcast-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--accent);
+}

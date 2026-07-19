@@ -57,10 +57,45 @@ export function computeModelForecasts(baseValue, drivers, driverState, baseBandW
   };
 }
 
-// Per-driver dollar contribution for the trace ("why did this move?") panel.
+// Per-driver contribution (dollars, percentage points, whatever the domain's
+// coefficients are scaled in) for the trace ("why did this move?") panel.
 export function driverContributions(drivers, driverState) {
   return drivers
     .map((d) => ({ key: d.key, contribution: d.coefficient * (driverState[d.key] ?? 0) }))
     .filter((c) => Math.abs(c.contribution) > 1e-6)
     .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution));
+}
+
+// Macro nowcasting (Module 7, ML-Research-Reference.md §6.2): three models
+// with genuinely different jobs, not just different math shapes on the same
+// job. DFM is "the classic econometric approach... give the most accurate
+// backcasts" — modeled as heavily anchored/damped, slow to move off the
+// structural view on any single high-frequency print. Random Forest "gives
+// the most accurate forecasts and nowcasts... most precise for inflation"
+// — reuses the same tanh-saturation shape as Gold's tree-ensemble lens,
+// which is a real match (Random Forest *is* a tree ensemble, not just an
+// analogy). LASSO/Elastic Net is deliberately given the full, undamped
+// linear read — not rigged to "win" numerically, since the doc's actual
+// "simplicity can win" finding is a comparative research result cited in
+// prose (see MACRO_SIMPLICITY_CALLOUT), not something this toy simulation
+// should fabricate proof of.
+export function computeMacroForecasts(baseValue, drivers, driverState, baseBandWidth) {
+  const linearDelta = computeDriverDelta(drivers, driverState);
+  const maxAbsDriver = Math.max(0, ...drivers.map((d) => Math.abs(driverState[d.key] ?? 0)));
+
+  const dfmDelta = linearDelta * 0.5;
+  const dfmBand = baseBandWidth * 0.8;
+
+  const rfDelta = drivers.reduce((sum, d) => sum + d.coefficient * Math.tanh((driverState[d.key] ?? 0) * 0.85) / 0.85, 0);
+  const rfBand = baseBandWidth * (1 + Math.max(0, maxAbsDriver - 1) * 0.4);
+
+  const lassoDelta = linearDelta;
+  const lassoBand = baseBandWidth * 0.9;
+
+  return {
+    dfm: { delta: dfmDelta, band: dfmBand },
+    randomForest: { delta: rfDelta, band: rfBand },
+    lassoElasticNet: { delta: lassoDelta, band: lassoBand },
+    linearDelta,
+  };
 }
