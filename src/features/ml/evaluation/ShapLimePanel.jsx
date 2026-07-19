@@ -1,6 +1,7 @@
 import {
   SHAP_INTRO, SHAP_FEATURES, LIME_INTRO, LIME_EXAMPLE,
   EV_SHAP_TITLE, EV_LIME_TITLE, EV_BASE_VALUE_LBL, EV_THIS_PREDICTION_LBL,
+  EV_LIME_BASE_MARGIN, EV_LIME_FINAL_MARGIN,
 } from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
@@ -42,6 +43,8 @@ export default function ShapLimePanel() {
   const limeTitle = useT(EV_LIME_TITLE);
   const baseValueLbl = useT(EV_BASE_VALUE_LBL);
   const thisPredictionLbl = useT(EV_THIS_PREDICTION_LBL);
+  const baseMargin = useT(EV_LIME_BASE_MARGIN);
+  const finalMargin = useT(EV_LIME_FINAL_MARGIN);
   const maxImportance = Math.max(...SHAP_FEATURES.map((f) => f.importance));
   const maxAbsContrib = Math.max(...LIME_EXAMPLE.contributions.map((c) => Math.abs(c.value)));
 
@@ -60,13 +63,13 @@ export default function ShapLimePanel() {
       <div className="ml-section">
         <p className="ml-section-title">{limeTitle}</p>
         <p className="ml-section-sub">{limeIntro}</p>
-        <p className="lime-base">{baseValueLbl}: <b>${LIME_EXAMPLE.baseValue.toLocaleString()}</b></p>
+        <p className="lime-base">{baseValueLbl}: <b>${LIME_EXAMPLE.baseValue.toLocaleString()}</b> <span className="lime-margin">{baseMargin}</span></p>
         <div className="lime-list">
           {LIME_EXAMPLE.contributions.map((c) => (
             <LimeBar key={c.key} contrib={c} scale={maxAbsContrib} />
           ))}
         </div>
-        <p className="lime-final">{thisPredictionLbl}: <b>${LIME_EXAMPLE.finalPrediction.toLocaleString()}</b></p>
+        <p className="lime-final">{thisPredictionLbl}: <b>${LIME_EXAMPLE.finalPrediction.toLocaleString()}</b> <span className="lime-margin">{finalMargin}</span></p>
         <div className="ml-citation-row"><MLCitation synthetic /></div>
       </div>
     </div>

@@ -140,11 +140,23 @@ export function generateDriftSeries(n = 40, breakAt = 24, seed = 11) {
 
 // Full metrics panel (Module 5, research doc §5) computed against the same
 // fitted points Module 4 produces — no separate fitting path.
+// Refutes "Exactness" (docs/research/ML-Mode-Pedagogy-Research.md §3, D.3
+// #2): every metric ships with a margin, never a bare point number. The
+// margin is a genuinely computed quantity, not a fabricated decoration —
+// the coefficient of variation of the per-point squared errors (how spread
+// out the model's misses are, relative to their average size) sets how wide
+// each metric's illustrative band is, capped at 40% so it never swamps the
+// value itself. This is a simplified stand-in for a proper bootstrap
+// confidence interval (computing one per metric per render is more than
+// this sandbox needs), not a rigorous inferential procedure — the point is
+// to make "any score from a finite sample carries uncertainty" visible and
+// true, not to be textbook-exact about how wide.
 export function computeMetrics(points, predict, numParams) {
   const n = points.length;
   const errors = points.map((p) => p.y - predict(p.x));
+  const sqErrors = errors.map((e) => e * e);
   const mae = errors.reduce((a, e) => a + Math.abs(e), 0) / n;
-  const mse = errors.reduce((a, e) => a + e * e, 0) / n;
+  const mse = sqErrors.reduce((a, e) => a + e, 0) / n;
   const rmse = Math.sqrt(mse);
   const mape = (points.reduce((a, p) => a + Math.abs((p.y - predict(p.x)) / (p.y || 1e-6)), 0) / n) * 100;
   const yMean = points.reduce((a, p) => a + p.y, 0) / n;
@@ -155,7 +167,17 @@ export function computeMetrics(points, predict, numParams) {
   // comparing least-squares fits of differing complexity.
   const aic = n * Math.log(ssRes / n) + 2 * numParams;
   const bic = n * Math.log(ssRes / n) + numParams * Math.log(n);
-  return { mae, rmse, mape, r2, aic, bic };
+
+  const sqMean = mse || 1e-9;
+  const sqVariance = sqErrors.reduce((a, e) => a + (e - sqMean) ** 2, 0) / n;
+  const cv = Math.sqrt(sqVariance) / sqMean;
+  const marginRatio = Math.min(0.4, Math.max(0.05, cv * 0.5));
+
+  const withMargin = (value) => ({ value, margin: Math.abs(value) * marginRatio });
+  return {
+    mae: withMargin(mae), rmse: withMargin(rmse), mape: withMargin(mape),
+    r2: withMargin(r2), aic: withMargin(aic), bic: withMargin(bic),
+  };
 }
 
 // Precomputes train/validation MSE across the full complexity range, for

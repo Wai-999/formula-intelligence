@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import {
   BACKTEST_INTRO, EV_WALKFORWARD_TITLE, EV_NAIVE_SPLIT_LBL, EV_NAIVE_SPLIT_SUB, EV_WALKFORWARD_LBL,
   EV_WF_SUB_TEMPLATE, EV_PLAY_BTN, EV_PAUSE_BTN, EV_RESET_BTN, EV_TRAIN_LEGEND, EV_TEST_LEGEND, EV_UNUSED_LEGEND,
+  EV_BACKTEST_PREDICT_Q, EV_BACKTEST_PREDICT_NAIVE, EV_BACKTEST_PREDICT_WF, EV_BACKTEST_PREDICT_EXPLAIN,
 } from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
+import PredictGate from '../../../components/ml/learning/PredictGate.jsx';
+
+const NODE_ID = 'evaluation-metrics';
 
 const N = 30;
 const TEST_WINDOW = 4;
@@ -85,29 +89,37 @@ export default function BacktestAnimator() {
       <p className="ml-section-title">{title}</p>
       <p className="ml-section-sub">{intro}</p>
 
-      <TimelineRow label={naiveSplitLbl} sublabel={naiveSplitSub} roleOf={naiveRole} />
-      <TimelineRow label={walkForwardLbl} sublabel={wfSublabel} roleOf={wfRole} />
+      <PredictGate
+        predictId="evaluation-backtest" nodeId={NODE_ID} layer="mechanism"
+        question={EV_BACKTEST_PREDICT_Q}
+        options={[EV_BACKTEST_PREDICT_NAIVE, EV_BACKTEST_PREDICT_WF]}
+        correctIndex={1}
+        explain={EV_BACKTEST_PREDICT_EXPLAIN}
+      >
+        <TimelineRow label={naiveSplitLbl} sublabel={naiveSplitSub} roleOf={naiveRole} />
+        <TimelineRow label={walkForwardLbl} sublabel={wfSublabel} roleOf={wfRole} />
 
-      <div className="bt-controls">
-        <button type="button" className="pg-regen-btn" onClick={() => setPlaying((p) => !p)}>
-          <i className={`ti ${playing ? 'ti-player-pause' : 'ti-player-play'}`} aria-hidden="true" />
-          {playing ? pauseBtn : playBtn}
-        </button>
-        <input
-          type="range" min={MIN_TRAIN} max={N - TEST_WINDOW} value={origin}
-          onChange={(e) => { setPlaying(false); setOrigin(Number(e.target.value)); }}
-          className="pg-slider bt-scrub"
-        />
-        <button type="button" className="pg-regen-btn" onClick={() => { setPlaying(false); setOrigin(MIN_TRAIN); }}>
-          <i className="ti ti-rewind-backward-10" aria-hidden="true" /> {resetBtn}
-        </button>
-      </div>
+        <div className="bt-controls">
+          <button type="button" className="pg-regen-btn" onClick={() => setPlaying((p) => !p)}>
+            <i className={`ti ${playing ? 'ti-player-pause' : 'ti-player-play'}`} aria-hidden="true" />
+            {playing ? pauseBtn : playBtn}
+          </button>
+          <input
+            type="range" min={MIN_TRAIN} max={N - TEST_WINDOW} value={origin}
+            onChange={(e) => { setPlaying(false); setOrigin(Number(e.target.value)); }}
+            className="pg-slider bt-scrub"
+          />
+          <button type="button" className="pg-regen-btn" onClick={() => { setPlaying(false); setOrigin(MIN_TRAIN); }}>
+            <i className="ti ti-rewind-backward-10" aria-hidden="true" /> {resetBtn}
+          </button>
+        </div>
 
-      <div className="bt-legend">
-        <span><i className="bt-dot bt-dot-train" /> {trainLegend}</span>
-        <span><i className="bt-dot bt-dot-test" /> {testLegend}</span>
-        <span><i className="bt-dot bt-dot-unused" /> {unusedLegend}</span>
-      </div>
+        <div className="bt-legend">
+          <span><i className="bt-dot bt-dot-train" /> {trainLegend}</span>
+          <span><i className="bt-dot bt-dot-test" /> {testLegend}</span>
+          <span><i className="bt-dot bt-dot-unused" /> {unusedLegend}</span>
+        </div>
+      </PredictGate>
       <div className="ml-citation-row"><MLCitation section="1" /></div>
     </div>
   );

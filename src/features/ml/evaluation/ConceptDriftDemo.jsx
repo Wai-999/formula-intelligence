@@ -4,14 +4,22 @@ import { generateDriftSeries, fitPolynomial, meanSquaredError } from '../../../l
 import {
   DRIFT_INTRO, EV_DRIFT_TITLE, EV_RETRAIN_THRESHOLD_LBL, EV_REGIME_CHANGE_LBL,
   EV_TIME_PROGRESS_LBL, EV_DRIFT_ALERT, EV_DRIFT_OK,
+  EV_DRIFT_PREDICT_Q, EV_DRIFT_PREDICT_ADAPTS, EV_DRIFT_PREDICT_SPIKES, EV_CONTINUOUS_LEARNING_NOTE,
 } from '../../../data/ml/evaluation.js';
 import { useT } from '../../../lib/mlContent.js';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
+import PredictGate from '../../../components/ml/learning/PredictGate.jsx';
+import MisconceptionCallout from '../../../components/ml/learning/MisconceptionCallout.jsx';
 
 const W = 620;
 const H = 220;
 const MARGIN = { top: 16, right: 16, bottom: 26, left: 40 };
 const THRESHOLD = 3.5;
+
+// Shares the Evaluation module's one consolidated node id (see
+// MetricsPanel.jsx) — this scrub interaction is that same node's Mechanism
+// layer, just surfaced here where the drift chart lives.
+const NODE_ID = 'evaluation-metrics';
 
 export default function ConceptDriftDemo() {
   const [progress, setProgress] = useState(24);
@@ -22,6 +30,7 @@ export default function ConceptDriftDemo() {
   const timeProgressLbl = useT(EV_TIME_PROGRESS_LBL);
   const driftAlert = useT(EV_DRIFT_ALERT);
   const driftOk = useT(EV_DRIFT_OK);
+  const continuousLearningNote = useT(EV_CONTINUOUS_LEARNING_NOTE);
   const { points, breakAt } = useMemo(() => generateDriftSeries(), []);
 
   // A model trained ONLY on the pre-break regime — its error against every
@@ -48,35 +57,49 @@ export default function ConceptDriftDemo() {
       <p className="ml-section-title">{title}</p>
       <p className="ml-section-sub">{intro}</p>
 
-      <svg viewBox={`0 0 ${W} ${H}`} className="drift-chart" role="img" aria-label="Rolling model error over time, spiking after a regime change">
-        <line x1={MARGIN.left} x2={W - MARGIN.right} y1={y(THRESHOLD)} y2={y(THRESHOLD)} className="drift-threshold-line" />
-        <text x={W - MARGIN.right} y={y(THRESHOLD) - 4} textAnchor="end" className="drift-threshold-label">{retrainThresholdLbl}</text>
-        <line x1={x(breakAt)} x2={x(breakAt)} y1={MARGIN.top} y2={H - MARGIN.bottom} className="drift-break-line" />
-        <text x={x(breakAt) + 4} y={MARGIN.top + 10} className="drift-break-label">{regimeChangeLbl}</text>
-        <path d={line(visible)} className="drift-error-line" />
-        {visible.length > 0 && (
-          <circle cx={x(visible[visible.length - 1].t)} cy={y(visible[visible.length - 1].error)} r={4} className="drift-current-dot" />
+      <PredictGate
+        predictId="evaluation-drift" nodeId={NODE_ID} layer="mechanism"
+        question={EV_DRIFT_PREDICT_Q}
+        options={[EV_DRIFT_PREDICT_ADAPTS, EV_DRIFT_PREDICT_SPIKES]}
+        correctIndex={1}
+        explain={EV_CONTINUOUS_LEARNING_NOTE}
+      >
+        <svg viewBox={`0 0 ${W} ${H}`} className="drift-chart" role="img" aria-label="Rolling model error over time, spiking after a regime change">
+          <line x1={MARGIN.left} x2={W - MARGIN.right} y1={y(THRESHOLD)} y2={y(THRESHOLD)} className="drift-threshold-line" />
+          <text x={W - MARGIN.right} y={y(THRESHOLD) - 4} textAnchor="end" className="drift-threshold-label">{retrainThresholdLbl}</text>
+          <line x1={x(breakAt)} x2={x(breakAt)} y1={MARGIN.top} y2={H - MARGIN.bottom} className="drift-break-line" />
+          <text x={x(breakAt) + 4} y={MARGIN.top + 10} className="drift-break-label">{regimeChangeLbl}</text>
+          <path d={line(visible)} className="drift-error-line" />
+          {visible.length > 0 && (
+            <circle cx={x(visible[visible.length - 1].t)} cy={y(visible[visible.length - 1].error)} r={4} className="drift-current-dot" />
+          )}
+        </svg>
+
+        <input
+          type="range" min={breakAt - 4 > 0 ? breakAt - 4 : 0} max={points.length - 1} value={progress}
+          onChange={(e) => setProgress(Number(e.target.value))}
+          className="pg-slider drift-scrub"
+        />
+        <p className="ml-lbl">{timeProgressLbl}: t = {progress}</p>
+
+        {driftDetected ? (
+          <div className="drift-flag drift-flag-alert">
+            <i className="ti ti-alert-triangle" aria-hidden="true" />
+            {driftAlert}
+          </div>
+        ) : (
+          <div className="drift-flag drift-flag-ok">
+            <i className="ti ti-circle-check" aria-hidden="true" />
+            {driftOk}
+          </div>
         )}
-      </svg>
+      </PredictGate>
 
-      <input
-        type="range" min={breakAt - 4 > 0 ? breakAt - 4 : 0} max={points.length - 1} value={progress}
-        onChange={(e) => setProgress(Number(e.target.value))}
-        className="pg-slider drift-scrub"
-      />
-      <p className="ml-lbl">{timeProgressLbl}: t = {progress}</p>
+      <div className="drift-cf-note">
+        <MisconceptionCallout misconceptionId="continuousLearning" />
+        <p className="ml-body-text">{continuousLearningNote}</p>
+      </div>
 
-      {driftDetected ? (
-        <div className="drift-flag drift-flag-alert">
-          <i className="ti ti-alert-triangle" aria-hidden="true" />
-          {driftAlert}
-        </div>
-      ) : (
-        <div className="drift-flag drift-flag-ok">
-          <i className="ti ti-circle-check" aria-hidden="true" />
-          {driftOk}
-        </div>
-      )}
       <div className="ml-citation-row"><MLCitation synthetic /></div>
     </div>
   );

@@ -63,6 +63,12 @@
   line-height: 1.4;
 }
 
+.mp-depth-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* Backtest animator */
 .bt-row {
   margin-bottom: 14px;
@@ -236,6 +242,12 @@
   font-family: var(--font-mono);
 }
 
+.lime-margin {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
 /* Concept drift */
 .drift-chart {
   width: 100%;
@@ -303,4 +315,11 @@
   background: rgba(52, 211, 153, 0.08);
   border: 1px solid rgba(52, 211, 153, 0.25);
   color: var(--success);
+}
+
+.drift-cf-note {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
 }
