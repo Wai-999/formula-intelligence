@@ -1,0 +1,57 @@
+/* Shared styling for every domain lab (Gold/Macro/Micro/Politics, Modules
+   6-9) built on top of mlPageShared.css's section conventions. */
+
+.dl-scenario-row {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dl-reset-btn {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.dl-reset-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-faint);
+}
+
+.dl-model-notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dl-model-note {
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+}
+
+.dl-model-note-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.ml-section-title i {
+  color: var(--accent);
+  margin-right: 4px;
+}

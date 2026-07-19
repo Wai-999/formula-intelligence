@@ -1,0 +1,54 @@
+.fbc-outer {
+  position: relative;
+}
+
+.fbc-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fbc-chart {
+  width: 100%;
+  min-width: 480px;
+  height: auto;
+}
+
+.fbc-scroll-hint {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 26px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 2px;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.3) 65%);
+  color: var(--text-faint);
+  font-size: 15px;
+}
+
+.fbc-base-line {
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1;
+  stroke-dasharray: 3, 3;
+}
+
+.fbc-model-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+
+.fbc-point-label {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.fbc-axis-label {
+  font-size: 9.5px;
+  fill: var(--text-faint);
+  font-family: var(--font-mono);
+}
