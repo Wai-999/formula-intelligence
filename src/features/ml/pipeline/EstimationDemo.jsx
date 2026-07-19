@@ -1,10 +1,12 @@
 import { useUIStore } from '../../../store/useUIStore.js';
 
 // Clicking Estimation surfaces the direct connection to Stats mode's own
-// Gibbs/PGAS estimation content — the research doc's explicit design note
-// (§7.5) that this pairing is "the best candidate for a literal shared node
-// between Stats mode and ML mode." Full interaction lives in Module 10;
-// this is the first cross-link into it.
+// estimation content. The research doc's §7.5 originally cited "your
+// existing Stats/Gibbs/PGAS content" for this pairing — checked against
+// src/data/nodes.js while building Module 10 and no such content exists in
+// Stats mode. What's real is Chapter 7's t-distribution confidence
+// interval for the mean (ci_mean_t), which is what this now references.
+// Full interaction lives in Module 10; this is the first cross-link into it.
 export default function EstimationDemo() {
   const navigateToLinkedConcept = useUIStore((s) => s.navigateToLinkedConcept);
 
@@ -16,8 +18,9 @@ export default function EstimationDemo() {
         <span className="epc-coef-ci">95% CI [−400, −224]</span>
       </div>
       <p className="ml-body-text">
-        This is exactly the kind of object Stats mode's Gibbs/PGAS estimation content already produces — a
-        parameter with a posterior distribution around it, not a single guess about the future.
+        A frequentist confidence interval like Stats mode's own t CI for the mean treats the parameter as fixed
+        and the interval as random. A posterior distribution flips that: the parameter itself is treated as
+        uncertain. Same-looking interval, different meaning underneath.
       </p>
       <button
         type="button"

@@ -1,0 +1,98 @@
+.bridge-card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.bridge-card {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-top: 3px solid;
+  border-radius: var(--radius-md);
+}
+
+.bridge-card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.bridge-card-points {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bridge-card-points li {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.bridge-card-interpretation {
+  font-size: 12.5px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  font-style: italic;
+}
+
+.bridge-nodes-lbl {
+  margin-top: 18px;
+}
+
+.bridge-node-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bridge-node-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bridge-node-link:hover {
+  color: var(--text-primary);
+  border-color: var(--primary);
+}
+
+.bridge-node-hint {
+  margin-top: 6px;
+  font-size: 10.5px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.bridge-politics-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 9px 14px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: var(--radius-sm);
+  color: var(--warning);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bridge-politics-link:hover {
+  background: rgba(251, 191, 36, 0.18);
+}

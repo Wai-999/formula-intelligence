@@ -18,6 +18,7 @@ export default function DetailPanel() {
   const selectedNodeId = useUIStore((s) => s.selectedNodeId);
   const selectNode = useUIStore((s) => s.selectNode);
   const traceFullChain = useUIStore((s) => s.traceFullChain);
+  const navigateToLinkedConcept = useUIStore((s) => s.navigateToLinkedConcept);
   const getNodeState = useMasteryStore((s) => s.getNodeState);
 
   const node = selectedNodeId ? nodeById[selectedNodeId] : null;
@@ -50,6 +51,17 @@ export default function DetailPanel() {
 
           <p className="detail-lbl">Used for</p>
           <p className="detail-desc">{node.use}</p>
+
+          {node.id === 'reg' && (
+            <button
+              type="button"
+              className="detail-bridge-btn"
+              onClick={() => navigateToLinkedConcept('ml', 'bridge', { from: 'stats-reg' })}
+            >
+              <i className="ti ti-arrows-right-left" aria-hidden="true" />
+              Compare this to the ML lens (Stats ↔ ML Bridge)
+            </button>
+          )}
 
           {BRIDGE_TEXT[node.id] && (
             <>

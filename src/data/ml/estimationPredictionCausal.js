@@ -34,10 +34,10 @@ export const EPC_COLUMNS = [
       '"Gold-price regression ရှိ real yields ၏ coefficient သည် −312 ဖြစ်ပြီး၊ 95% CI [−400, −224] ဖြစ်သည်။"'
     ),
     methods: bl(
-      'OLS, Maximum Likelihood, Bayesian methods — the same toolkit as Stats mode\'s Gibbs/PGAS content.',
-      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation (Gibbs/PGAS — Stats mode\'s existing content).',
-      'OLS, Maximum Likelihood, Bayesian နည်းလမ်းများ — Stats mode ၏ Gibbs/PGAS content အတိုင်းပင်။',
-      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation (Gibbs/PGAS — Stats mode ရှိ content အတိုင်း)။'
+      'OLS, Maximum Likelihood, Bayesian methods — the frequentist end of this toolkit is exactly Stats mode\'s own t CI for the mean.',
+      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — the frequentist branch overlaps directly with Stats mode\'s ci_mean_t content; see the Stats ↔ ML Bridge for the worked comparison.',
+      'OLS, Maximum Likelihood, Bayesian နည်းလမ်းများ — frequentist ဘက်က Stats mode ၏ t CI for the mean အတိုင်းပင်ဖြစ်သည်။',
+      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — frequentist ဘက်သည် Stats mode ၏ ci_mean_t content နှင့် တိုက်ရိုက်ထပ်နေသည်; worked comparison အတွက် Stats ↔ ML Bridge ကိုကြည့်ပါ။'
     ),
     failure: bl(
       'Mistaking "I\'m confident about this coefficient" for "I know what gold will do next month" — those are different questions.',

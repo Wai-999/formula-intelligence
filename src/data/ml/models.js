@@ -418,7 +418,7 @@ export const ML_MODELS = [
     ),
     advantages: blSame('Full posterior uncertainty, not just point estimates; mitigates overfitting by treating weights as distributions; superior in studies on both accuracy and uncertainty quantification over long horizons.', 'point estimate သာမက posterior မသေချာမှု အပြည့်အစုံ; weight များကို distribution အဖြစ်သတ်မှတ်ခြင်းဖြင့် overfitting လျှော့ချ; ခရီးရှည် horizon များတွင် တိကျမှုနှင့် မသေချာမှု quantification နှစ်ခုစလုံးတွင် သာလွန်ကြောင်း လေ့လာမှုများက ပြသသည်။'),
     weaknesses: blSame('Slower to fit (sampling-based); more complex to implement.', 'fit လုပ်ရန် နှေး (sampling-based); အကောင်အထည်ဖော်ရန် ပိုရှုပ်ထွေးသည်။'),
-    usageAreas: blSame('The direct ML-side sibling of Stats mode\'s existing Gibbs/PGAS content — natural bridge module.', 'Stats mode ၏ လက်ရှိ Gibbs/PGAS content ၏ တိုက်ရိုက် ML-ဘက် ညီအစ်ကို — သဘာဝကျသော bridge module။'),
+    usageAreas: blSame('The ML-side sibling of frequentist confidence intervals (Stats mode\'s ci_mean_t) — see the Stats ↔ ML Bridge for the same-numbers, different-meaning comparison.', 'Frequentist confidence interval (Stats mode ၏ ci_mean_t) ၏ ML-ဘက် ညီအစ်ကို — ဂဏန်းတူတူ၊ အဓိပ္ပာယ်ကွဲပြားမှု နှိုင်းယှဉ်ချက်အတွက် Stats ↔ ML Bridge ကိုကြည့်ပါ။'),
     compass: { interpretability: 3, dataHunger: 3, nonlinearity: 4 },
   },
   // 3.10 Reinforcement Learning
