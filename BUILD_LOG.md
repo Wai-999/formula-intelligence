@@ -110,3 +110,23 @@ One entry per module: what was built, files touched, decisions made and why, ver
 - Console: 0 errors throughout.
 
 ---
+
+## Module 4: Model Playground (bias-variance sandbox)
+
+**Built:** `src/lib/mlSandbox.js` — genuine client-side model fitting with no new dependency: a seeded PRNG (Mulberry32 + Box-Muller) for a reproducible synthetic dataset around a moderately wiggly true function, a polynomial-regression fitter (normal equations solved via Gaussian elimination with partial pivoting), and a depth-limited regression-tree fitter (recursive variance-reducing binary splits) — plus `complexityCurve()`, which fits the *entire* complexity range up front so the error-vs-complexity chart doesn't need to refit on every slider tick. `PlaygroundPage.jsx` — model toggle (Polynomial / Decision Tree, each with its own complexity semantics and range), noise slider, complexity slider, a "New sample" reseed button, `ScatterFitChart.jsx` (D3-scale-driven SVG: training/validation points, the fitted curve, and the true function for comparison), `ErrorCurveChart.jsx` (train/validation MSE across the full complexity range with a marker at the current position and a dashed line at the validation-optimal complexity), and a zone banner that classifies the current complexity as under/good/over-fit relative to that optimum and explains why, bilingual/two-depth via `src/data/ml/playground.js`.
+
+**Files touched:** `src/lib/mlSandbox.js` (new), `src/data/ml/playground.js` (new), `src/features/ml/playground/{PlaygroundPage,ScatterFitChart,ErrorCurveChart}.jsx` + `.css` (new; replaces the Module 1 placeholder).
+
+**Decisions (rule 1):**
+- Two fittable models (not one) because the spec's "polynomial degree or tree depth depending on model chosen" phrasing implies model choice is part of the module, and having two makes the underlying concept (complexity trades bias for variance regardless of *which* knob controls it) land more clearly than one model alone would.
+- The error-vs-complexity curve is precomputed across the *entire* range on every dataset/model change, not just at the current slider value — this is what makes the U-shaped validation curve visible as a whole shape (with a "you are here" marker) rather than requiring the learner to mentally accumulate points by dragging back and forth.
+- Charts are hand-rolled SVG using D3's scale/line generators for the math only (no D3 DOM manipulation, no new charting library) — consistent with rule 5 and with how the rest of the app already uses D3 (GraphCanvas/MLRelationshipMap use it for real DOM work; this is the "D3 for math, React for rendering" half of the library the app already depends on).
+
+**Verification:**
+- `npm run build`: pass; `PlaygroundPage` in its own ~29KB lazy chunk.
+- `npm run lint`: pass, 0 warnings (one caught and fixed: an unused `n` variable left over from an earlier draft of `fitPolynomial`).
+- Interaction smoke test, the module's actual done-criterion: complexity slider driven to its minimum (1) → "Underfitting" banner, train MSE 2.486, validation MSE 3.869 (close together, both high, exactly the underfitting signature); driven to its maximum (12) → "Overfitting" banner, train MSE 0.299, validation MSE 0.902 (train kept falling, validation rose back up — the diverging signature), and the fitted curve visibly bent itself around individual noisy points instead of the smooth true function. Switching to Decision Tree re-rendered a visibly distinct step-function fit (as opposed to the polynomial's smooth curve) with its own depth-based complexity range.
+- One transient false alarm during this module's testing: a single check immediately after a rapid slider-set script reported the app back in Stats mode with no ML DOM present at all. Re-run cleanly (fresh navigation, deliberate single actions per tool call) reproduced correctly every time afterward, including the exact same slider-to-12 action that had appeared to fail — treated as the same class of harness/HMR flakiness logged in Modules 2 and 3, not a real defect, since it could not be reproduced under controlled conditions and no console error accompanied it either time.
+- Console: 0 errors across every check, including through the false alarm.
+
+---

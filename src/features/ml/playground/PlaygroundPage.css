@@ -1,0 +1,234 @@
+.pg-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: flex-end;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pg-control-group {
+  min-width: 160px;
+  flex: 1;
+}
+
+.pg-model-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.pg-model-btn {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.pg-model-btn.active {
+  background: rgba(34, 211, 238, 0.16);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pg-slider {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.pg-regen-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.pg-regen-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.pg-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .pg-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pg-chart-block {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px;
+}
+
+.sf-chart, .ec-chart {
+  width: 100%;
+  height: auto;
+  margin-top: 6px;
+}
+
+.sf-truth-line {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1.5;
+  stroke-dasharray: 3, 3;
+}
+
+.sf-fit-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.sf-axis-zero {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.sf-point-train {
+  fill: var(--primary);
+  fill-opacity: 0.75;
+}
+
+.sf-point-val {
+  fill: var(--warning);
+  fill-opacity: 0.85;
+}
+
+.sf-legend-text {
+  font-size: 9px;
+  fill: var(--text-faint);
+}
+
+.ec-gridline {
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1;
+}
+
+.ec-train-line {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+}
+
+.ec-val-line {
+  fill: none;
+  stroke: var(--warning);
+  stroke-width: 2;
+}
+
+.ec-best-line {
+  stroke: rgba(52, 211, 153, 0.5);
+  stroke-width: 1.5;
+  stroke-dasharray: 2, 3;
+}
+
+.ec-current-line {
+  stroke: var(--text-primary);
+  stroke-width: 1;
+  stroke-opacity: 0.5;
+}
+
+.ec-current-dot {
+  fill: var(--text-primary);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.ec-axis-label {
+  font-size: 9px;
+  fill: var(--text-faint);
+}
+
+.pg-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--text-faint);
+}
+
+.pg-chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pg-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pg-dot-train { background: var(--primary); }
+.pg-dot-val { background: var(--warning); }
+
+.pg-line {
+  width: 12px;
+  height: 2px;
+  display: inline-block;
+}
+
+.pg-line-truth { background: rgba(255, 255, 255, 0.28); }
+.pg-line-train { background: var(--primary); }
+.pg-line-val { background: var(--warning); }
+.pg-line-best { background: rgba(52, 211, 153, 0.6); }
+
+.pg-zone-banner {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.pg-zone-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.pg-zone-numbers {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.pg-zone-under {
+  background: rgba(251, 191, 36, 0.06);
+  border-color: rgba(251, 191, 36, 0.25);
+}
+.pg-zone-under .pg-zone-title { color: var(--warning); }
+
+.pg-zone-good {
+  background: rgba(52, 211, 153, 0.06);
+  border-color: rgba(52, 211, 153, 0.25);
+}
+.pg-zone-good .pg-zone-title { color: var(--success); }
+
+.pg-zone-over {
+  background: rgba(251, 113, 133, 0.06);
+  border-color: rgba(251, 113, 133, 0.25);
+}
+.pg-zone-over .pg-zone-title { color: var(--danger); }
