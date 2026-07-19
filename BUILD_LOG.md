@@ -473,3 +473,21 @@ Also wired `markDomainVisited(DOMAIN)` into all four pages (task was previously 
 - Console: 0 errors from this module's own code.
 
 ---
+
+## Module 11: Learning Design System verification pass
+
+**Built:** No new features — a full audit of Modules 1-10 against Section D of the mission and the Section H deliverables checklist, going beyond the per-module verification already logged in each module's own entry above. Structural coverage confirmed by direct source inspection rather than assumption:
+- `<DepthLadder` appears in exactly the 9 files that need one (Pipeline, Model Map's `MLModelDetailPanel`, Playground, Evaluation's `MetricsPanel`, Gold, Macro, Micro, Politics, Bridge) — every Module 2-10.
+- All 7 misconceptions.js entries confirmed wired into real, reachable UI, not just defined in the registry: `programmedBehavior` (Pipeline's Estimation stage + Model Map's intro banner — the mission's own dual-placement), `autonomousDataAcquisition` (Pipeline's Data Collection stage), `dataStorage` (Model Map's KNN node), `exactness` (Evaluation's `MetricsPanel`, plus two Model Map nodes touching the same theme), `continuousLearning` (Evaluation's `ConceptDriftDemo`, plus Pipeline's Evaluation/Monitoring stage), `userTrainedModel` (Module 1's one-time entry banner, plus Model Map's Actor-Critic node — investigated specifically because a misconception appearing on a *model* node looked surprising at first grep; reading the node's actual content confirmed it's a deliberate, well-targeted second touchpoint asking "would fiddling with Playground sliders while reading about Actor-Critic count as training a real trading agent," not a copy-paste error), `lessBiasedThanHumans` (Politics, built this session).
+- All 9 ML-mode tabs confirmed reachable via the icon rail's `aria-label`s (Pipeline/Model Map/Playground/Evaluation/Gold/Macro/Micro/Politics/Stats↔ML), mode switcher (Stats/ML) confirmed working throughout dozens of toggles this session.
+- Module 1's entry misconception banner re-verified by clearing `ml_entry_banner_seen_v1` from `localStorage` and reloading — still renders correctly as a dismissal-gated modal, not a passive banner.
+- Module 2's 3-bucket sort (`EstimationPredictionSort`) confirmed still rendering its 6 items.
+- `npm run build`/`npm run lint`: pass (final full-project check, not scoped to any one module).
+
+**Decisions (rule 1):**
+- **Did not re-run full interactive click-throughs on Modules 1-4**, since those were already verified end-to-end in their own BUILD_LOG entries during the prior phase, and this session's own extensive verification of Modules 5-10 (each involving real driver pushes, live number cross-checks against hand computations, and bilingual/depth-level toggling) already exercises the same shared components (`DepthLadder`, `PredictGate`, `MisconceptionCallout`, `RetrievalCheck`) those earlier modules also depend on — a regression in the shared components would have surfaced there. The audit instead targeted structural completeness (grep-based coverage checks) and the specific things a session boundary makes easy to silently miss (stale `localStorage` state hiding a one-time banner, multi-placement misconceptions that look like errors until their actual context is read).
+- **Investigated rather than assumed** when the `modelDepthLadder.js` grep turned up `userTrainedModel` on a model node — the natural first reaction to a misconception ID in an unexpected file is "that's probably a bug," but reading the actual node content before concluding anything showed a deliberate, well-reasoned second placement. Rule 9 cuts both ways: don't fabricate confidence that something's broken any more than that something works.
+
+**Verification:** covered inline above — this entry documents a verification pass, not new functionality with its own separate verification section.
+
+---
