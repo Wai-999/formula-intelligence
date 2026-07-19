@@ -1,11 +1,16 @@
 const ROW_SPACING = 96;
 const COLUMN_SPACING = 68;
 
-// Layered (Sugiyama-style) layout: each chapter is a row, ordered top to
-// bottom. Columns within a row are ordered by the barycenter of each node's
-// connections to already-placed earlier rows, which keeps prerequisite edges
-// flowing downward with minimal crossings instead of a physics-settled tangle.
-export function computeHierarchicalLayout(nodes, links) {
+// Layered (Sugiyama-style) layout: each chapter/family is a row, ordered top
+// to bottom. Columns within a row are ordered by the barycenter of each
+// node's connections to already-placed earlier rows, which keeps edges
+// flowing downward with minimal crossings instead of a physics-settled
+// tangle. rowSpacing/columnSpacing are optional so callers with longer node
+// labels (e.g. ML mode's model names, which run much longer than Stats
+// mode's formula names) can widen the layout without a new hard-coded
+// constant per caller — existing callers that omit them get pixel-identical
+// output to before, so this is additive, not a behavior change.
+export function computeHierarchicalLayout(nodes, links, { rowSpacing = ROW_SPACING, columnSpacing = COLUMN_SPACING } = {}) {
   const byChapter = {};
   nodes.forEach((n) => {
     if (!byChapter[n.ch]) byChapter[n.ch] = [];
@@ -43,22 +48,22 @@ export function computeHierarchicalLayout(nodes, links) {
   });
 
   const maxRowCount = Math.max(...chapterIds.map((ch) => byChapter[ch].length));
-  const diagramWidth = (maxRowCount - 1) * COLUMN_SPACING;
+  const diagramWidth = (maxRowCount - 1) * columnSpacing;
 
   const positions = {};
   chapterIds.forEach((ch, rowIdx) => {
     const order = byChapter[ch];
-    const rowWidth = (order.length - 1) * COLUMN_SPACING;
+    const rowWidth = (order.length - 1) * columnSpacing;
     const offsetX = (diagramWidth - rowWidth) / 2;
     order.forEach((id, i) => {
       positions[id] = {
-        x: offsetX + i * COLUMN_SPACING,
-        y: rowIdx * ROW_SPACING,
+        x: offsetX + i * columnSpacing,
+        y: rowIdx * rowSpacing,
       };
     });
   });
 
-  const chapterRowY = Object.fromEntries(chapterIds.map((ch, rowIdx) => [ch, rowIdx * ROW_SPACING]));
+  const chapterRowY = Object.fromEntries(chapterIds.map((ch, rowIdx) => [ch, rowIdx * rowSpacing]));
 
   return {
     positions,
@@ -67,7 +72,7 @@ export function computeHierarchicalLayout(nodes, links) {
       minX: -170, // room for the left-side chapter label gutter
       maxX: diagramWidth + 40,
       minY: -40,
-      maxY: (chapterIds.length - 1) * ROW_SPACING + 40,
+      maxY: (chapterIds.length - 1) * rowSpacing + 40,
     },
   };
 }

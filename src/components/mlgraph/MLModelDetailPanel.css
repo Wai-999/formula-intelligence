@@ -1,0 +1,143 @@
+.ml-detail-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background: rgba(13, 14, 26, 0.96);
+  border-left: 1px solid var(--border);
+  padding: 14px;
+  overflow-y: auto;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease;
+  z-index: 8;
+}
+
+.ml-detail-panel.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ml-detail-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px;
+}
+
+.ml-detail-close:hover {
+  color: var(--text-primary);
+}
+
+.ml-detail-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-right: 20px;
+  margin-bottom: 6px;
+}
+
+.ml-detail-family-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+}
+
+.ml-detail-formula {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 9px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.ml-detail-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 4px;
+}
+
+.ml-detail-adv {
+  padding: 6px 8px;
+  background: rgba(52, 211, 153, 0.06);
+  border-left: 2px solid var(--success);
+  border-radius: 0 4px 4px 0;
+}
+
+.ml-detail-weak {
+  padding: 6px 8px;
+  background: rgba(251, 113, 133, 0.06);
+  border-left: 2px solid var(--danger);
+  border-radius: 0 4px 4px 0;
+}
+
+.ml-detail-panel .ml-lbl {
+  margin-top: 12px;
+}
+
+.ml-detail-panel .compass-meter {
+  margin-top: 4px;
+}
+
+.ml-detail-conn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ml-detail-conn:hover {
+  color: var(--text-primary);
+}
+
+.ml-detail-conn-type {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.ml-detail-conn-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ml-conn-extends {
+  background: var(--accent);
+}
+
+.ml-conn-competes {
+  background: var(--warning);
+}
+
+.ml-conn-combines {
+  background: var(--success);
+}

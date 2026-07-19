@@ -1,0 +1,79 @@
+.mm-page {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.mm-canvas-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.mm-legend {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  background: rgba(13, 14, 26, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  z-index: 5;
+  max-width: 200px;
+}
+
+.mm-legend-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.mm-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.mm-legend-line {
+  width: 16px;
+  height: 0;
+  border-top-width: 2px;
+  border-top-style: solid;
+  flex-shrink: 0;
+}
+
+.mm-line-extends {
+  border-color: var(--accent);
+}
+
+.mm-line-competes {
+  border-color: var(--warning);
+  border-top-style: dashed;
+}
+
+.mm-line-combines {
+  border-color: var(--success);
+  border-top-style: dotted;
+}
+
+.mm-legend-citation {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 480px) {
+  .mm-legend {
+    max-width: 150px;
+    padding: 8px 10px;
+  }
+}

@@ -14,6 +14,19 @@ export function bl(enBeginner, enResearcher, myBeginner, myResearcher) {
   };
 }
 
+/**
+ * Same text at both depths (beginner === researcher). Used for content that
+ * doesn't meaningfully change with audience depth — e.g. Module 3's model
+ * cards keep advantages/weaknesses/usage-area bullets doc-sourced and
+ * identical at both levels, while each model's `howItWorks` field (the
+ * actual mechanism explanation) uses full bl() to genuinely fork into a
+ * beginner analogy vs. a researcher notation/derivation, matching Module
+ * 11's definition of what the level toggle is for. See BUILD_LOG.md Module 3.
+ */
+export function blSame(en, my) {
+  return bl(en, en, my, my);
+}
+
 /** Reads the current level+language from useMLUIStore and resolves a bl() object to its string. */
 export function useT(content) {
   const level = useMLUIStore((s) => s.level);

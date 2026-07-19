@@ -1,0 +1,34 @@
+.compass-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.compass-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.compass-label {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.compass-bars {
+  display: flex;
+  gap: 2.5px;
+}
+
+.compass-bar {
+  width: 12px;
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.compass-bar.filled {
+  background: var(--accent);
+}
