@@ -16,6 +16,18 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  paint-order: stroke fill;
+  stroke: #0b0b16;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* Pinned to the viewport's left edge, outside the pannable/zoomable
+   container — see MLRelationshipMap.jsx (FIX_LOG.md B.1). Must never
+   intercept pointer events, since it can visually sit above a node or edge
+   near the left margin at some pan positions. */
+.mlgraph-row-labels-pinned {
+  pointer-events: none;
 }
 
 .mlgnode-circle {

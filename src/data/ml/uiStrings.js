@@ -36,6 +36,16 @@ export const UI_PREDICT_COMPARE_TEMPLATE = blSame(
   'You predicted {guess} — actual: {actual}',
   'သင် {guess} ဟု ခန့်မှန်းခဲ့သည် — အမှန်: {actual}'
 );
+// Used instead of the template above when guess === actual: showing
+// "You predicted X — actual: X" twice reads as a rendering glitch even
+// though it's accurate, since both sides display byte-identical text
+// (found during the post-mission QA sweep — Gold Lab's driver predict-gate,
+// answered correctly). One confirmatory sentence instead of a redundant
+// comparison.
+export const UI_PREDICT_CORRECT_TEMPLATE = blSame(
+  'You predicted correctly — {actual}',
+  'သင် မှန်ကန်စွာ ခန့်မှန်းခဲ့သည် — {actual}'
+);
 
 // MisconceptionCallout — shared refutation-text chrome.
 export const UI_MISCONCEPTION_LBL = blSame('A common misconception', 'အများသုံးများနေတဲ့ အထင်မှားမှု');

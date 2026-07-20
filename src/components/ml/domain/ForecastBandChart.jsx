@@ -5,7 +5,15 @@ import './ForecastBandChart.css';
 
 const W = 640;
 const ROW_H = 46;
-const MARGIN = { top: 10, right: 16, bottom: 26, left: 150 };
+// FIX_LOG.md Section C: a getBBox() sweep found the rightmost axis label
+// ("$4,157") clipping 1.2 units past the viewBox at the old right:16 —
+// text-anchor="middle" on an edge label centered exactly at the margin
+// boundary means it needs roughly half its own width as margin, and a
+// currency-formatted value can render wider than 32 units. left:150 was
+// also only 4.4 units short of GARCH's/DFM's ~27-character label
+// ("GARCH (volatility overlay)", "Dynamic Factor Model (DFM)") clipping —
+// not yet overflowing, but too tight to survive a slightly wider label.
+const MARGIN = { top: 10, right: 26, bottom: 26, left: 165 };
 
 function formatValue(v, unit, unitPosition, decimals) {
   const num = decimals > 0

@@ -23,9 +23,28 @@
   align-items: center;
   justify-content: center;
   padding: 8px;
+  /* A real backdrop, not just a centered card — without this, the dimmed
+     body (opacity 0.25) shows through around the card's edges and reads as
+     broken/disabled rather than a deliberate gate. inset:0 on this
+     absolutely-positioned sibling already matches predict-gate-body's full
+     height (the body is what gives .predict-gate its height, since the
+     scrim is out of flow), so this covers the entire gated region, not just
+     the card's footprint. */
+  background: rgba(8, 9, 20, 0.86);
+  backdrop-filter: blur(2px);
+  border-radius: var(--radius-md);
 }
 
-.predict-gate-card {
+/* FIX_LOG.md B.2: this used to be named .predict-gate-card, which
+   collided with the OUTER wrapper's own `predict-gate-${variant}` class —
+   variant defaults to 'card', so the outer wrapper (everything: controls,
+   metrics grid, driver panels, all of it) ALSO matched this selector and
+   inherited max-width:420px. That's what actually produced the "content
+   confined to a narrow column, rest of the viewport empty" symptom on
+   Evaluation/Gold/Macro/Micro/Politics/Bridge — not a missing chart and not
+   content that's genuinely meant to be narrow. Renamed so only the inner
+   question card (the thing this rule was always meant to size) matches. */
+.predict-gate-question-card {
   width: 100%;
   max-width: 420px;
   background: var(--surface-2);
@@ -35,7 +54,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.predict-gate-inline .predict-gate-card {
+.predict-gate-inline .predict-gate-question-card {
   padding: 10px 12px;
 }
 

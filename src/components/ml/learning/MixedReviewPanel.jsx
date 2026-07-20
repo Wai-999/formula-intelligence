@@ -3,7 +3,7 @@ import { useUnderstandingStore } from '../../../store/useUnderstandingStore.js';
 import { useMLUIStore } from '../../../store/useMLUIStore.js';
 import { MIXED_REVIEW_QUESTIONS } from '../../../data/ml/mixedReview.js';
 import {
-  UI_MIXED_REVIEW_LBL, UI_NEXT_QUESTION_BTN, UI_PREDICT_COMPARE_TEMPLATE,
+  UI_MIXED_REVIEW_LBL, UI_NEXT_QUESTION_BTN, UI_PREDICT_COMPARE_TEMPLATE, UI_PREDICT_CORRECT_TEMPLATE,
 } from '../../../data/ml/uiStrings.js';
 import { useT, resolveT } from '../../../lib/mlContent.js';
 import './MixedReviewPanel.css';
@@ -33,6 +33,7 @@ export default function MixedReviewPanel() {
   const lbl = useT(UI_MIXED_REVIEW_LBL);
   const nextBtn = useT(UI_NEXT_QUESTION_BTN);
   const compareTemplate = useT(UI_PREDICT_COMPARE_TEMPLATE);
+  const correctTemplate = useT(UI_PREDICT_CORRECT_TEMPLATE);
 
   const domainCount = ['gold', 'macro', 'micro', 'politics'].filter((d) => domainsVisited.includes(d)).length;
   if (domainCount < 2) return null;
@@ -52,8 +53,15 @@ export default function MixedReviewPanel() {
     setQIndex((i) => i + 1);
   }
 
+  // Same fix as PredictGate.jsx: a correct guess makes optionTexts[guessIndex]
+  // and optionTexts[correctIndex] the same string, so the guess/actual
+  // template would render it twice ("You predicted X — actual: X") —
+  // reads as a duplicate-render bug even though it's accurate.
   let compareBefore = compareTemplate, compareMiddle = '', compareAfter = '';
-  if (answered) {
+  if (answered && answered.correct) {
+    const [before, after] = correctTemplate.split('{actual}');
+    compareBefore = before; compareAfter = after;
+  } else if (answered) {
     const [before, afterGuess] = compareTemplate.split('{guess}');
     const [middle, after] = afterGuess.split('{actual}');
     compareBefore = before; compareMiddle = middle; compareAfter = after;
@@ -78,7 +86,9 @@ export default function MixedReviewPanel() {
             <div className={`mixed-review-result${answered.correct ? ' correct' : ' wrong'}`}>
               <span className="mixed-review-result-row">
                 <i className={`ti ${answered.correct ? 'ti-check' : 'ti-x'}`} aria-hidden="true" />
-                {compareBefore}<strong>{optionTexts[answered.guessIndex]}</strong>{compareMiddle}<strong>{optionTexts[q.correctIndex]}</strong>{compareAfter}
+                {answered.correct
+                  ? <>{compareBefore}<strong>{optionTexts[q.correctIndex]}</strong>{compareAfter}</>
+                  : <>{compareBefore}<strong>{optionTexts[answered.guessIndex]}</strong>{compareMiddle}<strong>{optionTexts[q.correctIndex]}</strong>{compareAfter}</>}
               </span>
               <p className="mixed-review-explain">{explainText}</p>
               <button type="button" className="mixed-review-next-btn" onClick={nextQuestion}>{nextBtn}</button>

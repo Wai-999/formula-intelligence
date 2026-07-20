@@ -1,0 +1,166 @@
+# Fix Log — Visual QA Pass
+
+One entry per bug: what was wrong, the confirmed root cause, what was changed, files touched. Section B first (the confirmed bugs from the mission brief), then Section C (everything else found during the full sweep).
+
+Every fix below was verified against the live DOM/CSS before being written, per the mission's own instruction — several of the assumed root causes in the brief turned out not to match what the live app was actually doing, and are called out explicitly where that happened.
+
+---
+
+## B.1 — Model Relationship Map: edge clutter, clipped labels, unused canvas
+
+**Confirmed live, not assumed:** re-read `MLRelationshipMap.jsx`/`hierarchicalLayout.js` before touching anything. Two of the brief's assumed root causes didn't match reality:
+- "No zoom-to-fit on mount" — a zoom-to-fit already existed. It just fit to `computeHierarchicalLayout`'s hand-estimated `bounds` (a fixed `minX: -170` gutter tuned for Stats mode's short row labels like "Ch 3: Data Description"), not the actual rendered content — ML mode's much longer category names ("TREE-BASED MODELS & ENSEMBLES") genuinely overflowed that gutter even at the default view, confirmed via `getBoundingClientRect()` showing every row label clipped at the SVG's left edge before any panning.
+- "Correct but overwhelming, needs a focus/declutter-on-click" — this was already built (`useMLUIStore.selectedModelId` subscription dims unrelated nodes/edges to opacity 0.15/0.06 on click). Confirmed still working after all other changes (26 dimmed, 6 highlighted on a real click test), not re-implemented.
+
+The real, live-confirmed causes:
+1. **Edges drawn as straight lines with no node/edge awareness** — a fixed hierarchical (Sugiyama-style) layout, not a force simulation, so nothing ever routes an edge around a node it happens to pass over.
+2. **Row category labels clipped at the viewport edge**, confirmed at the default fit (not just after panning) — the shared layout function's `minX: -170` gutter, sized for Stats mode, was too narrow for ML mode's category names.
+3. **Node labels could poke outside the fitted view** — the old fit used the layout's hand-estimated bounds, not real rendered label extents.
+
+**Fixed:**
+- Long-distance edges (2+ rows apart, `|Δy| ≥ 1.5 × rowSpacing`) now render as a quadratic curve bulging toward the diagram's outer margin (away from the dense center columns, into the space narrower rows already leave empty) instead of a straight line. Adjacent-row edges get zero offset, which collapses the same formula to a plain straight line — pixel-identical to before for the majority case. Endpoints are trimmed along the curve's own tangent (control-point → endpoint), not the raw source→target vector, so arrowheads stay correctly attached.
+- Row category labels are now pinned to the viewport's left edge — a sibling of the pannable/zoomable container, not inside it, with only their Y position tracking pan/zoom. They can no longer clip regardless of pan position, gutter width, or label length.
+- Fit-to-view now measures the actual rendered content (`contentGroup.getBBox()`, nodes + labels + edges, dividers excluded) instead of a hand-estimated bounds, so it stays correct for any future label-length change.
+- Added a truncation safety net for the one label wide enough to be a real outlier ("Bayesian Structural Time Series / Bayesian NNs", ~208 canvas-units) — full name stays available via the existing hover tooltip.
+
+**Bugs introduced and caught during this fix, before shipping:**
+- First bbox-fit attempt measured `container.getBBox()` including the row-divider lines, which span far past the diagram (`minNodeX − 400` to `maxNodeX + 400`) on purpose — that inflated the measured "content" to ~20,000 units wide and crushed the whole graph to a speck. Fixed by moving dividers to their own group, outside the bbox measurement.
+- Pinned labels rendered but stayed `display:none` on first real visit — traced to `positionPinnedLabels`'s visibility check reading a `const height` captured once at mount, which is `0` when the component happens to lazy-mount while its tab is hidden (this app's keep-alive tab pattern). The main fit-to-view logic already had a `needsRefit` correction for this exact scenario; the pinned-label check didn't share it. Fixed by making `width`/`height` `let` and updating them from the same resize-refit path.
+
+**Files touched:** `src/components/mlgraph/MLRelationshipMap.jsx`, `src/components/mlgraph/MLRelationshipMap.css`.
+
+**Verification:** `npm run build`/`npm run lint` clean. Live DOM checks: all 37 edges (straight and curved) trim to exactly 15px from their nearest node center at both endpoints; 10 edges confirmed genuinely curved (bulge > 2 units, up to 66.7); zero real label-label or label-node collisions (`getBoundingClientRect()`-based, not the misleading local-space `getBBox()` a first attempt used); all 10 row labels render fully unclipped at 360px, 768px, and desktop width; declutter-on-click confirmed still working; drag-to-reposition code-reviewed as correct (uses the same `edgePathD` already verified elsewhere) — synthetic pointer-event drag simulation in this environment is known-unreliable for d3-drag's pointer-capture requirements, so this specific interaction wasn't independently re-confirmed via automated drag, only via source review.
+
+---
+
+## B.2 — Domain-lab and Evaluation-lab pages: large unbalanced empty region
+
+**Confirmed live, not assumed:** measured the actual DOM chain from the visible empty region down to its cause, rather than guessing between the brief's two hypotheses (missing visualization vs. genuinely-narrow content). Neither was right.
+
+**Real root cause:** `PredictGate.jsx`'s outer wrapper renders with class `` `predict-gate predict-gate-${variant}` ``. `variant` defaults to `'card'`, so the outer wrapper — everything: driver panels, metrics grids, all of it — got class `predict-gate-card`. That class name was ALSO used, separately, for the small inner question card meant to float inside the scrim (`.predict-gate-card { max-width: 420px; }`). The two collided: on every page using the default variant (Evaluation, Gold, Macro, Micro, Politics, Bridge — i.e. every domain lab and the Evaluation metrics section), the entire gated content area inherited `max-width: 420px`, which is exactly the "content confined to a narrow column, rest of the viewport empty" symptom. This is a plain CSS selector collision, not a missing component and not content that's meant to be narrow.
+
+**Fixed:** renamed the inner question card's class from `.predict-gate-card` to `.predict-gate-question-card`, so it no longer matches the outer wrapper's variant class. No padding added, no text stretched — per the mission's own guardrail, and because neither would have fixed the actual cause.
+
+**Files touched:** `src/components/ml/learning/PredictGate.jsx`, `src/components/ml/learning/PredictGate.css`.
+
+**Verification:** `npm run build`/`npm run lint` clean. Live-checked all six affected pages (Evaluation, Gold, Macro, Micro, Politics, Bridge) — every one now uses the full page width, no empty region ≥35–40% of viewport remains anywhere. Confirmed no other CSS or JS referenced the old `.predict-gate-card` class name (`grep` across `src/`).
+
+---
+
+## B.3 — "Predict First" card renders as a broken-looking overlay
+
+**Confirmed live:** inspected the rendered DOM/CSS directly. `predict-gate-scrim` and `predict-gate-body-dimmed` classes already existed — this is a deliberate gate (the mission's option 2), not an accidental absolute-position-over-flow-content bug (option 1). The component's own comment confirms this is intentional: children stay mounted (never unmount/remount on answer) specifically so slider/chart state underneath survives the reveal.
+
+**Real root cause:** the gate was real but under-implemented. `.predict-gate-scrim` was `position: absolute; inset: 0;` with no background — just a transparent flex container centering the question card. The dimmed body (`opacity: 0.25; filter: blur(1.5px)`) showed through visibly around the card's edges, which is exactly what reads as "broken" rather than "gated": default `0.0` slider values, button labels, all partially visible with no real backdrop to explain why.
+
+**Fixed:** implemented the gate properly rather than picking a different architecture — added an actual backdrop (`background: rgba(8, 9, 20, 0.86); backdrop-filter: blur(2px);`) to `.predict-gate-scrim`. Since the scrim is `inset: 0` on `.predict-gate` (whose height comes from `.predict-gate-body`, the only in-flow child), this backdrop covers the entire gated region edge-to-edge, not just the card's own footprint. Children stay mounted, exactly as before — nothing about the "why" was changed, only the "how".
+
+**Files touched:** `src/components/ml/learning/PredictGate.css`.
+
+**Verification:** `npm run build`/`npm run lint` clean. Cleared a specific prediction from `localStorage` and reloaded to see the true unanswered state (the default dev session already had most gates pre-answered from earlier testing) — confirmed the backdrop now fully hides the dimmed body, with only the question card legible. Confirmed the resolved (answered) state still shows the compare/explain content immediately, unaffected.
+
+---
+
+## B.4 — Duplicate/broken label in the Gold Lab ("Different amounts —")
+
+**Confirmed live, not assumed — and the literal bug as described doesn't exist.** Found the string (`GOLD_PREDICT_DIFFERENT` in `src/data/ml/domains/gold.js`) — it's used exactly once, as one of two options in a real `PredictGate`. Deliberately reproduced both outcomes:
+- Answered wrong → compare row correctly shows two *different* strings (guess vs. actual).
+- Answered *correctly* → compare row renders `{guess}` and `{actual}` as the same string, since a correct guess means `optionTexts[guessIndex] === optionTexts[correctIndex]` by construction. The shared template (`"You predicted {guess} — actual: {actual}"`) then renders that identical string twice in the same sentence. That's what the mission's screenshot caught — not a duplicate-render bug, but a correct-answer state that reads like one, made worse by a short viewport clipping the row before the repeated text's second half was visible.
+
+**Fixed:** rather than leave "technically correct but reads like a glitch" in place, added a distinct template (`UI_PREDICT_CORRECT_TEMPLATE`, "You predicted correctly — {actual}") used only when the guess was correct, so it renders as one clean confirmatory sentence instead of a redundant comparison. Applied to both call sites that share this exact compare-row pattern — `PredictGate.jsx` (every predict-gate in the app) and `MixedReviewPanel.jsx` (the cross-domain review questions), since both read from the same `UI_PREDICT_COMPARE_TEMPLATE` and would show the identical symptom on a correct guess.
+
+**Files touched:** `src/data/ml/uiStrings.js`, `src/components/ml/learning/PredictGate.jsx`, `src/components/ml/learning/MixedReviewPanel.jsx`.
+
+**Verification:** `npm run build`/`npm run lint` clean. Live-tested both outcomes on Gold's driver predict-gate after the fix: wrong answer still shows the correct two-sided comparison; correct answer now shows "You predicted correctly — Different amounts — each model weighs the same evidence differently" as a single sentence, no repetition.
+
+---
+
+## B.5 — Content clipped at the top of the Stats↔ML Bridge view
+
+**Investigated thoroughly; not reproducible in the current app, most likely already fixed.** Checked `.ml-main-header` (not sticky/fixed — a normal flex child, confirmed via computed styles) and the actual scroll container (`.ml-page`, `overflow-y: auto` — not `body`, which is `overflow: hidden` by design). Reproduced the Bridge page's real cross-link entry point (Pipeline's Estimation demo → "See this compared side-by-side in the Stats ↔ ML Bridge" button, which calls the same `scrollIntoView({behavior:'auto', block:'start'})` mechanism named in the mission) at both desktop and 360px width — no clipping either time, comfortable margin below the header in both cases.
+
+`BridgePage.jsx`'s own code comments document a **prior, already-fixed** version of exactly this failure mode: `scrollIntoView` used to be called with `behavior: 'smooth'`, and a smooth scroll's frame-by-frame animation (via `requestAnimationFrame`) sometimes never visibly progressed — leaving the view frozen mid-scroll, with content clipped at the top and no way to scroll further (since the animation, not the user, "owned" the scroll position). That's switched to `behavior: 'auto'` already, with the reasoning documented in-line. This is the most likely explanation: the mission's screenshot was probably taken before that fix landed, or during the exact window it was needed.
+
+**No code change made** — there's no reproducible defect to fix, and speculatively changing code for a bug that can't be observed would risk introducing a real regression for no benefit. If this resurfaces, the next thing to check is whether it's viewport-size-specific in a way these two tests didn't hit, or specific to the *other* cross-link entry point (`stats-reg`, from the Stats Map's node detail panel) rather than the one tested here (`pipeline-estimation`).
+
+**Files touched:** none.
+
+---
+
+# Section C — Full QA Sweep
+
+## C.7-related — Macro nowcast timeline: right-edge label clipping
+
+**Found via the systematic chart sweep** (checking every SVG-based chart in the app for the same class of bug as B.1), not from a screenshot. `InformationGapTimeline.jsx`'s "Official GDP released (~4 weeks later)" label is `text-anchor="middle"` at a fixed `x=560` inside a fixed `viewBox="0 0 640 132"`. A `getBBox()` measurement showed the label's right edge at `x=656.2` — past the viewBox's own boundary. This clips regardless of how wide the container renders, since SVG clips to its viewBox by default and the overflow is relative to viewBox units, not real pixels — a wide container doesn't help.
+
+**Fixed:** widened the viewBox (`W`: 640 → 700) rather than moving the label's anchor point, so every other element (the gap-zone rect, baseline, other points) stays at its exact existing position — only new empty space was added on the right, exactly enough to hold the label that was already positioned there.
+
+**Files touched:** `src/features/ml/macro/InformationGapTimeline.jsx`.
+
+**Verification:** `npm run build`/`npm run lint` clean. Re-measured after the fix: label's right edge now at `x=656.1`, well inside the new 700-unit viewBox (43.9 units of margin). Visually confirmed full text renders in the live Macro Lab page.
+
+## C.7-related — ForecastBandChart: axis-label and model-name margins too tight
+
+**Also found via the chart sweep.** `ForecastBandChart.jsx` (shared by Gold and Macro) uses a proper `d3.scaleLinear()` with pixel margins rather than a hand-placed viewBox, which is more robust — but the margins themselves were still too tight in two places:
+- The rightmost axis label (a formatted currency value, e.g. "$4,157") is centered exactly at the margin boundary (`x(domain[1]) = W - MARGIN.right`); with the old `MARGIN.right: 16`, a `getBBox()` check found it clipping 1.2 units past the viewBox.
+- The widest model-name labels ("GARCH (volatility overlay)", "Dynamic Factor Model (DFM)", both ~27 characters) measured 145.6 units wide against a `MARGIN.left: 150` — not yet clipping, but only 4.4 units of margin, too tight to survive a slightly wider label or a different scenario-pushed value.
+
+**Fixed:** widened `MARGIN.right` (16 → 26) and `MARGIN.left` (150 → 165) for real headroom on both edges, rather than a razor-thin fix for the one exact value measured.
+
+**Files touched:** `src/components/ml/domain/ForecastBandChart.jsx`.
+
+**Verification:** `npm run build`/`npm run lint` clean. Re-measured on both Gold and Macro (the only two consumers of this shared component) after the fix: zero label overflow on either page's chart.
+
+## C.7 — remaining charts checked, all clean
+
+Every other SVG-based chart in the app (`ConceptDriftDemo` in Evaluation, `DemandCurveChart` in Micro, `ConfounderDemo` in Pipeline's Estimation/Prediction/Causal tab, `ScatterFitChart` and `ErrorCurveChart` in Playground) was checked with the same `getBBox()`-based overflow sweep. All clean, zero label overflow. `ConfounderDemo` and `ErrorCurveChart` both required navigating past a gate (a tab click, a "Reveal my result" Productive-Failure gate) to mount at all — checked in their revealed state, not just confirmed absent.
+
+## C.3 — Model Map's row category labels were English-only regardless of language toggle
+
+**Found while verifying B.1's pinned labels in Burmese mode** (part of the required toggle-combination sweep) — the labels didn't change at all when switching to Burmese. Traced to `ML_FAMILIES[].name` in `src/data/ml/models.js`: a plain string, never wrapped in `bl()`/`blSame()`.
+
+This is a different case from model/algorithm names ("Linear Regression", "XGBoost", "Ridge / Lasso / Elastic Net"), which are deliberately kept English-only throughout this app as proper nouns/terms-of-art — that convention is real and intentional, confirmed by checking that those names are consistently plain strings everywhere, on purpose. `ML_FAMILIES[].name` is different: it's a descriptive category/grouping label (the Model Map's row headers), the same kind of UI chrome as the connection-type legend (`MM_LEGEND_EXTENDS` etc., a few lines below in the same file) — which *is* bilingual. There was no reason for this one set of labels to be the exception, and B.1's fix (pinning them to the viewport, always visible) made the gap more visible than it was before, not less real.
+
+**Fixed:** wrapped all 10 family names in `blSame()`, translating the common/descriptive words and keeping genuinely technical terms as English loanwords — the same mixed-language convention this app already uses throughout (e.g. "Model မြေပုံ" for "Model Map"). Since `MLRelationshipMap.jsx`'s graph render is an imperative D3 effect that mounts once (`useEffect(..., [])`, deliberately not remounted on every store change, or pan/zoom/drag state would reset on a language toggle), added a second, separate effect keyed on `lang` that just updates the pinned labels' text in place — the graph itself doesn't re-render.
+
+**Files touched:** `src/data/ml/models.js`, `src/components/mlgraph/MLRelationshipMap.jsx`.
+
+**Decisions:** the mount effect reads the current language via a ref (`langRef.current`), not the reactive `lang` value directly — the correct, lint-clean way to read a "latest value" inside an effect without adding it as a dependency (which would force a full remount on every toggle). First version read `lang` directly and correctly triggered `oxlint`'s `react-hooks(exhaustive-deps)` warning; fixed properly rather than suppressed, matching this codebase's established practice of fixing Rules-of-Hooks-adjacent issues rather than silencing the linter (see BUILD_LOG.md Module 2).
+
+**Verification:** `npm run build`/`npm run lint` clean (zero warnings). Toggled language live: all 10 pinned labels switch to their Burmese text immediately, confirmed via direct DOM text-content read (not just visual glance). Confirmed the toggle does not reset pan/zoom or node positions (the mount effect genuinely does not re-run — only the label text updates).
+
+## C.1 — Control extremes (NaN/undefined/broken-string states)
+
+Every range slider on Gold, Macro, Micro, and Politics pushed programmatically to both its `min` and `max` (17 sliders total across the four domains), plus Micro's promotion/peak-season toggles exercised. Checked rendered text for `NaN`, `undefined`, `null`, `Infinity`, `[object Object]` after each push. Zero matches in every case.
+
+## C.5 — Cross-links
+
+- Pipeline's Estimation demo → Bridge (`{from: 'pipeline-estimation'}`): navigates correctly, scrolls to the right comparison section, no clipping (see B.5 above — this is the same mechanism).
+- Politics → Gold geopolitical-risk link: first test (clicked immediately, no Politics driver touched) correctly showed Gold's geoRisk driver at baseline 0 — that's correct behavior for a 0-in input, not a bug. Re-tested properly: pushed Politics' "Regional conflict escalates" preset first, then followed the link — Gold's geoRisk slider (index 3 of 5) landed at its max value (2, i.e. +2.0), confirming the cross-link delivers the pushed value correctly, matching the original build's documented verification.
+
+## C.6 — Citation footers
+
+Every `MLCitation section="X"` value used in the codebase (`1`, `2`, `3`, `5`, `6.1`, `6.2`, `6.3`, `6.4`) cross-checked against the actual section headers in `docs/research/ML-Research-Reference.md`. All eight correspond to a real, existing section. No broken references.
+
+## C.8 — Stats mode unaffected
+
+Every file this entire pass touched is under `src/data/ml/`, `src/components/ml*` (ML-specific), or `src/features/ml/` — confirmed via `git status`, zero files under `src/features/stats/`, `src/components/graph/` (Stats mode's own map, including the shared `hierarchicalLayout.js` — read for reference, never edited), or any Stats-specific store. Live-checked Stats mode's Formula Map regardless: renders identically to before (94 nodes, 13 chapters, sidebar, legend, chapter labels), zero console errors.
+
+## C.9 — Section H pedagogy checklist
+
+Nothing in this pass touched `DepthLadder`, `MisconceptionCallout`, `RetrievalCheck`, or the Understanding Tracker's core logic — only `PredictGate`'s compare-template and scrim CSS, both already re-verified working correctly (predict → gate → answer → compare → explain, full cycle) on multiple pages during this pass. Spot-checked a `DepthLadder` instance (Gold) after the language-toggle fix: all four tabs (Spark/Mechanism/Formalism/Critical Frontier) present with correct bilingual subtitles.
+
+## C.2 / C.4 — Breakpoints and console cleanliness
+
+Every fix in this log was verified at desktop width at minimum; the Model Map fix (the highest-risk change, given it's the one component with real layout/measurement logic) was additionally verified at 360px and 768px. Console checked for errors after every fix, across every page touched — clean throughout, including after rapid interactions (repeated slider pushes, drag/click sequences, language/level toggling).
+
+---
+
+## Final confirmation
+
+- `npm run build` and `npm run lint`: clean (0 errors, 0 warnings) as of the last change in this pass.
+- Stats mode: confirmed unaffected, both by file-diff (zero Stats files touched) and live visual check.
+- Mode switcher (Stats ↔ ML): unaffected — not touched, exercised repeatedly throughout this pass without issue.
+- Pedagogy checklist (Depth Ladder / misconceptions / Mixed-Review / Understanding Tracker): unaffected by any layout fix in this pass — the only shared learning component touched was `PredictGate`, and its predict → answer → compare → explain cycle was re-verified working after each of its two fixes (B.3's backdrop, B.4's correct-answer template).
+- All five Section B bugs addressed: four fixed (B.1, B.2, B.3, B.4), one investigated thoroughly and found not reproducible with a documented likely explanation (B.5).
+- Section C's sweep surfaced three additional real, previously unknown bugs beyond what Section B named — all fixed: the Macro timeline's label clipping, ForecastBandChart's tight margins, and Model Map's family-name bilingual gap.

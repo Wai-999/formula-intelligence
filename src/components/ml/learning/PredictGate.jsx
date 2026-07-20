@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMLUIStore } from '../../../store/useMLUIStore.js';
 import { useUnderstandingStore } from '../../../store/useUnderstandingStore.js';
-import { UI_PREDICT_FIRST_LBL, UI_PREDICT_COMPARE_TEMPLATE } from '../../../data/ml/uiStrings.js';
+import { UI_PREDICT_FIRST_LBL, UI_PREDICT_COMPARE_TEMPLATE, UI_PREDICT_CORRECT_TEMPLATE } from '../../../data/ml/uiStrings.js';
 import { useT, resolveT } from '../../../lib/mlContent.js';
 import './PredictGate.css';
 
@@ -26,6 +26,7 @@ export default function PredictGate({
   const explainText = useT(explain);
   const predictFirstLbl = useT(UI_PREDICT_FIRST_LBL);
   const compareTemplate = useT(UI_PREDICT_COMPARE_TEMPLATE);
+  const correctTemplate = useT(UI_PREDICT_CORRECT_TEMPLATE);
   const optionTexts = options.map((o) => resolveT(o, level, lang));
 
   const resolved = existing || justAnswered;
@@ -37,8 +38,17 @@ export default function PredictGate({
     setJustAnswered({ guessIndex: index, correct });
   }
 
+  // A correct guess means optionTexts[guessIndex] === optionTexts[correctIndex]
+  // byte-for-byte, so the guess/actual comparison template would render the
+  // same string twice ("You predicted X — actual: X") — reads as a
+  // duplicate-render bug even though it's accurate. Single confirmatory
+  // sentence instead, only when correct.
   let compareBefore = compareTemplate, compareMiddle = '', compareAfter = '';
-  if (resolved) {
+  if (resolved && resolved.correct) {
+    const [before, after] = correctTemplate.split('{actual}');
+    compareBefore = before;
+    compareAfter = after;
+  } else if (resolved) {
     const [before, afterGuess] = compareTemplate.split('{guess}');
     const [middle, after] = afterGuess.split('{actual}');
     compareBefore = before;
@@ -50,7 +60,7 @@ export default function PredictGate({
     <div className={`predict-gate predict-gate-${variant}`}>
       {!resolved && (
         <div className="predict-gate-scrim">
-          <div className="predict-gate-card">
+          <div className="predict-gate-question-card">
             <p className="predict-gate-lbl"><i className="ti ti-bulb" aria-hidden="true" /> {predictFirstLbl}</p>
             <p className="predict-gate-question">{questionText}</p>
             <div className="predict-gate-options">
@@ -68,7 +78,9 @@ export default function PredictGate({
         <div className={`predict-gate-compare${resolved.correct ? ' predict-gate-correct' : ' predict-gate-wrong'}`}>
           <span className="predict-gate-compare-row">
             <i className={`ti ${resolved.correct ? 'ti-check' : 'ti-x'}`} aria-hidden="true" />
-            {compareBefore}<strong>{optionTexts[resolved.guessIndex]}</strong>{compareMiddle}<strong>{optionTexts[correctIndex]}</strong>{compareAfter}
+            {resolved.correct
+              ? <>{compareBefore}<strong>{optionTexts[correctIndex]}</strong>{compareAfter}</>
+              : <>{compareBefore}<strong>{optionTexts[resolved.guessIndex]}</strong>{compareMiddle}<strong>{optionTexts[correctIndex]}</strong>{compareAfter}</>}
           </span>
           {explainText && <span className="predict-gate-explain">{explainText}</span>}
         </div>

@@ -3,7 +3,15 @@ import { useHorizontalScrollHint } from '../../../lib/useHorizontalScrollHint.js
 import { MACRO_GAP_LABELS } from '../../../data/ml/domains/macro.js';
 import './InformationGapTimeline.css';
 
-const W = 640;
+// FIX_LOG.md Section C: W was 640, with the "Official GDP released (~4
+// weeks later)" label centered at RELEASE_X=560 — a getBBox() measurement
+// showed that label's right edge at x=656.2, past the viewBox's own right
+// boundary, so it clipped silently regardless of the container's rendered
+// width (an SVG clips to its viewBox by default; a wider container doesn't
+// help since the overflow is relative to viewBox units, not real pixels).
+// Widened the viewBox rather than moving RELEASE_X, so every other
+// element's position (gap-zone width, baseline) stays pixel-identical.
+const W = 700;
 const H = 132;
 const BASE_Y = 76;
 const QUARTER_END_X = 90;

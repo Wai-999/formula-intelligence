@@ -5,17 +5,26 @@ import { bl, blSame } from '../../lib/mlContent.js';
 // see BUILD_LOG.md Module 3 for the handful of places the edge list in the
 // build spec named a sub-concept that isn't its own doc row (e.g. "Bayesian
 // Linear Regression"), and how those were resolved.
+// FIX_LOG.md Section C.3: name was a plain string (English-only regardless
+// of language toggle) — unlike model/algorithm names (Linear Regression,
+// XGBoost), which are deliberately kept English throughout this app as
+// term-of-art proper nouns, these are descriptive category/grouping labels
+// (the Model Map's row headers), the same kind of UI chrome as
+// MM_LEGEND_EXTENDS below — which IS bilingual. Translated the common
+// words, kept genuinely technical terms as English loanwords, matching
+// this app's established mixed-language convention throughout (e.g. "Model
+// မြေပုံ").
 export const ML_FAMILIES = [
-  { id: 1, name: 'Linear & Regularized', color: '#8b5cf6' },
-  { id: 2, name: 'Instance-Based & Probabilistic', color: '#6366f1' },
-  { id: 3, name: 'Tree-Based Models & Ensembles', color: '#22d3ee' },
-  { id: 4, name: 'Support Vector Machines', color: '#34d399' },
-  { id: 5, name: 'Unsupervised Learning', color: '#fbbf24' },
-  { id: 6, name: 'Classical Time-Series / Econometric', color: '#fb7185' },
-  { id: 7, name: 'Modern Applied Time-Series Tools', color: '#f472b6' },
-  { id: 8, name: 'Deep Learning', color: '#a78bfa' },
-  { id: 9, name: 'Bayesian Machine Learning', color: '#60a5fa' },
-  { id: 10, name: 'Reinforcement Learning', color: '#f87171' },
+  { id: 1, name: blSame('Linear & Regularized', 'Linear နှင့် Regularized'), color: '#8b5cf6' },
+  { id: 2, name: blSame('Instance-Based & Probabilistic', 'Instance-Based နှင့် Probabilistic'), color: '#6366f1' },
+  { id: 3, name: blSame('Tree-Based Models & Ensembles', 'Tree-Based မော်ဒယ်များ နှင့် Ensembles'), color: '#22d3ee' },
+  { id: 4, name: blSame('Support Vector Machines', 'Support Vector Machines'), color: '#34d399' },
+  { id: 5, name: blSame('Unsupervised Learning', 'Unsupervised သင်ယူမှု'), color: '#fbbf24' },
+  { id: 6, name: blSame('Classical Time-Series / Econometric', 'Classical Time-Series / Econometric'), color: '#fb7185' },
+  { id: 7, name: blSame('Modern Applied Time-Series Tools', 'ခေတ်မီ အသုံးချ Time-Series ကိရိယာများ'), color: '#f472b6' },
+  { id: 8, name: blSame('Deep Learning', 'Deep သင်ယူမှု'), color: '#a78bfa' },
+  { id: 9, name: blSame('Bayesian Machine Learning', 'Bayesian စက်သင်ယူမှု'), color: '#60a5fa' },
+  { id: 10, name: blSame('Reinforcement Learning', 'Reinforcement သင်ယူမှု'), color: '#f87171' },
 ];
 
 export const mlFamilyColorMap = Object.fromEntries(ML_FAMILIES.map((f) => [f.id, f.color]));
