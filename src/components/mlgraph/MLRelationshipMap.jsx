@@ -517,14 +517,26 @@ export default function MLRelationshipMap() {
     // longer strings could and did poke outside it, clipping at the SVG's
     // own edge. getBBox() on the content group measures real geometry, so
     // this stays correct regardless of future label-length changes.
-    const contentBBox = contentGroup.node().getBBox();
+    //
+    // getBBox() returns a degenerate near-zero box for content sitting
+    // inside a display:none ancestor — exactly this pane's state at mount
+    // whenever Model Map isn't the tab MLBody.jsx's keep-alive pattern
+    // happens to start on (it never is: mlActiveTab defaults to 'pipeline'
+    // and isn't persisted, so this is every session's actual first visit,
+    // not an edge case). That degenerate box, fed into computeFit() below,
+    // produces an enormous zoom scale centered near the origin — the graph
+    // renders far outside the viewport, at ~10x the intended zoom, i.e. an
+    // apparently empty canvas: every node is technically "there," just
+    // nowhere the visible page. `width`/`height` (the wrap's own size) have
+    // the identical problem and are already re-measured once the pane
+    // becomes visible, in onResize's needsRefit branch below — bounds needs
+    // the same treatment, which is why it's reassignable rather than const.
     const PAD = 36;
-    const bounds = {
-      minX: contentBBox.x - PAD,
-      maxX: contentBBox.x + contentBBox.width + PAD,
-      minY: contentBBox.y - PAD,
-      maxY: contentBBox.y + contentBBox.height + PAD,
-    };
+    function measureBounds() {
+      const b = contentGroup.node().getBBox();
+      return { minX: b.x - PAD, maxX: b.x + b.width + PAD, minY: b.y - PAD, maxY: b.y + b.height + PAD };
+    }
+    let bounds = measureBounds();
 
     function computeFit(w, h) {
       const diagramW = bounds.maxX - bounds.minX;
@@ -598,6 +610,12 @@ export default function MLRelationshipMap() {
       svg.attr('width', rect.width).attr('height', rect.height);
       if (needsRefit && rect.width > 10 && rect.height > 10) {
         needsRefit = false;
+        // The pane just went from hidden to visible — re-measure content
+        // bounds now (see the comment above bounds' first assignment): the
+        // mount-time getBBox() was taken while this pane was display:none
+        // and is not just stale but actively wrong (a degenerate near-zero
+        // box), not merely a smaller-viewport version of the right answer.
+        bounds = measureBounds();
         const refit = computeFit(rect.width, rect.height);
         zoomBehavior.scaleExtent([Math.max(0.05, Math.min(0.2, refit.scale * 0.7)), Math.max(3, refit.scale * 4)]);
         svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(refit.tx, refit.ty).scale(refit.scale));

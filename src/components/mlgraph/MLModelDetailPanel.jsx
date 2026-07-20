@@ -94,11 +94,21 @@ export default function MLModelDetailPanel() {
   const selectModel = useMLUIStore((s) => s.selectModel);
   const node = selectedModelId ? mlNodeById[selectedModelId] : null;
   const ladder = node ? MODEL_DEPTH_LADDER[node.id] : null;
+  const family = node ? ML_FAMILIES.find((f) => f.id === node.ch) : null;
 
   const howItWorks = useT(node?.howItWorks);
   const advantages = useT(node?.advantages);
   const weaknesses = useT(node?.weaknesses);
   const usageAreas = useT(node?.usageAreas);
+  // family.name is bl()/blSame()-wrapped, same as every other field on this
+  // page — it was being rendered raw (`{family?.name}`, no useT()) below,
+  // which throws "Objects are not valid as a React child" the instant any
+  // node is selected (family is never undefined for a real node — every
+  // model has a valid ch), and with no error boundary anywhere in this
+  // app, that throw blanks the whole page rather than just this panel.
+  // This is why the detail panel appeared to do "nothing" on click: it was
+  // never failing to open, it was crashing on every single attempt.
+  const familyName = useT(family?.name);
   const howItWorksLbl = useT(MM_HOW_IT_WORKS_LBL);
   const advantagesLbl = useT(MM_ADVANTAGES_LBL);
   const weaknessesLbl = useT(MM_WEAKNESSES_LBL);
@@ -108,7 +118,6 @@ export default function MLModelDetailPanel() {
 
   if (!node) return <aside className="ml-detail-panel" />;
 
-  const family = ML_FAMILIES.find((f) => f.id === node.ch);
   const relatedLinks = ML_LINKS.filter((l) => l.s === node.id || l.t === node.id).map((l) => ({
     type: l.type,
     otherId: l.s === node.id ? l.t : l.s,
@@ -122,7 +131,7 @@ export default function MLModelDetailPanel() {
       </button>
       <p className="ml-detail-name">{node.name}</p>
       <span className="ml-detail-family-badge" style={{ background: `${mlFamilyColorMap[node.ch]}22`, color: mlFamilyColorMap[node.ch] }}>
-        {family?.name}
+        {familyName}
       </span>
       <div className="ml-detail-formula">{node.short}</div>
 
