@@ -70,7 +70,7 @@ export default function MixedReviewPanel() {
   return (
     <div className="mixed-review-badge-wrap">
       <button type="button" className="mixed-review-badge" onClick={() => setOpen((o) => !o)}>
-        <i className="ti ti-shuffle" aria-hidden="true" />
+        <i className="ti ti-arrows-shuffle" aria-hidden="true" />
         <span>{lbl}</span>
       </button>
       {open && (

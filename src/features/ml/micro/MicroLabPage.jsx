@@ -78,7 +78,7 @@ function CriticalFrontierLayer() {
 function ToggleButton({ label, active, onClick }) {
   return (
     <button type="button" className={`micro-toggle${active ? ' active' : ''}`} onClick={onClick} aria-pressed={active}>
-      <i className={`ti ${active ? 'ti-square-rounded-check-filled' : 'ti-square-rounded'}`} aria-hidden="true" />
+      <i className={`ti ${active ? 'ti-square-rounded-check' : 'ti-square-rounded'}`} aria-hidden="true" />
       {label}
     </button>
   );

@@ -147,7 +147,19 @@ function assignArrivalAngles(simLinks, diagramCenterX) {
       const last = clusters[clusters.length - 1];
       const wrapGap = (first[0].angle + 2 * Math.PI) - last[last.length - 1].angle;
       if (wrapGap < MIN_ARRIVAL_GAP_RAD) {
-        clusters[0] = [...last, ...first];
+        // `first` sorts lowest (just above -PI) and `last` sorts highest
+        // (just below +PI) — geometrically adjacent across the atan2
+        // -PI/+PI seam (both point roughly due "west"), but numerically
+        // ~2*PI apart. The mean taken below (clusters.forEach) is a plain
+        // sum/length average of raw angle values, which would average a
+        // ~-3.1 and a ~3.1 to ~0 — due EAST, the opposite side of the node
+        // from where these edges actually point — if left un-normalized.
+        // Shifting `first`'s angles by +2*PI makes them numerically
+        // contiguous with `last`'s before that mean is taken; this changes
+        // no geometry (Math.cos/Math.sin are 2*PI-periodic), only which
+        // numeral represents the same direction.
+        const wrappedFirst = first.map((e) => ({ ...e, angle: e.angle + 2 * Math.PI }));
+        clusters[0] = [...last, ...wrappedFirst];
         clusters.pop();
       }
     }
