@@ -491,3 +491,32 @@ Also wired `markDomainVisited(DOMAIN)` into all four pages (task was previously 
 **Verification:** covered inline above — this entry documents a verification pass, not new functionality with its own separate verification section.
 
 ---
+
+## Post-mission audit: full-app error and miscomposition sweep
+
+**Built:** No new features — a from-scratch, whole-app pass in response to an explicit "find and fix all errors and miscomposition" request, covering both ML mode and Stats mode (not just the modules touched by the Learning Design System mission). Found and fixed a significant, previously-undetected class of bug, plus verified the rest of the app clean.
+
+**The bug — `bl()`/`blSame()` argument-count mismatches:** `bl(enBeginner, enResearcher, myBeginner, myResearcher)` takes 4 positional arguments; calling it with only 2 or 3 (intending `blSame`-style "same at both depths" behavior) silently misassigns arguments into the wrong slots rather than erroring, because `resolveT()`'s fallback chain (`byLang[level] ?? byLang.beginner ?? content.en?.beginner`) masks the mistake with plausible-looking output in some language/depth combinations while showing the *wrong language entirely* in others. This is the same bug already found once in `mixedReview.js` earlier in this session — a systematic sweep found it had been made **five more times in this session's own new code**, plus discovered it **pre-existing in the original Module 2 `pipeline.js`** (15 instances), for 22 total newly-fixed instances beyond the original catch:
+- `GOLD_SPARK_ANALOGY`, `MACRO_SPARK_ANALOGY`, `MICRO_SPARK_ANALOGY`, `POLITICS_SPARK_ANALOGY`, `CAUSAL_SPARK_ANALOGY` (bridge.js) — all 2-arg `bl()`, converted to `blSame()`.
+- `CAUSAL_PREDICTIVE_CARD.points` (bridge.js) — 3-arg with two byte-identical English arrays (a manual, incorrect attempt at `blSame` behavior) — converted to `blSame()`.
+- `CAUSAL_ACTUAL_CARD.points` (bridge.js) — 3-arg with two *genuinely different* English arrays (a real beginner/researcher fork) but only one Burmese translation — fixed by writing the missing researcher-level Burmese translation as a proper 4th argument, preserving the intended depth fork rather than collapsing it.
+- 15 instances across 5 `options: [bl(...), ...]` predict-answer arrays in `pipeline.js` (Data Collection, Estimation, Prediction stages) — pre-existing since Module 2, never caught by any prior verification pass.
+- 2 more `faded:` (Now You Try) blocks in `pipeline.js` with the same "genuinely-forked English, single Burmese" pattern as `CAUSAL_ACTUAL_CARD` — fixed the same way, adding the missing researcher-Burmese argument.
+
+Confirmed each fix live in the browser (not just statically): all 6 Spark-layer analogies re-verified rendering correct Burmese text after the fix (previously silently blind-spotted during original verification because `DepthLadder` auto-skips to the Formalism tab for advanced users, meaning Spark tabs were rarely manually opened once Understanding Tracker progressed past Competent).
+
+**Also verified clean (no fixes needed):** all ML-mode JSX for raw hardcoded English text nodes (a parse-based sweep of every `.jsx` file under `features/ml`/`components/ml`/`components/mlgraph` found zero); `predictId`/`nodeId` values for accidental collisions (all intentional, none accidental); console.log/debugger/TODO leftovers (none); a full 9-tab ML-mode and 9-tab Stats-mode click-through (console errors, visual layout, core interactions — Map node click/detail panel, Flashcards deck start, Quiz question flow, Practice problem generation, Journal knowledge-grid hover tooltips); the Politics→Gold cross-link's actual delivered value (mathematically verified: `computeGeoRisk` on the "Regional conflict escalates" preset → `geoRiskToGoldZ` → Gold's driver correctly showing +2.0, matching the hand-computed 1.976 rounded/clamped).
+
+**Files touched:** `src/data/ml/domains/{gold,macro,micro,politics}.js`, `src/data/ml/bridge.js`, `src/data/ml/pipeline.js` — all content-only fixes (function-name swaps and one added translation each), zero component/logic changes.
+
+**Decisions (rule 1):**
+- **A parser-based check, not a regex, for the `bl()` argument-count sweep** — a naive `grep`-based approach cannot correctly count top-level arguments across multi-line calls containing nested parens, brackets, and quoted strings with escaped characters. Wrote a small Node script that tracks paren/bracket/string-quote depth character-by-character to count real top-level commas, re-run after every fix batch to confirm zero regressions. Two classes of false positive were investigated and confirmed harmless before being ruled out: array-literal commas inside a single `.join('\n')` argument (first script version didn't track `[`/`{` depth, fixed in v2), and the literal string `"blSame()"` appearing inside a `//` comment (matched by the regex, produces nonsense downstream parse — verified by reading the actual source line, not assumed).
+- **Where English genuinely forks by depth but only one Burmese translation existed, added the missing translation rather than collapsing to `blSame()`** — collapsing would have silently discarded a real, intentional beginner/researcher distinction the original author wrote in English; the correct fix preserves authorial intent instead of erasing it for convenience.
+- **Did not change the Journal tab's 8-character name truncation** (`(n.name || n.id).slice(0, 8)` in `JournalPage.jsx`) after investigating it as a possible miscomposition — confirmed via source reading that a custom `showTip()` hover tooltip already displays the full, untruncated name plus recall/streak state on `onMouseEnter`, making the short grid label a deliberate compact-view choice backed by real progressive disclosure, not a bug.
+
+**Verification:**
+- `npm run build`/`npm run lint`: pass, before and after every fix batch.
+- Live-verified in-browser: all 6 fixed Spark analogies now show correct Burmese text in Burmese+Beginner mode (previously broken); Pipeline's Data-Collection-stage fixed predict options render correctly; no new console errors introduced (one recurring stale cached Vite HMR error from earlier mid-session editing was repeatedly confirmed non-live by cross-checking against working, non-crashed screenshots taken in the same moment).
+- Console: 0 live errors across the entire two-mode, 18-tab walkthrough.
+
+---

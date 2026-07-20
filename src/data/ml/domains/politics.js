@@ -155,7 +155,7 @@ export const GEO_PREDICT_EXPLAIN = blSame(
   'အောက်ပါ Critical Frontier tab သည် ဘာကြောင့်ဆိုတာကို ဥပမာအတိအကျဖြင့် ရှင်းပြသည်။'
 );
 
-export const POLITICS_SPARK_ANALOGY = bl(
+export const POLITICS_SPARK_ANALOGY = blSame(
   "A judge and a spreadsheet both have to make a call under uncertainty — the spreadsheet just hides the judgment calls inside formulas instead of stating them out loud. Every weight in these two models (how much polls count, how much a military signal counts) is a human decision wearing a number's clothing.",
   'တရားသူကြီးတစ်ဦးနှင့် spreadsheet တစ်ခုစလုံးသည် uncertainty အောက်တွင် ဆုံးဖြတ်ချက်ချရသည် — spreadsheet က ဆုံးဖြတ်ချက်များကို အသံထွက်ပြောမည့်အစား formula ထဲတွင် ဝှက်ထားခြင်းသာဖြစ်သည်။ ဒီမော်ဒယ်နှစ်ခု၏ weight တိုင်း (poll က ဘယ်လောက်အရေးပါလဲ၊ စစ်ရေး signal က ဘယ်လောက်အရေးပါလဲ) သည် ဂဏန်း၏ အဝတ်အစားဝတ်ထားသော လူ့ဆုံးဖြတ်ချက်တစ်ခုဖြစ်သည်။'
 );

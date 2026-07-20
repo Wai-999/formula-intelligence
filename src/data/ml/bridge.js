@@ -191,13 +191,7 @@ export const CAUSAL_PREDICTIVE_CARD = {
     'The predictive view: promotion is a strong signal',
     'ခန့်မှန်းချက် ရှုထောင့်: ပရိုမိုးရှင်းသည် အားကောင်းသော signal ဖြစ်သည်'
   ),
-  points: bl(
-    [
-      'In this lab\'s data, promo-on periods show noticeably higher demand',
-      'A predictive model is right to flag "promotion" as an important feature',
-      'Using it as an input genuinely improves forecast accuracy',
-      'The model never needs to know WHY the correlation exists to benefit from it',
-    ].join('\n'),
+  points: blSame(
     [
       'In this lab\'s data, promo-on periods show noticeably higher demand',
       'A predictive model is right to flag "promotion" as an important feature',
@@ -240,6 +234,12 @@ export const CAUSAL_ACTUAL_CARD = {
       'တကယ့် retail history တွင်: ပရိုမိုးရှင်းများကို အထွက်နှုန်းအမြင့်ဆုံးရာသီအတွင်း (Black Friday, holiday sale) ရက်ချိန်းလေ့ရှိသည် — နှစ်ခုသည် အလွန်ထပ်နေသည်',
       'တကယ့် historical data ဖြင့် train လုပ်ထားသော model တစ်ခုသည် "ပရိုမိုးရှင်းက ဒါဖြစ်စေတယ်" ကို "ရာသီက ဒါဖြစ်စေတယ်၊ ပရိုမိုးရှင်းက အတူတကွ ဖြစ်ခဲ့တာပါပဲ" နှင့် အလိုအလျောက် ခွဲခြား၍မရနိုင်ပါ',
       'အကြောင်းရင်း မေးခွန်းကို တကယ်ဖြေရန် deliberate design လိုအပ်သည် — off-season တွင် promo လုပ်ခြင်း (သို့) controlled experiment တစ်ခု',
+    ].join('\n'),
+    [
+      'ဒီ lab ၏ toy model တွင်: ဟုတ်သည်၊ စနစ်တကျ — ပရိုမိုးရှင်းနှင့် ရာသီသည် ဖွဲ့စည်းပုံအရ သီးခြား multiplier များဖြစ်သည်',
+      'တကယ့် retail history တွင်: ပရိုမိုးရှင်းများကို အထွက်နှုန်းအမြင့်ဆုံးရာသီအတွင်း (Black Friday, holiday sale) ရက်ချိန်းလေ့ရှိသည် — နှစ်ခုသည် အလွန်ထပ်နေသည်၊ တကယ့် confound တစ်ခုဖြစ်သည်',
+      'တကယ့် historical data ဖြင့် train လုပ်ထားသော model တစ်ခုသည် deliberate design မရှိဘဲ "ပရိုမိုးရှင်းက ဒါဖြစ်စေတယ်" ကို "ရာသီက ဒါဖြစ်စေတယ်၊ ပရိုမိုးရှင်းက အတူတကွ ဖြစ်ခဲ့တာပါပဲ" နှင့် အလိုအလျောက် ခွဲခြား၍မရနိုင်ပါ',
+      'အကြောင်းရင်း မေးခွန်းကို တကယ်ဖြေရန် randomization သို့မဟုတ် natural experiment တစ်ခု လိုအပ်သည် (ဥပမာ off-season တွင် တမင် promo လုပ်ခြင်း) — observational correlation တစ်ခုတည်းနှင့် ဒါကို အဆုံးအဖြတ်မပေးနိုင်ပါ',
     ].join('\n')
   ),
   interpretation: blSame(
@@ -265,7 +265,7 @@ export const CAUSAL_PREDICT_EXPLAIN = blSame(
   'အောက်ပါ Critical Frontier tab သည် ဒါကို အတိအကျ ရှင်းပြသည် — ပရိုမိုးရှင်းနှင့် ရာသီသည် တကယ့် retail data တွင် များသောအားဖြင့်ရှိသည့်အတိုင်း historically ရောထွေးနေသောအခါ ဘာဖြစ်လဲဆိုတာဖြစ်သည်။'
 );
 
-export const CAUSAL_SPARK_ANALOGY = bl(
+export const CAUSAL_SPARK_ANALOGY = blSame(
   "Ice cream sales and drowning deaths rise and fall together throughout the year — with real statistical strength. Nobody concludes ice cream causes drowning. Both are driven by a third factor entirely: summer heat brings out both swimmers and ice cream vendors. A correlation this strong can be 100% real and 0% causal.",
   'ရေခဲမုန့် အရောင်းနှင့် ရေနစ်သေဆုံးမှုများသည် တစ်နှစ်ပတ်လုံး အတူတကွ တက်ကျသည် — real statistical strength ဖြင့်။ ရေခဲမုန့်က ရေနစ်ခြင်းကို ဖြစ်စေသည်ဟု ဘယ်သူမှ မကောက်ချက်ချပါ။ နှစ်ခုစလုံးကို တတိယ အချက်တစ်ခုလုံးက တွန်းအားပေးနေသည်: နွေရာသီအပူသည် ရေကူးသူများနှင့် ရေခဲမုန့်ရောင်းသူများ နှစ်ဦးစလုံးကို ခေါ်ဆောင်လာသည်။ ဒီလို ခိုင်မာသော ဆက်နွယ်မှုသည် 100% real ဖြစ်ပြီး 0% causal ဖြစ်နိုင်သည်။'
 );

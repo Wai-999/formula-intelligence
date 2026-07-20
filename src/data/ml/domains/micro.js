@@ -111,7 +111,7 @@ export const MICRO_PREDICT_EXPLAIN = blSame(
   '"Charm Threshold အောက်ကပဲ" နှင့် "Charm Threshold အထက်ကို ကျော်" scenario preset များကို အဆက်တိုက် စမ်းကြည့်ပြီး ML မျဉ်းအမြဲကို အထူးကြည့်ပါ — $15.00 တွင် အတိအကျ step ကျသွားပြီး econometric မျဉ်းက အစက်ရွေးမျဉ်းသည် တူညီသောအမှတ်ကို ချောမွေ့စွာ ဆက်ရွေ့နေသည်။'
 );
 
-export const MICRO_SPARK_ANALOGY = bl(
+export const MICRO_SPARK_ANALOGY = blSame(
   "A thermometer reads temperature smoothly, degree by degree — but a light switch doesn't dim gradually, it's off, then suddenly on. Some real-world relationships are thermometers; others are light switches. The question is never which model is fancier, it's which shape actually matches the thing you're modeling.",
   'သာမိတာသည် အပူချိန်ကို ဒီဂရီအလိုက် ချောမွေ့စွာ ဖတ်ပေးသည် — သို့သော် မီးခလုတ်တစ်ခုသည် တဖြည်းဖြည်း မမှိန်ပါ၊ ပိတ်၊ ပြီးရင် ရုတ်တရက် ဖွင့်သည်။ လက်တွေ့ဆက်နွယ်မှု အချို့သည် သာမိတာများဖြစ်ပြီး အချို့ကတော့ မီးခလုတ်များဖြစ်သည်။ ဘယ်မော်ဒယ်က ပိုချောမွေ့လဲ ဆိုသည့်မေးခွန်းမဟုတ်ဘဲ၊ ဘယ်ပုံသဏ္ဍာန်က သင် model လုပ်နေသောအရာနှင့် တကယ်ကိုက်ညီလဲဆိုသည့်မေးခွန်းသာဖြစ်သည်။'
 );

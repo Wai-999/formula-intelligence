@@ -226,9 +226,9 @@ export const PIPELINE_STAGES = [
           'ရွှေကို ကုန်သွယ်ရေးနေ့တိုင်း ရောင်းဝယ်နေသော်လည်း ဗဟိုဘဏ်ဝယ်ယူမှု data က သုံးလတစ်ကြိမ်သာ ထွက်သည်။ ချိန်မညှိဘဲ model ထဲ ထည့်လိုက်ရင် ဘာဖြစ်မလဲ?'
         ),
         options: [
-          bl('Nothing — models automatically handle any mismatched frequency', 'ဘာမှမဖြစ်ပါ — model များသည် ကြိမ်နှုန်းမတူညီမှုမည်သို့ကိုမဆို အလိုအလျောက် ကိုင်တွယ်သည်'),
-          bl('The model breaks, or silently learns a distorted, mostly-missing-data version of the quarterly driver', 'Model ပျက်စီးသည် သို့မဟုတ် သုံးလပတ် driver ၏ ကွက်လပ်များစွာပါသော ပုံပျက်ပြောင်းသွားသော version ကို အသိမသိ သင်ယူသည်'),
-          bl('The quarterly data automatically becomes daily on its own', 'သုံးလပတ် data သည် နေ့စဉ်ဖြစ်အောင် သူ့ဘာသာ အလိုအလျောက် ပြောင်းသွားသည်'),
+          blSame('Nothing — models automatically handle any mismatched frequency', 'ဘာမှမဖြစ်ပါ — model များသည် ကြိမ်နှုန်းမတူညီမှုမည်သို့ကိုမဆို အလိုအလျောက် ကိုင်တွယ်သည်'),
+          blSame('The model breaks, or silently learns a distorted, mostly-missing-data version of the quarterly driver', 'Model ပျက်စီးသည် သို့မဟုတ် သုံးလပတ် driver ၏ ကွက်လပ်များစွာပါသော ပုံပျက်ပြောင်းသွားသော version ကို အသိမသိ သင်ယူသည်'),
+          blSame('The quarterly data automatically becomes daily on its own', 'သုံးလပတ် data သည် နေ့စဉ်ဖြစ်အောင် သူ့ဘာသာ အလိုအလျောက် ပြောင်းသွားသည်'),
         ],
         correctIndex: 1,
       },
@@ -319,9 +319,9 @@ export const PIPELINE_STAGES = [
           '"real-yield 30-ရက် ရွေ့လျားပျမ်းမျှ" feature ကို raw နေ့စဉ် real yields ရှိပြီးသား model ထဲ ထည့်လိုက်သည်။ ဒါက model ကို အမြဲတမ်း တိုးတက်စေသလား?'
         ),
         options: [
-          bl('Yes, always — more features are always better', 'ဟုတ်သည်၊ အမြဲတမ်း — feature ပိုများလေ ပိုကောင်းလေ'),
-          bl('Not necessarily — it can help if the trend matters more than the daily noise, but can also add redundant noise if the model already captures that trend another way', 'မဖြစ်မနေမဟုတ်ပါ — daily noise ထက် လမ်းကြောင်းက ပိုအရေးကြီးလျှင် အထောက်အကူဖြစ်နိုင်သော်လည်း model က ထိုလမ်းကြောင်းကို တခြားနည်းဖြင့် ဖမ်းယူပြီးသားလျှင် redundant noise ထပ်ဖြစ်စေနိုင်သည်'),
-          bl('No, adding any feature always hurts accuracy', 'မဟုတ်ပါ၊ feature မည်သည့်အရာထည့်သည်ဖြစ်စေ တိကျမှုကို ထိခိုက်စေသည်'),
+          blSame('Yes, always — more features are always better', 'ဟုတ်သည်၊ အမြဲတမ်း — feature ပိုများလေ ပိုကောင်းလေ'),
+          blSame('Not necessarily — it can help if the trend matters more than the daily noise, but can also add redundant noise if the model already captures that trend another way', 'မဖြစ်မနေမဟုတ်ပါ — daily noise ထက် လမ်းကြောင်းက ပိုအရေးကြီးလျှင် အထောက်အကူဖြစ်နိုင်သော်လည်း model က ထိုလမ်းကြောင်းကို တခြားနည်းဖြင့် ဖမ်းယူပြီးသားလျှင် redundant noise ထပ်ဖြစ်စေနိုင်သည်'),
+          blSame('No, adding any feature always hurts accuracy', 'မဟုတ်ပါ၊ feature မည်သည့်အရာထည့်သည်ဖြစ်စေ တိကျမှုကို ထိခိုက်စေသည်'),
         ],
         correctIndex: 1,
       },
@@ -412,9 +412,9 @@ export const PIPELINE_STAGES = [
           '"data scientist တစ်ဦးက ရွှေဈေးနှုန်း model သုံးမည့် rule အတိအကျကို data မမြင်ဖူးမီ တစ်ကြောင်းချင်း ရေးထားသည်" ဆိုတာ ကို စောဒကတက်သူတစ်ဦးရှိသည်။ Estimation က တကယ်ဒီလို အလုပ်လုပ်သလား?'
         ),
         options: [
-          bl('Yes — every coefficient is hand-typed by a person', 'ဟုတ်သည် — coefficient တိုင်းကို လူတစ်ဦးက လက်ဖြင့် ရိုက်ထည့်သည်'),
-          bl('No — a person chooses the model shape, but the algorithm searches for the specific numbers from data', 'မဟုတ်ပါ — လူတစ်ဦးက model ပုံသဏ္ဍာန်ကို ရွေးချယ်သော်လည်း algorithm က data မှ တိကျသောဂဏန်းများကို ရှာဖွေသည်'),
-          bl('No model ever has any fixed structure at all', 'Model မည်သည်မှာမဆို ပုံသေ structure လုံးဝမရှိပါ'),
+          blSame('Yes — every coefficient is hand-typed by a person', 'ဟုတ်သည် — coefficient တိုင်းကို လူတစ်ဦးက လက်ဖြင့် ရိုက်ထည့်သည်'),
+          blSame('No — a person chooses the model shape, but the algorithm searches for the specific numbers from data', 'မဟုတ်ပါ — လူတစ်ဦးက model ပုံသဏ္ဍာန်ကို ရွေးချယ်သော်လည်း algorithm က data မှ တိကျသောဂဏန်းများကို ရှာဖွေသည်'),
+          blSame('No model ever has any fixed structure at all', 'Model မည်သည်မှာမဆို ပုံသေ structure လုံးဝမရှိပါ'),
         ],
         correctIndex: 1,
       },
@@ -505,9 +505,9 @@ export const PIPELINE_STAGES = [
           'Real-yield တန်ဖိုး -2 မှ +2 ကြားတွင်သာ train လုပ်ထားသော ရွှေ model ကို real-yield = +8 (ဘယ်တော့မှ မမြင်ဖူးသော range) တွင် ခန့်မှန်းခိုင်းလိုက်သည်။ ၎င်း၏ ယုံကြည်စိတ်ချမှု ဘာဖြစ်သွားမလဲ?'
         ),
         options: [
-          bl('It should get less confident — this is extrapolation far outside the training range', 'ယုံကြည်စိတ်ချမှု နည်းသင့်သည် — ဒါက train range ထက် အလွန်ကျယ်ပြန့်စွာ ကျော်ခန့်မှန်းခြင်း (extrapolation) ဖြစ်သည်'),
-          bl('It stays exactly as confident as it is near the training range', 'Train range အနီးတွင် ယုံကြည်စိတ်ချမှုအတိုင်း အတိအကျ ဆက်ရှိနေသည်'),
-          bl('It becomes more confident, since 8 is a bigger, more decisive number', '8 သည် ပိုကြီး၊ ပိုဆုံးဖြတ်ချက်ရှိသော ဂဏန်းဖြစ်သောကြောင့် ပိုယုံကြည်စိတ်ချလာသည်'),
+          blSame('It should get less confident — this is extrapolation far outside the training range', 'ယုံကြည်စိတ်ချမှု နည်းသင့်သည် — ဒါက train range ထက် အလွန်ကျယ်ပြန့်စွာ ကျော်ခန့်မှန်းခြင်း (extrapolation) ဖြစ်သည်'),
+          blSame('It stays exactly as confident as it is near the training range', 'Train range အနီးတွင် ယုံကြည်စိတ်ချမှုအတိုင်း အတိအကျ ဆက်ရှိနေသည်'),
+          blSame('It becomes more confident, since 8 is a bigger, more decisive number', '8 သည် ပိုကြီး၊ ပိုဆုံးဖြတ်ချက်ရှိသော ဂဏန်းဖြစ်သောကြောင့် ပိုယုံကြည်စိတ်ချလာသည်'),
         ],
         correctIndex: 0,
       },
@@ -534,7 +534,8 @@ export const PIPELINE_STAGES = [
       faded: bl(
         'Now you try: using the same fitted line price ≈ 4015 − 90×yield, what point prediction does it give for yield = -1? Step 1 — plug in: price ≈ 4015 − 90×(_____) = _____. Step 2 — is yield = -1 inside or outside the original training range (-2 to +2)? _____. Step 3 — should the interval here be wide or narrow relative to yield=0.5\'s? _____.',
         'Now you try: compute the point prediction at yield=-1, then argue whether its interval should be wider or narrower than the yield=0.5 prediction\'s, using distance-from-training-center reasoning.',
-        'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ: fit လုပ်ထားသော မျဉ်း price ≈ 4015 − 90×yield ကို သုံးပြီး yield = -1 အတွက် point prediction ဘာပေးမလဲ? အဆင့် ၁ — ထည့်ပါ: price ≈ 4015 − 90×(_____) = _____။ အဆင့် ၂ — yield = -1 သည် မူလ training range (-2 မှ +2) အတွင်းလား အပြင်လား? _____။ အဆင့် ၃ — ဒီနေရာမှာ interval သည် yield=0.5 ထက် ကျယ်သင့်သလား ကျဉ်းသင့်သလား? _____။'
+        'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ: fit လုပ်ထားသော မျဉ်း price ≈ 4015 − 90×yield ကို သုံးပြီး yield = -1 အတွက် point prediction ဘာပေးမလဲ? အဆင့် ၁ — ထည့်ပါ: price ≈ 4015 − 90×(_____) = _____။ အဆင့် ၂ — yield = -1 သည် မူလ training range (-2 မှ +2) အတွင်းလား အပြင်လား? _____။ အဆင့် ၃ — ဒီနေရာမှာ interval သည် yield=0.5 ထက် ကျယ်သင့်သလား ကျဉ်းသင့်သလား? _____။',
+        'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ: yield=-1 တွင် point prediction ကို တွက်ချက်ပြီး၊ training-center မှ အကွာအဝေးဆိုင်ရာ ယုတ္တိကို အသုံးပြု၍ ၎င်း၏ interval သည် yield=0.5 ခန့်မှန်းချက်ထက် ပိုကျယ်သင့်သလား ပိုကျဉ်းသင့်သလားဆိုတာ ငြင်းချက်တင်ပြပါ။'
       ),
     },
     criticalFrontier: {
@@ -597,9 +598,9 @@ export const PIPELINE_STAGES = [
           'ရွှေ model တစ်ခုသည် ၂၀၂၃ ကတည်းက မပြောင်းလဲဘဲ လည်ပတ်နေသည်။ ၂၀၂၆ တွင် ဗဟိုဘဏ်ဝယ်ယူမှုပုံစံ ပြင်းထန်စွာ ပြောင်းလဲသွားသည်။ ပြန်လေ့ကျင့်ခြင်းမလုပ်ဘဲ model ၏ တိကျမှု ဘာဖြစ်သွားမလဲ?'
         ),
         options: [
-          bl('It stays exactly as accurate — models don\'t degrade if the code doesn\'t change', 'တိကျမှုအတိုင်း အတိအကျ ဆက်ရှိနေသည် — code မပြောင်းလဲလျှင် model ကျဆင်းမှု မရှိပါ'),
-          bl("It quietly degrades — the model keeps applying the old (now-stale) pattern to a changed world", 'တိတ်တဆိတ် ကျဆင်းသည် — model သည် ပြောင်းလဲသွားပြီးသော ကမ္ဘာပေါ်တွင် ဟောင်းနွမ်းနေသော pattern ဟောင်းကို ဆက်လက်အသုံးချနေသည်'),
-          bl('It automatically retrains itself the moment it detects the shift', 'ပြောင်းလဲမှုကို တွေ့ရှိလိုက်သည့်အခိုက် သူ့ဘာသာ အလိုအလျောက် ပြန်လေ့ကျင့်သည်'),
+          blSame('It stays exactly as accurate — models don\'t degrade if the code doesn\'t change', 'တိကျမှုအတိုင်း အတိအကျ ဆက်ရှိနေသည် — code မပြောင်းလဲလျှင် model ကျဆင်းမှု မရှိပါ'),
+          blSame("It quietly degrades — the model keeps applying the old (now-stale) pattern to a changed world", 'တိတ်တဆိတ် ကျဆင်းသည် — model သည် ပြောင်းလဲသွားပြီးသော ကမ္ဘာပေါ်တွင် ဟောင်းနွမ်းနေသော pattern ဟောင်းကို ဆက်လက်အသုံးချနေသည်'),
+          blSame('It automatically retrains itself the moment it detects the shift', 'ပြောင်းလဲမှုကို တွေ့ရှိလိုက်သည့်အခိုက် သူ့ဘာသာ အလိုအလျောက် ပြန်လေ့ကျင့်သည်'),
         ],
         correctIndex: 1,
       },
@@ -626,7 +627,8 @@ export const PIPELINE_STAGES = [
       faded: bl(
         'Now you try: a politics-forecasting model has baseline RMSE (or error) of 5 points. Its live error this month is 11 points. Step 1 — compute the ratio: 11 ÷ 5 = _____. Step 2 — if the drift threshold is "ratio > 1.5", has drift been detected? _____. Step 3 — what should happen next: _____.',
         'Now you try: apply the same ratio-to-threshold logic to a hypothetical politics-model drift scenario, and state the correct action once drift crosses the threshold.',
-        'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ: နိုင်ငံရေးခန့်မှန်းသော model တစ်ခု၏ baseline RMSE (သို့မဟုတ် error) သည် ၅ မှတ်ဖြစ်သည်။ ဒီလ live error သည် ၁၁ မှတ်ဖြစ်သည်။ အဆင့် ၁ — ratio ကို တွက်ပါ: 11 ÷ 5 = _____။ အဆင့် ၂ — drift threshold သည် "ratio > 1.5" ဖြစ်ပါက drift တွေ့ရှိသလား? _____။ အဆင့် ၃ — နောက်ဘာဖြစ်သင့်လဲ: _____။'
+        'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ: နိုင်ငံရေးခန့်မှန်းသော model တစ်ခု၏ baseline RMSE (သို့မဟုတ် error) သည် ၅ မှတ်ဖြစ်သည်။ ဒီလ live error သည် ၁၁ မှတ်ဖြစ်သည်။ အဆင့် ၁ — ratio ကို တွက်ပါ: 11 ÷ 5 = _____။ အဆင့် ၂ — drift threshold သည် "ratio > 1.5" ဖြစ်ပါက drift တွေ့ရှိသလား? _____။ အဆင့် ၃ — နောက်ဘာဖြစ်သင့်လဲ: _____။',
+        'အခု သင်ကိုယ်တိုင် စမ်းကြည့်ပါ: တူညီသော ratio-to-threshold ယုတ္တိကို hypothetical politics-model drift scenario တွင် အသုံးချပြီး၊ drift သည် threshold ကျော်လွန်သည့်အခါ မှန်ကန်သော လုပ်ဆောင်ချက်ကို ဖော်ပြပါ။'
       ),
     },
     criticalFrontier: {

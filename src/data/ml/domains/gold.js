@@ -123,7 +123,7 @@ export const GOLD_PREDICT_EXPLAIN = blSame(
   'ပထဝီရေးအန္တရာယ်ကို တွန်းပြီးနောက် forecast chart နှင့် trace panel ကို စစ်ကြည့်ပါ — ARIMA နှင့် GARCH သည် point forecast တူညီသော်လည်း GARCH ၏ band ပိုကျယ်သည်၊ LSTM နှင့် XGBoost သည် လုံးဝကွဲပြားသော ဒေါ်လာဂဏန်းများသို့ ရောက်သည်။ သက်သေအထောက်အထားတူညီ၊ တုံ့ပြန်မှုကွဲပြား လေးမျိုး။'
 );
 
-export const GOLD_SPARK_ANALOGY = bl(
+export const GOLD_SPARK_ANALOGY = blSame(
   "Ask five weather forecasters for tomorrow's high temperature and you'll get five slightly different numbers — not because someone's wrong, but because each reads slightly different evidence and weighs it differently. Ask five investment banks where gold will be next year and the same thing happens, just with far higher stakes.",
   'ရာသီဥတု ခန့်မှန်းသူ ငါးယောက်ကို မနက်ဖြန် အပူချိန်အမြင့်ဆုံး မေးကြည့်ပါ၊ အနည်းငယ် ကွဲပြားသော ဂဏန်း ငါးလုံး ရလိမ့်မည် — တစ်ယောက်ယောက် မှားလို့ မဟုတ်ပါ၊ တစ်ဦးစီက အနည်းငယ်ကွဲပြားသော သက်သေအထောက်အထားကို ဖတ်ပြီး မတူညီစွာ ချိန်ဆလို့ ဖြစ်သည်။ ရင်းနှီးမြှုပ်နှံမှု ဘဏ်ငါးခုကို လာမည့်နှစ် ရွှေ ဘယ်နေရာရောက်မလဲ မေးကြည့်ပါ၊ အလားတူဖြစ်ပေါ်မည်၊ အရေးပါမှု ပိုမြင့်ရုံသာ ကွဲပြားသည်။'
 );

@@ -165,7 +165,7 @@ export const MACRO_PREDICT_EXPLAIN = blSame(
   'Chart တစ်ခုတည်းကြည့်ရုံနှင့် universal အနိုင်ရသူ မမြင်ရပါ — သို့သော် မော်ဒယ်များအောက်ရှိ callout က အဖြေက "အခြေအနေပေါ် မူတည်သည်" ဆိုတာ genuinely ဘာကြောင့်ဖြစ်သလဲ၊ လှည့်ဖျားမေးခွန်းမဟုတ်ကြောင်း ရှင်းပြသည်။'
 );
 
-export const MACRO_SPARK_ANALOGY = bl(
+export const MACRO_SPARK_ANALOGY = blSame(
   "A master chef with forty ingredients can make a worse dish than a home cook with five, if the chef adds ingredients that don't actually belong. More model complexity is the same bet: it only pays off if the extra machinery is capturing something real, not just extra noise.",
   'ပါရဂူ စားဖိုမှူးတစ်ဦးသည် ပါဝင်ပစ္စည်း ၄၀ ဖြင့် အိမ်တွင်းချက်တစ်ဦးထက် ဆိုးရွားသော ဟင်းလျာတစ်ခု ချက်နိုင်သည်၊ မလိုအပ်သော ပါဝင်ပစ္စည်း ထည့်လိုက်လျှင်။ Model complexity ပိုများခြင်းသည် လောင်းကစားတူညီသည် — extra machinery က real သောအရာကို ဖမ်းယူနေမှသာ အကျိုးရှိမည်၊ extra noise သာ ဖမ်းယူနေလျှင် မဟုတ်ပါ။'
 );
