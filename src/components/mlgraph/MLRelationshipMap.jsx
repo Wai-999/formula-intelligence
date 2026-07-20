@@ -253,8 +253,22 @@ export default function MLRelationshipMap() {
       rowSpacing: ROW_SPACING,
     });
     const simNodes = ML_MODELS.map((n) => ({ ...n, ...positions[n.id] }));
+    // Index simNodes (not the static `positions` map) by id, and point every
+    // link's source/target at THOSE objects. This matters once dragging is
+    // in play: a node's drag handler mutates its own simNode datum's x/y in
+    // place (see the 'drag' handler below), so any link whose source/target
+    // is the SAME object reference sees the live position automatically —
+    // including links to a DIFFERENT node that was dragged earlier in the
+    // same session. Pointing links at `positions[id]` instead (the original,
+    // never-updated static layout) was the bug: dragging node A, then
+    // dragging its neighbor B, redrew the A-B edge's "A end" from A's
+    // stale pre-drag coordinates, not wherever A had actually been dragged
+    // to — a link anchored to empty space rather than to A's visible
+    // position, which is what produced arrows/edges that looked entirely
+    // disconnected from the graph after moving more than one node around.
+    const nodeById = new Map(simNodes.map((n) => [n.id, n]));
     const simLinks = ML_LINKS
-      .map((l) => ({ ...l, source: positions[l.s], target: positions[l.t] }))
+      .map((l) => ({ ...l, source: nodeById.get(l.s), target: nodeById.get(l.t) }))
       .filter((l) => l.source && l.target);
 
     const rowXs = Object.values(positions).map((p) => p.x);
@@ -336,11 +350,34 @@ export default function MLRelationshipMap() {
             linkSel
               .filter((l) => l.s === d.id || l.t === d.id)
               .attr('d', function (l) {
-                const sx = l.s === d.id ? d.x : l.source.x;
-                const sy = l.s === d.id ? d.y : l.source.y;
-                const tx = l.t === d.id ? d.x : l.target.x;
-                const ty = l.t === d.id ? d.y : l.target.y;
-                return edgePathD(sx, sy, tx, ty, diagramCenterX, l._sAngle, l._tAngle);
+                // l.source/l.target are now the SAME objects as the
+                // simNodes datums (see nodeById above), so l.source.x/y and
+                // l.target.x/y are always current — including for whichever
+                // end equals the node being dragged right now (d.x/d.y were
+                // just assigned into that exact object above) and for any
+                // OTHER node this link touches that was itself dragged
+                // earlier. No more reaching for d.x/d.y as a special case.
+                const sx = l.source.x;
+                const sy = l.source.y;
+                const tx = l.target.x;
+                const ty = l.target.y;
+                // The dragged endpoint's cached _sAngle/_tAngle was measured
+                // from its PRE-drag position and PRE-drag control point —
+                // reusing it here trims the line off the node in a direction
+                // that no longer has anything to do with where the node (or
+                // the curve's own control point, which DOES track the live
+                // x/y below via edgeControlPoint) actually is now, which is
+                // exactly the "line doesn't touch the node" / "arrowhead
+                // pointing the wrong way" look a drag produces. Pass null
+                // for whichever endpoint IS the dragged node so edgePathD
+                // falls back to its tangent-based trim (trimTowardPoint),
+                // which recomputes from the live position every call and so
+                // always stays visually attached; the OTHER, stationary
+                // endpoint keeps its assigned angle so it doesn't re-bunch
+                // with that node's other edges while this one moves.
+                const sAngle = l.s === d.id ? null : l._sAngle;
+                const tAngle = l.t === d.id ? null : l._tAngle;
+                return edgePathD(sx, sy, tx, ty, diagramCenterX, sAngle, tAngle);
               });
           })
           .on('end', (event, d) => {
