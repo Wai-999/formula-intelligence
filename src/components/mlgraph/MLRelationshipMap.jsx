@@ -13,6 +13,25 @@ import './MLRelationshipMap.css';
 // (read click-vs-drag from d3.drag/d3.zoom's own start/end gesture, not a
 // hand-rolled mousedown/mouseup pair — see GraphCanvas.jsx's own comments
 // for the full "why" if this is ever touched again).
+//
+// FIX_LOG.md (second pass): this is, and always was, a fixed hierarchical
+// (Sugiyama-style) layout — one row per model family, columns
+// barycenter-ordered within each row — not a force simulation. There is no
+// physics "settle" step anywhere in this file. That matters for how the
+// fixes below are framed: the layout strategy asked for (fixed bands per
+// family, local ordering within a band, curved cross-band routing instead
+// of straight lines) is not a rewrite of what's here — it's what's already
+// here. What was genuinely missing, confirmed by measuring the live
+// rendered DOM rather than assuming from the first pass's own report:
+// (a) the curve-routing only considered ROW distance, so same-row edges
+// spanning many columns (a real, common case — e.g. Decision Tree straight
+// to Bagging, 900 canvas-units, cutting through every node between them)
+// stayed dead straight; (b) multiple edges arriving at one node from
+// similar directions landed at the exact same angle on its circumference
+// (measured: several nodes had a 0° gap between two arrowheads — not an
+// approximation, the literal same point); (c) node labels and the hover
+// tooltip had no viewport-bounds awareness at all, unlike the row headers
+// (which were already pinned in the first pass).
 const EDGE_STYLE = {
   extends: { color: 'var(--accent)', dash: null },
   competes: { color: 'var(--warning)', dash: '3,3' },
@@ -24,16 +43,10 @@ function sourceClientXY(sourceEvent) {
   return touch ? [touch.clientX, touch.clientY] : [sourceEvent.clientX, sourceEvent.clientY];
 }
 
-// Node circles are drawn with r=NODE_R (below); edges were previously drawn
-// straight from center to center, so every arrowhead marker landed exactly
-// on the target's center — entirely hidden under the (semi-opaque) node
-// circle rather than visibly pointing into it from outside, which is what
-// read as "dislocated arrows" (the marker was there, just invisible, so
-// the thin line-under-node made nearby unrelated markers look detached).
-// Trimming both endpoints back along the source→target unit vector by the
-// node radius (+ a small gap) fixes this: the line now visibly stops at
-// each node's boundary and the arrowhead renders in the open, just outside
-// the target circle, pointing in.
+// Node circles are drawn with r=NODE_R (below); edges are trimmed back from
+// each node's exact center by this radius (+ a small gap) so the line
+// visibly stops at the node's boundary and the arrowhead marker renders in
+// the open, pointing in, rather than buried under the node's own fill.
 const NODE_R = 12;
 const EDGE_GAP = 3;
 // Must match the columnSpacing/rowSpacing passed to computeHierarchicalLayout
@@ -42,16 +55,13 @@ const EDGE_GAP = 3;
 // of the layout call itself.
 const ROW_SPACING = 110;
 const COLUMN_SPACING = 150;
-// FIX_LOG.md B.1: a generous safety net, not a default-triggering rule —
-// only the single longest current label ("Bayesian Structural Time Series /
-// Bayesian NNs", ~208 canvas-units) exceeds this. A getBoundingClientRect
-// sweep across all 32 nodes confirmed zero real label collisions in the
-// static layout even with several labels wider than their own column slot
-// (centered text mostly overhangs into empty inter-column gaps, not into a
-// neighbor's label) — so truncation stays a defensive fallback for outliers
-// and for whatever a learner drags nodes into, not a rewrite of the whole
-// label set.
+// A generous safety net, not a default-triggering rule — only the single
+// longest current label ("Bayesian Structural Time Series / Bayesian NNs",
+// ~208 canvas-units) exceeds this in the static layout.
 const MAX_LABEL_W = 190;
+// Minimum angular gap enforced between edges arriving at the same node, so
+// no two arrowheads land at (or near enough to look like) the same point.
+const MIN_ARRIVAL_GAP_RAD = (13 * Math.PI) / 180;
 
 function trimTowardPoint(fromX, fromY, towardX, towardY, trim) {
   const dx = towardX - fromX;
@@ -60,40 +70,142 @@ function trimTowardPoint(fromX, fromY, towardX, towardY, trim) {
   return { x: fromX + (dx / dist) * trim, y: fromY + (dy / dist) * trim };
 }
 
-// FIX_LOG.md B.1: this is a fixed hierarchical (Sugiyama-style) layout, not
-// a force simulation — there's no "settle" step where physics could push
-// edges around nodes. Long-distance edges (2+ rows apart) drawn as straight
-// lines were the main source of "edges slicing through unrelated nodes":
-// with columns barycenter-ordered for their IMMEDIATE row only, an edge
-// skipping several rows has no reason to stay clear of whatever sits in the
-// rows it passes through. Bowing those edges into a quadratic curve that
-// bulges toward the diagram's outer margin (away from the dense center
-// columns, into space the centered-row layout already leaves empty for
-// narrower rows) routes them clear of intermediate nodes in the common case
-// and reads as deliberate lanes rather than a tangle. Same-row/adjacent-row
-// edges (the majority) get zero offset, which collapses the same formula to
-// a plain straight line — pixel-identical to the old rendering for those.
+// Picks a control point for the quadratic-bezier edge between two node
+// centers. Three cases:
+//  - Nodes close together (same/adjacent row, few columns apart): a plain
+//    straight line (control point on the midpoint) — the common case,
+//    nothing to route around.
+//  - Same/adjacent row but many columns apart: a straight line here would
+//    cut through every node sitting between them on that row (confirmed
+//    live — several real edges spanned 450-900 canvas-units, 3-6 columns,
+//    dead straight). Bulges vertically instead, clear of the row's own
+//    baseline; a modest, distance-scaled offset is enough given rows are
+//    110 units apart and nodes are only 12px radius.
+//  - Genuinely different rows: bulges horizontally toward the diagram's
+//    outer margin (away from the dense center columns, into space the
+//    centered-row layout already leaves empty for narrower rows).
 function edgeControlPoint(sx, sy, tx, ty, diagramCenterX) {
   const midX = (sx + tx) / 2;
   const midY = (sy + ty) / 2;
   const rowDist = Math.abs(ty - sy) / ROW_SPACING;
-  if (rowDist < 1.5) return { x: midX, y: midY };
-  const offset = Math.min(70, 18 * rowDist);
-  const side = midX < diagramCenterX ? -1 : 1;
-  return { x: midX + side * offset, y: midY };
+  const colDist = Math.abs(tx - sx) / COLUMN_SPACING;
+
+  if (rowDist >= 1.5) {
+    const offset = Math.min(140, 26 * rowDist);
+    const side = midX < diagramCenterX ? -1 : 1;
+    return { x: midX + side * offset, y: midY };
+  }
+  if (colDist >= 2.5) {
+    const offset = Math.min(48, 9 * colDist);
+    return { x: midX, y: midY + offset };
+  }
+  return { x: midX, y: midY };
 }
 
-function edgePathD(sx, sy, tx, ty, diagramCenterX) {
+// Distributes the angle each edge departs its endpoints at, so edges that
+// would otherwise arrive from nearly the same direction (measured live:
+// several real nodes had two arrowheads at the literal identical angle)
+// fan out around the node's circumference instead. Computed once from the
+// static layout and cached on each link as _sAngle/_tAngle; reused as-is
+// during drag (recomputing a stable fan live while a node moves is a lot
+// of complexity for an interaction the verification pass isn't targeting —
+// the fixed angle still departs the node in roughly the right direction).
+function assignArrivalAngles(simLinks, diagramCenterX) {
+  const byNode = new Map();
+  simLinks.forEach((l) => {
+    const cp = edgeControlPoint(l.source.x, l.source.y, l.target.x, l.target.y, diagramCenterX);
+    const sEntry = { link: l, end: 's', angle: Math.atan2(cp.y - l.source.y, cp.x - l.source.x) };
+    const tEntry = { link: l, end: 't', angle: Math.atan2(cp.y - l.target.y, cp.x - l.target.x) };
+    if (!byNode.has(l.s)) byNode.set(l.s, []);
+    if (!byNode.has(l.t)) byNode.set(l.t, []);
+    byNode.get(l.s).push(sEntry);
+    byNode.get(l.t).push(tEntry);
+  });
+
+  function apply(entry) {
+    if (entry.end === 's') entry.link._sAngle = entry.angle;
+    else entry.link._tAngle = entry.angle;
+  }
+
+  byNode.forEach((entries) => {
+    if (entries.length < 2) {
+      entries.forEach(apply);
+      return;
+    }
+    const sorted = [...entries].sort((a, b) => a.angle - b.angle);
+    const clusters = [[sorted[0]]];
+    for (let i = 1; i < sorted.length; i++) {
+      const lastCluster = clusters[clusters.length - 1];
+      if (sorted[i].angle - lastCluster[lastCluster.length - 1].angle < MIN_ARRIVAL_GAP_RAD) {
+        lastCluster.push(sorted[i]);
+      } else {
+        clusters.push([sorted[i]]);
+      }
+    }
+    if (clusters.length > 1) {
+      const first = clusters[0];
+      const last = clusters[clusters.length - 1];
+      const wrapGap = (first[0].angle + 2 * Math.PI) - last[last.length - 1].angle;
+      if (wrapGap < MIN_ARRIVAL_GAP_RAD) {
+        clusters[0] = [...last, ...first];
+        clusters.pop();
+      }
+    }
+    const spread = [];
+    clusters.forEach((cluster) => {
+      if (cluster.length === 1) { spread.push(cluster[0]); return; }
+      const mean = cluster.reduce((sum, e) => sum + e.angle, 0) / cluster.length;
+      cluster.forEach((e, i) => {
+        spread.push({ ...e, angle: mean + (i - (cluster.length - 1) / 2) * MIN_ARRIVAL_GAP_RAD });
+      });
+    });
+    // Per-cluster spreading can still leave two DIFFERENT clusters' edge
+    // members closer together than the minimum gap (confirmed live: one
+    // node measured 4.8° between a cluster boundary pair, vs. the 13°
+    // enforced within each cluster) — a few relaxation passes over the
+    // fully-spread set catches that residual case too.
+    for (let pass = 0; pass < 4; pass++) {
+      spread.sort((a, b) => a.angle - b.angle);
+      for (let i = 1; i < spread.length; i++) {
+        const gap = spread[i].angle - spread[i - 1].angle;
+        if (gap < MIN_ARRIVAL_GAP_RAD) {
+          const push = (MIN_ARRIVAL_GAP_RAD - gap) / 2;
+          spread[i - 1].angle -= push;
+          spread[i].angle += push;
+        }
+      }
+      const wrapGap = (spread[0].angle + 2 * Math.PI) - spread[spread.length - 1].angle;
+      if (wrapGap < MIN_ARRIVAL_GAP_RAD) {
+        const push = (MIN_ARRIVAL_GAP_RAD - wrapGap) / 2;
+        spread[spread.length - 1].angle -= push;
+        spread[0].angle += push;
+      }
+    }
+    spread.forEach(apply);
+  });
+}
+
+function edgePathD(sx, sy, tx, ty, diagramCenterX, sAngle, tAngle) {
   const cp = edgeControlPoint(sx, sy, tx, ty, diagramCenterX);
   const trim = NODE_R + EDGE_GAP;
-  // Trim along the tangent at each end (control-point → endpoint), not the
-  // raw source→target vector, so the trim stays correct once the edge is
-  // curved — for a quadratic bezier the tangent at P2 is CP→P2 and at P0 is
-  // P0→CP, which is exactly what trimTowardPoint(endpoint, cp, ...) gives.
-  const p0 = trimTowardPoint(sx, sy, cp.x, cp.y, trim);
-  const p2 = trimTowardPoint(tx, ty, cp.x, cp.y, trim);
+  // Trim along the assigned arrival angle when one was computed (the usual
+  // case — see assignArrivalAngles), which is what actually spreads
+  // converging edges apart. Falls back to the tangent at the endpoint
+  // (control-point → endpoint) otherwise, which is what keeps a plain
+  // 2-edge connection's arrowhead correctly oriented.
+  const p0 = sAngle != null
+    ? { x: sx + Math.cos(sAngle) * trim, y: sy + Math.sin(sAngle) * trim }
+    : trimTowardPoint(sx, sy, cp.x, cp.y, trim);
+  const p2 = tAngle != null
+    ? { x: tx + Math.cos(tAngle) * trim, y: ty + Math.sin(tAngle) * trim }
+    : trimTowardPoint(tx, ty, cp.x, cp.y, trim);
   return `M${p0.x},${p0.y} Q${cp.x},${cp.y} ${p2.x},${p2.y}`;
 }
+
+const LABEL_DY_BELOW = 26;
+const LABEL_DY_ABOVE = -18;
+const LABEL_DX_SHIFT = 20;
+const VIEWPORT_MARGIN = 4;
 
 export default function MLRelationshipMap() {
   const svgRef = useRef(null);
@@ -114,12 +226,6 @@ export default function MLRelationshipMap() {
     // let, not const: the pane can be display:none at mount (keep-alive
     // tab mounting — see MLBody.jsx), giving a 0x0 initial measurement that
     // the resize-refit logic below corrects once the tab becomes visible.
-    // positionPinnedLabels' visibility check needs the CURRENT size at the
-    // time it runs, not this stale mount-time snapshot, or pinned labels
-    // stay hidden forever on any page that happened to lazy-mount hidden
-    // (FIX_LOG.md B.1 — caught by the pinned labels never appearing at all
-    // on first real visit, an easy one to miss since the graph itself
-    // renders correctly using the already-live-corrected fit transform).
     let { width, height } = wrap.getBoundingClientRect();
     const svg = d3.select(svgRef.current).attr('width', width).attr('height', height);
     svg.selectAll('*').remove();
@@ -143,6 +249,8 @@ export default function MLRelationshipMap() {
     const minNodeX = Math.min(...rowXs);
     const maxNodeX = Math.max(...rowXs);
     const diagramCenterX = (minNodeX + maxNodeX) / 2;
+
+    assignArrivalAngles(simLinks, diagramCenterX);
 
     const defs = svg.append('defs');
     Object.entries(EDGE_STYLE).forEach(([type, style]) => {
@@ -187,7 +295,7 @@ export default function MLRelationshipMap() {
       .join('path')
       .attr('class', (d) => `mlglink mlglink-${d.type}`)
       .attr('fill', 'none')
-      .attr('d', (d) => edgePathD(d.source.x, d.source.y, d.target.x, d.target.y, diagramCenterX))
+      .attr('d', (d) => edgePathD(d.source.x, d.source.y, d.target.x, d.target.y, diagramCenterX, d._sAngle, d._tAngle))
       .attr('stroke', (d) => EDGE_STYLE[d.type]?.color || 'rgba(255,255,255,0.14)')
       .attr('stroke-width', 1.4)
       .attr('stroke-opacity', 0.55)
@@ -220,7 +328,7 @@ export default function MLRelationshipMap() {
                 const sy = l.s === d.id ? d.y : l.source.y;
                 const tx = l.t === d.id ? d.x : l.target.x;
                 const ty = l.t === d.id ? d.y : l.target.y;
-                return edgePathD(sx, sy, tx, ty, diagramCenterX);
+                return edgePathD(sx, sy, tx, ty, diagramCenterX, l._sAngle, l._tAngle);
               });
           })
           .on('end', (event, d) => {
@@ -229,21 +337,45 @@ export default function MLRelationshipMap() {
             const dy = y - (d._dragStartClientY ?? y);
             if (Math.hypot(dx, dy) < 6) {
               useMLUIStore.getState().selectModel(d.id);
+            } else {
+              repositionNodeLabels(d3.zoomTransform(svg.node()), width, height);
             }
           })
       )
-      .on('mouseenter', (event, d) => {
+      .on('mouseenter', function (event, d) {
         const tip = tooltipRef.current;
         if (!tip) return;
         tip.style.display = 'block';
         tip.innerHTML = `<b>${d.name}</b><div class="mlgtip-short">${d.short}</div>`;
+        // Measured once per hover (content just changed, size is now
+        // settled) — mousemove below reuses these cached dimensions rather
+        // than forcing a synchronous layout on every pointer move.
+        const r = tip.getBoundingClientRect();
+        tip._w = r.width;
+        tip._h = r.height;
       })
       .on('mousemove', (event) => {
         const tip = tooltipRef.current;
         if (!tip) return;
         const b = wrap.getBoundingClientRect();
-        tip.style.left = `${event.clientX - b.left + 14}px`;
-        tip.style.top = `${event.clientY - b.top + 14}px`;
+        const relX = event.clientX - b.left;
+        const relY = event.clientY - b.top;
+        const GAP = 14;
+        const tw = tip._w || 160;
+        const th = tip._h || 48;
+        // Viewport-collision: default to the cursor's bottom-right, flip to
+        // the opposite side of the cursor when that would clip past the
+        // wrap's right/bottom edge, clamp near (not flip) on the left/top
+        // since the cursor being that close to those edges already leaves
+        // little room to flip into.
+        let left = relX + GAP;
+        let top = relY + GAP;
+        if (left + tw > b.width) left = relX - tw - GAP;
+        if (top + th > b.height) top = relY - th - GAP;
+        if (left < 0) left = VIEWPORT_MARGIN;
+        if (top < 0) top = VIEWPORT_MARGIN;
+        tip.style.left = `${left}px`;
+        tip.style.top = `${top}px`;
       })
       .on('mouseleave', () => {
         if (tooltipRef.current) tooltipRef.current.style.display = 'none';
@@ -259,31 +391,83 @@ export default function MLRelationshipMap() {
 
     const labelSel = nodeSel.append('text')
       .attr('class', 'mlgnode-label')
-      .attr('dy', 26)
+      .attr('dy', LABEL_DY_BELOW)
       .attr('text-anchor', 'middle')
       .text((d) => d.name)
       .attr('fill', 'rgba(244,247,251,0.72)');
 
-    // Truncation safety net (FIX_LOG.md B.1) — full name always remains
-    // available via the hover tooltip above, unaffected by this.
+    // Truncation safety net — full name always remains available via the
+    // hover tooltip above, unaffected by this. Cache each label's final
+    // (possibly truncated) rendered width for the viewport-collision check
+    // below, which needs it on every pan/zoom without re-measuring the DOM.
     labelSel.each(function (d) {
       const el = this;
-      if (el.getComputedTextLength() <= MAX_LABEL_W) return;
-      let name = d.name;
-      while (name.length > 3 && el.getComputedTextLength() > MAX_LABEL_W) {
-        name = name.slice(0, -1);
-        el.textContent = `${name}…`;
+      if (el.getComputedTextLength() > MAX_LABEL_W) {
+        let name = d.name;
+        while (name.length > 3 && el.getComputedTextLength() > MAX_LABEL_W) {
+          name = name.slice(0, -1);
+          el.textContent = `${name}…`;
+        }
       }
+      d._labelW = el.getComputedTextLength();
     });
 
+    // Node-label viewport collision: flip below->above when the label
+    // would clip the bottom edge, shift the text-anchor toward the node
+    // when it would clip the left/right edge. Node labels move freely with
+    // pan/zoom/drag (unlike the pinned row headers below), so unlike those,
+    // this has to be re-evaluated on every transform change rather than
+    // solved once.
+    function repositionNodeLabels(transform, w, h) {
+      labelSel.each(function (d) {
+        const screenX = transform.applyX(d.x);
+        const screenY = transform.applyY(d.y);
+        // A node whose own center is well past the viewport shouldn't have
+        // its label dragged back on-screen to "rescue" it from clipping —
+        // confirmed live: without this, a label for a node hundreds of
+        // pixels off-screen got shifted far enough to land in the middle
+        // of the viewport, disconnected from any visible node and
+        // overlapping whatever real label was already there. If the node
+        // itself isn't reasonably on-screen, hide its label instead.
+        const nodeOffScreen = screenX < -NODE_R - 40 || screenX > w + NODE_R + 40
+          || screenY < -NODE_R - 40 || screenY > h + NODE_R + 40;
+        if (nodeOffScreen) {
+          d3.select(this).style('display', 'none');
+          return;
+        }
+        d3.select(this).style('display', null);
+        const halfW = (d._labelW * transform.k) / 2;
+        let anchor = 'middle';
+        let dx = 0;
+        const overflowLeft = VIEWPORT_MARGIN - (screenX - halfW);
+        const overflowRight = (screenX + halfW) - (w - VIEWPORT_MARGIN);
+        if (overflowLeft > 0) {
+          anchor = 'start';
+          // Not just a fixed nudge — a node can sit close enough to the
+          // edge that a constant shift isn't enough to actually clear the
+          // boundary. Use whichever is larger: the usual small "hug the
+          // node" gap, or the exact overflow plus a buffer. Safe from the
+          // same runaway-shift problem the off-screen check above guards
+          // against, since a node close enough to still be on-screen only
+          // ever needs a bounded shift.
+          dx = Math.max(LABEL_DX_SHIFT, overflowLeft / transform.k + 8);
+        } else if (overflowRight > 0) {
+          anchor = 'end';
+          dx = -Math.max(LABEL_DX_SHIFT, overflowRight / transform.k + 8);
+        }
+        const labelBelowBottomPx = screenY + (LABEL_DY_BELOW + 12) * transform.k;
+        const dy = labelBelowBottomPx > h - VIEWPORT_MARGIN ? LABEL_DY_ABOVE : LABEL_DY_BELOW;
+        d3.select(this).attr('text-anchor', anchor).attr('dx', dx).attr('dy', dy);
+      });
+    }
+
     // Fit-to-view from the ACTUAL rendered extent (nodes + labels + edge
-    // curves), not a hand-estimated bounding box (FIX_LOG.md B.1) — the old
-    // fit used computeHierarchicalLayout's bounds, which only reserves a
-    // fixed margin tuned for Stats mode's short row labels/node names; ML
-    // mode's longer strings (e.g. "Exponential Smoothing / Holt-Winters")
-    // could and did poke outside it, clipping at the SVG's own edge.
-    // getBBox() on the content group measures real geometry, so this stays
-    // correct regardless of future label-length changes.
+    // curves), not a hand-estimated bounding box — the old fit used
+    // computeHierarchicalLayout's bounds, which only reserves a fixed
+    // margin tuned for Stats mode's short row labels/node names; ML mode's
+    // longer strings could and did poke outside it, clipping at the SVG's
+    // own edge. getBBox() on the content group measures real geometry, so
+    // this stays correct regardless of future label-length changes.
     const contentBBox = contentGroup.node().getBBox();
     const PAD = 36;
     const bounds = {
@@ -313,10 +497,7 @@ export default function MLRelationshipMap() {
     // `container`, outside its zoom transform, with only their Y position
     // (not X) following pan/zoom. Structural navigation ("which family of
     // models am I looking at") must stay legible at any pan/zoom position,
-    // not just the initial fit — embedding them in the pannable canvas
-    // meant panning left, or simply not having enough gutter width for ML
-    // mode's longer category names (vs. the Stats-mode-tuned default),
-    // clipped them into unreadable fragments (FIX_LOG.md B.1).
+    // not just the initial fit.
     const pinnedLabels = svg.append('g').attr('class', 'mlgraph-row-labels-pinned');
     const pinnedLabelSel = pinnedLabels.selectAll('text')
       .data(ML_FAMILIES.filter((fam) => chapterRowY[fam.id] !== undefined))
@@ -330,12 +511,12 @@ export default function MLRelationshipMap() {
       .text((d) => resolveT(d.name, 'beginner', langRef.current));
     pinnedLabelSelRef.current = pinnedLabelSel;
 
-    function positionPinnedLabels(transform) {
+    function positionPinnedLabels(transform, h) {
       pinnedLabelSel
         .attr('y', (d) => transform.applyY(chapterRowY[d.id]) - 10)
         .style('display', (d) => {
           const y = transform.applyY(chapterRowY[d.id]);
-          return y > -20 && y < height + 20 ? null : 'none';
+          return y > -20 && y < h + 20 ? null : 'none';
         });
     }
 
@@ -343,7 +524,8 @@ export default function MLRelationshipMap() {
       .scaleExtent([minZoom, maxZoom])
       .on('zoom', (event) => {
         container.attr('transform', event.transform);
-        positionPinnedLabels(event.transform);
+        positionPinnedLabels(event.transform, height);
+        repositionNodeLabels(event.transform, width, height);
       });
     svg.call(zoomBehavior);
 
@@ -372,9 +554,11 @@ export default function MLRelationshipMap() {
         svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(refit.tx, refit.ty).scale(refit.scale));
       } else {
         // Viewport resized (not just the initial hidden->visible reveal) —
-        // pinned labels' Y must track it even though `container`'s own
-        // transform didn't change.
-        positionPinnedLabels(d3.zoomTransform(svg.node()));
+        // pinned/node labels must re-check bounds even though `container`'s
+        // own transform didn't change.
+        const t = d3.zoomTransform(svg.node());
+        positionPinnedLabels(t, height);
+        repositionNodeLabels(t, width, height);
       }
     };
     const ro = new ResizeObserver(onResize);
@@ -412,10 +596,10 @@ export default function MLRelationshipMap() {
     return unsubscribe;
   }, []);
 
-  // Pinned row labels (FIX_LOG.md Section C.3) are bilingual, but the graph
-  // itself is an imperative D3 mount effect ([] deps) that doesn't re-run
-  // on a language toggle — this keeps just the label text in sync without
-  // remounting the whole graph (which would reset pan/zoom/drag state).
+  // Pinned row labels are bilingual, but the graph itself is an imperative
+  // D3 mount effect ([] deps) that doesn't re-run on a language toggle —
+  // this keeps just the label text in sync without remounting the whole
+  // graph (which would reset pan/zoom/drag state).
   useEffect(() => {
     if (pinnedLabelSelRef.current) {
       pinnedLabelSelRef.current.text((d) => resolveT(d.name, 'beginner', lang));

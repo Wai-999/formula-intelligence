@@ -164,3 +164,75 @@ Every fix in this log was verified at desktop width at minimum; the Model Map fi
 - Pedagogy checklist (Depth Ladder / misconceptions / Mixed-Review / Understanding Tracker): unaffected by any layout fix in this pass — the only shared learning component touched was `PredictGate`, and its predict → answer → compare → explain cycle was re-verified working after each of its two fixes (B.3's backdrop, B.4's correct-answer template).
 - All five Section B bugs addressed: four fixed (B.1, B.2, B.3, B.4), one investigated thoroughly and found not reproducible with a documented likely explanation (B.5).
 - Section C's sweep surfaced three additional real, previously unknown bugs beyond what Section B named — all fixed: the Macro timeline's label clipping, ForecastBandChart's tight margins, and Model Map's family-name bilingual gap.
+
+---
+
+# Second Pass — Model Map: structural layout fixes
+
+A follow-up mission reported the first pass's Model Map fix as too shallow — edge hairball, clipped labels at multiple pan positions, and a new symptom (tooltip clipping) — and asked for a structurally different approach rather than more parameter tuning, plus far more rigorous live verification than the first pass gave it.
+
+**Read the current implementation before choosing an approach, per the mission's own instruction.** The mission assumed the existing code was a tuned force simulation and asked to replace it with a cluster-constrained layout (its recommended Path 1) or hierarchical edge bundling (Path 2). Neither assumption matched what was actually there: `MLRelationshipMap.jsx` has never run a force simulation — it's always been a fixed hierarchical (Sugiyama-style) layout, one row per model family, columns barycenter-ordered within each row, with zero physics "settle" step anywhere in the file. That's already structurally Path 1 (fixed bands per family, local column ordering within a band) — the mission's own reasoning for preferring Path 1 ("the app already has category headers implying fixed bands") describes the code as it already was. So this pass is not a rewrite to a new layout paradigm; it's closing real, confirmed gaps in the fixed-band approach the first pass only partially finished — measured live, not assumed from the report.
+
+## What was actually still broken (confirmed live, not from the bug report's screenshots)
+
+The report included no new screenshots, only a text description of claimed symptoms. Rather than trust or dismiss it, every claim was checked directly against the running app:
+
+1. **Arrowhead bunching — confirmed, precisely.** A script measured the real angle-of-arrival of every edge at every node with 2+ connections. Result: several nodes had a **0.0° gap** between two arrowheads — not visually close, the literal same point (e.g. "Decision Tree" had 3 edges all arriving at exactly 180°; "Gradient Boosting (general)" had 4 of its 5 at exactly 180°). The first pass's edge-trimming fix (endpoints pulled back from center by node radius + gap) fixed *where along the line* the arrowhead sits, but never addressed *what angle* multiple edges at one node share — a different property it happened not to touch.
+2. **Same-row long edges cutting through nodes — confirmed, precisely.** The first pass's curve-routing only considered *row* distance; edges within the same or adjacent row stayed straight regardless of *column* distance. A live measurement found 7 real edges spanning 450–900 canvas-units (3–6 columns) on the same row, dead straight, cutting directly through every node sitting between their endpoints — e.g. "Decision Tree" straight to "Bagging (general)," passing directly over Random Forest, Gradient Boosting, XGBoost, LightGBM, and CatBoost.
+3. **Category headers — already fixed, re-confirmed.** The first pass's pinned-header fix (viewport-anchored, outside the pannable coordinate space) was checked again across every pan/zoom position in this pass's sweep (below) and never clipped once. No regression, no further work needed here.
+4. **Node labels and the hover tooltip — confirmed, zero collision handling.** Direct source inspection: node labels had no viewport-bounds logic of any kind (an edge-panned node's label could and did clip). The tooltip's positioning was `cursor + (14, 14)` with no bounds check at all — guaranteed to clip whenever the cursor was near the wrap's right or bottom edge. This is a real, structural gap, not a tuning issue.
+5. **Bug reproduction attempt for label clipping specifically:** panning via simulated mouse drag proved unreliable in this environment (consistent with a pattern noted earlier this session), so this was verified instead via zoom (which dispatches cleanly through d3-zoom's wheel handler) at multiple positions, plus direct DOM/attribute inspection — both are equally valid ways to get a node near the viewport edge, which is the actual condition being tested.
+
+## Fixes
+
+**1. Long-distance edge routing extended to same-row spans, not just cross-row.** `edgeControlPoint()` now also curves same/adjacent-row edges that span 2.5+ columns, bulging vertically (away from the row's own baseline) instead of only handling cross-row edges with a horizontal bulge. Cross-row bulge strength was also increased (cap 70→140, multiplier 18→26 per row) after the original values proved too subtle at the diagram's actual scale.
+
+**2. Arrival-angle spreading for multi-edge nodes.** New `assignArrivalAngles()` runs once against the static layout: for every node, it collects every edge touching it, clusters angles that are within a minimum gap (13°) of each other, and redistributes each cluster evenly around its mean — then runs a few relaxation passes over the fully-spread set to catch residual collisions between *different* clusters that the first pass didn't (found live: one node still measured a 4.8° gap after per-cluster spreading alone; the relaxation pass brought the worst case across all 18 multi-edge nodes to 12.3°, essentially every other node landing at or above the 13° target). Edges are trimmed along this assigned angle rather than the raw tangent-to-control-point direction, which is what actually separates the arrowheads.
+
+**3. Node-label viewport collision.** New `repositionNodeLabels()`, called on every zoom/pan/resize event: for each node, checks whether its label would overflow the left, right, or bottom edge and flips the anchor / shifts horizontally, or moves the label above the node instead of below, to compensate. Two bugs were found and fixed *during* this fix, both caught by live measurement, not assumed correct after writing the code:
+   - A **fixed shift amount wasn't always enough** — one label, on a node with only ~3px of its own circle still inside the viewport, needed a larger shift than the constant provided and clipped by 11px anyway. Changed to compute the *exact* required shift (with a small buffer), using the larger of the exact requirement or the usual constant.
+   - That exact-shift fix then created a **worse, new bug**: with no upper bound, a node far off-screen produced a huge computed shift that dragged its label all the way back into the visible viewport, disconnected from its actual (invisible) node, overlapping whatever real label was already there — visually worse than the original clipping. Fixed by hiding a label entirely once its node's own center is meaningfully off-screen (more than node-radius + 40px past any edge), rather than trying to rescue it. A node that's still reasonably on-screen (like the 3px-sliver case above) keeps the exact-shift treatment; a node that's genuinely gone doesn't get a label dragged across the canvas to compensate.
+
+**4. Tooltip viewport collision.** The hover tooltip now checks its own cached dimensions (measured once per hover, not on every mousemove, to avoid forcing layout on a high-frequency event) against the wrap's bounds and flips from the cursor's bottom-right to whichever side actually has room, clamping near (not flipping past) the left/top edges where the cursor itself is already close.
+
+**5. Click-based node detail panel — checked, not applicable.** This is a separate UI element from the hover tooltip: a right-docked, full-height sidebar (`selectedModelId`-driven), always in the same screen position regardless of which node was clicked. Structurally immune to this class of bug by construction — it doesn't position itself relative to the node at all. Confirmed via source reading, not just assumed.
+
+**Files touched:** `src/components/mlgraph/MLRelationshipMap.jsx` only.
+
+## Known residual limitation (found during verification, not fully resolved)
+
+Fixing a label's viewport-edge clipping by shifting it toward its own node can, in a few cases, cause it to overlap an *adjacent* node's label that wasn't itself near an edge — confirmed live at two zoom positions ("Ridge / Lasso / Elastic Net" shifting into "Logistic Regression"'s space; "GARCH / ARCH" shifting into "VAR (Vector Autoregression)"'s space). This is a different, narrower problem than viewport clipping (general label-label collision avoidance across the whole scene, not just against the frame), out of scope for a viewport-bounds check and not one of the mission's explicitly named/verified requirements. It was deliberately not chased further: the explicit, checked requirement (no viewport clipping) was prioritized and is solid; a full neighbor-aware collision system would be materially more scope than a bounds check. Documented here rather than silently left out of the report.
+
+## Verification (six-plus-position pan/zoom sweep, tooltip at all four edges, all four breakpoints)
+
+Every check below was run against the live DOM via `getBoundingClientRect()`-based scripts (not eyeballed from a screenshot alone), with screenshots taken alongside as visual corroboration.
+
+**Pan/zoom sweep — seven positions (one more than the required six), covering the full graph:**
+1. Default fit-to-view — 0 clipped node labels, 0 clipped headers.
+2. Zoomed in on the top-right corner (7 wheel steps) — 0 of 7 visible nodes' labels clipped, 0 of 6 visible headers clipped.
+3. Zoomed in on the bottom-left corner (6 steps) — 0 of 14 visible nodes' labels clipped, 0 of 6 visible headers clipped.
+4. Zoomed in on the bottom-right corner (6 steps) — 0 of 14 visible nodes' labels clipped, 0 of 6 visible headers clipped.
+5. Deep zoom on the center (14 steps) — 0 of 6 visible nodes' labels clipped.
+6. Zoomed on the far-right/widest row (9 steps, revealed 29 of 32 nodes) — 0 clipped labels.
+7. Zoomed in on the top-left corner (8 steps) — 0 of 18 visible nodes' labels clipped, 0 of 9 visible headers clipped.
+
+Also confirmed at every position: no straight edge crossing through an unrelated node (the same-row and cross-row curve fixes hold at every zoom/pan tested), arrowheads visibly separated at every multi-edge node checked.
+
+**Tooltip at all four canvas edges** — not just labels, per the mission's explicit distinction: dispatched a hover + mousemove sequence to each of the four corners of `.mlgraph-canvas-wrap` (measured bounds: left 52, top 103, right 1280, bottom 720) and checked the tooltip's resulting `getBoundingClientRect()` against those bounds each time.
+   - Top-left: no clip on any edge (default offset already clears it).
+   - Top-right: flipped left of the cursor (tip right edge at 1261, inside the 1280 boundary) — no clip.
+   - Bottom-left: flipped above the cursor (tip bottom at 701, inside the 720 boundary) — no clip.
+   - Bottom-right: both flips applied simultaneously (left of and above the cursor) — no clip.
+   Re-confirmed a second time after the node-label off-screen-hiding fix (which touched a different function) to make sure nothing regressed — still 0 clips at all four corners.
+
+**Breakpoints — 360 / 768 / 1280 / 1920px**, each re-checked with the same live DOM script after resizing:
+   - 360px: 18 visible nodes, 0 clipped labels, 8 visible headers, 0 clipped.
+   - 768px: 32 visible nodes (whole graph fits), 0 clipped labels, 10 visible headers, 0 clipped.
+   - 1280px: 30 visible nodes, 0 clipped labels, 10 visible headers, 0 clipped.
+   - 1920px: 32 visible nodes, 0 clipped labels, 10 visible headers, 0 clipped.
+
+**Console:** checked after every fix and at multiple pan/zoom/resize points throughout — 0 errors.
+
+**Build/lint:** `npm run build` and `npm run lint` both clean (0 errors, 0 warnings) after every change in this pass, including after a lint warning surfaced mid-fix (`react-hooks(exhaustive-deps)` on the mount effect reading `lang`) — fixed properly via a ref rather than suppressed, since adding `lang` as a real dependency would have forced a full graph remount (losing pan/zoom/drag state) on every language toggle.
+
+**Screenshots captured as evidence** at: default view, top-right zoom, bottom-left zoom, bottom-right zoom, deep-center zoom, far-right zoom, top-left zoom, and 1920px width — eight in total, all showing clean rendering with no clipped text, no orphan diagonals, and visibly separated arrowheads at converging nodes.
