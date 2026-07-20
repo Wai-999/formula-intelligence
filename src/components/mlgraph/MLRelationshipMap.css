@@ -29,6 +29,13 @@
 .mlgnode-label {
   font-size: 9px;
   pointer-events: none;
+  /* Halo behind the fill so a label stays legible when an unrelated edge
+     crosses directly behind it — with 32 nodes and many long-distance
+     competes/combines links, that's routine, not an edge case. */
+  paint-order: stroke fill;
+  stroke: #0b0b16;
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 .mlgtip-short {

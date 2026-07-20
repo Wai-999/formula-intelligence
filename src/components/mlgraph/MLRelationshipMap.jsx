@@ -23,6 +23,34 @@ function sourceClientXY(sourceEvent) {
   return touch ? [touch.clientX, touch.clientY] : [sourceEvent.clientX, sourceEvent.clientY];
 }
 
+// Node circles are drawn with r=NODE_R (below); edges were previously drawn
+// straight from center to center, so every arrowhead marker landed exactly
+// on the target's center — entirely hidden under the (semi-opaque) node
+// circle rather than visibly pointing into it from outside, which is what
+// read as "dislocated arrows" (the marker was there, just invisible, so
+// the thin line-under-node made nearby unrelated markers look detached).
+// Trimming both endpoints back along the source→target unit vector by the
+// node radius (+ a small gap) fixes this: the line now visibly stops at
+// each node's boundary and the arrowhead renders in the open, just outside
+// the target circle, pointing in.
+const NODE_R = 12;
+const EDGE_GAP = 3;
+
+function trimToNodeEdges(sx, sy, tx, ty) {
+  const dx = tx - sx;
+  const dy = ty - sy;
+  const dist = Math.hypot(dx, dy) || 1;
+  const ux = dx / dist;
+  const uy = dy / dist;
+  const trim = NODE_R + EDGE_GAP;
+  return {
+    x1: sx + ux * trim,
+    y1: sy + uy * trim,
+    x2: tx - ux * trim,
+    y2: ty - uy * trim,
+  };
+}
+
 export default function MLRelationshipMap() {
   const svgRef = useRef(null);
   const wrapRef = useRef(null);
@@ -100,8 +128,10 @@ export default function MLRelationshipMap() {
       .data(simLinks)
       .join('line')
       .attr('class', (d) => `mlglink mlglink-${d.type}`)
-      .attr('x1', (d) => d.source.x).attr('y1', (d) => d.source.y)
-      .attr('x2', (d) => d.target.x).attr('y2', (d) => d.target.y)
+      .attr('x1', (d) => trimToNodeEdges(d.source.x, d.source.y, d.target.x, d.target.y).x1)
+      .attr('y1', (d) => trimToNodeEdges(d.source.x, d.source.y, d.target.x, d.target.y).y1)
+      .attr('x2', (d) => trimToNodeEdges(d.source.x, d.source.y, d.target.x, d.target.y).x2)
+      .attr('y2', (d) => trimToNodeEdges(d.source.x, d.source.y, d.target.x, d.target.y).y2)
       .attr('stroke', (d) => EDGE_STYLE[d.type]?.color || 'rgba(255,255,255,0.14)')
       .attr('stroke-width', 1.4)
       .attr('stroke-opacity', 0.55)
@@ -129,10 +159,16 @@ export default function MLRelationshipMap() {
             d3.select(this).attr('transform', `translate(${d.x},${d.y})`);
             linkSel
               .filter((l) => l.s === d.id || l.t === d.id)
-              .attr('x1', (l) => (l.s === d.id ? d.x : l.source.x))
-              .attr('y1', (l) => (l.s === d.id ? d.y : l.source.y))
-              .attr('x2', (l) => (l.t === d.id ? d.x : l.target.x))
-              .attr('y2', (l) => (l.t === d.id ? d.y : l.target.y));
+              .each(function (l) {
+                const sx = l.s === d.id ? d.x : l.source.x;
+                const sy = l.s === d.id ? d.y : l.source.y;
+                const tx = l.t === d.id ? d.x : l.target.x;
+                const ty = l.t === d.id ? d.y : l.target.y;
+                const trimmed = trimToNodeEdges(sx, sy, tx, ty);
+                d3.select(this)
+                  .attr('x1', trimmed.x1).attr('y1', trimmed.y1)
+                  .attr('x2', trimmed.x2).attr('y2', trimmed.y2);
+              });
           })
           .on('end', (event, d) => {
             const [x, y] = sourceClientXY(event.sourceEvent);

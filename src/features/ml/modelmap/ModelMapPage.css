@@ -84,6 +84,14 @@
   top: 14px;
   z-index: 5;
   max-width: 320px;
+  /* MisconceptionCallout's own background is a subtle ~6%-opacity tint,
+     correct when it sits inline on a page's normal dark background but far
+     too transparent here, where it floats directly on top of the busy
+     graph — without a solid backdrop of its own, node labels and edges
+     showed straight through the text. */
+  background: rgba(10, 11, 20, 0.97);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
 .mm-misconception-close {

@@ -14,7 +14,7 @@ const savedPrefs = loadJSON(PREFS_KEY, { level: 'beginner', lang: 'en' });
 // `label` during the Module 11 verification pass — see BUILD_LOG.md.
 export const ML_TABS = [
   { id: 'pipeline', label: 'Pipeline', title: blSame('Pipeline', 'Pipeline'), icon: 'ti-route', module: 2 },
-  { id: 'modelmap', label: 'Model Map', title: blSame('Model Map', 'Model မြေပုံ'), icon: 'ti-share-2', module: 3 },
+  { id: 'modelmap', label: 'Model Map', title: blSame('Model Map', 'Model မြေပုံ'), icon: 'ti-sitemap', module: 3 },
   { id: 'playground', label: 'Playground', title: blSame('Playground', 'Playground'), icon: 'ti-adjustments-horizontal', module: 4 },
   { id: 'evaluation', label: 'Evaluation', title: blSame('Evaluation', 'အကဲဖြတ်မှု'), icon: 'ti-chart-histogram', module: 5 },
   { id: 'gold', label: 'Gold', title: blSame('Gold', 'ရွှေ'), icon: 'ti-coin', module: 6 },

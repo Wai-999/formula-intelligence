@@ -50,6 +50,7 @@ export default function MLBody() {
           <span className="ml-main-title">{tabTitle}</span>
           <div className="ml-main-header-controls">
             <UnderstandingTrackerBadge />
+            <MixedReviewPanel />
             <LevelLangToggle />
           </div>
         </div>
@@ -63,7 +64,6 @@ export default function MLBody() {
           ))}
         </div>
       </main>
-      <MixedReviewPanel />
       <EntryMisconceptionBanner />
     </>
   );
