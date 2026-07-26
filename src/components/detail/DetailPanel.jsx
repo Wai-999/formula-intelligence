@@ -56,10 +56,10 @@ export default function DetailPanel() {
             <button
               type="button"
               className="detail-bridge-btn"
-              onClick={() => navigateToLinkedConcept('ml', 'bridge', { from: 'stats-reg' })}
+              onClick={() => navigateToLinkedConcept('ml', 'python', { from: 'stats-reg' })}
             >
-              <i className="ti ti-arrows-right-left" aria-hidden="true" />
-              Compare this to the ML lens (Stats ↔ ML Bridge)
+              <i className="ti ti-brand-python" aria-hidden="true" />
+              See the Python implementation (Python Hub)
             </button>
           )}
 

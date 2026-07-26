@@ -26,9 +26,9 @@ export default function EstimationDemo() {
       <button
         type="button"
         className="epc-bridge-btn"
-        onClick={() => navigateToLinkedConcept('ml', 'bridge', { from: 'pipeline-estimation' })}
+        onClick={() => navigateToLinkedConcept('ml', 'python', { from: 'pipeline-estimation' })}
       >
-        <i className="ti ti-arrows-right-left" aria-hidden="true" />
+        <i className="ti ti-brand-python" aria-hidden="true" />
         {btnText}
       </button>
     </div>

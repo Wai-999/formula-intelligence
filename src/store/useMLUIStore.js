@@ -21,7 +21,7 @@ export const ML_TABS = [
   { id: 'macro', label: 'Macro', title: blSame('Macro', 'Macro'), icon: 'ti-building-bank', module: 7 },
   { id: 'micro', label: 'Micro', title: blSame('Micro', 'Micro'), icon: 'ti-shopping-cart', module: 8 },
   { id: 'politics', label: 'Politics', title: blSame('Politics', 'နိုင်ငံရေး'), icon: 'ti-flag', module: 9 },
-  { id: 'bridge', label: 'Stats ↔ ML', title: blSame('Stats ↔ ML', 'Stats ↔ ML'), icon: 'ti-arrows-right-left', module: 10 },
+  { id: 'python', label: 'Python', title: blSame('Python Hub', 'Python Hub'), icon: 'ti-brand-python', module: 10 },
 ];
 
 export const useMLUIStore = create((set) => ({

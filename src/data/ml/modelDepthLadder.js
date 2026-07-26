@@ -1602,7 +1602,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'live-link', module: 'bridge', label: blSame('Stats ↔ ML Bridge — the frequentist vs. Bayesian estimation comparison', 'Stats ↔ ML Bridge — frequentist vs. Bayesian estimation နှိုင်းယှဉ်ချက်') },
+    mechanism: { kind: 'live-link', module: 'python', label: blSame('Python Hub — Bayesian models implemented in code', 'Python Hub — Bayesian model များကို code ဖြင့် အကောင်အထည်ဖော်ခြင်း') },
     formalism: {
       worked: bl(
         'A Bayesian NN\'s weight isn\'t one number like w=2.3 — it\'s a full distribution, say Normal(2.3, 0.4²). Sampling that distribution many times and running the network each time produces not one prediction but a spread of predictions, whose range IS the model\'s honest uncertainty.',

@@ -1,0 +1,115 @@
+.pycode {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #0b0c18;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.pycode-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.pycode-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.pycode-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fb7185;
+}
+
+.pycode-dots i:nth-child(2) { background: #fbbf24; }
+.pycode-dots i:nth-child(3) { background: #34d399; }
+
+.pycode-lang {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pycode-lang .ti { color: #4b8bbe; font-size: 14px; }
+
+.pycode-runhint {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-faint);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pycode-runhint .ti { color: var(--success); }
+
+.pycode-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.pycode-copy:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+.pycode-body {
+  margin: 0;
+  padding: 10px 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+
+.pycode-line { display: flex; white-space: pre; }
+
+.pycode-line:hover { background: rgba(255, 255, 255, 0.03); }
+
+.pycode-ln {
+  flex: 0 0 40px;
+  text-align: right;
+  padding-right: 14px;
+  color: #3d4763;
+  user-select: none;
+}
+
+.pycode-src { color: #d6deeb; }
+
+.tok-keyword { color: #c792ea; }
+.tok-string { color: #ecc48d; }
+.tok-comment { color: #5f7291; font-style: italic; }
+.tok-number { color: #f78c6c; }
+.tok-call { color: #82aaff; }
+.tok-decorator { color: #34d399; }
+
+.pycode-expand {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px;
+  font-size: 12px;
+  color: var(--accent);
+  background: rgba(34, 211, 238, 0.05);
+  border: none;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.pycode-expand:hover { background: rgba(34, 211, 238, 0.1); }

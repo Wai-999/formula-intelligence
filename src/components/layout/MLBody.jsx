@@ -19,7 +19,7 @@ const GoldLabPage = lazy(() => import('../../features/ml/gold/GoldLabPage.jsx'))
 const MacroLabPage = lazy(() => import('../../features/ml/macro/MacroLabPage.jsx'));
 const MicroLabPage = lazy(() => import('../../features/ml/micro/MicroLabPage.jsx'));
 const PoliticsLabPage = lazy(() => import('../../features/ml/politics/PoliticsLabPage.jsx'));
-const BridgePage = lazy(() => import('../../features/ml/bridge/BridgePage.jsx'));
+const PythonHubPage = lazy(() => import('../../features/ml/python/PythonHubPage.jsx'));
 
 const FEATURES = {
   pipeline: PipelinePage,
@@ -30,7 +30,7 @@ const FEATURES = {
   macro: MacroLabPage,
   micro: MicroLabPage,
   politics: PoliticsLabPage,
-  bridge: BridgePage,
+  python: PythonHubPage,
 };
 
 function MLLoading() {

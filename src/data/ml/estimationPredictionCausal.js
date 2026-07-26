@@ -147,8 +147,8 @@ export const EST_DEMO_TEXT = blSame(
   'Stats mode ၏ mean အတွက် t CI ကဲ့သို့သော frequentist confidence interval သည် parameter ကို ပုံသေထားပြီး interval ကို ကျပန်းအဖြစ် သတ်မှတ်သည်။ Posterior distribution က ဒါကို ပြောင်းပြန်လှန်သည်: parameter ကိုယ်တိုင်ကို မသေချာဟု သတ်မှတ်သည်။ ပုံစံတူ interval ဖြစ်သော်လည်း အဓိပ္ပာယ် မတူပါ။'
 );
 export const EST_DEMO_BTN = blSame(
-  'See this compared side-by-side in the Stats ↔ ML Bridge',
-  'ဒါကို Stats ↔ ML Bridge တွင် side-by-side နှိုင်းယှဉ်ကြည့်ရန်'
+  'See how estimation is done in Python (Python Hub)',
+  'Estimation ကို Python ဖြင့် မည်သို့ပြုလုပ်သည်ကို ကြည့်ရန် (Python Hub)'
 );
 
 export const PRED_DEMO_LBL = blSame('Point forecast + prediction interval', 'Point Forecast + Prediction Interval');
