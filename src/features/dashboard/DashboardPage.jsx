@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { CHAPTERS, nodes } from '../../data/index.js';
 import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { useCountUp } from '../../hooks/useCountUp.js';
+import ProgressionPanel from './ProgressionPanel.jsx';
 import './DashboardPage.css';
 
 function KpiCard({ label, value }) {
@@ -53,6 +54,8 @@ export default function DashboardPage() {
   return (
     <div className="dash-page">
       <h2>Mastery dashboard</h2>
+
+      <ProgressionPanel />
 
       <div className="dash-summary">
         <KpiCard label="Total formulas" value={totalDisplay} />
