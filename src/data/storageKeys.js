@@ -16,4 +16,5 @@ export const STORAGE_KEYS = {
   mlModePrefs: 'ml_mode_prefs_v1',
   mlUnderstanding: 'ml_understanding_v1',
   mlEntryBannerSeen: 'ml_entry_banner_seen_v1',
+  pyLab: 'py_lab_v1',
 };

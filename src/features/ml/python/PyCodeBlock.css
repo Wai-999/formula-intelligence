@@ -218,3 +218,11 @@
 }
 
 .pycode-out-error .pycode-out-body { color: var(--danger); }
+
+.pycode-figs { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px; }
+.pycode-fig {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #0b0c18;
+}

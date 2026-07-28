@@ -62,8 +62,39 @@ export function isRuntimeLoaded() {
   return Boolean(globalThis.pyodide) || pyodidePromise !== null;
 }
 
+// Any figures a run left open, as base64 PNGs. Matplotlib is on the Agg
+// backend (there is no screen to draw to), so a plot exists only as an
+// in-memory figure until something writes it out — without this it would be
+// computed and silently discarded, which is worse than not supporting plots.
+const CAPTURE_FIGURES = `
+import io as _fi_io, base64 as _fi_b64
+_fi_imgs = []
+try:
+    import matplotlib.pyplot as _fi_plt
+    for _fi_num in _fi_plt.get_fignums():
+        _fi_fig = _fi_plt.figure(_fi_num)
+        _fi_buf = _fi_io.BytesIO()
+        _fi_fig.savefig(_fi_buf, format="png", dpi=110, bbox_inches="tight",
+                        facecolor="#0b0c18", edgecolor="none")
+        _fi_imgs.append(_fi_b64.b64encode(_fi_buf.getvalue()).decode())
+    _fi_plt.close("all")
+except Exception:
+    pass
+_fi_imgs
+`;
+
+function collectFigures(py) {
+  try {
+    const res = py.runPython(CAPTURE_FIGURES);
+    const arr = res?.toJs ? res.toJs() : Array.from(res || []);
+    return arr.map((b64) => `data:image/png;base64,${b64}`);
+  } catch {
+    return [];
+  }
+}
+
 /**
- * Execute a sample and capture everything it printed.
+ * Execute a sample and capture everything it printed, plus any plots.
  * Errors are returned, not thrown: a failing sample is a normal outcome the
  * panel should display, not an exception that trips the error boundary.
  */
@@ -73,7 +104,7 @@ export async function runPython(code, { onProgress, timeoutMs = 30000 } = {}) {
   try {
     py = await getPyodide(onProgress);
   } catch (err) {
-    return { ok: false, output: '', error: err.message || String(err), ms: 0 };
+    return { ok: false, output: '', figures: [], error: err.message || String(err), ms: 0 };
   }
 
   const race = (promise) => Promise.race([
@@ -85,16 +116,25 @@ export async function runPython(code, { onProgress, timeoutMs = 30000 } = {}) {
   ]);
 
   try {
-    py.runPython('import sys, io\n_fi_buf = io.StringIO()\n_fi_prev = sys.stdout\nsys.stdout = _fi_buf');
+    py.runPython('import sys, io\n_fi_out = io.StringIO()\n_fi_prev = sys.stdout\nsys.stdout = _fi_out');
     await race(py.runPythonAsync(code));
-    const output = py.runPython('sys.stdout = _fi_prev\n_fi_buf.getvalue()');
-    return { ok: true, output: String(output), error: null, ms: Math.round(performance.now() - started) };
+    const output = py.runPython('sys.stdout = _fi_prev\n_fi_out.getvalue()');
+    return {
+      ok: true,
+      output: String(output),
+      figures: collectFigures(py),
+      error: null,
+      ms: Math.round(performance.now() - started),
+    };
   } catch (err) {
     try { py.runPython('sys.stdout = _fi_prev'); } catch { /* stdout already restored */ }
     return {
       ok: false,
       // Python tracebacks are long and the useful line is the last one.
       output: '',
+      // A run can print and plot before it fails; showing that is more
+      // useful than discarding it because the last statement raised.
+      figures: collectFigures(py),
       error: formatPythonError(err),
       ms: Math.round(performance.now() - started),
     };

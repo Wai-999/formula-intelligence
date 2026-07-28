@@ -21,6 +21,7 @@ const MacroLabPage = lazy(() => import('../../features/ml/macro/MacroLabPage.jsx
 const MicroLabPage = lazy(() => import('../../features/ml/micro/MicroLabPage.jsx'));
 const PoliticsLabPage = lazy(() => import('../../features/ml/politics/PoliticsLabPage.jsx'));
 const PythonHubPage = lazy(() => import('../../features/ml/python/PythonHubPage.jsx'));
+const PyLabPage = lazy(() => import('../../features/ml/pylab/PyLabPage.jsx'));
 const SourcesPage = lazy(() => import('../../features/ml/sources/SourcesPage.jsx'));
 
 const FEATURES = {
@@ -33,6 +34,7 @@ const FEATURES = {
   micro: MicroLabPage,
   politics: PoliticsLabPage,
   python: PythonHubPage,
+  pylab: PyLabPage,
   sources: SourcesPage,
 };
 

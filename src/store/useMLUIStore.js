@@ -22,7 +22,8 @@ export const ML_TABS = [
   { id: 'micro', label: 'Micro', title: blSame('Micro', 'Micro'), icon: 'ti-shopping-cart', module: 8 },
   { id: 'politics', label: 'Politics', title: blSame('Politics', 'နိုင်ငံရေး'), icon: 'ti-flag', module: 9 },
   { id: 'python', label: 'Python', title: blSame('Python Hub', 'Python Hub'), icon: 'ti-brand-python', module: 10 },
-  { id: 'sources', label: 'Sources', title: blSame('Sources & Data Provenance', 'အရင်းအမြစ်နှင့် ဒေတာ မူလအစ'), icon: 'ti-license', module: 11 },
+  { id: 'pylab', label: 'Lab', title: blSame('Python Lab', 'Python Lab'), icon: 'ti-flask-2', module: 11 },
+  { id: 'sources', label: 'Sources', title: blSame('Sources & Data Provenance', 'အရင်းအမြစ်နှင့် ဒေတာ မူလအစ'), icon: 'ti-license', module: 12 },
 ];
 
 export const useMLUIStore = create((set) => ({
