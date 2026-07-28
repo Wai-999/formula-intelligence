@@ -31,14 +31,25 @@ export function blSame(en, my) {
 export function useT(content) {
   const level = useMLUIStore((s) => s.level);
   const lang = useMLUIStore((s) => s.lang);
-  if (!content) return '';
-  const byLang = content[lang] || content.en;
-  return byLang[level] ?? byLang.beginner ?? content.en?.beginner ?? '';
+  return resolveT(content, level, lang);
 }
 
-/** Non-hook resolver for use inside callbacks/loops where a hook can't be called. */
+/**
+ * Non-hook resolver for use inside callbacks/loops where a hook can't be called.
+ *
+ * Guarantees a STRING for every input, including malformed ones. That
+ * guarantee is the point: these objects are shaped {en:{...}, my:{...}},
+ * and returning one to a JSX child throws "Objects are not valid as a
+ * React child" — which, before error boundaries existed, blanked the whole
+ * app (FIX_LOG Fifth Pass). The `byLang` guard below covers content that
+ * has neither the requested language nor an `en` fallback (an empty or
+ * half-authored object); without it this threw a TypeError instead of
+ * degrading to empty text, turning one bad content entry into a dead page.
+ */
 export function resolveT(content, level, lang) {
   if (!content) return '';
   const byLang = content[lang] || content.en;
-  return byLang[level] ?? byLang.beginner ?? content.en?.beginner ?? '';
+  if (!byLang) return '';
+  const value = byLang[level] ?? byLang.beginner ?? content.en?.beginner ?? '';
+  return typeof value === 'string' ? value : String(value ?? '');
 }

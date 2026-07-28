@@ -24,6 +24,11 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # Gate the deploy on lint + tests. Previously a broken build was the
+      # only thing that could stop a bad commit reaching production; content
+      # and logic regressions (the kind FIX_LOG is full of) shipped freely.
+      - run: npm run lint
+      - run: npm test
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
