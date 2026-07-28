@@ -25,17 +25,51 @@ const ML_TABS = ['Model Map', 'Python', 'Lab', 'Sources', 'Gold'];
 
 let server;
 async function serve() {
-  server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], {
-    stdio: 'ignore', detached: false,
+  // --host 127.0.0.1 is explicit on purpose. Vite defaults to `localhost`,
+  // which on some hosts (GitHub runners among them) resolves to ::1 — so a
+  // server listening on IPv6 is invisible to a poll of 127.0.0.1: the
+  // request never connects and the wait times out while the server is
+  // running perfectly. Binding and polling the same literal address removes
+  // the ambiguity entirely.
+  server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort', '--host', '127.0.0.1'], {
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
-  for (let i = 0; i < 40; i++) {
+
+  // Keep the child's output. The first version discarded it and failed with
+  // a bare "preview server did not start" — the least useful sentence
+  // available, since it cannot tell a slow start from a crashed process, an
+  // occupied port or a missing build.
+  const log = [];
+  const capture = (buf) => {
+    log.push(buf.toString());
+    if (log.length > 40) log.shift();
+  };
+  server.stdout.on('data', capture);
+  server.stderr.on('data', capture);
+
+  let exited = null;
+  server.on('exit', (code, signal) => { exited = { code, signal }; });
+
+  // 60s rather than 20: a cold CI runner is slower than a warm laptop, and a
+  // false timeout here fails the whole deploy.
+  const deadline = Date.now() + 60_000;
+  while (Date.now() < deadline) {
+    if (exited) {
+      throw new Error(
+        `preview server exited early (code ${exited.code}, signal ${exited.signal})\n`
+        + `--- server output ---\n${log.join('')}`
+      );
+    }
     try {
       const r = await fetch(BASE);
       if (r.ok) return;
-    } catch { /* not up yet */ }
+    } catch { /* not listening yet */ }
     await sleep(500);
   }
-  throw new Error('preview server did not start');
+  throw new Error(
+    `preview server did not answer ${BASE} within 60s\n`
+    + `--- server output ---\n${log.join('') || '(no output captured)'}`
+  );
 }
 
 const violations = new Map();

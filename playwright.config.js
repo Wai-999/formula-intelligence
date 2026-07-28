@@ -23,7 +23,9 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run build && npx vite preview --port 4321 --strictPort',
+    // --host 127.0.0.1 matches baseURL literally: Vite defaults to `localhost`,
+    // which can resolve to ::1 while Playwright polls IPv4.
+    command: 'npm run build && npx vite preview --port 4321 --strictPort --host 127.0.0.1',
     url: 'http://127.0.0.1:4321/formula-intelligence/',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
