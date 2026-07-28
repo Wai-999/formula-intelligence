@@ -150,12 +150,12 @@ export default function PracticePage() {
   return (
     <div className="prac-page">
       <div className="prac-controls">
-        <select value={mode} onChange={(e) => setMode(e.target.value)}>
+        <select aria-label="Practice mode" value={mode} onChange={(e) => setMode(e.target.value)}>
           <option value="mixed">Mode: Mixed</option>
           <option value="chapter">By chapter</option>
           <option value="weak">Weak spots</option>
         </select>
-        <select value={chFilter} onChange={(e) => setChFilter(e.target.value)}>
+        <select aria-label="Filter problems by chapter" value={chFilter} onChange={(e) => setChFilter(e.target.value)}>
           <option value="all">Chapters: All</option>
           {CHAPTERS.map((c) => (
             <option key={c.id} value={String(c.id)}>{c.name}</option>

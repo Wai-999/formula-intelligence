@@ -14,6 +14,11 @@ function DriverRow({ driver, value, onChange, min, max }) {
         type="range" min={min} max={max} step="0.1" value={value}
         onChange={(e) => onChange(driver.key, Number(e.target.value))}
         className="pg-slider dp-slider"
+        // The visible label sits in a sibling span, which a screen reader
+        // never associates with the control; the relation text is what
+        // actually explains which direction the slider moves the forecast.
+        aria-label={`${label} — ${relation}`}
+        aria-valuetext={`${value > 0 ? '+' : ''}${value.toFixed(1)} standard deviations`}
       />
       <p className="dp-relation">{relation}</p>
     </div>
