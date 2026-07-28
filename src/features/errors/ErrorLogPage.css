@@ -72,7 +72,7 @@
 
 .err-empty {
   text-align: center;
-  color: #4a4a6a;
+  color: var(--text-faint);
   padding: 50px 20px;
   font-size: 13px;
   line-height: 1.8;
@@ -97,7 +97,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #6b7280;
+  color: var(--text-faint);
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -115,7 +115,7 @@
 
 .err-pattern-hint {
   font-size: 11px;
-  color: #4a4a6a;
+  color: var(--text-faint);
   margin-top: 4px;
 }
 
@@ -150,7 +150,7 @@
 
 .err-bar-count {
   font-size: 10px;
-  color: #6b7280;
+  color: var(--text-faint);
   width: 46px;
   flex-shrink: 0;
 }

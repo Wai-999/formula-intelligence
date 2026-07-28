@@ -16,7 +16,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .retrieval-check-question {
@@ -39,7 +39,7 @@
 }
 
 .retrieval-check-btn:hover {
-  border-color: var(--primary);
+  border-color: var(--primary-text);
 }
 
 .retrieval-check-answer {

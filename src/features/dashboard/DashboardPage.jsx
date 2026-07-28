@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { CHAPTERS, nodes } from '../../data/index.js';
+import { chapterTextColor } from '../../data/chapters.js';
 import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { useCountUp } from '../../hooks/useCountUp.js';
 import ProgressionPanel from './ProgressionPanel.jsx';
@@ -52,7 +53,7 @@ export default function DashboardPage() {
   const recentSessions = sessions.slice().reverse().slice(0, 8);
 
   return (
-    <div className="dash-page">
+    <div className="dash-page" tabIndex={0}>
       <h2>Mastery dashboard</h2>
 
       <ProgressionPanel />
@@ -71,7 +72,7 @@ export default function DashboardPage() {
             <div className="ch-row" key={ch.id}>
               <div className="ch-row-header">
                 <span className="ch-row-name">{ch.name}</span>
-                <span className="ch-row-pct" style={{ color: ch.color }}>{ch.pct}%</span>
+                <span className="ch-row-pct" style={{ color: chapterTextColor(ch) }}>{ch.pct}%</span>
               </div>
               <div className="prog-bar">
                 <div className="prog-fill" style={{ width: `${ch.pct}%`, background: ch.color }} />

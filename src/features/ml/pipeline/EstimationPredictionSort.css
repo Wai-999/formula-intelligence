@@ -50,12 +50,12 @@
 }
 
 .epc-sort-bucket-btn:hover:not(:disabled) {
-  border-color: var(--primary);
+  border-color: var(--primary-text);
   color: var(--text-primary);
 }
 
 .epc-sort-bucket-btn.selected {
-  border-color: var(--primary);
+  border-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.16);
   color: var(--text-primary);
 }

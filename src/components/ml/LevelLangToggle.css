@@ -19,7 +19,9 @@
   color: var(--text-muted);
   font-size: 10.5px;
   font-weight: 700;
-  padding: 4px 9px;
+  padding: 6px 11px;
+  /* WCAG 2.2 target-size minimum (24x24); measured 20px tall before. */
+  min-height: 24px;
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;

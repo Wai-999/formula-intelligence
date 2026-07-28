@@ -86,8 +86,8 @@
 .pyhub-nav-link:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.04); }
 
 .pyhub-nav-link.active {
-  color: var(--primary);
-  border-left-color: var(--primary);
+  color: var(--primary-text);
+  border-left-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.08);
 }
 
@@ -180,7 +180,7 @@
 
 .pyentry-caret { color: var(--text-faint); font-size: 15px; flex: 0 0 auto; }
 
-.pyentry.open .pyentry-caret { color: var(--primary); }
+.pyentry.open .pyentry-caret { color: var(--primary-text); }
 
 .pyentry-name { font-size: 13.5px; font-weight: 600; }
 
@@ -227,7 +227,7 @@
 }
 
 .pyentry-sechead-concept { color: var(--accent); }
-.pyentry-sechead-think { color: var(--primary); }
+.pyentry-sechead-think { color: var(--primary-text); }
 .pyentry-sechead-code { color: #82aaff; }
 .pyentry-sechead-scenario { color: var(--warning); }
 .pyentry-sechead-warn { color: var(--danger); }
@@ -263,7 +263,7 @@
 
 .pyentry-flow-step { display: flex; flex-direction: column; font-size: 12.5px; color: var(--text-primary); }
 
-.pyentry-flow-arrow { color: var(--primary); font-size: 13px; padding: 1px 0; }
+.pyentry-flow-arrow { color: var(--primary-text); font-size: 13px; padding: 1px 0; }
 
 .pyentry-think-grid {
   display: grid;

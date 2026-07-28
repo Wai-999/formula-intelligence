@@ -43,7 +43,6 @@ describe('usePyLabStore', () => {
   });
 
   it('caps the number of notebooks, evicting the OLDEST not the newest', () => {
-    const { create } = usePyLabStore.getState();
     for (let i = 0; i < PY_LAB_LIMITS.MAX_NOTEBOOKS + 5; i++) {
       usePyLabStore.getState().create(`nb${i}`, `# ${i}`);
     }

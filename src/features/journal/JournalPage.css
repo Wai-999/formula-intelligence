@@ -170,7 +170,7 @@
 
 .jnl-prev-empty {
   font-size: 11px;
-  color: #4a4a6a;
+  color: var(--text-faint);
   text-align: center;
   padding: 10px 0;
 }
@@ -223,7 +223,7 @@
 
 .jnl-entry-chevron {
   font-size: 9px;
-  color: #4a4a6a;
+  color: var(--text-faint);
   flex-shrink: 0;
 }
 
@@ -294,7 +294,7 @@
 
 .jnl-ch-count {
   font-size: 8px;
-  color: #4a4a6a;
+  color: var(--text-faint);
 }
 
 .jnl-ch-cells {

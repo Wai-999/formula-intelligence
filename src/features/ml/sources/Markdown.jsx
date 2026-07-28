@@ -62,7 +62,10 @@ export default function Markdown({ blocks }) {
           case 'table':
             return (
               // eslint-disable-next-line react/no-array-index-key
-              <div key={i} className="md-table-wrap">
+              // A wide table scrolls horizontally; it must be focusable or
+              // its right-hand columns are unreachable by keyboard.
+              // eslint-disable-next-line react/no-array-index-key
+              <div key={i} className="md-table-wrap" tabIndex={0} role="region" aria-label="Table">
                 <table className="md-table">
                   <thead>
                     <tr>{b.header.map((h, j) => (

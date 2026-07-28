@@ -105,7 +105,9 @@ export default function LearningPathPage() {
           </select>
         </div>
 
-        <div className="lp-steps">
+        {/* tabIndex makes an overflow region reachable by keyboard; without
+            it the content below the fold is unreachable without a mouse. */}
+        <div className="lp-steps" tabIndex={0} role="group" aria-label="Prerequisite steps">
           {!targetId ? (
             <div className="lp-empty-state">
               <i className="ti ti-route lpe-icon" aria-hidden="true" />

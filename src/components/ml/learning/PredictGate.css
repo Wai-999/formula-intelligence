@@ -97,7 +97,7 @@
 }
 
 .predict-gate-opt:hover {
-  border-color: var(--primary);
+  border-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.14);
 }
 

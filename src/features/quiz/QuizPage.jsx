@@ -93,13 +93,13 @@ export default function QuizPage() {
   return (
     <div className="quiz-page">
       <div className="quiz-header">
-        <select value={chFilter} onChange={(e) => setChFilter(e.target.value)}>
+        <select aria-label="Filter questions by chapter" value={chFilter} onChange={(e) => setChFilter(e.target.value)}>
           <option value="all">All chapters</option>
           {CHAPTERS.map((c) => (
             <option key={c.id} value={String(c.id)}>{c.name}</option>
           ))}
         </select>
-        <select value={qType} onChange={(e) => setQType(e.target.value)}>
+        <select aria-label="Question type" value={qType} onChange={(e) => setQType(e.target.value)}>
           <option value="name2formula">Name → formula</option>
           <option value="formula2name">Formula → name</option>
           <option value="desc2name">Description → name</option>

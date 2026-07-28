@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { nodeById, links, chapterColorMap } from '../../data/index.js';
 import { BRIDGE_TEXT } from '../../data/bridgeText.js';
 import { INVENTORS } from '../../data/inventors.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import { useMasteryStore } from '../../store/useMasteryStore.js';
 import { useMLUIStore } from '../../store/useMLUIStore.js';
-import { PY_ENTRY_BY_ID } from '../../data/python/index.js';
 import './DetailPanel.css';
 
 const STATE_LABEL = {
@@ -23,6 +22,21 @@ export default function DetailPanel() {
   const navigateToLinkedConcept = useUIStore((s) => s.navigateToLinkedConcept);
   const getNodeState = useMasteryStore((s) => s.getNodeState);
   const level = useMLUIStore((s) => s.level);
+  // The Python Hub corpus is ~430KB of content for 126 topics. Importing it
+  // statically here (as the first version of this panel did) pulled all of
+  // it into the MAIN bundle, since this panel loads with Stats mode —
+  // measured at +180KB gzip on the initial page load for content that
+  // Beginner depth, the default, never displays. Loading it on demand keeps
+  // the cost with the readers who actually asked for the depth.
+  const [deepCorpus, setDeepCorpus] = useState(null);
+  useEffect(() => {
+    if (level !== 'researcher' || deepCorpus) return;
+    let cancelled = false;
+    import('../../data/python/index.js').then((m) => {
+      if (!cancelled) setDeepCorpus(m.PY_ENTRY_BY_ID);
+    });
+    return () => { cancelled = true; };
+  }, [level, deepCorpus]);
 
   const node = selectedNodeId ? nodeById[selectedNodeId] : null;
   // Researcher depth doesn't re-author this panel's content — it surfaces
@@ -30,7 +44,7 @@ export default function DetailPanel() {
   // Python Hub corpus (assumptions, when NOT to use it, variable glossary,
   // failure modes). Same ids by design, so the join is free and the two
   // surfaces can never drift out of sync the way parallel copies would.
-  const deep = level === 'researcher' && node ? PY_ENTRY_BY_ID[node.id] : null;
+  const deep = level === 'researcher' && node && deepCorpus ? deepCorpus[node.id] : null;
 
   const { prereqs, dependents } = useMemo(() => {
     if (!node) return { prereqs: [], dependents: [] };

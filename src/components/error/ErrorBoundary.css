@@ -85,7 +85,7 @@
 }
 
 .errb-btn-primary {
-  color: var(--primary);
+  color: var(--primary-text);
   border-color: rgba(139, 92, 246, 0.4);
   background: rgba(139, 92, 246, 0.1);
 }

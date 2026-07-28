@@ -44,7 +44,7 @@
 
 .lp-selector select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-text);
 }
 
 .lp-steps {

@@ -12,7 +12,7 @@
 .dash-page h2 {
   font-size: 14px;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-text);
   border-bottom: 1px solid var(--border);
   padding-bottom: 8px;
 }
@@ -34,7 +34,7 @@
 .kpi-val {
   font-size: 28px;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -108,7 +108,7 @@
 }
 
 .session-empty {
-  color: #4a4a6a;
+  color: var(--text-faint);
   font-size: 11px;
 }
 

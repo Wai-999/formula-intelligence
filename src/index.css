@@ -13,7 +13,16 @@
   --danger: #fb7185;
   --text-primary: #f4f7fb;
   --text-muted: #9aa3b2;
-  --text-faint: #657083;
+  /* Raised from #657083 (contrast 3.35-3.74) to clear WCAG AA's 4.5:1 for
+     normal text against every surface in the palette — worst case is now
+     4.61 on the lightest card background. An axe-core audit attributed 31
+     of the app's 36 violations to this single token, so the fix is one
+     variable rather than 31 rules. */
+  --text-faint: #7c8798;
+  /* --primary is a fill colour first, but it is also used for headings and
+     small labels, where #8b5cf6 measured 3.96-4.42. This lighter tint is
+     for TEXT only; fills and borders keep --primary. */
+  --primary-text: #a78bfa;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;

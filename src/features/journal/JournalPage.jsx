@@ -107,7 +107,12 @@ function EntryForm() {
           <span>Confidence in today's formulas</span>
           <span id="jnl-conf-val" style={{ background: cc.bg, color: cc.color }}>{conf} / 10</span>
         </div>
-        <input type="range" min={1} max={10} step={1} value={conf} onChange={(e) => setConf(parseInt(e.target.value, 10))} />
+        <input
+          type="range" min={1} max={10} step={1} value={conf}
+          aria-label="Confidence in today's formulas, 1 to 10"
+          aria-valuetext={`${conf} out of 10`}
+          onChange={(e) => setConf(parseInt(e.target.value, 10))}
+        />
       </div>
 
       <button type="button" className="jnl-save-btn" disabled={!canSave} onClick={handleSave}>Save session entry</button>

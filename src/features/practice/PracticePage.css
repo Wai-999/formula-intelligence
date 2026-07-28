@@ -67,7 +67,7 @@
 
 .prac-empty {
   text-align: center;
-  color: #4a4a6a;
+  color: var(--text-faint);
   padding: 60px 20px;
   font-size: 13px;
   line-height: 1.8;
@@ -102,7 +102,7 @@
 
 .prac-hdr-sep {
   font-size: 10px;
-  color: #4a4a6a;
+  color: var(--text-faint);
 }
 
 .prac-node-name {

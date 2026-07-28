@@ -17,7 +17,7 @@
 .track-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
 .track-card.active { border-color: rgba(139, 92, 246, 0.5); background: rgba(139, 92, 246, 0.08); }
 
-.track-icon { font-size: 19px; color: var(--primary); }
+.track-icon { font-size: 19px; color: var(--primary-text); }
 .track-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .track-audience { font-size: 11px; color: var(--text-faint); line-height: 1.45; min-height: 30px; }
 
@@ -37,7 +37,7 @@
 .track-stage-num {
   flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; color: var(--primary);
+  font-size: 11px; font-weight: 700; color: var(--primary-text);
   background: rgba(139, 92, 246, 0.16); border: 1px solid rgba(139, 92, 246, 0.4);
 }
 .track-stage-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-primary); }

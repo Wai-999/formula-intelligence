@@ -101,8 +101,14 @@ export function provenanceTotals() {
   let real = 0, derived = 0, illustrative = 0;
   for (const d of PROVENANCE_DOMAINS) {
     real += d.realParts.length;
-    for (const b of d.baseline) (b.kind === 'derived' ? derived++ : illustrative++);
-    for (const dr of d.drivers) (dr.kind === 'illustrative' ? illustrative++ : real++);
+    for (const b of d.baseline) {
+      if (b.kind === 'derived') derived++;
+      else illustrative++;
+    }
+    for (const dr of d.drivers) {
+      if (dr.kind === 'illustrative') illustrative++;
+      else real++;
+    }
   }
   return { real, derived, illustrative };
 }

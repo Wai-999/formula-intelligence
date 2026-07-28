@@ -75,7 +75,12 @@ export default function ProgressionPanel() {
               <span className="prog-next">{progress.neededForNext.toLocaleString()} XP to level {progress.level + 1}</span>
             )}
           </div>
-          <div className="prog-bar" role="progressbar" aria-valuenow={progress.pct} aria-valuemin={0} aria-valuemax={100}>
+          <div
+            className="prog-bar" role="progressbar"
+            aria-label={`Progress to level ${progress.level + 1}`}
+            aria-valuenow={progress.pct} aria-valuemin={0} aria-valuemax={100}
+            aria-valuetext={`${progress.pct}% — ${progress.neededForNext} XP to level ${progress.level + 1}`}
+          >
             <div className="prog-bar-fill" style={{ width: `${progress.pct}%` }} />
           </div>
           <p className="prog-note">

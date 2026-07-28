@@ -15,7 +15,9 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  padding: 4px 12px;
+  padding: 6px 13px;
+  /* WCAG 2.2 target-size minimum (24x24); measured 21px tall before. */
+  min-height: 24px;
   border-radius: calc(var(--radius-md) - 2px);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
@@ -27,7 +29,7 @@
 
 .mode-switcher-btn.active.stats {
   background: rgba(139, 92, 246, 0.22);
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .mode-switcher-btn.active.ml {

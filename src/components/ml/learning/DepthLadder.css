@@ -51,13 +51,13 @@
 }
 
 .depth-ladder-tab.active {
-  border-color: var(--primary);
+  border-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.14);
   color: var(--text-primary);
 }
 
 .depth-ladder-tab.active i {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .depth-ladder-jumped-note {

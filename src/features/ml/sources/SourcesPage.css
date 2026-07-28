@@ -52,7 +52,7 @@
   border-left: 2px solid transparent; color: var(--text-muted); font-size: 11.5px;
   padding: 3px 8px; cursor: pointer;
 }
-.src-toc-link:hover { color: var(--primary); border-left-color: var(--primary); }
+.src-toc-link:hover { color: var(--primary-text); border-left-color: var(--primary-text); }
 
 .src-body { flex: 1; min-width: 0; max-height: calc(100vh - 120px); overflow-y: auto; padding-right: 4px; }
 
@@ -96,7 +96,7 @@
 }
 .src-chip-real { color: var(--accent); background: rgba(34, 211, 238, 0.12); }
 .src-chip-derived { color: var(--warning); background: rgba(251, 191, 36, 0.12); }
-.src-chip-illustrative { color: var(--primary); background: rgba(139, 92, 246, 0.14); }
+.src-chip-illustrative { color: var(--primary-text); background: rgba(139, 92, 246, 0.14); }
 
 .src-prov-domain {
   border: 1px solid var(--border); border-radius: var(--radius-lg);
