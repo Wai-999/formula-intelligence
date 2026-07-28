@@ -28,6 +28,7 @@ jobs:
       # only thing that could stop a bad commit reaching production; content
       # and logic regressions (the kind FIX_LOG is full of) shipped freely.
       - run: npm run lint
+      - run: npm run validate:content
       - run: npm test
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
