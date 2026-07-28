@@ -11,6 +11,10 @@
   min-width: 0;
   min-height: 0;
   display: flex;
+  /* Same as the Stats map: the closed detail panel sits off-screen via
+     translateX(100%) and would otherwise add 300px of phantom scroll
+     width, widening the layout viewport on phones. */
+  overflow: hidden;
 }
 
 .mm-legend {

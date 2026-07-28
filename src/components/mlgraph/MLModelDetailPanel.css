@@ -163,3 +163,14 @@
   margin-top: 8px;
 }
 
+
+/* On a phone a 300px panel leaves a useless sliver of graph beside it;
+   full width makes it a proper sheet. Lives here rather than in the shell
+   so it reliably overrides the base width above it. */
+@media (max-width: 720px) {
+  .detail-panel,
+  .ml-detail-panel {
+    width: 100%;
+    border-left: none;
+  }
+}

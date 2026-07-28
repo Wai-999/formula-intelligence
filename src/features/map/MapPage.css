@@ -9,4 +9,53 @@
   min-width: 0;
   position: relative;
   display: flex;
+  /* The detail panel is parked off-screen with translateX(100%) when
+     closed. Without clipping, those 300px count toward the document's
+     scroll width — which on a phone makes Chrome widen the layout viewport
+     to fit them, so every graph page rendered as if the device were 690px
+     wide. Nothing was visibly broken, which is why it survived this long. */
+  overflow: hidden;
+}
+
+/* ————— Phones —————
+ * The shell's fixed furniture (52px rail + 210px sidebar + 300px detail)
+ * is 562px before any content, which made a 390px phone lay out as a small
+ * desktop. Below 720px the sidebar slides over instead of taking a column.
+ */
+.map-sidebar-toggle {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .map-sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 14;
+    top: 8px;
+    left: 8px;
+    min-width: 34px;
+    min-height: 34px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: rgba(var(--panel-rgb), 0.92);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .nav-sidebar {
+    position: absolute;
+    z-index: 12;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    box-shadow: 10px 0 30px var(--shadow);
+    transform: translateX(-110%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .map-page.sidebar-open .nav-sidebar {
+    transform: none;
+  }
 }
