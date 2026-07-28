@@ -7,6 +7,8 @@ import MLBody from './MLBody.jsx';
 import ModeSwitcher from './ModeSwitcher.jsx';
 import StatsDepthToggle from './StatsDepthToggle.jsx';
 import ThemeToggle from './ThemeToggle.jsx';
+import ShortcutsOverlay from './ShortcutsOverlay.jsx';
+import { useGlobalShortcuts } from '../../hooks/useGlobalShortcuts.js';
 import ToastStack from '../toast/ToastStack.jsx';
 import './AppShell.css';
 
@@ -24,6 +26,7 @@ const ML_SUBTITLE = blSame(
 export default function AppShell() {
   const mode = useUIStore((s) => s.mode);
   const mlSubtitle = useT(ML_SUBTITLE);
+  const { helpOpen, closeHelp } = useGlobalShortcuts();
 
   useEffect(() => initHashSync(), []);
 
@@ -45,6 +48,7 @@ export default function AppShell() {
         {mode === 'stats' ? <StatsBody /> : <MLBody />}
       </div>
       <ToastStack />
+      <ShortcutsOverlay open={helpOpen} onClose={closeHelp} />
     </div>
   );
 }
