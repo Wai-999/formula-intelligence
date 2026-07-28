@@ -80,13 +80,16 @@ export default function LearningPathPage() {
 
   return (
     <div className="lp-page">
-      <div className="lp-left">
-        {/* Tracks answer "where do I start for my goal?"; the selector
-            below answers "what comes before this formula?". Tracks lead
-            because a learner arriving with a goal has no target formula
-            in mind yet. */}
-        <TracksPanel />
+      {/* Tracks answer "where do I start for my goal?"; the selector below
+          answers "what comes before this formula?". Tracks lead because a
+          learner arriving with a goal has no target formula in mind yet —
+          but they belong at PAGE width, not inside the 320px column, which
+          squeezed six cards into a single stack and pushed the selector
+          they are supposed to precede below the fold. */}
+      <TracksPanel />
 
+      <div className="lp-columns">
+        <div className="lp-left">
         <div className="lp-selector">
           <label htmlFor="lp-target-select">Choose your target formula</label>
           <select id="lp-target-select" value={targetId} onChange={(e) => handleTargetChange(e.target.value)}>
@@ -231,6 +234,7 @@ export default function LearningPathPage() {
               </button>
             </>
           )}
+          </div>
         </div>
       </div>
     </div>

@@ -64,7 +64,7 @@ export default function TracksPanel() {
   }
 
   return (
-    <section className="tracks">
+    <section className="tracks lp-tracks-band">
       <div className="tracks-head">
         <h3 className="tracks-title"><i className="ti ti-route-2" aria-hidden="true" /> Learning tracks</h3>
         <p className="tracks-sub">

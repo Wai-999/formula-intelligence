@@ -1,6 +1,30 @@
 .lp-page {
   flex: 1;
   min-width: 0;
+  /* Column, not row: the tracks panel spans the full page above the
+     two-column finder below it. It used to live inside .lp-left, whose
+     fixed 320px squeezed six cards into one tall stack and pushed the
+     formula selector — the thing tracks are meant to introduce — off
+     the bottom of the screen. */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.lp-tracks-band {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(var(--panel-rgb), 0.6);
+}
+
+/* The original two-pane finder, unchanged in behaviour — just no longer
+   the page's only row. */
+.lp-columns {
+  flex: 1;
+  min-height: 420px;
+  min-width: 0;
   display: flex;
 }
 

@@ -103,6 +103,40 @@ test.describe('cross-feature navigation', () => {
     expect(heading, `should land on section ${cited}`).toMatch(new RegExp(`^${cited}\\.`));
   });
 
+  test('the tracks panel gets the full page width, not the sidebar column', async ({ page }) => {
+    // Regression: the panel was originally mounted inside .lp-left, a fixed
+    // 320px column, which stacked all six cards vertically and pushed the
+    // formula selector they are meant to introduce below the fold. Nothing
+    // else caught it — the cards rendered, were clickable, and passed axe;
+    // they were just in the wrong container. So assert the LAYOUT, not just
+    // the presence.
+    await openApp(page);
+    await goToStatsTab(page, 'Learning Path');
+
+    const viewport = page.viewportSize().width;
+    const band = await page.locator(VISIBLE + '.tracks').boundingBox();
+    expect(band.width, 'tracks should span most of the page').toBeGreaterThan(viewport * 0.7);
+
+    // The cards must sit side by side. The grid is auto-fit/minmax, so the
+    // exact count per row is a function of viewport width and wrapping to a
+    // second row is correct — what is NOT correct is one card per row, which
+    // is the failure mode being guarded against.
+    const cards = page.locator(VISIBLE + '.track-card');
+    await expect(cards).toHaveCount(6);
+    const boxes = await cards.evaluateAll((els) =>
+      els.map((el) => el.getBoundingClientRect()).map((r) => ({ x: r.x, y: r.y })),
+    );
+    const rows = new Set(boxes.map((b) => Math.round(b.y)));
+    expect(rows.size, 'cards must share rows, not stack one per row').toBeLessThan(boxes.length);
+    expect(boxes[0].y, 'first two cards should be side by side').toBeCloseTo(boxes[1].y, 0);
+    expect(boxes[1].x, 'second card should sit right of the first').toBeGreaterThan(boxes[0].x);
+
+    // And the selector the tracks introduce is still reachable without
+    // scrolling past them.
+    const selector = await page.locator(VISIBLE + '.lp-selector').boundingBox();
+    expect(selector.y, 'formula selector should be above the fold').toBeLessThan(page.viewportSize().height);
+  });
+
   test('a track item opens the thing it points at', async ({ page }) => {
     await openApp(page);
     await goToStatsTab(page, 'Learning Path');
