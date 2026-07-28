@@ -6,6 +6,7 @@ import { useLearningPathStore } from '../../store/useLearningPathStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import { useToastStore } from '../../store/useToastStore.js';
 import MiniPrereqGraph from './MiniPrereqGraph.jsx';
+import TracksPanel from './TracksPanel.jsx';
 import './LearningPathPage.css';
 
 const STATUS_LABEL = { ns: 'Not started', ip: 'In progress', ma: 'Mastered' };
@@ -80,6 +81,12 @@ export default function LearningPathPage() {
   return (
     <div className="lp-page">
       <div className="lp-left">
+        {/* Tracks answer "where do I start for my goal?"; the selector
+            below answers "what comes before this formula?". Tracks lead
+            because a learner arriving with a goal has no target formula
+            in mind yet. */}
+        <TracksPanel />
+
         <div className="lp-selector">
           <label htmlFor="lp-target-select">Choose your target formula</label>
           <select id="lp-target-select" value={targetId} onChange={(e) => handleTargetChange(e.target.value)}>
