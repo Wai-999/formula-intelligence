@@ -118,46 +118,6 @@ test.describe('cross-feature navigation', () => {
   });
 });
 
-test.describe('python execution', () => {
-  // Slow by nature: the first run downloads a ~10MB WebAssembly runtime.
-  test.setTimeout(180_000);
-
-  test('a Hub sample runs and prints real output', async ({ page }) => {
-    await openApp(page);
-    await goToMLTab(page, 'Python');
-
-    await page.locator(VISIBLE + '.pyentry-header', { hasText: 'Sample Mean' }).first().click();
-    await page.locator(VISIBLE + '.pycode-run').click();
-    await expect(page.locator(VISIBLE + '.pycode-out-head')).toBeVisible({ timeout: 150_000 });
-    await expect(page.locator(VISIBLE + '.pycode-out-head')).toContainText(/output/i);
-    await expect(page.locator(VISIBLE + '.pycode-out-body')).not.toBeEmpty();
-  });
-
-  test('a sample that cannot run says why instead of failing', async ({ page }) => {
-    await openApp(page);
-    await goToMLTab(page, 'Python');
-    await page.locator(VISIBLE + '.pyhub-search input').fill('LSTM');
-    await page.waitForTimeout(400);
-    await page.locator(VISIBLE + '.pyentry-header').first().click();
-
-    await expect(page.locator(VISIBLE + '.pycode-run')).toHaveCount(0);
-    await expect(page.locator(VISIBLE + '.pycode-why')).toContainText('PyTorch');
-  });
-
-  test('the Lab runs edited code and keeps it across a reload', async ({ page }) => {
-    await openApp(page);
-    await goToMLTab(page, 'Lab');
-
-    await page.locator(VISIBLE + '.pylab-editor').fill('print("journey test", 6 * 7)');
-    await page.locator(VISIBLE + '.pylab-run').click();
-    await expect(page.locator(VISIBLE + '.pylab-out-body')).toContainText('journey test 42', { timeout: 150_000 });
-
-    await page.reload({ waitUntil: 'networkidle' });
-    await goToMLTab(page, 'Lab');
-    await expect(page.locator(VISIBLE + '.pylab-editor')).toHaveValue(/journey test/);
-  });
-});
-
 test.describe('resilience', () => {
   test('every tab in both modes renders without tripping a boundary', async ({ page }) => {
     const consoleErrors = [];
@@ -195,3 +155,54 @@ test.describe('resilience', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   });
 });
+
+// Tagged @heavy and run as a SEPARATE process (`npm run e2e:python`), not
+// merely ordered last. Loading a WebAssembly Python runtime dwarfs
+// everything else here, and sharing a process with the other journeys was
+// observed to starve them: the 20-tab resilience walk takes 11s on its own
+// and stalls when it follows this block. A separate process gets a fresh
+// browser and its own memory budget, so neither can degrade the other.
+test.describe('python execution', () => {
+  // Loading Pyodide is a ~10MB WebAssembly download and by far the most
+  // expensive thing this suite does. These assertions share ONE page so the
+  // runtime is fetched once — which is also the real user path: run a
+  // sample, then take it into the Lab and change it. Three separate tests
+  // paid that cost three times and made the suite fragile on constrained
+  // machines for no extra coverage.
+  test.setTimeout(180_000);
+
+  test('@heavy a sample runs, an unrunnable one explains itself, and the Lab keeps edits', async ({ page }) => {
+    await openApp(page);
+    await goToMLTab(page, 'Python');
+
+    // 1. A sample that can run, does — with real captured stdout.
+    await page.locator(VISIBLE + '.pyentry-header', { hasText: 'Sample Mean' }).first().click();
+    await page.locator(VISIBLE + '.pycode-run').click();
+    const outHead = page.locator(VISIBLE + '.pycode-out-head');
+    await expect(outHead).toBeVisible({ timeout: 150_000 });
+    await expect(outHead).toContainText(/output/i);
+    await expect(page.locator(VISIBLE + '.pycode-out-body')).not.toBeEmpty();
+
+    // 2. One that cannot run offers no button and says why — an honest
+    //    refusal beats a Run that always fails.
+    await page.locator(VISIBLE + '.pyhub-search input').fill('LSTM');
+    await page.waitForTimeout(400);
+    await page.locator(VISIBLE + '.pyentry-header').first().click();
+    await expect(page.locator(VISIBLE + '.pycode-run')).toHaveCount(0);
+    await expect(page.locator(VISIBLE + '.pycode-why')).toContainText('PyTorch');
+
+    // 3. The Lab runs code the user wrote and keeps it across a reload.
+    //    The runtime is already warm here, which is the point.
+    await goToMLTab(page, 'Lab');
+    await page.locator(VISIBLE + '.pylab-editor').fill('print("journey test", 6 * 7)');
+    await page.locator(VISIBLE + '.pylab-run').click();
+    await expect(page.locator(VISIBLE + '.pylab-out-body'))
+      .toContainText('journey test 42', { timeout: 150_000 });
+
+    await page.reload({ waitUntil: 'networkidle' });
+    await goToMLTab(page, 'Lab');
+    await expect(page.locator(VISIBLE + '.pylab-editor')).toHaveValue(/journey test/);
+  });
+});
+
+

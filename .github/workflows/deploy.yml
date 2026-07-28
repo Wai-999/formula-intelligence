@@ -43,6 +43,9 @@ jobs:
       # each piece; these check that the pieces still agree with each other
       # once wired together — the failure mode nothing else can see.
       - run: npm run e2e
+      # Separate process: the Pyodide journey loads a WebAssembly runtime,
+      # and sharing a browser lifecycle with the other journeys starves them.
+      - run: npm run e2e:python
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
