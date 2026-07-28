@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "validate:content": "node scripts/validate-content.mjs",
     "a11y": "node scripts/a11y-audit.mjs",
-    "a11y:light": "A11Y_THEME=light node scripts/a11y-audit.mjs"
+    "a11y:light": "A11Y_THEME=light node scripts/a11y-audit.mjs",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "d3": "^7.9.0",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.62.0",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.17",

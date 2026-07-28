@@ -39,6 +39,10 @@ jobs:
       # to anyone who only ever tests in dark.
       - run: npm run a11y
       - run: npm run a11y:light
+      # Cross-feature journeys against the real build. The unit suite checks
+      # each piece; these check that the pieces still agree with each other
+      # once wired together — the failure mode nothing else can see.
+      - run: npm run e2e
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
