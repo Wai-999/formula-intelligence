@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { runPython } from '../../../lib/pyodideRunner.js';
+import { runnability, RUNTIME_NOTE } from '../../../data/python/runnability.js';
 import './PyCodeBlock.css';
 
 // Lightweight Python syntax highlighter. A full grammar (or a heavyweight
@@ -51,12 +53,25 @@ function tokenizeLine(line) {
 
 const COLLAPSED_LINES = 14;
 
-export default function PyCodeBlock({ code }) {
+export default function PyCodeBlock({ code, entryId }) {
   const lines = useMemo(() => code.replace(/\n+$/, '').split('\n').map(tokenizeLine), [code]);
   const collapsible = lines.length > COLLAPSED_LINES + 4;
   const [expanded, setExpanded] = useState(!collapsible);
   const [copied, setCopied] = useState(false);
+  const [run, setRun] = useState(null);       // { state, output, error, ms }
   const visible = expanded ? lines : lines.slice(0, COLLAPSED_LINES);
+
+  // Whether this specific sample can execute in a browser was established by
+  // actually running all 126 in Pyodide, not guessed from its imports.
+  const can = runnability(entryId);
+
+  async function execute() {
+    setRun({ state: 'running', progress: 'Starting…' });
+    const result = await runPython(code, {
+      onProgress: (progress) => setRun((r) => (r?.state === 'running' ? { ...r, progress } : r)),
+    });
+    setRun({ state: 'done', ...result });
+  }
 
   function copy() {
     const write = navigator.clipboard?.writeText
@@ -76,7 +91,21 @@ export default function PyCodeBlock({ code }) {
       <div className="pycode-bar">
         <span className="pycode-dots" aria-hidden="true"><i /><i /><i /></span>
         <span className="pycode-lang"><i className="ti ti-brand-python" aria-hidden="true" /> Python</span>
-        <span className="pycode-runhint"><i className="ti ti-player-play" aria-hidden="true" /> ready to run</span>
+        <span className="pycode-runhint">{can.runnable ? 'runs in your browser' : 'read-only'}</span>
+        {can.runnable ? (
+          <button
+            type="button" className="pycode-run" onClick={execute}
+            disabled={run?.state === 'running'}
+            title={RUNTIME_NOTE}
+          >
+            <i className={`ti ${run?.state === 'running' ? 'ti-loader-2 pycode-spin' : 'ti-player-play'}`} aria-hidden="true" />
+            {run?.state === 'running' ? 'Running…' : 'Run'}
+          </button>
+        ) : (
+          <span className="pycode-cantrun" title={can.why}>
+            <i className="ti ti-player-play-off" aria-hidden="true" /> Not runnable here
+          </span>
+        )}
         <button type="button" className="pycode-copy" onClick={copy}>
           <i className={`ti ${copied ? 'ti-check' : 'ti-copy'}`} aria-hidden="true" />
           {copied ? 'Copied' : 'Copy'}
@@ -102,6 +131,36 @@ export default function PyCodeBlock({ code }) {
           <i className={`ti ${expanded ? 'ti-chevron-up' : 'ti-chevron-down'}`} aria-hidden="true" />
           {expanded ? 'Collapse code' : `Show all ${lines.length} lines`}
         </button>
+      )}
+
+      {!can.runnable && (
+        <p className="pycode-why">
+          <i className="ti ti-info-circle" aria-hidden="true" />
+          Can’t run in the browser: {can.why}. Copy it and run locally.
+        </p>
+      )}
+
+      {run?.state === 'running' && (
+        <div className="pycode-out pycode-out-running">
+          <i className="ti ti-loader-2 pycode-spin" aria-hidden="true" /> {run.progress}
+        </div>
+      )}
+
+      {run?.state === 'done' && (
+        <div className={`pycode-out ${run.ok ? '' : 'pycode-out-error'}`}>
+          <div className="pycode-out-head">
+            <span>
+              <i className={`ti ${run.ok ? 'ti-check' : 'ti-alert-triangle'}`} aria-hidden="true" />
+              {run.ok ? `Output (${run.ms} ms)` : 'Error'}
+            </span>
+            <button type="button" className="pycode-out-close" onClick={() => setRun(null)} aria-label="Clear output">
+              <i className="ti ti-x" aria-hidden="true" />
+            </button>
+          </div>
+          <pre className="pycode-out-body">
+            {run.ok ? (run.output.trim() || '(the sample produced no printed output)') : run.error}
+          </pre>
+        </div>
       )}
     </div>
   );

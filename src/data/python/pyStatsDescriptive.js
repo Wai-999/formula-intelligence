@@ -605,8 +605,11 @@ s2 = (n * sum_fx2 - sum_fx ** 2) / (n * (n - 1))
 print(f"grouped mean = {sum_fx/n:.2f} min")
 print(f"grouped s    = {np.sqrt(s2):.2f} min  (n = {n})")
 
-# Equivalent modern one-liner: expand midpoints by frequency
-expanded = np.repeat(tbl["Xm"].values, tbl["f"].values)
+# Equivalent modern one-liner: expand midpoints by frequency.
+# .astype(int) keeps this portable — np.repeat requires a platform-native
+# integer count, and a pandas int64 column raises a cast error on 32-bit
+# targets (Windows, and WebAssembly runtimes like Pyodide).
+expanded = np.repeat(tbl["Xm"].values, tbl["f"].values.astype(int))
 print(f"check via repeat: s = {expanded.std(ddof=1):.2f}")`,
     scenario: {
       title: 'Commute-time spread from a survey table',

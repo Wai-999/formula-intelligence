@@ -98,7 +98,7 @@ export default function PyEntry({ entry, open, onToggle, innerRef }) {
           {entry.code && (
             <section className="pyentry-sec">
               <SectionHead icon="ti-code" tone="code">Python Implementation</SectionHead>
-              <PyCodeBlock code={entry.code} />
+              <PyCodeBlock code={entry.code} entryId={entry.id} />
             </section>
           )}
 
