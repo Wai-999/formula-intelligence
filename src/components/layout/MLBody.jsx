@@ -3,6 +3,7 @@ import MLIconRail from './MLIconRail.jsx';
 import ErrorBoundary from '../error/ErrorBoundary.jsx';
 import { useUIStore } from '../../store/useUIStore.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
+import { useVisitedTabs } from '../../hooks/useVisitedTabs.js';
 import LevelLangToggle from '../ml/LevelLangToggle.jsx';
 import UnderstandingTrackerBadge from '../ml/learning/UnderstandingTrackerBadge.jsx';
 import MixedReviewPanel from '../ml/learning/MixedReviewPanel.jsx';
@@ -45,6 +46,7 @@ function MLLoading() {
 export default function MLBody() {
   const mlActiveTab = useUIStore((s) => s.mlActiveTab);
   const tabMeta = ML_TABS.find((t) => t.id === mlActiveTab);
+  const visited = useVisitedTabs(mlActiveTab);
   const tabTitle = useT(tabMeta?.title);
 
   return (
@@ -60,7 +62,9 @@ export default function MLBody() {
           </div>
         </div>
         <div className="ml-main-content">
-          {Object.entries(FEATURES).map(([id, Feature]) => (
+          {Object.entries(FEATURES)
+            .filter(([id]) => visited.has(id))
+            .map(([id, Feature]) => (
             <div key={id} className="app-tab-keepalive" style={{ display: mlActiveTab === id ? 'flex' : 'none' }}>
               {/* Boundary OUTSIDE Suspense so it also catches lazy-chunk
                   load failures (a failed dynamic import throws on render),
