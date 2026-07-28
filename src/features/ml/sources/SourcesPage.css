@@ -30,7 +30,7 @@
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.src-doc-btn:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-primary); }
+.src-doc-btn:hover { background: rgba(var(--overlay-rgb), 0.04); color: var(--text-primary); }
 
 .src-doc-btn.active {
   background: rgba(139, 92, 246, 0.1);
@@ -66,7 +66,7 @@
 
 .src-search {
   display: flex; align-items: center; gap: 7px; padding: 6px 10px;
-  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border);
+  background: rgba(var(--overlay-rgb), 0.05); border: 1px solid var(--border);
   border-radius: var(--radius-md); min-width: 210px;
 }
 .src-search .ti { color: var(--text-faint); }
@@ -126,7 +126,7 @@
   text-align: left; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--text-faint); padding: 5px 10px 5px 0; border-bottom: 1px solid var(--border);
 }
-.src-prov-table td { padding: 7px 10px 7px 0; vertical-align: top; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-primary); }
+.src-prov-table td { padding: 7px 10px 7px 0; vertical-align: top; border-bottom: 1px solid rgba(var(--overlay-rgb), 0.05); color: var(--text-primary); }
 .src-prov-val { font-family: var(--font-mono); color: var(--warning); white-space: nowrap; }
 .src-prov-note { display: block; font-size: 11px; color: var(--text-faint); margin-top: 2px; line-height: 1.5; }
 .src-prov-footnote { margin: 10px 0 0; font-size: 11.5px; color: var(--text-faint); font-style: italic; }

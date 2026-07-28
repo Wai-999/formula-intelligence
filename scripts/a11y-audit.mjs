@@ -54,7 +54,15 @@ async function main() {
   const browser = await chromium.launch();
   const context = await browser.newContext({ viewport: { width: 1400, height: 900 } });
   const page = await context.newPage();
-  await page.goto(BASE, { waitUntil: 'networkidle' });
+
+  // Set the theme the way the app itself persists it, then load. Poking
+  // [data-theme] directly would switch the CSS but leave the store — and so
+  // every JS-driven colour, like the chapter swatches — on the other theme,
+  // auditing a state no real user can reach.
+  const theme = process.env.A11Y_THEME || 'dark';
+  await page.goto(BASE, { waitUntil: 'domcontentloaded' });
+  await page.evaluate((t) => localStorage.setItem('fi_theme_v1', JSON.stringify(t)), theme);
+  await page.reload({ waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
 
   const scan = async (label) => record(label, await new AxeBuilder({ page }).withTags(TAGS).analyze());
@@ -83,10 +91,10 @@ async function main() {
   const found = [...violations.values()].sort((a, b) => b.nodes - a.nodes);
   const pages = STATS_TABS.length + ML_TABS.length;
   if (found.length === 0) {
-    console.log(`\x1b[32m✓ No WCAG A/AA violations across ${pages} pages.\x1b[0m`);
+    console.log(`\x1b[32m✓ No WCAG A/AA violations across ${pages} pages (${theme} theme).\x1b[0m`);
     return 0;
   }
-  console.log(`\x1b[31m✗ ${found.length} violation type(s):\x1b[0m\n`);
+  console.log(`\x1b[31m✗ ${found.length} violation type(s) in the ${theme} theme:\x1b[0m\n`);
   for (const v of found) {
     console.log(`  [${v.impact}] ${v.id} — ${v.nodes} element(s) on ${[...v.pages].join(', ')}`);
     console.log(`      ${v.help}`);

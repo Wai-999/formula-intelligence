@@ -442,8 +442,9 @@ export default function MLRelationshipMap() {
       .attr('class', 'mlgnode-label')
       .attr('dy', LABEL_DY_BELOW)
       .attr('text-anchor', 'middle')
-      .text((d) => d.name)
-      .attr('fill', 'rgba(244,247,251,0.72)');
+      .text((d) => d.name);
+      // Fill comes from CSS (.mlgnode-label) so it follows the theme —
+      // a literal here was invisible in light mode.
 
     // Truncation safety net — full name always remains available via the
     // hover tooltip above, unaffected by this. Cache each label's final

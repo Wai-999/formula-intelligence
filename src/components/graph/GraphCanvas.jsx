@@ -293,8 +293,9 @@ export default function GraphCanvas() {
       .attr('class', 'gnode-label')
       .attr('dy', 26)
       .attr('text-anchor', 'middle')
-      .text((d) => d.name)
-      .attr('fill', 'rgba(244,247,251,0.72)');
+      .text((d) => d.name);
+      // Fill comes from CSS (.gnode-label) so it follows the theme; D3 owns
+      // only the selected/unselected emphasis, expressed as opacity.
 
     // Background deselect is read from zoomBehavior's OWN 'start'/'end'
     // gesture (same reasoning as the node click fix above: d3-zoom's
@@ -396,7 +397,7 @@ export default function GraphCanvas() {
 
       g.attr('opacity', dimmed ? 0.13 : 1);
       g.classed('gnode-selected', isSelected);
-      g.select('text.gnode-label').attr('fill', isSelected ? '#f4f7fb' : 'rgba(244,247,251,0.72)');
+      g.select('text.gnode-label').attr('fill-opacity', isSelected ? 1 : 0.72);
     });
 
     if (linkSel) {

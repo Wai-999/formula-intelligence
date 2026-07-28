@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--overlay-rgb), 0.05);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 7px 10px;
@@ -83,7 +83,7 @@
   transition: color 0.12s, background 0.12s;
 }
 
-.pyhub-nav-link:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.04); }
+.pyhub-nav-link:hover { color: var(--text-primary); background: rgba(var(--overlay-rgb), 0.04); }
 
 .pyhub-nav-link.active {
   color: var(--primary-text);
@@ -176,7 +176,7 @@
   color: var(--text-primary);
 }
 
-.pyentry-header:hover { background: rgba(255, 255, 255, 0.03); }
+.pyentry-header:hover { background: rgba(var(--overlay-rgb), 0.03); }
 
 .pyentry-caret { color: var(--text-faint); font-size: 15px; flex: 0 0 auto; }
 
@@ -228,7 +228,7 @@
 
 .pyentry-sechead-concept { color: var(--accent); }
 .pyentry-sechead-think { color: var(--primary-text); }
-.pyentry-sechead-code { color: #82aaff; }
+.pyentry-sechead-code { color: var(--primary-text); }
 .pyentry-sechead-scenario { color: var(--warning); }
 .pyentry-sechead-warn { color: var(--danger); }
 .pyentry-sechead-tip { color: var(--success); }
@@ -274,7 +274,7 @@
 .pyentry-think-card {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(var(--overlay-rgb), 0.025);
   padding: 10px 12px;
 }
 

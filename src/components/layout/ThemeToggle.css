@@ -1,0 +1,22 @@
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.2 target-size minimum. */
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-glass);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.theme-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: rgba(var(--overlay-rgb), 0.09);
+}
+
+.theme-toggle .ti { font-size: 16px; }

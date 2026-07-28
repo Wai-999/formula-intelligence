@@ -7,7 +7,7 @@
 .ll-toggle {
   display: flex;
   padding: 2px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--overlay-rgb), 0.04);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   gap: 2px;

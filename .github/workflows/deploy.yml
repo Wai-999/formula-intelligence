@@ -35,7 +35,10 @@ jobs:
       # on computed layout, which jsdom cannot provide), so this runs against
       # the built preview rather than in the unit-test pass.
       - run: npx playwright install --with-deps chromium
+      # Both themes: a light palette that fails contrast would be invisible
+      # to anyone who only ever tests in dark.
       - run: npm run a11y
+      - run: npm run a11y:light
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -17,7 +17,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   paint-order: stroke fill;
-  stroke: #0b0b16;
+  stroke: var(--surface-deep);
   stroke-width: 3px;
   stroke-linejoin: round;
 }
@@ -41,11 +41,13 @@
 .mlgnode-label {
   font-size: 9px;
   pointer-events: none;
+  fill: var(--text-primary);
+  fill-opacity: 0.82;
   /* Halo behind the fill so a label stays legible when an unrelated edge
      crosses directly behind it — with 32 nodes and many long-distance
      competes/combines links, that's routine, not an edge case. */
   paint-order: stroke fill;
-  stroke: #0b0b16;
+  stroke: var(--surface-deep);
   stroke-width: 3px;
   stroke-linejoin: round;
 }
@@ -61,7 +63,7 @@
   position: absolute;
   display: none;
   pointer-events: none;
-  background: rgba(13, 14, 26, 0.96);
+  background: rgba(var(--panel-rgb), 0.96);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 6px 9px;

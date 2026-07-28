@@ -13,9 +13,9 @@
   max-width: 320px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid #2a2a4a;
+  border: 1px solid var(--border-solid);
   background: rgba(26, 26, 58, 0.88);
-  color: #e0e0f0;
+  color: var(--text-primary);
   font-size: 11px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   animation: toastIn 0.22s ease both;

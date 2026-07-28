@@ -3,7 +3,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background: #0f0f1a;
+  background: var(--surface);
   overflow-y: auto;
 }
 
@@ -14,7 +14,7 @@
   padding: 10px 20px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  background: rgba(12, 13, 24, 0.85);
+  background: rgba(var(--panel-rgb), 0.85);
   flex-wrap: wrap;
 }
 
@@ -28,14 +28,14 @@
 }
 
 .err-stat-sep {
-  color: #2a2a4a;
+  color: var(--border-solid);
   margin: 0 2px;
 }
 
 .err-filter-sel {
   min-height: 30px;
   padding: 0 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--overlay-rgb), 0.05);
   border: 1px solid var(--border);
   color: var(--text-primary);
   border-radius: 6px;
@@ -49,7 +49,7 @@
   border-radius: 6px;
   border: 1px solid rgba(251, 113, 133, 0.3);
   background: rgba(251, 113, 133, 0.07);
-  color: #f87171;
+  color: var(--danger);
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
@@ -85,8 +85,8 @@
 }
 
 .err-pattern-box {
-  background: #12122a;
-  border: 1px solid #2a2a4a;
+  background: var(--surface);
+  border: 1px solid var(--border-solid);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 16px;
@@ -137,7 +137,7 @@
 .err-bar-track {
   flex: 1;
   height: 7px;
-  background: #1e1e3a;
+  background: var(--surface-2);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -165,14 +165,14 @@
 
 .err-advice-item {
   font-size: 11px;
-  color: #b0b0c8;
+  color: var(--text-muted);
   line-height: 1.65;
   padding: 1px 0;
 }
 
 .err-card {
-  background: #12122a;
-  border: 1px solid #3a3a5a;
+  background: var(--surface);
+  border: 1px solid var(--border-solid-2);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 10px;
@@ -208,7 +208,7 @@
 
 .err-date-tag {
   font-size: 10px;
-  color: #5a5a7a;
+  color: var(--text-faint);
   margin-left: auto;
 }
 
@@ -218,7 +218,7 @@
   line-height: 1.5;
   margin-bottom: 8px;
   font-style: italic;
-  border-left: 2px solid #2a2a4a;
+  border-left: 2px solid var(--border-solid);
   padding-left: 8px;
 }
 
@@ -232,7 +232,7 @@
 }
 
 .err-my-ans {
-  color: #f87171;
+  color: var(--danger);
 }
 
 .err-my-ans b,
@@ -242,14 +242,14 @@
 }
 
 .err-ok-ans {
-  color: #34d399;
+  color: var(--success);
 }
 
 .err-type-lbl {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #5a5a7a;
+  color: var(--text-faint);
   font-weight: 700;
   margin-bottom: 6px;
 }
@@ -273,8 +273,8 @@
   gap: 6px;
   padding: 6px 8px;
   border-radius: 7px;
-  border: 1px solid #2a2a4a;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-solid);
+  background: rgba(var(--overlay-rgb), 0.02);
   cursor: pointer;
   transition: background 0.18s, border-color 0.18s;
   font-size: 11px;
@@ -285,12 +285,12 @@
 }
 
 .err-type-opt:hover {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.06);
 }
 
 .err-type-opt.selected {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.1);
   color: var(--text-primary);
 }
@@ -299,25 +299,25 @@
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  border: 2px solid #3a3a5a;
+  border: 2px solid var(--border-solid-2);
   flex-shrink: 0;
   margin-top: 1px;
   transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
 .err-type-opt.selected .err-radio {
-  border-color: #a78bfa;
-  background: #a78bfa;
+  border-color: var(--primary-text);
+  background: var(--primary-text);
   box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.25);
 }
 
 .err-note-inp {
   width: 100%;
   padding: 6px 9px;
-  background: #1a1a3a;
-  border: 1px solid #2a2a4a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid);
   border-radius: 6px;
-  color: #c0c0d8;
+  color: var(--text-muted);
   font-size: 11px;
   outline: none;
   margin-bottom: 10px;
@@ -326,7 +326,7 @@
 }
 
 .err-note-inp:focus {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
 }
 
 .err-actions {
@@ -340,7 +340,7 @@
   border-radius: 7px;
   border: 1px solid rgba(52, 211, 153, 0.3);
   background: rgba(52, 211, 153, 0.07);
-  color: #34d399;
+  color: var(--success);
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
@@ -353,7 +353,7 @@
 
 .err-resolve-btn.done {
   background: rgba(52, 211, 153, 0.16);
-  border-color: #34d399;
+  border-color: var(--success);
   cursor: default;
 }
 
@@ -362,7 +362,7 @@
   border-radius: 7px;
   border: 1px solid rgba(139, 92, 246, 0.3);
   background: rgba(139, 92, 246, 0.07);
-  color: #a78bfa;
+  color: var(--primary-text);
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;

@@ -7,7 +7,7 @@
   justify-content: flex-start;
   padding: 20px;
   overflow-y: auto;
-  background: #0f0f1a;
+  background: var(--surface);
 }
 
 .fc-controls {
@@ -20,9 +20,9 @@
 }
 
 .fc-controls select {
-  background: #1e1e3a;
-  border: 1px solid #3a3a5a;
-  color: #e0e0f0;
+  background: var(--surface-2);
+  border: 1px solid var(--border-solid-2);
+  color: var(--text-primary);
   padding: 5px 10px;
   border-radius: 6px;
   font-size: 12px;
@@ -44,8 +44,8 @@
 }
 
 .big-btn.gray {
-  background: #2a2a4a;
-  color: #a0a0c0;
+  background: var(--border-solid);
+  color: var(--text-muted);
 }
 
 .big-btn:hover {
@@ -66,7 +66,7 @@
 }
 
 .fc-ring-bg {
-  stroke: rgba(255, 255, 255, 0.1);
+  stroke: rgba(var(--overlay-rgb), 0.1);
 }
 
 .fc-ring-fg {
@@ -118,8 +118,8 @@
 }
 
 .fc-front {
-  background: linear-gradient(135deg, #1a1a3a, #1e1e4a);
-  border: 1px solid #3a3a6a;
+  background: linear-gradient(135deg, var(--surface-raised), var(--surface-raised));
+  border: 1px solid var(--border-solid-2);
 }
 
 .fc-back {
@@ -139,7 +139,7 @@
 .fc-name {
   font-size: 22px;
   font-weight: 700;
-  color: #e0e0ff;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
@@ -152,7 +152,7 @@
 .fc-formula {
   font-size: 16px;
   font-family: var(--font-mono);
-  color: #fbbf24;
+  color: var(--warning);
   line-height: 1.5;
   margin-bottom: 10px;
 }
@@ -182,7 +182,7 @@
 
 .rate-hard {
   background: #7f1d1d;
-  color: #fca5a5;
+  color: var(--danger);
 }
 
 .rate-hard:hover {
@@ -200,7 +200,7 @@
 
 .rate-easy {
   background: #064e3b;
-  color: #6ee7b7;
+  color: var(--success);
 }
 
 .rate-easy:hover {
@@ -216,7 +216,7 @@
 
 .fc-queue-info {
   font-size: 11px;
-  color: #a78bfa;
+  color: var(--primary-text);
   margin-top: 6px;
   text-align: center;
 }

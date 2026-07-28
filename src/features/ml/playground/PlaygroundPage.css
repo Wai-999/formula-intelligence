@@ -20,7 +20,7 @@
 
 .pg-model-btn {
   padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--overlay-rgb), 0.03);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-muted);
@@ -74,7 +74,7 @@
 }
 
 .pg-chart-block {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(var(--overlay-rgb), 0.02);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 10px;
@@ -88,7 +88,7 @@
 
 .sf-truth-line {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.28);
+  stroke: rgba(var(--overlay-rgb), 0.28);
   stroke-width: 1.5;
   stroke-dasharray: 3, 3;
 }
@@ -100,7 +100,7 @@
 }
 
 .sf-axis-zero {
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: rgba(var(--overlay-rgb), 0.08);
   stroke-width: 1;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .ec-gridline {
-  stroke: rgba(255, 255, 255, 0.05);
+  stroke: rgba(var(--overlay-rgb), 0.05);
   stroke-width: 1;
 }
 
@@ -190,7 +190,7 @@
   display: inline-block;
 }
 
-.pg-line-truth { background: rgba(255, 255, 255, 0.28); }
+.pg-line-truth { background: rgba(var(--overlay-rgb), 0.28); }
 .pg-line-train { background: var(--primary); }
 .pg-line-val { background: var(--warning); }
 .pg-line-best { background: rgba(52, 211, 153, 0.6); }

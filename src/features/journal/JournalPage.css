@@ -8,7 +8,7 @@
 .jnl-left {
   width: 300px;
   flex-shrink: 0;
-  background: rgba(12, 13, 24, 0.88);
+  background: rgba(var(--panel-rgb), 0.88);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -26,7 +26,7 @@
   min-width: 0;
   overflow-y: auto;
   padding: 16px 20px;
-  background: #0f0f1a;
+  background: var(--surface);
 }
 
 .jnl-streak-bar {
@@ -40,7 +40,7 @@
 }
 
 .jnl-streak-bar b {
-  color: #fbbf24;
+  color: var(--warning);
 }
 
 .jnl-date-hdr {
@@ -70,10 +70,10 @@
 .jnl-ta {
   display: block;
   width: 100%;
-  background: #1a1a3a;
-  border: 1px solid #3a3a5a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 7px;
-  color: #e0e0f0;
+  color: var(--text-primary);
   font-size: 12px;
   padding: 8px 10px;
   resize: vertical;
@@ -86,7 +86,7 @@
 }
 
 .jnl-ta:focus {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
 }
 
 .jnl-slider-row {
@@ -119,7 +119,7 @@
 .jnl-slider-row input[type='range'] {
   width: 100%;
   cursor: pointer;
-  accent-color: #a78bfa;
+  accent-color: var(--primary-text);
   display: block;
   margin-top: 6px;
 }
@@ -149,7 +149,7 @@
 
 .jnl-save-confirm {
   font-size: 11px;
-  color: #34d399;
+  color: var(--success);
   font-weight: 600;
   text-align: center;
   min-height: 16px;
@@ -176,7 +176,7 @@
 }
 
 .jnl-entry-row {
-  border: 1px solid #2a2a4a;
+  border: 1px solid var(--border-solid);
   border-radius: 8px;
   margin-bottom: 7px;
   overflow: hidden;
@@ -188,12 +188,12 @@
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(var(--overlay-rgb), 0.025);
   user-select: none;
 }
 
 .jnl-entry-summary:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--overlay-rgb), 0.05);
 }
 
 .jnl-entry-date {
@@ -231,7 +231,7 @@
   display: none;
   padding: 10px 12px;
   background: #0d0d1a;
-  border-top: 1px solid #2a2a4a;
+  border-top: 1px solid var(--border-solid);
 }
 
 .jnl-entry-body.open {
@@ -246,7 +246,7 @@
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #5a5a7a;
+  color: var(--text-faint);
   font-weight: 700;
   margin-bottom: 3px;
 }
@@ -258,7 +258,7 @@
 }
 
 .jnl-entry-formulas {
-  color: #a78bfa;
+  color: var(--primary-text);
 }
 
 #jnl-map-area h2 {
@@ -307,7 +307,7 @@
   width: 48px;
   height: 32px;
   border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(var(--overlay-rgb), 0.07);
   cursor: pointer;
   position: relative;
   display: flex;
@@ -326,7 +326,7 @@
 
 .jnl-cell-nm {
   font-size: 8.5px;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--overlay-rgb), 0.75);
   font-weight: 600;
   text-align: center;
   line-height: 1;
@@ -348,12 +348,12 @@
 .jnl-tip {
   position: fixed;
   z-index: 9900;
-  background: #1a1a3a;
-  border: 1px solid #3a3a6a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 7px;
   padding: 7px 10px;
   font-size: 11px;
-  color: #e0e0f0;
+  color: var(--text-primary);
   pointer-events: none;
   display: none;
   max-width: 200px;
@@ -382,7 +382,7 @@
 }
 
 .jnl-mastery-label b {
-  color: #a78bfa;
+  color: var(--primary-text);
   font-size: 14px;
 }
 
@@ -390,14 +390,14 @@
   flex: 1;
   min-width: 80px;
   height: 8px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(var(--overlay-rgb), 0.07);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .jnl-master-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #a78bfa, #22d3ee);
+  background: linear-gradient(90deg, var(--primary-text), var(--accent));
   border-radius: 4px;
   transition: width 0.5s ease;
 }
@@ -416,7 +416,7 @@
   border-radius: 6px;
   border: 1px solid rgba(139, 92, 246, 0.3);
   background: rgba(139, 92, 246, 0.07);
-  color: #a78bfa;
+  color: var(--primary-text);
   font-size: 10px;
   cursor: pointer;
   transition: background 0.2s;
@@ -428,10 +428,10 @@
 }
 
 .jnl-target-row input[type='date'] {
-  background: #1a1a3a;
-  border: 1px solid #3a3a5a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 6px;
-  color: #e0e0f0;
+  color: var(--text-primary);
   font-size: 11px;
   padding: 3px 8px;
   outline: none;
@@ -439,12 +439,12 @@
 }
 
 .jnl-target-row input[type='date']:focus {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
 }
 
 #jnl-urgency-msg {
   font-size: 11px;
-  color: #f87171;
+  color: var(--danger);
   font-weight: 600;
   margin-top: 8px;
   padding: 7px 10px;

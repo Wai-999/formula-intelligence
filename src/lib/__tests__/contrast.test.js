@@ -26,15 +26,22 @@ export const contrast = (a, b) => {
 const BACKGROUNDS = ['#10111f', '#151628', '#191923', '#1a1a3a', '#0f0f1a', '#0b0c18'];
 const AA_NORMAL = 4.5;
 
-function tokenFromCss(name) {
+function tokenFromCss(name, theme = 'dark') {
   // Read the real stylesheet: the point is to test what ships, not a
   // duplicated copy of the palette that could drift from it. (import.meta.url
   // resolves to an http:// URL under the jsdom environment, so this goes via
   // the project root instead.)
   const css = readFileSync(resolve(process.cwd(), 'src/index.css'), 'utf8');
-  const m = new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`).exec(css);
+  // Each theme is one block; scope the search to the right one or the dark
+  // value is found first and the light palette is never actually tested.
+  const block = theme === 'light'
+    ? css.slice(css.indexOf("[data-theme='light']"))
+    : css.slice(0, css.indexOf("[data-theme='light']"));
+  const m = new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`).exec(block);
   return m?.[1] || null;
 }
+
+const LIGHT_BACKGROUNDS = ['#f7f8fb', '#ffffff', '#eef1f6', '#f2f4f9', '#f8f9fc'];
 
 describe('text colour tokens meet WCAG AA on every surface', () => {
   for (const token of ['text-primary', 'text-muted', 'text-faint', 'primary-text']) {
@@ -52,6 +59,28 @@ describe('text colour tokens meet WCAG AA on every surface', () => {
   it('keeps --text-faint above the value that caused 31 violations', () => {
     // Regression guard: #657083 measured 3.35-3.74.
     expect(tokenFromCss('text-faint')).not.toBe('#657083');
+  });
+});
+
+describe('light theme text tokens meet WCAG AA', () => {
+  // The light palette is the likeliest to regress: someone tweaking colours
+  // in dark mode never sees it, and an axe run in one theme cannot catch it.
+  for (const token of ['text-primary', 'text-muted', 'text-faint', 'primary-text', 'accent', 'success', 'warning', 'danger']) {
+    it(`--${token} clears ${AA_NORMAL}:1 on light surfaces`, () => {
+      const hex = tokenFromCss(token, 'light');
+      expect(hex, `--${token} should be defined in the light block`).toBeTruthy();
+      const failures = LIGHT_BACKGROUNDS
+        .map((bg) => ({ bg, ratio: contrast(hex, bg) }))
+        .filter((r) => r.ratio < AA_NORMAL)
+        .map((r) => `${r.bg}: ${r.ratio.toFixed(2)}`);
+      expect(failures, `${hex} fails on`).toEqual([]);
+    });
+  }
+
+  it('defines a distinct value per theme rather than reusing the dark one', () => {
+    for (const token of ['text-primary', 'accent', 'warning']) {
+      expect(tokenFromCss(token, 'light')).not.toBe(tokenFromCss(token, 'dark'));
+    }
   });
 });
 
@@ -74,9 +103,18 @@ describe('chapter colours used as text', () => {
     }
   });
 
+  it('gives every chapter a light-theme text colour that clears AA on white', () => {
+    const failures = CHAPTERS
+      .map((ch) => ({ id: ch.id, hex: chapterTextColor(ch, 'light') }))
+      .map((r) => ({ ...r, ratio: Math.min(...LIGHT_BACKGROUNDS.map((bg) => contrast(r.hex, bg))) }))
+      .filter((r) => r.ratio < AA_NORMAL)
+      .map((r) => `ch${r.id} ${r.hex} = ${r.ratio.toFixed(2)}`);
+    expect(failures).toEqual([]);
+  });
+
   it('falls back to the identity colour when no override exists', () => {
     const plain = CHAPTERS.find((ch) => !ch.textColor);
-    expect(chapterTextColor(plain)).toBe(plain.color);
+    if (plain) expect(chapterTextColor(plain)).toBe(plain.color);
     expect(chapterTextColor(undefined)).toBe('inherit');
   });
 });

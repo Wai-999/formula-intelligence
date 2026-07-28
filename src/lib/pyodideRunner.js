@@ -46,6 +46,10 @@ export function getPyodide(onProgress) {
       // Charts are captured as files rather than drawn to a screen that
       // does not exist; without this, any savefig() call raises.
       py.runPython('import matplotlib; matplotlib.use("Agg")');
+      // Axes, ticks and labels default to black, which is invisible on the
+      // dark surface these figures are drawn onto. Set them from the live
+      // theme so a chart is legible in both.
+      applyMatplotlibTheme(py);
       onProgress?.('Ready');
       return py;
     })().catch((err) => {
@@ -66,7 +70,7 @@ export function isRuntimeLoaded() {
 // backend (there is no screen to draw to), so a plot exists only as an
 // in-memory figure until something writes it out — without this it would be
 // computed and silently discarded, which is worse than not supporting plots.
-const CAPTURE_FIGURES = `
+const captureFigures = (face) => `
 import io as _fi_io, base64 as _fi_b64
 _fi_imgs = []
 try:
@@ -75,7 +79,7 @@ try:
         _fi_fig = _fi_plt.figure(_fi_num)
         _fi_buf = _fi_io.BytesIO()
         _fi_fig.savefig(_fi_buf, format="png", dpi=110, bbox_inches="tight",
-                        facecolor="#0b0c18", edgecolor="none")
+                        facecolor="${face}", edgecolor="none")
         _fi_imgs.append(_fi_b64.b64encode(_fi_buf.getvalue()).decode())
     _fi_plt.close("all")
 except Exception:
@@ -83,9 +87,50 @@ except Exception:
 _fi_imgs
 `;
 
+/** Push the app's text colour into matplotlib's defaults. */
+function applyMatplotlibTheme(py) {
+  try {
+    const style = getComputedStyle(document.documentElement);
+    const read = (name, fallback) => {
+      const v = style.getPropertyValue(name).trim();
+      return /^#[0-9a-f]{3,8}$/i.test(v) ? v : fallback;
+    };
+    const fg = read('--text-primary', '#f4f7fb');
+    const grid = read('--text-faint', '#7c8798');
+    py.runPython(`
+import matplotlib as _fi_mpl
+_fi_mpl.rcParams.update({
+    "text.color": "${fg}",
+    "axes.labelcolor": "${fg}",
+    "axes.edgecolor": "${grid}",
+    "axes.titlecolor": "${fg}",
+    "xtick.color": "${grid}",
+    "ytick.color": "${grid}",
+    "grid.color": "${grid}",
+    "axes.facecolor": "none",
+    "figure.facecolor": "none",
+})
+`);
+  } catch {
+    /* styling is cosmetic; a failure here must not break execution */
+  }
+}
+
+// A chart is an image, so it cannot inherit the page's theme the way the
+// rest of the UI does — it has to be RENDERED with the right background, or
+// a dark plot lands on a white page looking like a rendering fault.
+function figureBackground() {
+  try {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--surface-deep').trim();
+    return /^#[0-9a-f]{3,8}$/i.test(v) ? v : '#0b0c18';
+  } catch {
+    return '#0b0c18';
+  }
+}
+
 function collectFigures(py) {
   try {
-    const res = py.runPython(CAPTURE_FIGURES);
+    const res = py.runPython(captureFigures(figureBackground()));
     const arr = res?.toJs ? res.toJs() : Array.from(res || []);
     return arr.map((b64) => `data:image/png;base64,${b64}`);
   } catch {

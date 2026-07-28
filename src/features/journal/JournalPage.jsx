@@ -1,15 +1,18 @@
 import { useMemo, useRef, useState } from 'react';
 import { nodes } from '../../data/index.js';
+import { CHAPTERS, chapterTextColor } from '../../data/chapters.js';
+import { useThemeStore } from '../../store/useThemeStore.js';
 import { useJournalStore, calcStreak } from '../../store/useJournalStore.js';
 import { useMasteryStore } from '../../store/useMasteryStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import './JournalPage.css';
 
-const JNL_CH_COLORS = {
-  2: '#60a5fa', 3: '#34d399', 4: '#f59e0b', 5: '#a78bfa', 6: '#22d3ee',
-  7: '#fb923c', 8: '#f87171', 9: '#818cf8', 10: '#4ade80', 11: '#e879f9',
-  12: '#38bdf8', 13: '#a3e635', 14: '#fbbf24',
-};
+// This page used to keep its OWN chapter palette, different from the one the
+// map and dashboard use — the same chapter appeared in two different colours
+// depending on which page you were looking at, and none of those values
+// survived the light theme. It now reads the shared, theme-aware chapter
+// colours so the association is consistent everywhere and legible in both.
+const chapterById = Object.fromEntries(CHAPTERS.map((ch) => [ch.id, ch]));
 
 const CELL_FILL = {
   gold: 'rgba(251,191,36,0.36)',
@@ -19,7 +22,11 @@ const CELL_FILL = {
   none: 'rgba(255,255,255,0.02)',
 };
 const CELL_ICON = { gold: '●', green: '●', blue: '◐', red: '◯', none: '○' };
-const CELL_ICON_COLOR = { gold: '#fbbf24', green: '#34d399', blue: '#60a5fa', red: '#f87171', none: '#3a3a5a' };
+// Tokens rather than literals so the grid stays legible in both themes.
+const CELL_ICON_COLOR = {
+  gold: 'var(--warning)', green: 'var(--success)', blue: 'var(--primary-text)',
+  red: 'var(--danger)', none: 'var(--border-solid-2)',
+};
 
 function confColor(conf) {
   if (conf <= 4) return { color: '#f87171', bg: 'rgba(251,113,133,.14)' };
@@ -173,6 +180,7 @@ function PrevEntries({ entries }) {
 }
 
 function KnowledgeStateMap() {
+  const theme = useThemeStore((s) => s.theme);
   const getNodeState = useMasteryStore((s) => s.getNodeState);
   const recallData = useMasteryStore((s) => s.recallData);
   const targetDate = useJournalStore((s) => s.targetDate);
@@ -234,16 +242,16 @@ function KnowledgeStateMap() {
       <h2>Knowledge state map</h2>
       <p className="jnl-legend">
         Your mastery at a glance — click any cell to study it on the Map.{' '}
-        <span style={{ color: '#fbbf24' }}>●gold</span>=Feynman verified &nbsp;
-        <span style={{ color: '#34d399' }}>●green</span>=Recall×3+ &nbsp;
-        <span style={{ color: '#60a5fa' }}>◐blue</span>=Partial &nbsp;
-        <span style={{ color: '#f87171' }}>◯red</span>=Needs review
+        <span style={{ color: 'var(--warning)' }}>●gold</span>=Feynman verified &nbsp;
+        <span style={{ color: 'var(--success)' }}>●green</span>=Recall×3+ &nbsp;
+        <span style={{ color: 'var(--primary-text)' }}>◐blue</span>=Partial &nbsp;
+        <span style={{ color: 'var(--danger)' }}>◯red</span>=Needs review
       </p>
 
       <div id="jnl-grid">
         {Object.keys(byChapter).map(Number).sort((a, b) => a - b).map((ch) => {
           const nds = byChapter[ch];
-          const chColor = JNL_CH_COLORS[ch] || '#6b7280';
+          const chColor = chapterTextColor(chapterById[ch], theme);
           const touchedCount = nds.filter((n) => getNodeState(n.id).state !== 'none').length;
           return (
             <div className="jnl-ch-row" key={ch}>

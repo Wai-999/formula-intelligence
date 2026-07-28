@@ -13,20 +13,20 @@
 }
 
 .lp-mini-node text {
-  fill: #c0c0d8;
+  fill: var(--text-muted);
   pointer-events: none;
 }
 
 .lp-mn-focus circle {
-  filter: drop-shadow(0 0 12px #fbbf24);
+  filter: drop-shadow(0 0 12px var(--warning));
 }
 
 .lp-mn-mastered circle {
-  filter: drop-shadow(0 0 8px #34d399);
+  filter: drop-shadow(0 0 8px var(--success));
 }
 
 .lp-mn-target circle {
-  filter: drop-shadow(0 0 14px #a78bfa);
+  filter: drop-shadow(0 0 14px var(--primary-text));
 }
 
 .lp-mini-tip {
@@ -35,12 +35,12 @@
   z-index: 20;
   top: 0;
   left: 0;
-  background: #1a1a3a;
-  border: 1px solid #3a3a6a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 7px;
   padding: 7px 10px;
   font-size: 11px;
-  color: #e0e0f0;
+  color: var(--text-primary);
   pointer-events: none;
   max-width: 200px;
   line-height: 1.5;

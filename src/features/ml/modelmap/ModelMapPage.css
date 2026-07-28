@@ -17,7 +17,7 @@
   position: absolute;
   left: 14px;
   bottom: 14px;
-  background: rgba(13, 14, 26, 0.9);
+  background: rgba(var(--panel-rgb), 0.9);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 10px 12px;

@@ -145,7 +145,7 @@ export default function ErrorLogPage() {
       <div className="err-controls">
         <span className="err-stat">Total: <b>{errorLog.length}</b></span>
         <span className="err-stat-sep">|</span>
-        <span className="err-stat">Unresolved: <b style={{ color: '#f87171' }}>{unresolvedCount}</b></span>
+        <span className="err-stat">Unresolved: <b style={{ color: 'var(--danger)' }}>{unresolvedCount}</b></span>
         <select className="err-filter-sel" value={filterResolved} onChange={(e) => setFilterResolved(e.target.value)}>
           <option value="all">All errors</option>
           <option value="unresolved">Unresolved only</option>

@@ -21,7 +21,7 @@
 .track-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .track-audience { font-size: 11px; color: var(--text-faint); line-height: 1.45; min-height: 30px; }
 
-.track-bar { display: block; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 4px; }
+.track-bar { display: block; height: 5px; border-radius: 999px; background: rgba(var(--overlay-rgb), 0.08); overflow: hidden; margin-top: 4px; }
 .track-bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.4s; }
 .track-prog { font-size: 10.5px; color: var(--text-faint); }
 
@@ -52,10 +52,10 @@
   align-items: baseline; gap: 8px;
   text-align: left; padding: 6px 9px;
   border: 1px solid transparent; border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.02); cursor: pointer;
+  background: rgba(var(--overlay-rgb), 0.02); cursor: pointer;
   transition: background 0.13s, border-color 0.13s;
 }
-.track-item:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--border); }
+.track-item:hover { background: rgba(var(--overlay-rgb), 0.06); border-color: var(--border); }
 .track-item .ti { font-size: 14px; }
 .track-item-name { font-size: 12.5px; color: var(--text-primary); font-weight: 500; }
 .track-item-tag { font-size: 10px; white-space: nowrap; }

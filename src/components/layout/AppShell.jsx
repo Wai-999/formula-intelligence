@@ -6,6 +6,7 @@ import StatsBody from './StatsBody.jsx';
 import MLBody from './MLBody.jsx';
 import ModeSwitcher from './ModeSwitcher.jsx';
 import StatsDepthToggle from './StatsDepthToggle.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 import ToastStack from '../toast/ToastStack.jsx';
 import './AppShell.css';
 
@@ -37,6 +38,7 @@ export default function AppShell() {
             sub-header; Stats mode has no such sub-header, so its depth
             toggle lives here in the shell. Both drive the same state. */}
         {mode === 'stats' && <StatsDepthToggle />}
+        <ThemeToggle />
         <ModeSwitcher />
       </header>
       <div className="app-body">

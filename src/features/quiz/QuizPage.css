@@ -6,7 +6,7 @@
   align-items: center;
   padding: 20px;
   overflow-y: auto;
-  background: #0f0f1a;
+  background: var(--surface);
 }
 
 .quiz-header {
@@ -19,9 +19,9 @@
 }
 
 .quiz-header select {
-  background: #1e1e3a;
-  border: 1px solid #3a3a5a;
-  color: #e0e0f0;
+  background: var(--surface-2);
+  border: 1px solid var(--border-solid-2);
+  color: var(--text-primary);
   padding: 5px 10px;
   border-radius: 6px;
   font-size: 12px;
@@ -57,7 +57,7 @@
 }
 
 .quiz-score-bar b {
-  color: #a78bfa;
+  color: var(--primary-text);
   font-weight: 700;
 }
 
@@ -65,7 +65,7 @@
   width: min(620px, 100%);
   height: 9px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-rgb), 0.08);
   margin: 0 0 16px;
   overflow: hidden;
 }
@@ -83,8 +83,8 @@
 }
 
 .quiz-q {
-  background: #1a1a3a;
-  border: 1px solid #3a3a5a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
@@ -102,7 +102,7 @@
 .q-text {
   font-size: 18px;
   font-weight: 700;
-  color: #e0e0ff;
+  color: var(--text-primary);
   line-height: 1.4;
 }
 
@@ -116,9 +116,9 @@
 .choice-btn {
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #3a3a5a;
-  background: #1e1e3a;
-  color: #c0c0d8;
+  border: 1px solid var(--border-solid-2);
+  background: var(--surface-2);
+  color: var(--text-muted);
   font-size: 12px;
   cursor: pointer;
   text-align: left;
@@ -128,20 +128,20 @@
 }
 
 .choice-btn:hover:not(.disabled) {
-  border-color: #a78bfa;
-  background: #1e1e4a;
+  border-color: var(--primary-text);
+  background: var(--surface-raised);
 }
 
 .choice-btn.correct {
   background: #064e3b;
-  border-color: #10b981;
-  color: #6ee7b7;
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .choice-btn.wrong {
   background: #7f1d1d;
   border-color: #ef4444;
-  color: #fca5a5;
+  color: var(--danger);
 }
 
 .choice-btn.disabled {
@@ -165,12 +165,12 @@
 
 .fb-correct {
   background: #064e3b;
-  color: #6ee7b7;
+  color: var(--success);
 }
 
 .fb-wrong {
   background: #7f1d1d;
-  color: #fca5a5;
+  color: var(--danger);
 }
 
 .quiz-next {

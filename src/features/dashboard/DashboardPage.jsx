@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { CHAPTERS, nodes } from '../../data/index.js';
 import { chapterTextColor } from '../../data/chapters.js';
+import { useThemeStore } from '../../store/useThemeStore.js';
 import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { useCountUp } from '../../hooks/useCountUp.js';
 import ProgressionPanel from './ProgressionPanel.jsx';
@@ -16,6 +17,7 @@ function KpiCard({ label, value }) {
 }
 
 export default function DashboardPage() {
+  const theme = useThemeStore((s) => s.theme);
   const srData = useSRStore((s) => s.srData);
   const quizStats = useSRStore((s) => s.quizStats);
   const sessions = useSRStore((s) => s.sessions);
@@ -72,7 +74,7 @@ export default function DashboardPage() {
             <div className="ch-row" key={ch.id}>
               <div className="ch-row-header">
                 <span className="ch-row-name">{ch.name}</span>
-                <span className="ch-row-pct" style={{ color: chapterTextColor(ch) }}>{ch.pct}%</span>
+                <span className="ch-row-pct" style={{ color: chapterTextColor(ch, theme) }}>{ch.pct}%</span>
               </div>
               <div className="prog-bar">
                 <div className="prog-fill" style={{ width: `${ch.pct}%`, background: ch.color }} />

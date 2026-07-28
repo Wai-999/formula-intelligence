@@ -17,4 +17,5 @@ export const STORAGE_KEYS = {
   mlUnderstanding: 'ml_understanding_v1',
   mlEntryBannerSeen: 'ml_entry_banner_seen_v1',
   pyLab: 'py_lab_v1',
+  theme: 'fi_theme_v1',
 };

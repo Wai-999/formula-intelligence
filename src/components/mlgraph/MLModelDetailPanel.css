@@ -4,7 +4,7 @@
   right: 0;
   bottom: 0;
   width: 300px;
-  background: rgba(13, 14, 26, 0.96);
+  background: rgba(var(--panel-rgb), 0.96);
   border-left: 1px solid var(--border);
   padding: 14px;
   overflow-y: auto;
@@ -60,7 +60,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--accent);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--overlay-rgb), 0.04);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 8px 9px;

@@ -2,8 +2,8 @@
   flex: 1;
   min-width: 0;
   position: relative;
-  background: radial-gradient(circle at 50% 40%, rgba(139, 92, 246, 0.05), transparent 60%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.035));
+  background: radial-gradient(circle at 50% 40%, var(--bg-tint-1), transparent 60%),
+    linear-gradient(180deg, rgba(var(--overlay-rgb), 0.015), rgba(var(--overlay-rgb), 0.035));
   overflow: hidden;
 }
 
@@ -16,6 +16,13 @@
   font-weight: 500;
   pointer-events: none;
   font-family: var(--font-sans);
+  fill: var(--text-primary);
+  /* Halo so a label stays readable where an edge passes behind it — the
+     same treatment the ML graph already uses. */
+  paint-order: stroke fill;
+  stroke: var(--bg-2);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
 }
 
 .grow-label {
@@ -83,12 +90,12 @@
   z-index: 20;
   top: 0;
   left: 0;
-  background: #1a1a3a;
-  border: 1px solid #3a3a6a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 7px;
   padding: 7px 10px;
   font-size: 11px;
-  color: #e0e0f0;
+  color: var(--text-primary);
   pointer-events: none;
   max-width: 220px;
   line-height: 1.5;
@@ -105,8 +112,8 @@
 .gtip-junction {
   margin-top: 5px;
   padding-top: 5px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: #c4b5fd;
+  border-top: 1px solid rgba(var(--overlay-rgb), 0.1);
+  color: var(--primary-text);
   font-size: 10px;
 }
 
@@ -114,7 +121,7 @@
   position: absolute;
   left: 12px;
   bottom: 12px;
-  background: rgba(12, 13, 24, 0.82);
+  background: rgba(var(--panel-rgb), 0.82);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px;
@@ -163,7 +170,7 @@
 }
 
 .glegend-ring-fork {
-  border: 1.3px dashed #a78bfa;
+  border: 1.3px dashed var(--primary-text);
 }
 
 .glegend-ring-collider {

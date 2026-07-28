@@ -3,7 +3,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background: #0f0f1a;
+  background: var(--surface);
   overflow-y: auto;
 }
 
@@ -15,13 +15,13 @@
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   flex-wrap: wrap;
-  background: rgba(12, 13, 24, 0.85);
+  background: rgba(var(--panel-rgb), 0.85);
 }
 
 .prac-controls select {
   min-height: 34px;
   padding: 0 10px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--overlay-rgb), 0.06);
   border: 1px solid var(--border);
   color: var(--text-primary);
   border-radius: 8px;
@@ -36,7 +36,7 @@
 }
 
 .prac-score b {
-  color: #a78bfa;
+  color: var(--primary-text);
 }
 
 .prac-new-btn {
@@ -45,7 +45,7 @@
   border-radius: 8px;
   border: 1px solid rgba(139, 92, 246, 0.45);
   background: rgba(139, 92, 246, 0.12);
-  color: #a78bfa;
+  color: var(--primary-text);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -76,8 +76,8 @@
 .prac-card {
   width: 100%;
   max-width: 680px;
-  background: #12122a;
-  border: 1px solid #2a2a4a;
+  background: var(--surface);
+  border: 1px solid var(--border-solid);
   border-radius: 14px;
   padding: 24px;
   display: flex;
@@ -108,7 +108,7 @@
 .prac-node-name {
   font-size: 11px;
   font-weight: 700;
-  color: #c4b5fd;
+  color: var(--primary-text);
 }
 
 .prac-scenario-lbl {
@@ -121,18 +121,18 @@
 }
 
 .prac-scenario {
-  background: rgba(255, 255, 255, 0.03);
-  border-left: 3px solid #a78bfa;
+  background: rgba(var(--overlay-rgb), 0.03);
+  border-left: 3px solid var(--primary-text);
   border-radius: 0 8px 8px 0;
   padding: 12px 14px;
   font-size: 13px;
-  color: #c0c0d8;
+  color: var(--text-muted);
   line-height: 1.7;
 }
 
 .prac-zone {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid #2a2a4a;
+  background: rgba(var(--overlay-rgb), 0.02);
+  border: 1px solid var(--border-solid);
   border-radius: 10px;
   padding: 14px;
 }
@@ -168,9 +168,9 @@
 .prac-opt {
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid #2a2a4a;
-  background: rgba(255, 255, 255, 0.03);
-  color: #c0c0d8;
+  border: 1px solid var(--border-solid);
+  background: rgba(var(--overlay-rgb), 0.03);
+  color: var(--text-muted);
   font-size: 12px;
   cursor: pointer;
   text-align: left;
@@ -180,20 +180,20 @@
 }
 
 .prac-opt:hover:not(.disabled) {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
   background: rgba(139, 92, 246, 0.08);
 }
 
 .prac-opt.correct {
   background: rgba(52, 211, 153, 0.1);
-  border-color: #10b981;
-  color: #6ee7b7;
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .prac-opt.wrong {
   background: rgba(251, 113, 133, 0.09);
-  border-color: #f87171;
-  color: #fecdd3;
+  border-color: var(--danger);
+  color: var(--danger);
   animation: prac-shake 0.35s ease;
 }
 
@@ -222,13 +222,13 @@
 .prac-why.ok {
   background: rgba(52, 211, 153, 0.07);
   border: 1px solid rgba(52, 211, 153, 0.22);
-  color: #6ee7b7;
+  color: var(--success);
 }
 
 .prac-why.bad {
   background: rgba(251, 113, 133, 0.07);
   border: 1px solid rgba(251, 113, 133, 0.22);
-  color: #fecdd3;
+  color: var(--danger);
 }
 
 .prac-solve-zone {
@@ -242,7 +242,7 @@
 .prac-formula-tag {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: #fbbf24;
+  color: var(--warning);
   background: rgba(251, 191, 36, 0.07);
   border: 1px solid rgba(251, 191, 36, 0.18);
   border-radius: 6px;
@@ -264,7 +264,7 @@
   flex-wrap: wrap;
   gap: 6px;
   font-size: 13px;
-  color: #c0c0d8;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
@@ -281,16 +281,16 @@
 .prac-val {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: #a0a0c0;
+  color: var(--text-muted);
 }
 
 .prac-inp {
   width: 72px;
   padding: 4px 8px;
-  background: #1a1a3a;
-  border: 1px solid #3a3a5a;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-solid-2);
   border-radius: 5px;
-  color: #fbbf24;
+  color: var(--warning);
   font-family: var(--font-mono);
   font-size: 13px;
   text-align: center;
@@ -299,24 +299,24 @@
 }
 
 .prac-inp:focus {
-  border-color: #a78bfa;
+  border-color: var(--primary-text);
 }
 
 .prac-inp.inp-ok {
-  border-color: #10b981;
+  border-color: var(--success);
   background: rgba(52, 211, 153, 0.08);
-  color: #6ee7b7;
+  color: var(--success);
 }
 
 .prac-inp.inp-err {
-  border-color: #f87171;
+  border-color: var(--danger);
   background: rgba(251, 113, 133, 0.08);
-  color: #fecdd3;
+  color: var(--danger);
 }
 
 .prac-inp-hint {
   font-size: 10px;
-  color: #f87171;
+  color: var(--danger);
   flex-basis: 100%;
 }
 
@@ -357,13 +357,13 @@
 .prac-solve-fb.ok {
   background: rgba(52, 211, 153, 0.08);
   border: 1px solid rgba(52, 211, 153, 0.22);
-  color: #6ee7b7;
+  color: var(--success);
 }
 
 .prac-solve-fb.bad {
   background: rgba(251, 113, 133, 0.07);
   border: 1px solid rgba(251, 113, 133, 0.22);
-  color: #fecdd3;
+  color: var(--danger);
 }
 
 .prac-interp-zone {
@@ -376,7 +376,7 @@
 
 .prac-interp-q {
   font-size: 13px;
-  color: #c0c0d8;
+  color: var(--text-muted);
   line-height: 1.8;
   margin-bottom: 10px;
 }
@@ -384,10 +384,10 @@
 .prac-blank-inp {
   width: 80px;
   padding: 2px 6px;
-  background: #1a1a3a;
+  background: var(--surface-raised);
   border: none;
-  border-bottom: 2px solid #a78bfa;
-  color: #fbbf24;
+  border-bottom: 2px solid var(--primary-text);
+  color: var(--warning);
   font-family: var(--font-mono);
   font-size: 13px;
   text-align: center;
@@ -397,17 +397,17 @@
 }
 
 .prac-blank-inp:focus {
-  border-bottom-color: #22d3ee;
+  border-bottom-color: var(--accent);
 }
 
 .prac-blank-inp.ok {
-  border-bottom-color: #10b981;
-  color: #6ee7b7;
+  border-bottom-color: var(--success);
+  color: var(--success);
 }
 
 .prac-blank-inp.err {
-  border-bottom-color: #f87171;
-  color: #fecdd3;
+  border-bottom-color: var(--danger);
+  color: var(--danger);
 }
 
 .prac-submit-btn {
@@ -415,7 +415,7 @@
   border-radius: 8px;
   border: 1px solid rgba(34, 211, 238, 0.3);
   background: rgba(34, 211, 238, 0.12);
-  color: #22d3ee;
+  color: var(--accent);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -448,13 +448,13 @@
 .prac-interp-fb.ok {
   background: rgba(52, 211, 153, 0.08);
   border: 1px solid rgba(52, 211, 153, 0.2);
-  color: #6ee7b7;
+  color: var(--success);
 }
 
 .prac-interp-fb.bad {
   background: rgba(251, 113, 133, 0.07);
   border: 1px solid rgba(251, 113, 133, 0.2);
-  color: #fecdd3;
+  color: var(--danger);
 }
 
 .prac-next-btn {

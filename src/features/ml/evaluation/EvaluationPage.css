@@ -26,7 +26,7 @@
 }
 
 .mp-row {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--overlay-rgb), 0.03);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 9px 10px;
@@ -103,12 +103,12 @@
   flex: 1;
   height: 18px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--overlay-rgb), 0.06);
 }
 
 .bt-cell-train { background: var(--primary); }
 .bt-cell-test { background: var(--warning); }
-.bt-cell-unused { background: rgba(255, 255, 255, 0.06); }
+.bt-cell-unused { background: rgba(var(--overlay-rgb), 0.06); }
 
 .bt-controls {
   display: flex;
@@ -144,7 +144,7 @@
 
 .bt-dot-train { background: var(--primary); }
 .bt-dot-test { background: var(--warning); }
-.bt-dot-unused { background: rgba(255, 255, 255, 0.12); }
+.bt-dot-unused { background: rgba(var(--overlay-rgb), 0.12); }
 
 /* SHAP / LIME */
 .sl-grid {
@@ -177,7 +177,7 @@
 
 .shap-bar-track {
   height: 10px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--overlay-rgb), 0.06);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -198,7 +198,7 @@
 .lime-bar-track {
   position: relative;
   height: 10px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--overlay-rgb), 0.06);
   border-radius: 4px;
   overflow: visible;
 }
@@ -219,7 +219,7 @@
   top: -2px;
   bottom: -2px;
   width: 1px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--overlay-rgb), 0.25);
 }
 
 .lime-value {
@@ -268,7 +268,7 @@
 }
 
 .drift-break-line {
-  stroke: rgba(255, 255, 255, 0.3);
+  stroke: rgba(var(--overlay-rgb), 0.3);
   stroke-width: 1.5;
 }
 

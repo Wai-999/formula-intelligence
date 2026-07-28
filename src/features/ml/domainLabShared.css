@@ -40,7 +40,7 @@
 
 .dl-model-note {
   padding: 8px 10px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(var(--overlay-rgb), 0.02);
   border-left: 3px solid var(--accent);
   border-radius: 0 6px 6px 0;
 }

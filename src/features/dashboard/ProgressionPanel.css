@@ -24,7 +24,7 @@
 .prog-xp { font-size: 15px; font-weight: 700; color: var(--text-primary); }
 .prog-next { font-size: 11.5px; color: var(--text-faint); }
 
-.prog-bar { height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
+.prog-bar { height: 8px; border-radius: 999px; background: rgba(var(--overlay-rgb), 0.07); overflow: hidden; }
 .prog-bar-fill {
   height: 100%; border-radius: 999px;
   background: linear-gradient(90deg, var(--primary), var(--accent));
@@ -39,7 +39,7 @@
 .prog-src {
   display: flex; align-items: baseline; gap: 8px;
   padding: 7px 10px; border: 1px solid var(--border);
-  border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.025);
+  border-radius: var(--radius-md); background: rgba(var(--overlay-rgb), 0.025);
 }
 .prog-src-xp { font-size: 13px; font-weight: 700; color: var(--accent); white-space: nowrap; }
 .prog-src-lbl { font-size: 12px; color: var(--text-primary); flex: 1; }
@@ -61,7 +61,7 @@
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   width: 104px; padding: 10px 8px 12px;
   border: 1px solid var(--border); border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--overlay-rgb), 0.03);
   text-align: center;
 }
 .prog-badge .ti { font-size: 20px; }
@@ -79,6 +79,6 @@
 .prog-badge-prog { font-size: 10px; color: var(--text-faint); }
 .prog-badge-bar {
   position: absolute; left: 8px; right: 8px; bottom: 6px;
-  height: 3px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden;
+  height: 3px; border-radius: 999px; background: rgba(var(--overlay-rgb), 0.08); overflow: hidden;
 }
 .prog-badge-bar div { height: 100%; background: var(--primary); border-radius: 999px; }

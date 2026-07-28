@@ -2,7 +2,9 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(6, 7, 14, 0.72);
+  /* Scrim follows the theme; a near-black wash over a light page
+     reads as a rendering fault rather than a modal. */
+  background: rgba(var(--panel-rgb), 0.72);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
