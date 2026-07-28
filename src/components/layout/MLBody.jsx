@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import MLIconRail from './MLIconRail.jsx';
+import ErrorBoundary from '../error/ErrorBoundary.jsx';
 import { useUIStore } from '../../store/useUIStore.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
 import LevelLangToggle from '../ml/LevelLangToggle.jsx';
@@ -57,9 +58,14 @@ export default function MLBody() {
         <div className="ml-main-content">
           {Object.entries(FEATURES).map(([id, Feature]) => (
             <div key={id} className="app-tab-keepalive" style={{ display: mlActiveTab === id ? 'flex' : 'none' }}>
-              <Suspense fallback={<MLLoading />}>
-                <Feature />
-              </Suspense>
+              {/* Boundary OUTSIDE Suspense so it also catches lazy-chunk
+                  load failures (a failed dynamic import throws on render),
+                  not just errors inside the loaded page. */}
+              <ErrorBoundary label={ML_TABS.find((t) => t.id === id)?.label || id}>
+                <Suspense fallback={<MLLoading />}>
+                  <Feature />
+                </Suspense>
+              </ErrorBoundary>
             </div>
           ))}
         </div>

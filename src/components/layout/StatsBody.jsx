@@ -1,4 +1,5 @@
 import IconRail from './IconRail.jsx';
+import ErrorBoundary from '../error/ErrorBoundary.jsx';
 import { useUIStore, TABS } from '../../store/useUIStore.js';
 import MapPage from '../../features/map/MapPage.jsx';
 import DashboardPage from '../../features/dashboard/DashboardPage.jsx';
@@ -37,7 +38,12 @@ export default function StatsBody() {
       <main className="app-main">
         {Object.entries(FEATURES).map(([id, Feature]) => (
           <div key={id} className="app-tab-keepalive" style={{ display: activeTab === id ? 'flex' : 'none' }}>
-            <Feature />
+            {/* One boundary per pane, not one around the whole map: every
+                tab is mounted at once (keep-alive), so an un-isolated throw
+                in a hidden tab would blank the visible one too. */}
+            <ErrorBoundary label={TABS.find((t) => t.id === id)?.label || id}>
+              <Feature />
+            </ErrorBoundary>
           </div>
         ))}
         {!isImplemented && <ComingSoonPage tab={tabMeta} />}
