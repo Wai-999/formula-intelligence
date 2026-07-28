@@ -27,7 +27,11 @@ export default function PythonHubPage() {
   // progress during a same-tick tab switch.
   useEffect(() => {
     if (linkedConcept?.tab !== 'python') return undefined;
-    const target = LINKED_FROM_TO_ENTRY[linkedConcept.payload?.from];
+    // `entryId` is the general form (any of the 126 topics, used by Stats
+    // mode's Researcher-depth panel); `from` is the older named-origin form
+    // kept for the two hardcoded buttons that predate it.
+    const target = linkedConcept.payload?.entryId
+      || LINKED_FROM_TO_ENTRY[linkedConcept.payload?.from];
     if (target) setOpenId(target);
     const timer = setTimeout(() => {
       if (target) entryRefs.current[target]?.scrollIntoView({ behavior: 'auto', block: 'start' });

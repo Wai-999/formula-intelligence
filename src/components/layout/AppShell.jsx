@@ -5,6 +5,7 @@ import { blSame, useT } from '../../lib/mlContent.js';
 import StatsBody from './StatsBody.jsx';
 import MLBody from './MLBody.jsx';
 import ModeSwitcher from './ModeSwitcher.jsx';
+import StatsDepthToggle from './StatsDepthToggle.jsx';
 import ToastStack from '../toast/ToastStack.jsx';
 import './AppShell.css';
 
@@ -32,6 +33,10 @@ export default function AppShell() {
         <span className="app-title-dot" aria-hidden="true" />
         <span className="app-subtitle">{mode === 'stats' ? STATS_SUBTITLE : mlSubtitle}</span>
         <div className="app-header-spacer" />
+        {/* ML mode renders its own depth+language pair inside MLBody's
+            sub-header; Stats mode has no such sub-header, so its depth
+            toggle lives here in the shell. Both drive the same state. */}
+        {mode === 'stats' && <StatsDepthToggle />}
         <ModeSwitcher />
       </header>
       <div className="app-body">

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { nodes } from '../index.js';
 import { ML_MODELS, ML_LINKS, ML_FAMILIES, mlNodeById } from '../ml/models.js';
 import { MODEL_DEPTH_LADDER } from '../ml/modelDepthLadder.js';
-import { PY_ALL_ENTRIES, PY_SECTIONS } from '../python/index.js';
+import { PY_ALL_ENTRIES, PY_SECTIONS, PY_ENTRY_BY_ID } from '../python/index.js';
 import { resolveT } from '../../lib/mlContent.js';
 
 // Content in this app is hand-authored JS, not a validated CMS, so a typo
@@ -169,5 +169,39 @@ describe('Python Hub content', () => {
   it('places every entry in exactly one navigable group', () => {
     const grouped = PY_SECTIONS.flatMap((s) => s.groups.flatMap((g) => g.entries.map((e) => e.id)));
     expect(grouped.slice().sort()).toEqual(PY_ALL_ENTRIES.map((e) => e.id).sort());
+  });
+});
+
+describe('Stats Researcher-depth join', () => {
+  // Stats mode's DetailPanel renders its Researcher block by looking the
+  // formula's id up in the Python Hub corpus. That join is invisible at
+  // author time: renaming a formula id, or adding a formula without a Hub
+  // entry, silently degrades the panel to Beginner-only with no error.
+  it('gives every stats formula a Python Hub entry to deepen into', () => {
+    const missing = nodes.filter((n) => !PY_ENTRY_BY_ID[n.id]).map((n) => n.id);
+    expect(missing).toEqual([]);
+  });
+
+  it('supplies at least one researcher-only section per formula', () => {
+    // A joined entry that has none of these renders an empty labeled block,
+    // which reads as a bug to the user.
+    const empty = nodes.filter((n) => {
+      const e = PY_ENTRY_BY_ID[n.id];
+      return !(e.overview || e.variables?.length || e.thinking?.assumptions?.length
+        || e.thinking?.notWhen?.length || e.mistakes?.length);
+    }).map((n) => n.id);
+    expect(empty).toEqual([]);
+  });
+
+  it('keeps notation pairs renderable as [symbol, meaning] rows', () => {
+    const bad = [];
+    for (const n of nodes) {
+      for (const v of PY_ENTRY_BY_ID[n.id].variables || []) {
+        if (!Array.isArray(v) || v.length !== 2 || typeof v[0] !== 'string' || typeof v[1] !== 'string') {
+          bad.push(n.id);
+        }
+      }
+    }
+    expect(bad).toEqual([]);
   });
 });

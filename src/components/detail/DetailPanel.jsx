@@ -4,6 +4,8 @@ import { BRIDGE_TEXT } from '../../data/bridgeText.js';
 import { INVENTORS } from '../../data/inventors.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import { useMasteryStore } from '../../store/useMasteryStore.js';
+import { useMLUIStore } from '../../store/useMLUIStore.js';
+import { PY_ENTRY_BY_ID } from '../../data/python/index.js';
 import './DetailPanel.css';
 
 const STATE_LABEL = {
@@ -20,8 +22,15 @@ export default function DetailPanel() {
   const traceFullChain = useUIStore((s) => s.traceFullChain);
   const navigateToLinkedConcept = useUIStore((s) => s.navigateToLinkedConcept);
   const getNodeState = useMasteryStore((s) => s.getNodeState);
+  const level = useMLUIStore((s) => s.level);
 
   const node = selectedNodeId ? nodeById[selectedNodeId] : null;
+  // Researcher depth doesn't re-author this panel's content — it surfaces
+  // the rigorous material already written for this exact formula id in the
+  // Python Hub corpus (assumptions, when NOT to use it, variable glossary,
+  // failure modes). Same ids by design, so the join is free and the two
+  // surfaces can never drift out of sync the way parallel copies would.
+  const deep = level === 'researcher' && node ? PY_ENTRY_BY_ID[node.id] : null;
 
   const { prereqs, dependents } = useMemo(() => {
     if (!node) return { prereqs: [], dependents: [] };
@@ -51,6 +60,73 @@ export default function DetailPanel() {
 
           <p className="detail-lbl">Used for</p>
           <p className="detail-desc">{node.use}</p>
+
+          {deep && (
+            <div className="detail-deep">
+              <p className="detail-deep-flag">
+                <i className="ti ti-microscope" aria-hidden="true" /> Researcher depth
+              </p>
+
+              {deep.overview && (
+                <>
+                  <p className="detail-lbl">Why it exists</p>
+                  <p className="detail-desc">{deep.overview}</p>
+                </>
+              )}
+
+              {deep.variables?.length > 0 && (
+                <>
+                  <p className="detail-lbl">Notation</p>
+                  <table className="detail-vars">
+                    <tbody>
+                      {deep.variables.map(([sym, meaning]) => (
+                        <tr key={sym}>
+                          <td className="detail-var-sym">{sym}</td>
+                          <td className="detail-var-meaning">{meaning}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              )}
+
+              {deep.thinking?.assumptions?.length > 0 && (
+                <>
+                  <p className="detail-lbl">Assumptions</p>
+                  <ul className="detail-deep-list">
+                    {deep.thinking.assumptions.map((a) => <li key={a}>{a}</li>)}
+                  </ul>
+                </>
+              )}
+
+              {deep.thinking?.notWhen?.length > 0 && (
+                <>
+                  <p className="detail-lbl">Do not use when</p>
+                  <ul className="detail-deep-list detail-deep-warn">
+                    {deep.thinking.notWhen.map((x) => <li key={x}>{x}</li>)}
+                  </ul>
+                </>
+              )}
+
+              {deep.mistakes?.length > 0 && (
+                <>
+                  <p className="detail-lbl">Common mistakes</p>
+                  <ul className="detail-deep-list detail-deep-warn">
+                    {deep.mistakes.map((m) => <li key={m}>{m}</li>)}
+                  </ul>
+                </>
+              )}
+
+              <button
+                type="button"
+                className="detail-bridge-btn"
+                onClick={() => navigateToLinkedConcept('ml', 'python', { entryId: node.id })}
+              >
+                <i className="ti ti-brand-python" aria-hidden="true" />
+                Full Python implementation & scenario
+              </button>
+            </div>
+          )}
 
           {node.id === 'reg' && (
             <button

@@ -90,3 +90,11 @@ export const PY_SECTIONS = [
 ];
 
 export const PY_ALL_ENTRIES = [...ALL_STATS, ...ALL_ML];
+
+/**
+ * id → entry lookup. Lets other surfaces (Stats mode's DetailPanel at
+ * Researcher depth) reuse this corpus instead of duplicating assumptions,
+ * caveats and variable glossaries that already exist here for all 126
+ * topics — the ids are deliberately identical to nodes.js / models.js.
+ */
+export const PY_ENTRY_BY_ID = Object.fromEntries(PY_ALL_ENTRIES.map((e) => [e.id, e]));
