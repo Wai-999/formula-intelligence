@@ -11,12 +11,16 @@ import './MechanismLiveLink.css';
 // hand off beyond "go look at the live version."
 export default function MechanismLiveLink({ mechanism, nodeId }) {
   const setMLActiveTab = useUIStore((s) => s.setMLActiveTab);
+  const openMLLesson = useUIStore((s) => s.openMLLesson);
   const markLayerEngaged = useUnderstandingStore((s) => s.markLayerEngaged);
   const label = useT(mechanism.label);
   const tryLiveText = useT(UI_TRY_LIVE_ELSEWHERE);
 
   function goToLive() {
-    setMLActiveTab(mechanism.module);
+    // A lesson lives inside another page now (src/data/ml/lessons.js):
+    // open the page AND the lesson, not just the page.
+    if (mechanism.lesson) openMLLesson(mechanism.lesson);
+    else setMLActiveTab(mechanism.module);
     if (nodeId) markLayerEngaged(nodeId, 'mechanism');
   }
 

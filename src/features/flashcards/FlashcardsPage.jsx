@@ -108,13 +108,13 @@ export default function FlashcardsPage() {
   return (
     <div className="fc-page">
       <div className="fc-controls">
-        <select value={chFilter} onChange={(e) => setChFilter(e.target.value)}>
+        <select aria-label="Chapter" value={chFilter} onChange={(e) => setChFilter(e.target.value)}>
           <option value="all">All chapters</option>
           {CHAPTERS.map((c) => (
             <option key={c.id} value={String(c.id)}>{c.name}</option>
           ))}
         </select>
-        <select value={mode} onChange={(e) => setMode(e.target.value)}>
+        <select aria-label="Cards to review" value={mode} onChange={(e) => setMode(e.target.value)}>
           <option value="due">Due for review</option>
           <option value="all">All cards</option>
           <option value="unlearned">Unlearned only</option>

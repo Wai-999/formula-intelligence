@@ -126,7 +126,7 @@ export default function MetricsPanel() {
             </div>
             <div className="mp-complexity">
               <span className="ml-lbl">{complexityLbl}: {complexity}</span>
-              <input type="range" min="1" max={modelId === 'tree' ? 8 : 12} value={complexity} onChange={(e) => setComplexity(Number(e.target.value))} className="pg-slider" />
+              <input type="range" aria-label={complexityLbl} min="1" max={modelId === 'tree' ? 8 : 12} value={complexity} onChange={(e) => setComplexity(Number(e.target.value))} className="pg-slider" />
             </div>
           </div>
           <div className="mp-grid">

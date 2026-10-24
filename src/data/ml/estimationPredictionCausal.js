@@ -46,7 +46,7 @@ export const EPC_COLUMNS = [
     ),
     methods: bl(
       'OLS, Maximum Likelihood, Bayesian methods — the frequentist end of this toolkit is exactly Stats mode\'s own t CI for the mean.',
-      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — the frequentist branch overlaps directly with Stats mode\'s ci_mean_t content; see the Stats ↔ ML Bridge for the worked comparison.',
+      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — the frequentist branch overlaps directly with Stats mode\'s ci_mean_t content.',
       'OLS, Maximum Likelihood, Bayesian နည်းလမ်းများ — frequentist ဘက်က Stats mode ၏ t CI for the mean အတိုင်းပင်ဖြစ်သည်။',
       'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — frequentist ဘက်သည် Stats mode ၏ ci_mean_t content နှင့် တိုက်ရိုက်ထပ်နေသည်; worked comparison အတွက် Stats ↔ ML Bridge ကိုကြည့်ပါ။'
     ),
@@ -133,8 +133,8 @@ export const EPC_COLUMNS = [
 ];
 
 export const EPC_BRIDGE_NOTE = bl(
-  'Why this matters for the mode switch: the exact same model (e.g. "linear regression on gold price vs. real yields") can be looked at from either lens. Stats asks "how confident am I in this coefficient?" ML asks "how well does this generalize to gold prices next quarter?" A good learner can flip between the two questions on the same node — try it in Module 10\'s Stats↔ML Bridge.',
-  'Why this matters for the mode switch: the same underlying object supports two questions — the Stats lens asks whether a coefficient is statistically significant, the ML lens asks how well the fitted model generalizes out-of-sample. Module 10 makes this a live, side-by-side interaction on identical data.',
+  'Why this matters for the mode switch: the exact same model (e.g. "linear regression on gold price vs. real yields") can be looked at from either lens. Stats asks "how confident am I in this coefficient?" ML asks "how well does this generalize to gold prices next quarter?" A good learner can flip between the two questions on the same node.',
+  'Why this matters for the mode switch: the same underlying object supports two questions — the Stats lens asks whether a coefficient is statistically significant, the ML lens asks how well the fitted model generalizes out-of-sample.',
   'Mode switch အတွက် ဘာကြောင့်အရေးကြီးလဲဆိုတော့: မော်ဒယ်တစ်ခုတည်း (ဥပမာ "ရွှေစျေးနှုန်းကို real yields ပေါ် linear regression") ကို မှန်ဘီလူးနှစ်မျိုးဖြင့် ကြည့်နိုင်သည်။ Stats က "ဒီ coefficient ကို ဘယ်လောက်ယုံကြည်လဲ" ဟု မေးပြီး ML က "ဒါက လာမယ့်သုံးလပတ် ရွှေစျေးနှုန်းအတွက် ဘယ်လောက်ကောင်းစွာ အလုပ်လုပ်မလဲ" ဟု မေးသည်။ Module 10 ၏ Stats↔ML Bridge တွင် စမ်းကြည့်ပါ။',
   'Mode switch အတွက် အရေးကြီးသည့်အကြောင်းရင်း: underlying object တစ်ခုတည်းသည် မေးခွန်းနှစ်ခုကို ဖြေဆိုနိုင်သည် — Stats မှန်ဘီလူးက coefficient သည် statistically significant ဖြစ်မဖြစ် မေးပြီး၊ ML မှန်ဘီလူးက fit လုပ်ပြီးသား မော်ဒယ်သည် out-of-sample တွင် မည်မျှ generalize ဖြစ်သည်ကို မေးသည်။ Module 10 တွင် တူညီသော data ပေါ်၌ side-by-side live interaction အဖြစ် ပြသထားသည်။'
 );

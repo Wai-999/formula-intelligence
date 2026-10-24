@@ -30,7 +30,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'live-link', module: 'playground', label: blSame('Playground — Polynomial Regression at degree 1', 'Playground — Degree 1 ရှိ Polynomial Regression') },
+    mechanism: { kind: 'live-link', module: 'pipeline', lesson: 'bias-variance', label: blSame('Bias–variance lesson — Polynomial Regression at degree 1', 'Playground — Degree 1 ရှိ Polynomial Regression') },
     formalism: {
       worked: bl(
         'Three points (1,2), (2,4), (3,7): OLS finds the slope and intercept minimizing total squared vertical distance — here roughly ŷ = -0.83 + 2.5x, predicting ŷ≈6.67 at x=4.',
@@ -82,7 +82,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'macro', label: blSame('Macro Lab — the LASSO/Elastic Net lens', 'Macro Lab — LASSO/Elastic Net lens') },
+    mechanism: { kind: 'retired-lab', module: 'macro', label: blSame('Macro Lab — the LASSO/Elastic Net lens', 'Macro Lab — LASSO/Elastic Net lens') },
     formalism: {
       worked: bl(
         'OLS gives β=10 for a noisy feature. Add a Lasso penalty λ=2: the coefficient shrinks toward zero, and if the feature is weak enough, Lasso can push it to exactly 0 — dropping it from the model entirely, unlike Ridge which only shrinks toward (but never exactly to) zero.',
@@ -314,7 +314,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'playground', label: blSame('Playground — Decision Tree', 'Playground — Decision Tree') },
+    mechanism: { kind: 'live-link', module: 'pipeline', lesson: 'bias-variance', label: blSame('Bias–variance lesson — Decision Tree', 'Playground — Decision Tree') },
     formalism: {
       worked: bl(
         'Splitting 10 gold-forecast examples by "real yields > 0?": 6 examples with yields>0 have average outcome "price falls" (say -50), 4 with yields≤0 average "price rises" (+40). This single split already separates the two groups cleanly — a good candidate first split.',
@@ -363,7 +363,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'macro', label: blSame('Macro Lab — the Random Forest lens', 'Macro Lab — Random Forest lens') },
+    mechanism: { kind: 'retired-lab', module: 'macro', label: blSame('Macro Lab — the Random Forest lens', 'Macro Lab — Random Forest lens') },
     formalism: {
       worked: bl(
         'Three trees predict tomorrow\'s gold move as +$30, -$10, +$50 respectively (each saw a different bootstrap sample). Random Forest\'s prediction is their average: (30-10+50)/3 ≈ $23 — smoothing away each tree\'s individual noise.',
@@ -412,7 +412,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'micro', label: blSame('Micro Lab — the Gradient Boosting curve', 'Micro Lab — Gradient Boosting curve') },
+    mechanism: { kind: 'retired-lab', module: 'micro', label: blSame('Micro Lab — the Gradient Boosting curve', 'Micro Lab — Gradient Boosting curve') },
     formalism: {
       worked: bl(
         'Tree 1 predicts gold moves +$40 when actual was +$55 — residual error +$15. Tree 2 is fit specifically to predict that leftover +$15, learning to add a correction where Tree 1 undershot. Combined prediction: $40+$15=$55.',
@@ -461,7 +461,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'gold', label: blSame('Gold Lab — the XGBoost lens', 'Gold Lab — XGBoost lens') },
+    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the XGBoost lens', 'Gold Lab — XGBoost lens') },
     formalism: {
       worked: bl(
         'XGBoost\'s objective adds Ω(f)=γT+½λΣwⱼ² to the loss, where T is the number of leaves and wⱼ their weights. A tree with 20 tiny, barely-useful leaves gets penalized more than one with 5 substantial ones — this is the "automatic guardrail" in concrete math form.',
@@ -681,7 +681,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'live-link', module: 'micro', label: blSame('Micro Lab — Gradient Boosting, a real instance of Boosting', 'Micro Lab — Gradient Boosting, Boosting ၏ တကယ့် instance') },
+    mechanism: { kind: 'retired-lab', module: 'micro', label: blSame('Micro Lab — Gradient Boosting, a real instance of Boosting', 'Micro Lab — Gradient Boosting, Boosting ၏ တကယ့် instance') },
     formalism: {
       worked: bl(
         'A weak learner alone gets 60% accuracy. Boosting chains 50 weak learners, each fixing the specific errors of the ensemble so far — the combined ensemble can reach 95%+ accuracy on the same problem, far beyond what any single weak learner could.',
@@ -1007,7 +1007,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'gold', label: blSame('Gold Lab — the ARIMA lens', 'Gold Lab — ARIMA lens') },
+    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the ARIMA lens', 'Gold Lab — ARIMA lens') },
     formalism: {
       worked: bl(
         'A simple AR(1) model: next_price = 4015 + 0.8×(today_price − 4015). If today is $4,050 (35 above the long-run level), tomorrow\'s forecast is 4015 + 0.8×35 = $4,043 — reverting most, but not all, of the way back.',
@@ -1113,7 +1113,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'live-link', module: 'gold', label: blSame('Gold Lab — the GARCH volatility overlay', 'Gold Lab — GARCH volatility overlay') },
+    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the GARCH volatility overlay', 'Gold Lab — GARCH volatility overlay') },
     formalism: {
       worked: bl(
         'σ²ₜ = 0.02 + 0.15·ε²ₜ₋₁ + 0.8·σ²ₜ₋₁. If yesterday\'s shock ε was unusually large (ε²=4) and yesterday\'s variance σ²ₜ₋₁ was 1, today\'s variance forecast: 0.02+0.15(4)+0.8(1)=1.42 — noticeably higher than yesterday\'s 1, exactly the "shock raises expected turbulence" behavior.',
@@ -1276,7 +1276,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'live-link', module: 'gold', label: blSame('Gold Lab — compare the ARIMA and XGBoost lenses side by side', 'Gold Lab — ARIMA နှင့် XGBoost lens များကို ယှဉ်တွဲကြည့်ပါ') },
+    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — compare the ARIMA and XGBoost lenses side by side', 'Gold Lab — ARIMA နှင့် XGBoost lens များကို ယှဉ်တွဲကြည့်ပါ') },
     formalism: {
       worked: bl(
         'ARIMA forecasts gold at $4,015 for tomorrow. Its historical residuals (actual minus ARIMA-predicted) show a pattern XGBoost detects: residuals tend to be +$25 whenever geopolitical risk spiked recently, something ARIMA structurally can\'t see. Final hybrid forecast: $4,015 + $25 = $4,040.',
@@ -1382,7 +1382,7 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'live-link', module: 'gold', label: blSame('Gold Lab — the LSTM lens', 'Gold Lab — LSTM lens') },
+    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the LSTM lens', 'Gold Lab — LSTM lens') },
     formalism: {
       worked: bl(
         'A forget gate outputs fₜ=0.9 (close to 1, "keep most of the old memory") when recent inputs look unremarkable, but drops to fₜ=0.1 ("mostly forget") right after a genuinely surprising data point — this learned, input-dependent gating is exactly what lets important old information survive far longer than a fixed 0.5 decay would allow.',
@@ -1630,7 +1630,7 @@ export const MODEL_DEPTH_LADDER = {
       retrieval: {
         question: blSame('Without looking back: why does the doc call this family "the ML-side sibling of frequentist confidence intervals"?', 'ပြန်မကြည့်ဘဲ: doc သည် ဒီ family ကို "frequentist confidence interval ၏ ML-ဘက် ညီအစ်ကို" ဟု ဘာကြောင့် ခေါ်သလဲ?'),
         answer: blSame(
-          "Both a frequentist t confidence interval (Stats mode's ci_mean_t) and a Bayesian posterior interval report a range around an estimate — but they mean fundamentally different things: the frequentist interval treats the true parameter as fixed and the interval as random across repeated sampling; the Bayesian interval treats the parameter itself as uncertain and the interval as a direct probability statement about it, which the Stats ↔ ML Bridge makes explicit with matching numbers.",
+          "Both a frequentist t confidence interval (Stats mode's ci_mean_t) and a Bayesian posterior interval report a range around an estimate — but they mean fundamentally different things: the frequentist interval treats the true parameter as fixed and the interval as random across repeated sampling; the Bayesian interval treats the parameter itself as uncertain and the interval as a direct probability statement about it.",
           'Frequentist t confidence interval (Stats mode ၏ ci_mean_t) နှင့် Bayesian posterior interval နှစ်ခုစလုံးသည် ခန့်မှန်းချက်တစ်ခု ပတ်ဝန်းကျင် အပိုင်းအခြားတစ်ခုကို report ပြုသည် — သို့သော် အခြေခံအားဖြင့် မတူညီသော အရာများကို ဆိုလိုသည်: frequentist interval သည် စစ်မှန်သော parameter ကို ပုံသေထားပြီး interval ကို ထပ်ခါထပ်ခါ sampling တစ်လျှောက် ကျပန်းအဖြစ် ယူဆသည်; Bayesian interval သည် parameter ကိုယ်တိုင်ကို မသေချာဟု ယူဆပြီး interval ကို ၎င်းအကြောင်း တိုက်ရိုက် probability ဖော်ပြချက်တစ်ခုအဖြစ် ယူဆသည်၊ ဒါကို Stats ↔ ML Bridge က ဂဏန်းတူတူဖြင့် ရှင်းလင်းစွာ ပြသသည်။'
         ),
       },

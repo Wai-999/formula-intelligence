@@ -27,6 +27,8 @@
 const f = (id, why) => ({ kind: 'formula', id, why });
 const m = (id, why) => ({ kind: 'model', id, why });
 const mod = (id, why) => ({ kind: 'module', id, why });
+// A lesson embedded in an ML page (src/data/ml/lessons.js).
+const lesson = (id, why) => ({ kind: 'lesson', id, why });
 
 export const LEARNING_TRACKS = [
   {
@@ -139,7 +141,7 @@ export const LEARNING_TRACKS = [
         title: 'Prove it works',
         goal: 'Validation and explanation, which is where projects actually fail.',
         items: [
-          mod('evaluation', 'Metrics, walk-forward validation, SHAP vs LIME'),
+          lesson('evaluation', 'Metrics, walk-forward validation, SHAP vs LIME'),
           mod('python', 'Production-quality implementations of everything above'),
           f('r2', 'And why it is not a measure of correctness'),
           f('se_est', 'Model error in the units the business feels'),
@@ -196,8 +198,8 @@ export const LEARNING_TRACKS = [
         title: 'Operations',
         goal: 'The parts nobody teaches and everybody hits.',
         items: [
-          mod('evaluation', 'Drift, monitoring, and explainability in production'),
-          mod('playground', 'Bias-variance, felt rather than described'),
+          lesson('evaluation', 'Drift, monitoring, and explainability in production'),
+          lesson('bias-variance', 'Bias-variance, felt rather than described'),
           mod('sources', 'Where every figure in this app comes from — and how to keep that discipline'),
         ],
       },
@@ -237,15 +239,6 @@ export const LEARNING_TRACKS = [
           m('prophet', 'Calendar-driven business series'),
           m('hybrid', 'Econometric core plus ML on the residuals'),
           m('ridge_lasso_en', 'High-dimensional nowcasting — often beats fancier ML'),
-        ],
-      },
-      {
-        title: 'Applied labs',
-        goal: 'The same models against real forecasting problems.',
-        items: [
-          mod('macro', 'GDP nowcasting under data-release lags'),
-          mod('gold', 'Five drivers, four model families, one price'),
-          mod('politics', 'Geopolitical risk as a quantified feature'),
         ],
       },
     ],
@@ -359,16 +352,17 @@ export const LEARNING_TRACKS = [
  * - models:   Depth Ladder engagement, since ML models have no flashcards.
  *             Using SR mastery for both would leave the ML Engineer track
  *             permanently at 0/12 no matter how much of it a learner did.
- * - modules:  excluded from the denominator entirely. They are pages, not
- *             assessable items, and a bar that can never reach 100% teaches
- *             learners to ignore bars.
+ * - modules and lessons: excluded from the denominator entirely. They are
+ *             pages (or sections of one), not assessable items, and a bar
+ *             that can never reach 100% teaches learners to ignore bars.
  */
+const UNSCORED = new Set(['module', 'lesson']);
 export function trackProgress(track, isDone) {
   let done = 0;
   let total = 0;
   for (const stage of track.stages) {
     for (const item of stage.items) {
-      if (item.kind === 'module') continue;
+      if (UNSCORED.has(item.kind)) continue;
       total++;
       if (isDone(item)) done++;
     }
@@ -377,7 +371,7 @@ export function trackProgress(track, isDone) {
 }
 
 export function stageProgress(stage, isDone) {
-  const items = stage.items.filter((i) => i.kind !== 'module');
+  const items = stage.items.filter((i) => !UNSCORED.has(i.kind));
   const done = items.filter((i) => isDone(i)).length;
   return { done, total: items.length, pct: items.length ? Math.round((done / items.length) * 100) : 0 };
 }

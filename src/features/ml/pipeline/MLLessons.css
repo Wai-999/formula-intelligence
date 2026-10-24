@@ -1,0 +1,77 @@
+.ml-lessons h2.ml-section-title {
+  font-size: 13px;
+}
+
+.ml-lesson-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* No background of its own: the embedded lessons draw their own translucent
+   panels, and stacking them on a raised surface lightened the composite
+   enough to drop their faint labels to 4.15:1 in the dark theme (axe). On
+   the page's own background they pass, as they did as standalone tabs. */
+.ml-lesson {
+  border: 1px solid var(--border-solid);
+  border-radius: 10px;
+}
+
+.ml-lesson-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  font: inherit;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.ml-lesson-toggle:hover .ml-lesson-title {
+  text-decoration: underline;
+}
+
+.ml-lesson-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ml-lesson-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ml-lesson-summary {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.ml-lesson-toggle .ti {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.ml-lesson-body {
+  border-top: 1px solid var(--border-solid);
+  padding: 12px;
+}
+
+/* The lesson components were written as whole pages (.ml-page owns padding
+   and its own vertical scroll). Embedded, the host page scrolls instead. */
+.ml-lesson-body .ml-page {
+  padding: 0;
+  overflow: visible;
+  flex: none;
+}

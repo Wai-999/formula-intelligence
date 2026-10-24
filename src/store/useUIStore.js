@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { ML_TABS } from './useMLUIStore.js';
 import { useToastStore } from './useToastStore.js';
+import { ML_LESSONS } from '../data/ml/lessons.js';
 
 export const TABS = [
   { id: 'map', label: 'Map', icon: 'ti-topology-star-3', ready: true },
@@ -19,8 +20,19 @@ export const DEFAULT_TAB = { stats: 'map', ml: 'pipeline' };
 // Retired ML tabs and where their teaching lives now (docs/audits/
 // FEATURE_INVENTORY.md §2). `lesson` opens an embedded lesson on the target
 // page; `notice` explains the move once, instead of a silent redirect.
+const LAB_NOTICE = (name) => `The ${name} forecasting lab was retired when ML mode was reorganised into lessons. You're on the ML Pipeline instead.`;
 export const RETIRED_ML_TABS = {
   bridge: { tab: 'pipeline', notice: 'The Stats ↔ ML comparison page was retired; its comparisons now live in the ML lessons.' },
+  gold: { tab: 'pipeline', notice: LAB_NOTICE('Gold') },
+  macro: { tab: 'pipeline', notice: LAB_NOTICE('Macro (GDP nowcasting)') },
+  micro: { tab: 'pipeline', notice: LAB_NOTICE('Micro (retail demand)') },
+  politics: { tab: 'pipeline', notice: LAB_NOTICE('Politics') },
+  // Rehomed, not retired: these open their lesson on the host page.
+  ...Object.fromEntries(ML_LESSONS.map((l) => [l.retiredTab, {
+    tab: l.host,
+    lesson: l.id,
+    notice: `This tab became the lesson "${l.title}" — opened for you below.`,
+  }])),
 };
 
 /**
@@ -82,6 +94,12 @@ export const useUIStore = create((set, get) => ({
 
   clearMLLesson() {
     set({ mlLesson: null });
+  },
+
+  openMLLesson(lessonId) {
+    const lesson = ML_LESSONS.find((l) => l.id === lessonId);
+    if (!lesson) return;
+    set({ mode: 'ml', mlActiveTab: lesson.host, mlLesson: lesson.id, selectedNodeId: null, traceChain: null, breadcrumbFrom: null });
   },
 
   // Shared cross-mode/cross-domain link slice (Module 9's geopolitical-risk

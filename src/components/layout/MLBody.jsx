@@ -6,7 +6,6 @@ import { ML_TABS } from '../../store/useMLUIStore.js';
 import { useVisitedTabs } from '../../hooks/useVisitedTabs.js';
 import LevelLangToggle from '../ml/LevelLangToggle.jsx';
 import UnderstandingTrackerBadge from '../ml/learning/UnderstandingTrackerBadge.jsx';
-import MixedReviewPanel from '../ml/learning/MixedReviewPanel.jsx';
 import EntryMisconceptionBanner from '../ml/learning/EntryMisconceptionBanner.jsx';
 import { useT } from '../../lib/mlContent.js';
 import './MLBody.css';
@@ -15,25 +14,17 @@ import './MLBody.css';
 // ML mode (Phase 1 §2 — "code-splittable" without adding a router).
 const PipelinePage = lazy(() => import('../../features/ml/pipeline/PipelinePage.jsx'));
 const ModelMapPage = lazy(() => import('../../features/ml/modelmap/ModelMapPage.jsx'));
-const PlaygroundPage = lazy(() => import('../../features/ml/playground/PlaygroundPage.jsx'));
-const EvaluationPage = lazy(() => import('../../features/ml/evaluation/EvaluationPage.jsx'));
-const GoldLabPage = lazy(() => import('../../features/ml/gold/GoldLabPage.jsx'));
-const MacroLabPage = lazy(() => import('../../features/ml/macro/MacroLabPage.jsx'));
-const MicroLabPage = lazy(() => import('../../features/ml/micro/MicroLabPage.jsx'));
-const PoliticsLabPage = lazy(() => import('../../features/ml/politics/PoliticsLabPage.jsx'));
 const PythonHubPage = lazy(() => import('../../features/ml/python/PythonHubPage.jsx'));
 const PyLabPage = lazy(() => import('../../features/ml/pylab/PyLabPage.jsx'));
 const SourcesPage = lazy(() => import('../../features/ml/sources/SourcesPage.jsx'));
 
+// Mixed-Review interleaving is unmounted, not deleted: its questions were
+// built entirely on the retired domain labs (every one requires two lab
+// visits), so it could only ever ask about pages that no longer exist. To be
+// re-sourced across the new lessons (docs/UPGRADE_PROGRESS.md, decision D2).
 const FEATURES = {
   pipeline: PipelinePage,
   modelmap: ModelMapPage,
-  playground: PlaygroundPage,
-  evaluation: EvaluationPage,
-  gold: GoldLabPage,
-  macro: MacroLabPage,
-  micro: MicroLabPage,
-  politics: PoliticsLabPage,
   python: PythonHubPage,
   pylab: PyLabPage,
   sources: SourcesPage,
@@ -57,7 +48,6 @@ export default function MLBody() {
           <span className="ml-main-title">{tabTitle}</span>
           <div className="ml-main-header-controls">
             <UnderstandingTrackerBadge />
-            <MixedReviewPanel />
             <LevelLangToggle />
           </div>
         </div>
