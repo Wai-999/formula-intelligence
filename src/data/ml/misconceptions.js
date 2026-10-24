@@ -46,10 +46,10 @@ export const MISCONCEPTIONS = {
   userTrainedModel: {
     id: 'userTrainedModel',
     belief: blSame(
-      "Moving the sliders in this app's Playground is training 'the' AI model — like teaching a real system."
+      "Moving the sliders in this app's demos — the Model Playground, the lesson labs, the Model Map widgets — is training 'the' AI model, like teaching a real system."
     ),
     truth: blSame(
-      "The Playground fits a small, local, disposable demo model live in your browser, to a synthetic dataset generated just for this session. Nothing here is training or updating any shared, persistent, or production model — closing this tab discards everything it just fit. It's a sandbox for building intuition about how fitting works, not a control panel for a real system."
+      "Everything here runs in your browser, and nothing it computes leaves this device. The Model Playground (in the ML pipeline's bias–variance lesson) fits a small, disposable model to a synthetic dataset generated for that session; the lesson labs and Model Map widgets compute a formula from the numbers you set; the Python lab runs only the code you write. None of it trains or updates any shared, persistent or production model — these are sandboxes for building intuition, not control panels for a real system."
     ),
   },
   autonomousDataAcquisition: {

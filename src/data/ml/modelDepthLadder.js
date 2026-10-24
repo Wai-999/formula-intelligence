@@ -1542,9 +1542,9 @@ export const MODEL_DEPTH_LADDER = {
         'A real caveat: because both the actor and critic are being learned simultaneously from the same noisy financial data, errors in one can propagate into the other — an early bad critic estimate can misdirect actor updates before the critic has had a chance to improve.'
       ),
       retrieval: {
-        question: blSame('Without looking back: if you spent an afternoon adjusting the sliders in this app\'s Playground while reading about Actor-Critic, would that be training a real Actor-Critic trading agent?'),
+        question: blSame('Without looking back: if you spent an afternoon adjusting the sliders in the Model Playground (the ML pipeline\'s bias–variance lesson) while reading about Actor-Critic, would that be training a real Actor-Critic trading agent?'),
         answer: blSame(
-          "No — per this app's own entry banner, the Playground fits a small, local, disposable demo model to a synthetic dataset for that session only. It never trains, updates, or influences any shared Actor-Critic system, real or otherwise — a genuine reinforcement-learning trading agent would need its own dedicated training pipeline running for far longer than an afternoon."
+          "No — as this app's entry banner says, the Model Playground fits a small, local, disposable demo model to a synthetic dataset for that session only. It never trains, updates, or influences any shared Actor-Critic system, real or otherwise — a genuine reinforcement-learning trading agent would need its own dedicated training pipeline running for far longer than an afternoon."
         ),
       },
     },
