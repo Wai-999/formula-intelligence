@@ -83,10 +83,16 @@ async function serve() {
 const violations = new Map();
 function record(label, result) {
   for (const v of result.violations) {
-    const prev = violations.get(v.id) || { id: v.id, impact: v.impact, help: v.help, nodes: 0, pages: new Set(), sample: '' };
+    const prev = violations.get(v.id) || { id: v.id, impact: v.impact, help: v.help, nodes: 0, pages: new Set(), samples: [] };
     prev.nodes += v.nodes.length;
     prev.pages.add(label);
-    if (!prev.sample) prev.sample = v.nodes[0]?.target?.join(' ') ?? '';
+    // Keep a few complete examples — target, markup and axe's own summary —
+    // so a failure that only happens on another machine (CI fonts differ
+    // from a laptop's) can be diagnosed from the log alone.
+    for (const n of v.nodes) {
+      if (prev.samples.length >= 3) break;
+      prev.samples.push({ page: label, target: n.target.join(' '), html: n.html, summary: n.failureSummary });
+    }
     violations.set(v.id, prev);
   }
 }
@@ -95,6 +101,18 @@ async function main() {
   await serve();
   const browser = await chromium.launch();
   const context = await browser.newContext({ viewport: { width: 1400, height: 900 } });
+  // A11Y_FONT='DejaVu Sans' (or Arial) approximates the CI runner, which has
+  // no Inter: wider text wraps differently, and target-size failures that a
+  // laptop never shows appear there first.
+  if (process.env.A11Y_FONT) {
+    await context.addInitScript((f) => {
+      document.addEventListener('DOMContentLoaded', () => {
+        const st = document.createElement('style');
+        st.textContent = `:root { --font-sans: ${f} !important } body, button, input, textarea, select { font-family: ${f} !important }`;
+        document.head.appendChild(st);
+      });
+    }, process.env.A11Y_FONT);
+  }
   const page = await context.newPage();
 
   // Set the theme the way the app itself persists it, then load. Poking
@@ -159,7 +177,12 @@ async function main() {
   for (const v of found) {
     console.log(`  [${v.impact}] ${v.id} — ${v.nodes} element(s) on ${[...v.pages].join(', ')}`);
     console.log(`      ${v.help}`);
-    console.log(`      e.g. ${v.sample.slice(0, 90)}\n`);
+    for (const x of v.samples) {
+      console.log(`      on ${x.page}: ${x.target}`);
+      console.log(`        ${x.html.slice(0, 240)}`);
+      console.log(`        ${(x.summary || '').replace(/\s+/g, ' ').slice(0, 300)}`);
+    }
+    console.log();
   }
   return 1;
 }

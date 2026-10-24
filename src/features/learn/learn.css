@@ -339,6 +339,15 @@
   cursor: pointer;
 }
 
+/* Stacked links: at least 24 px tall (WCAG 2.5.8). With a wide fallback
+   font (CI's Linux runner has no Inter) two short titles otherwise sit
+   15 px apart. */
+.lesson-builds-on a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
 .lesson-main a,
 .lesson-aside a,
 .course-page a:not(.studio-btn):not(.studio-card-link) {

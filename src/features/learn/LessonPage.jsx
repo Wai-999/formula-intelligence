@@ -405,7 +405,7 @@ export default function LessonPage({ lessonId }) {
           </nav>
           <div>
             <p className="studio-eyebrow">Builds on</p>
-            <ul className="studio-list">
+            <ul className="studio-list lesson-builds-on">
               {meta.prerequisites.map((p) => <li key={p}><a href={hashFor('maps/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></li>)}
             </ul>
           </div>

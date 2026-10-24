@@ -7,6 +7,17 @@ import { expectNoCrash, VISIBLE } from './helpers.js';
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('ml_entry_banner_seen_v1', 'true'));
+  // E2E_FONT='DejaVu Sans' approximates CI's Linux runner (no Inter), where
+  // wider text can wrap or overflow differently than on a laptop.
+  if (process.env.E2E_FONT) {
+    await page.addInitScript((f) => {
+      document.addEventListener('DOMContentLoaded', () => {
+        const st = document.createElement('style');
+        st.textContent = `:root { --font-sans: ${f} !important } body, button, input, textarea, select { font-family: ${f} !important }`;
+        document.head.appendChild(st);
+      });
+    }, process.env.E2E_FONT);
+  }
 });
 
 test.describe('home and first run', () => {

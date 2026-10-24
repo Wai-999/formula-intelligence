@@ -15,6 +15,8 @@ Target: WCAG 2.2 AA for core flows (§13). This report separates what automated 
 
 Fixed during Phases 2–10 because the audit found them: radio choices whose only label was rendered math (now named from `toPlainText` of the math); 24 px target size on Python-library and Sources table-of-contents links; an unlabelled phone search button; a scrollable display-math region that was not keyboard-focusable (focusable now, only when it overflows); light-theme contrast of the active depth button; the Model Map mechanism slider had no accessible name (now labelled, output announced politely).
 
+Found only by CI: on the Linux runner, which has no Inter font, the lesson sidebar's "Builds on" links wrapped onto lines 15 px apart (10 target-size failures on 5 lessons) while every laptop run passed. They are now at least 24 px tall, and `A11Y_FONT='DejaVu Sans' npm run a11y` (and `E2E_FONT=… npx playwright test`) reproduce CI's wider text locally; all 59 pages pass in both themes with DejaVu Sans, Arial and the default font.
+
 Axe cannot judge meaning, reading order, or whether an explanation makes sense when heard. It is a floor, not a verdict.
 
 ## Scripted keyboard and layout tests (Playwright, every CI run)
