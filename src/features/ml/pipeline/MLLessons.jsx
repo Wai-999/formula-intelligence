@@ -75,7 +75,7 @@ export default function MLLessons({ host }) {
               {isOpen && Lesson && (
                 <div className="ml-lesson-body" id={`ml-lesson-body-${l.id}`}>
                   <ErrorBoundary label={l.title}>
-                    <Suspense fallback={<div className="ml-loading">Loading lesson…</div>}>
+                    <Suspense fallback={<div className="page-loading" role="status">Loading lesson…</div>}>
                       <Lesson />
                     </Suspense>
                   </ErrorBoundary>

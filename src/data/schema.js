@@ -18,9 +18,9 @@
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
-/** A bilingual, two-depth object as produced by bl()/blSame(). */
+/** A two-depth content object as produced by bl()/blSame(): { beginner, researcher }. */
 export function isBlObject(v) {
-  return isPlainObject(v) && isPlainObject(v.en) && isPlainObject(v.my);
+  return isPlainObject(v) && 'beginner' in v && 'researcher' in v;
 }
 
 // ————— Field rule constructors —————
@@ -80,17 +80,15 @@ function checkField(rule, value, path, errors) {
       break;
     case 'bl': {
       // The single highest-value check in this file: an incomplete bl()
-      // renders as blank UI at whichever depth/language wasn't authored.
+      // renders as blank UI at whichever depth wasn't authored.
       if (!isBlObject(value)) {
         errors.push(`${path} — expected a bl()/blSame() object, got ${describe(value)}`);
         return;
       }
-      for (const lang of ['en', 'my']) {
-        for (const level of ['beginner', 'researcher']) {
-          const v = value[lang]?.[level];
-          if (typeof v !== 'string' || v.trim() === '') {
-            errors.push(`${path}.${lang}.${level} — missing text (bl() called with too few arguments?)`);
-          }
+      for (const level of ['beginner', 'researcher']) {
+        const v = value[level];
+        if (typeof v !== 'string' || v.trim() === '') {
+          errors.push(`${path}.${level} — missing text (bl() called with too few arguments?)`);
         }
       }
       break;

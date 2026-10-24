@@ -25,7 +25,7 @@ const kind = (v) => {
   return typeof v;
 };
 
-function quarantine(key, raw) {
+export function quarantine(key, raw) {
   try {
     const existing = JSON.parse(localStorage.getItem(QUARANTINE_KEY) || '{}');
     const store = existing && kind(existing) === 'object' ? existing : {};

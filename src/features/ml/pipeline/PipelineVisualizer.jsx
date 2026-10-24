@@ -115,7 +115,6 @@ export default function PipelineVisualizer() {
   const title = useT(PIPELINE_TITLE);
   const intro = useT(PIPELINE_INTRO);
   const level = useMLUIStore((s) => s.level);
-  const lang = useMLUIStore((s) => s.lang);
 
   return (
     <div className="ml-section">
@@ -123,7 +122,7 @@ export default function PipelineVisualizer() {
       <p className="ml-section-sub">{intro}</p>
       <div className="pv-track">
         {PIPELINE_STAGES.map((stage, i) => {
-          const stageName = resolveT(stage.stageName, level, lang);
+          const stageName = resolveT(stage.stageName, level);
           return (
             <div className="pv-track-item" key={stage.id}>
               <button

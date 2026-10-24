@@ -1,0 +1,158 @@
+/* Sidebar (≥1024 px, collapsible) and compact rail (768–1023 px). Below
+   768 px this nav is hidden and BottomNav takes over. */
+.primary-nav {
+  flex-shrink: 0;
+  width: 208px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 10px;
+  background: rgba(var(--panel-rgb), 0.82);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.primary-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.primary-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.primary-nav-link .ti {
+  font-size: 19px;
+  flex-shrink: 0;
+}
+
+.primary-nav-link:hover {
+  background: rgba(var(--overlay-rgb), 0.06);
+  color: var(--text-primary);
+}
+
+.primary-nav-link.active {
+  background: rgba(139, 92, 246, 0.16);
+  color: var(--text-primary);
+}
+
+.primary-nav-link.active .ti {
+  color: var(--primary-text);
+}
+
+.primary-nav-short {
+  display: none;
+}
+
+.primary-nav-collapse {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.primary-nav-collapse:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.primary-nav-collapse .ti {
+  font-size: 18px;
+}
+
+/* Collapsed by the learner: icons only, label in the tooltip. */
+.primary-nav.collapsed {
+  width: 64px;
+  align-items: center;
+}
+
+.primary-nav.collapsed .primary-nav-link {
+  justify-content: center;
+  padding: 0;
+  width: 44px;
+}
+
+.primary-nav.collapsed .primary-nav-label {
+  /* Visually hidden, still the link's accessible name. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.primary-nav.collapsed .primary-nav-collapse {
+  align-self: center;
+}
+
+/* Compact rail: always icon + short label, no collapse control. */
+@media (max-width: 1023px) {
+  .primary-nav,
+  .primary-nav.collapsed {
+    width: 76px;
+    align-items: stretch;
+    padding: 10px 6px;
+  }
+
+  .primary-nav-link,
+  .primary-nav.collapsed .primary-nav-link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    width: auto;
+    min-height: 54px;
+    padding: 4px 2px;
+    font-size: 10.5px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .primary-nav-label,
+  .primary-nav.collapsed .primary-nav-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .primary-nav-short {
+    display: block;
+  }
+
+  .primary-nav-collapse {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .primary-nav {
+    display: none;
+  }
+}

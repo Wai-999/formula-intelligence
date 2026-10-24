@@ -11,11 +11,12 @@ export const SHORTCUTS = [
   { keys: ['?'], label: 'Show this help', group: 'General' },
   { keys: ['Esc'], label: 'Close panel, overlay or selection', group: 'General' },
   { keys: ['t'], label: 'Toggle light / dark theme', group: 'General' },
-  { keys: ['m'], label: 'Switch between Stats and ML mode', group: 'General' },
+  { keys: ['⌘/Ctrl', 'K'], label: 'Search lessons, formulas, models and pages', group: 'General' },
   { keys: ['/'], label: 'Focus the search box on this page', group: 'General' },
-  { keys: ['['], label: 'Previous tab', group: 'Navigation' },
-  { keys: [']'], label: 'Next tab', group: 'Navigation' },
-  { keys: ['1', '–', '9'], label: 'Jump to the nth tab of the current mode', group: 'Navigation' },
+  { keys: ['f'], label: 'Focus mode: hide the navigation while you study', group: 'General' },
+  { keys: ['1', '–', '7'], label: 'Home, Learn, Maps, Practice, Projects, Progress, Notebook', group: 'Navigation' },
+  { keys: ['['], label: 'Previous page in this section', group: 'Navigation' },
+  { keys: [']'], label: 'Next page in this section', group: 'Navigation' },
   { keys: ['⌘/Ctrl', 'Enter'], label: 'Run the code (Python Lab)', group: 'Python' },
 ];
 
@@ -31,7 +32,10 @@ export function isTypingTarget(el) {
  * Kept pure so the whole table is testable without a DOM or a React tree.
  */
 export function matchShortcut(event) {
-  // Never hijack the browser's or the OS's combinations.
+  // The one combination the app claims is the near-universal "quick search"
+  // chord, and it works from inside a text field too. Every other browser or
+  // OS combination is left alone.
+  if ((event.metaKey || event.ctrlKey) && !event.altKey && (event.key === 'k' || event.key === 'K')) return 'globalSearch';
   if (event.metaKey || event.ctrlKey || event.altKey) return null;
   if (isTypingTarget(event.target)) {
     // Escape is the one key that must still work while typing: it is how you
@@ -43,12 +47,12 @@ export function matchShortcut(event) {
     case '?': return 'help';
     case 'Escape': return 'escape';
     case 't': case 'T': return 'theme';
-    case 'm': case 'M': return 'mode';
+    case 'f': case 'F': return 'focus';
     case '/': return 'search';
-    case '[': return 'prevTab';
-    case ']': return 'nextTab';
+    case '[': return 'prevPage';
+    case ']': return 'nextPage';
     default:
-      if (/^[1-9]$/.test(event.key)) return `tab:${Number(event.key) - 1}`;
+      if (/^[1-7]$/.test(event.key)) return `section:${Number(event.key) - 1}`;
       return null;
   }
 }
@@ -57,7 +61,7 @@ export function matchShortcut(event) {
 export function findSearchInput() {
   const candidates = document.querySelectorAll('input[type="search"], input[type="text"][placeholder*="earch"]');
   for (const el of candidates) {
-    // Every tab stays mounted (keep-alive), so most of these are hidden;
+    // Visited pages stay mounted (keep-alive), so most of these are hidden;
     // offsetParent is null for anything inside a display:none ancestor.
     if (el.offsetParent !== null) return el;
   }

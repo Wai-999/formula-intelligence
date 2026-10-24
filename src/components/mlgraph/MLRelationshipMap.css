@@ -73,3 +73,12 @@
   max-width: 220px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
+
+.mlgnode:focus {
+  outline: none;
+}
+
+.mlgnode:focus-visible circle {
+  stroke: var(--accent);
+  stroke-width: 4;
+}

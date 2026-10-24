@@ -4,7 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="From uncertain maths to data science: algebra, linear algebra, calculus, statistics, machine learning and Python — visual, practised, and stored only on your device." />
+    <meta name="theme-color" content="#10111f" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <title>Formula Intelligence</title>
+    <script>
+      // Resolve the theme before any stylesheet loads, so a light-mode learner
+      // never sees a dark first paint. Same rule as src/store/useThemeStore.js:
+      // an explicit 'light'/'dark' wins; anything else follows the OS.
+      (function () {
+        var pref = null;
+        try { pref = JSON.parse(localStorage.getItem('fi_theme_v1')); } catch (e) { pref = null; }
+        if (pref !== 'light' && pref !== 'dark') {
+          try { pref = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } catch (e) { pref = 'dark'; }
+        }
+        document.documentElement.setAttribute('data-theme', pref);
+      })();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.44.0/tabler-icons.min.css" />
   </head>
   <body>

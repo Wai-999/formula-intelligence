@@ -1,0 +1,356 @@
+{
+  "captured": "2026-10-24T19:05:13.522Z",
+  "browser": "Chromium (Playwright)",
+  "shots": [
+    {
+      "file": "home-320-dark.jpg",
+      "page": "#home",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "courses-320-dark.jpg",
+      "page": "#learn/courses",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-a1-slope-320-dark.jpg",
+      "page": "#learn/lesson/a1-slope",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-la-matrix-transform-320-dark.jpg",
+      "page": "#learn/lesson/la-matrix-transform",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "concept-map-320-dark.jpg",
+      "page": "#maps/concepts",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "formula-map-320-dark.jpg",
+      "page": "#maps/formulas",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "mixed-practice-320-dark.jpg",
+      "page": "#practice/mixed",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "code-exercises-320-dark.jpg",
+      "page": "#practice/code",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "diagnostic-320-dark.jpg",
+      "page": "#progress/diagnostic",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "settings-320-dark.jpg",
+      "page": "#settings",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "home-768-dark.jpg",
+      "page": "#home",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "courses-768-dark.jpg",
+      "page": "#learn/courses",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-a1-slope-768-dark.jpg",
+      "page": "#learn/lesson/a1-slope",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-la-matrix-transform-768-dark.jpg",
+      "page": "#learn/lesson/la-matrix-transform",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "concept-map-768-dark.jpg",
+      "page": "#maps/concepts",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "formula-map-768-dark.jpg",
+      "page": "#maps/formulas",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "mixed-practice-768-dark.jpg",
+      "page": "#practice/mixed",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "code-exercises-768-dark.jpg",
+      "page": "#practice/code",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "diagnostic-768-dark.jpg",
+      "page": "#progress/diagnostic",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "settings-768-dark.jpg",
+      "page": "#settings",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "home-1280-dark.jpg",
+      "page": "#home",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "courses-1280-dark.jpg",
+      "page": "#learn/courses",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-a1-slope-1280-dark.jpg",
+      "page": "#learn/lesson/a1-slope",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-la-matrix-transform-1280-dark.jpg",
+      "page": "#learn/lesson/la-matrix-transform",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "concept-map-1280-dark.jpg",
+      "page": "#maps/concepts",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "formula-map-1280-dark.jpg",
+      "page": "#maps/formulas",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "mixed-practice-1280-dark.jpg",
+      "page": "#practice/mixed",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "code-exercises-1280-dark.jpg",
+      "page": "#practice/code",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "diagnostic-1280-dark.jpg",
+      "page": "#progress/diagnostic",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "settings-1280-dark.jpg",
+      "page": "#settings",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "home-320-light.jpg",
+      "page": "#home",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "courses-320-light.jpg",
+      "page": "#learn/courses",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-a1-slope-320-light.jpg",
+      "page": "#learn/lesson/a1-slope",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-la-matrix-transform-320-light.jpg",
+      "page": "#learn/lesson/la-matrix-transform",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "concept-map-320-light.jpg",
+      "page": "#maps/concepts",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "formula-map-320-light.jpg",
+      "page": "#maps/formulas",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "mixed-practice-320-light.jpg",
+      "page": "#practice/mixed",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "code-exercises-320-light.jpg",
+      "page": "#practice/code",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "diagnostic-320-light.jpg",
+      "page": "#progress/diagnostic",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "settings-320-light.jpg",
+      "page": "#settings",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "home-1280-light.jpg",
+      "page": "#home",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "courses-1280-light.jpg",
+      "page": "#learn/courses",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-a1-slope-1280-light.jpg",
+      "page": "#learn/lesson/a1-slope",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-la-matrix-transform-1280-light.jpg",
+      "page": "#learn/lesson/la-matrix-transform",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "concept-map-1280-light.jpg",
+      "page": "#maps/concepts",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "formula-map-1280-light.jpg",
+      "page": "#maps/formulas",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "mixed-practice-1280-light.jpg",
+      "page": "#practice/mixed",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "code-exercises-1280-light.jpg",
+      "page": "#practice/code",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "diagnostic-1280-light.jpg",
+      "page": "#progress/diagnostic",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "settings-1280-light.jpg",
+      "page": "#settings",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    }
+  ]
+}

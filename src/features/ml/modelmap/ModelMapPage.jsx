@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import MLRelationshipMap from '../../../components/mlgraph/MLRelationshipMap.jsx';
 import MLModelDetailPanel from '../../../components/mlgraph/MLModelDetailPanel.jsx';
+import ModelOutline from './ModelOutline.jsx';
+import '../../map/MapPage.css';
 import MLCitation from '../../../components/ml/MLCitation.jsx';
 import MisconceptionCallout from '../../../components/ml/learning/MisconceptionCallout.jsx';
 import { MM_LEGEND_TITLE, MM_LEGEND_EXTENDS, MM_LEGEND_COMPETES, MM_LEGEND_COMBINES } from '../../../data/ml/models.js';
@@ -9,6 +11,7 @@ import './ModelMapPage.css';
 
 export default function ModelMapPage() {
   const [showMisconception, setShowMisconception] = useState(true);
+  const [view, setView] = useState('graph');
   const legendTitle = useT(MM_LEGEND_TITLE);
   const legendExtends = useT(MM_LEGEND_EXTENDS);
   const legendCompetes = useT(MM_LEGEND_COMPETES);
@@ -17,7 +20,12 @@ export default function ModelMapPage() {
   return (
     <div className="mm-page">
       <div className="mm-canvas-area">
-        <MLRelationshipMap />
+        <div className="map-view-toggle" role="group" aria-label="View">
+          <button type="button" aria-pressed={view === 'graph'} onClick={() => setView('graph')}><i className="ti ti-topology-star-3" aria-hidden="true" /> Graph</button>
+          <button type="button" aria-pressed={view === 'outline'} onClick={() => setView('outline')}><i className="ti ti-list-tree" aria-hidden="true" /> Outline</button>
+        </div>
+        <div className="map-view" hidden={view !== 'graph'}><MLRelationshipMap /></div>
+        {view === 'outline' && <ModelOutline />}
         <MLModelDetailPanel />
         {showMisconception && (
           <div className="mm-misconception-card">

@@ -2,131 +2,98 @@ import { bl, blSame } from '../../lib/mlContent.js';
 
 // Module 11 audit (see gold.js's identical note in domains/).
 export const EPC_TITLE = blSame(
-  'Estimation vs. Prediction vs. Causal Inference',
-  'ခန့်မှန်းခြင်း vs. ကြိုတင်ဟောကိန်း vs. အကြောင်းရင်း ခြေရာခံခြင်း'
+  'Estimation vs. Prediction vs. Causal Inference'
 );
-export const EPC_GOAL_LBL = blSame('Goal', 'ရည်မှန်းချက်');
-export const EPC_OUTPUT_LBL = blSame('Typical output', 'ပုံမှန် Output');
-export const EPC_EXAMPLE_LBL = blSame('Example', 'ဥပမာ');
-export const EPC_METHODS_LBL = blSame('Method family', 'နည်းလမ်းအုပ်စု');
-export const EPC_FAILURE_LBL = blSame('Failure mode if confused', 'ရှုပ်ထွေးမိလျှင် မှားယွင်းနိုင်ပုံ');
+export const EPC_GOAL_LBL = blSame('Goal');
+export const EPC_OUTPUT_LBL = blSame('Typical output');
+export const EPC_EXAMPLE_LBL = blSame('Example');
+export const EPC_METHODS_LBL = blSame('Method family');
+export const EPC_FAILURE_LBL = blSame('Failure mode if confused');
 
 // Source: docs/research/ML-Research-Reference.md §2. The single most
 // important conceptual hinge between Stats mode and ML mode — built as its
 // own interactive panel per the research doc's explicit design note.
 export const EPC_INTRO = bl(
   'The same regression on gold price vs. real yields can be looked at two completely different ways. Click each column below to see what changes.',
-  'The same underlying object — e.g. linear regression of gold price on real yields — supports three distinct questions. Confusing them is the single most common conceptual error at the Stats/ML boundary.',
-  'ရွှေစျေးနှုန်းနှင့် real yields ကြားက regression တစ်ခုတည်းကို လုံးဝကွဲပြားသော နည်းလမ်းနှစ်မျိုးဖြင့် ကြည့်နိုင်သည်။ အောက်ပါ ကော်လံတစ်ခုစီကို နှိပ်ကြည့်ပါ။',
-  'ရွှေစျေးနှုန်းကို real yields ပေါ်တွင် linear regression ပြုလုပ်သည့် object တစ်ခုတည်းသည် လုံးဝကွဲပြားသော မေးခွန်းသုံးခုကို ဖြေဆိုနိုင်သည်။ ၎င်းတို့ကို ရောထွေးမှုသည် Stats/ML နယ်စပ်တွင် အဖြစ်များဆုံး သဘောတရားအမှားဖြစ်သည်။'
+  'The same underlying object — e.g. linear regression of gold price on real yields — supports three distinct questions. Confusing them is the single most common conceptual error at the Stats/ML boundary.'
 );
 
 export const EPC_COLUMNS = [
   {
     id: 'estimation',
-    label: bl('Estimation', 'Estimation', 'ခန့်မှန်းခြင်း (Estimation)', 'ခန့်မှန်းခြင်း (Estimation)'),
-    territory: bl('Classic Stats territory', 'Classic Stats territory', 'Stats ၏ ရိုးရာနယ်ပယ်', 'Stats ၏ ရိုးရာနယ်ပယ်'),
+    label: bl('Estimation', 'Estimation'),
+    territory: bl('Classic Stats territory', 'Classic Stats territory'),
     goal: bl(
       'Pin down the true value of a fixed number hiding in the data — like "how much does gold really move per 1% change in real yields?"',
-      'Infer the true value of a fixed but unknown parameter (a coefficient, a mean, a variance) from a sample.',
-      'အချက်အလက်ထဲ ဝှက်နေသော ဂဏန်းအမှန်ကို ရှာဖွေသည် — "real yields ၁% ပြောင်းလဲတိုင်း ရွှေက အမှန်တကယ် ဘယ်လောက်ရွေ့လဲ" ကဲ့သို့။',
-      'နမူနာတစ်ခုမှ ခိုင်မာသော်လည်း မသိသေးသော ပါရာမီတာတစ်ခု (coefficient၊ mean၊ variance) ၏ တန်ဖိုးအမှန်ကို ခန့်မှန်းသည်။'
+      'Infer the true value of a fixed but unknown parameter (a coefficient, a mean, a variance) from a sample.'
     ),
     output: bl(
       'A number plus how confident we are in it.',
-      'A parameter estimate + standard error / confidence interval.',
-      'ဂဏန်းတစ်ခုနှင့် ၎င်းကို ဘယ်လောက်ယုံကြည်သလဲဆိုတဲ့ အတိုင်းအတာ။',
-      'ပါရာမီတာ ခန့်မှန်းချက် + standard error / ယုံကြည်မှုအပိုင်းအခြား (confidence interval)။'
+      'A parameter estimate + standard error / confidence interval.'
     ),
     example: bl(
       '"Real yields\' effect on gold is about −312 — and we\'re 95% confident the true effect is somewhere between −400 and −224."',
-      '"The coefficient on real yields in a gold-price regression is −312, 95% CI [−400, −224]."',
-      '"Real yields က ရွှေပေါ် သက်ရောက်မှုက −312 ခန့်ရှိပြီး — အမှန်တကယ် သက်ရောက်မှုက −400 နှင့် −224 ကြားရှိမယ်လို့ ၉၅% ယုံကြည်ပါတယ်။"',
-      '"Gold-price regression ရှိ real yields ၏ coefficient သည် −312 ဖြစ်ပြီး၊ 95% CI [−400, −224] ဖြစ်သည်။"'
+      '"The coefficient on real yields in a gold-price regression is −312, 95% CI [−400, −224]."'
     ),
     methods: bl(
       'OLS, Maximum Likelihood, Bayesian methods — the frequentist end of this toolkit is exactly Stats mode\'s own t CI for the mean.',
-      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — the frequentist branch overlaps directly with Stats mode\'s ci_mean_t content.',
-      'OLS, Maximum Likelihood, Bayesian နည်းလမ်းများ — frequentist ဘက်က Stats mode ၏ t CI for the mean အတိုင်းပင်ဖြစ်သည်။',
-      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — frequentist ဘက်သည် Stats mode ၏ ci_mean_t content နှင့် တိုက်ရိုက်ထပ်နေသည်; worked comparison အတွက် Stats ↔ ML Bridge ကိုကြည့်ပါ။'
+      'OLS, Maximum Likelihood Estimation (MLE), Bayesian posterior estimation — the frequentist branch overlaps directly with Stats mode\'s ci_mean_t content.'
     ),
     failure: bl(
       'Mistaking "I\'m confident about this coefficient" for "I know what gold will do next month" — those are different questions.',
-      'Mistaking a tight confidence interval for a guarantee about a future value — the interval describes the parameter, not next quarter\'s price.',
-      '"ဒီ coefficient ကို ယုံကြည်ပါတယ်" ဆိုတာနဲ့ "လာမယ့်လ ရွှေဘယ်လိုဖြစ်မလဲ သိပါတယ်" ဆိုတာ မှားနေတတ်သည် — ၎င်းတို့သည် မတူညီသောမေးခွန်းများဖြစ်သည်။',
-      'Confidence interval ကျဉ်းမြောင်းခြင်းကို အနာဂတ်တန်ဖိုးအတွက် အာမခံချက်ဟု မှားထင်တတ်သည် — interval သည် ပါရာမီတာကို ဖော်ပြခြင်းဖြစ်ပြီး နောက်သုံးလပတ်စျေးနှုန်းကို မဟုတ်ပါ။'
+      'Mistaking a tight confidence interval for a guarantee about a future value — the interval describes the parameter, not next quarter\'s price.'
     ),
     accentVar: '--primary',
   },
   {
     id: 'prediction',
-    label: bl('Prediction', 'Prediction', 'ခန့်မှန်းချက် (Prediction)', 'ခန့်မှန်းချက် (Prediction)'),
-    territory: bl('Classic ML territory', 'Classic ML territory', 'ML ၏ ရိုးရာနယ်ပယ်', 'ML ၏ ရိုးရာနယ်ပယ်'),
+    label: bl('Prediction', 'Prediction'),
+    territory: bl('Classic ML territory', 'Classic ML territory'),
     goal: bl(
       'Take a real guess at a number we don\'t know yet — "what will gold actually trade at next month?"',
-      'Guess the value of a random, currently-unobserved outcome.',
-      'မသိသေးသော ဂဏန်းတစ်ခုကို အစစ်အမှန် ခန့်မှန်းသည် — "လာမယ့်လ ရွှေဘယ်လောက်ရောင်းဝယ်မှာလဲ" ကဲ့သို့။',
-      'ကျပန်း၊ လက်ရှိမတွေ့ရသေးသော ရလဒ်တစ်ခု၏ တန်ဖိုးကို ခန့်မှန်းသည်။'
+      'Guess the value of a random, currently-unobserved outcome.'
     ),
     output: bl(
       'A single best-guess number plus a plausible range around it.',
-      'A point forecast + prediction interval.',
-      'အကောင်းဆုံးခန့်မှန်းဂဏန်းတစ်ခုနှင့် ၎င်းပတ်ဝန်းကျင်ရှိ ဖြစ်နိုင်ချေအပိုင်းအခြား။',
-      'Point forecast + prediction interval။'
+      'A point forecast + prediction interval.'
     ),
     example: bl(
       '"Gold will trade around $4,180, plus or minus $150."',
-      '"Gold will trade at $4,180 ± $150 next month."',
-      '"ရွှေက $4,180 ဝန်းကျင်မှာ ရောင်းဝယ်မယ်၊ $150 လောက် အထက်အောက်ရှိနိုင်တယ်။"',
-      '"လာမယ့်လ ရွှေက $4,180 ± $150 မှာ ရောင်းဝယ်မည်။"'
+      '"Gold will trade at $4,180 ± $150 next month."'
     ),
     methods: bl(
       'Regularized regression, decision trees/ensembles, neural networks — anything trained to minimize prediction error.',
-      'Regularized regression, trees/ensembles, neural nets, any loss-minimizing algorithm.',
-      'Regularized regression, decision tree/ensemble များ၊ neural network များ — ခန့်မှန်းအမှားကို လျှော့ချရန် လေ့ကျင့်ထားသော မည်သည့်အယ်လဂိုရီသမ်မဆို။',
-      'Regularized regression, tree/ensemble များ၊ neural net များ၊ loss-minimizing algorithm မည်သည့်မဆို။'
+      'Regularized regression, trees/ensembles, neural nets, any loss-minimizing algorithm.'
     ),
     failure: bl(
       'Mistaking "this feature predicts well" for "this feature causes the outcome" — a model can lean hard on a variable that\'s just a bystander.',
-      'Mistaking a highly predictive feature for a causal driver — ML routinely "dismisses" covariates with low predictive power even when they\'re crucial confounders.',
-      '"ဒီ feature က ကောင်းကောင်းခန့်မှန်းနိုင်တယ်" ဆိုတာနဲ့ "ဒီ feature က ရလဒ်ကို ဖြစ်စေတယ်" ဆိုတာ မှားနေတတ်သည် — မော်ဒယ်တစ်ခုသည် ကပ်ပါလိုက်ရုံမျှသော variable တစ်ခုကို အလေးအနက်ထားနိုင်သည်။',
-      'ခန့်မှန်းအားကောင်းသော feature ကို causal driver ဟု မှားထင်တတ်သည် — ML သည် ခန့်မှန်းအားနည်းသော covariate များကို အရေးကြီးသော confounder ဖြစ်နေသော်လည်း "ပယ်ချ" လေ့ရှိသည်။'
+      'Mistaking a highly predictive feature for a causal driver — ML routinely "dismisses" covariates with low predictive power even when they\'re crucial confounders.'
     ),
     accentVar: '--accent',
   },
   {
     id: 'causal',
-    label: bl('Causal Inference', 'Causal Inference', 'အကြောင်းရင်း ခြေရာခံခြင်း (Causal Inference)', 'အကြောင်းရင်း ခြေရာခံခြင်း (Causal Inference)'),
-    territory: bl('The often-confused third sibling', "The third, often-confused sibling", 'မကြာခဏ ရောထွေးတတ်သော တတိယညီအစ်ကို', 'မကြာခဏ ရောထွေးတတ်သော တတိယညီအစ်ကို'),
+    label: bl('Causal Inference', 'Causal Inference'),
+    territory: bl('The often-confused third sibling', "The third, often-confused sibling"),
     goal: bl(
       'Work out what would have happened under a hypothetical "what if" — "if the Fed had cut rates, would gold actually have risen because of that?"',
-      'Determine what a variable\'s value would have been under a hypothetical intervention.',
-      '"ဒီလိုဖြစ်ခဲ့ရင်ကော" ဆိုတဲ့ ယူဆချက်တစ်ခုအောက်တွင် ဘာဖြစ်ပျက်မလဲဆိုတာကို ရှာဖွေသည် — "Fed က အတိုးနှုန်းလျှော့ခဲ့ရင် ရွှေက အဲဒါကြောင့် တကယ်တက်ခဲ့မလား" ကဲ့သို့။',
-      'ယူဆချက်ဆိုင်ရာ ဝင်ရောက်စွက်ဖက်မှု (intervention) တစ်ခုအောက်တွင် variable တစ်ခု၏ တန်ဖိုးသည် မည်သို့ဖြစ်ခဲ့မည်ကို ဆုံးဖြတ်သည်။'
+      'Determine what a variable\'s value would have been under a hypothetical intervention.'
     ),
     output: bl(
       'An estimate of the effect of deliberately changing one thing, holding everything else fixed.',
-      'An average treatment effect.',
-      'တခြားအရာအားလုံးကို မပြောင်းဘဲ တစ်ခုတည်းကို တမင်ပြောင်းလိုက်လျှင် ဖြစ်ပေါ်လာမည့် သက်ရောက်မှု ခန့်မှန်းချက်။',
-      'ပျမ်းမျှ ကုသမှု/ဝင်ရောက်စွက်ဖက်မှု သက်ရောက်မှု (average treatment effect)။'
+      'An average treatment effect.'
     ),
     example: bl(
       '"If the Fed cuts rates by 50bps, gold rises by roughly X — holding the dollar, inflation expectations, and everything else fixed."',
-      '"If the Fed cuts rates by 50bps, gold rises by X, holding everything else fixed."',
-      '"Fed က အတိုးနှုန်း 50bps လျှော့ရင် ရွှေက ခန့်မှန်း X လောက် မြင့်တက်လာမယ် — ဒေါ်လာ၊ ငွေကြေးဖောင်းပွမှု မျှော်မှန်းချက်နဲ့ တခြားအရာအားလုံးကို မပြောင်းဘဲထားရင်။"',
-      '"Fed က အတိုးနှုန်း 50bps လျှော့ရင်၊ တခြားအရာအားလုံးကို မပြောင်းဘဲထားလျှင် ရွှေက X လောက် မြင့်တက်မည်။"'
+      '"If the Fed cuts rates by 50bps, gold rises by X, holding everything else fixed."'
     ),
     methods: bl(
       'Potential-outcomes framework, instrumental variables, "double ML", randomized controlled trials.',
-      'Potential-outcomes framework, instrumental variables, double ML, RCTs.',
-      'Potential-outcomes framework, instrumental variable, "double ML", randomized controlled trial များ။',
-      'Potential-outcomes framework, instrumental variable, double ML, RCT များ။'
+      'Potential-outcomes framework, instrumental variables, double ML, RCTs.'
     ),
     failure: bl(
       'Using a purely predictive model to claim "X causes Y" — a model can predict gold well using DXY without DXY actually driving it (both could be reacting to a third factor).',
-      'Using purely predictive ML models to claim "X causes Y" — correlation ≠ causation, and predictive accuracy alone can never establish the direction or existence of a causal link.',
-      'Predictive မော်ဒယ်တစ်ခုတည်းသုံးပြီး "X က Y ကို ဖြစ်စေသည်" ဟု ဆိုတတ်သည် — DXY သည် ရွှေကို တကယ်တွန်းအားမပေးဘဲလျက် ရွှေကို ကောင်းစွာခန့်မှန်းနိုင်သည် (နှစ်ခုစလုံးက တတိယအချက်တစ်ခုကို တုံ့ပြန်နေခြင်းသာ ဖြစ်နိုင်သည်)။',
-      'Purely predictive ML မော်ဒယ်များသုံးပြီး "X က Y ကို ဖြစ်စေသည်" ဟု ဆိုတတ်သည် — correlation ≠ causation ဖြစ်ပြီး၊ ခန့်မှန်းတိကျမှုတစ်ခုတည်းက အကြောင်းရင်းဆက်စပ်မှု ဦးတည်ချက် (သို့) ရှိမရှိကို ဘယ်တော့မှ သက်သေမပြနိုင်ပါ။'
+      'Using purely predictive ML models to claim "X causes Y" — correlation ≠ causation, and predictive accuracy alone can never establish the direction or existence of a causal link.'
     ),
     accentVar: '--warning',
   },
@@ -134,39 +101,33 @@ export const EPC_COLUMNS = [
 
 export const EPC_BRIDGE_NOTE = bl(
   'Why this matters for the mode switch: the exact same model (e.g. "linear regression on gold price vs. real yields") can be looked at from either lens. Stats asks "how confident am I in this coefficient?" ML asks "how well does this generalize to gold prices next quarter?" A good learner can flip between the two questions on the same node.',
-  'Why this matters for the mode switch: the same underlying object supports two questions — the Stats lens asks whether a coefficient is statistically significant, the ML lens asks how well the fitted model generalizes out-of-sample.',
-  'Mode switch အတွက် ဘာကြောင့်အရေးကြီးလဲဆိုတော့: မော်ဒယ်တစ်ခုတည်း (ဥပမာ "ရွှေစျေးနှုန်းကို real yields ပေါ် linear regression") ကို မှန်ဘီလူးနှစ်မျိုးဖြင့် ကြည့်နိုင်သည်။ Stats က "ဒီ coefficient ကို ဘယ်လောက်ယုံကြည်လဲ" ဟု မေးပြီး ML က "ဒါက လာမယ့်သုံးလပတ် ရွှေစျေးနှုန်းအတွက် ဘယ်လောက်ကောင်းစွာ အလုပ်လုပ်မလဲ" ဟု မေးသည်။ Module 10 ၏ Stats↔ML Bridge တွင် စမ်းကြည့်ပါ။',
-  'Mode switch အတွက် အရေးကြီးသည့်အကြောင်းရင်း: underlying object တစ်ခုတည်းသည် မေးခွန်းနှစ်ခုကို ဖြေဆိုနိုင်သည် — Stats မှန်ဘီလူးက coefficient သည် statistically significant ဖြစ်မဖြစ် မေးပြီး၊ ML မှန်ဘီလူးက fit လုပ်ပြီးသား မော်ဒယ်သည် out-of-sample တွင် မည်မျှ generalize ဖြစ်သည်ကို မေးသည်။ Module 10 တွင် တူညီသော data ပေါ်၌ side-by-side live interaction အဖြစ် ပြသထားသည်။'
+  'Why this matters for the mode switch: the same underlying object supports two questions — the Stats lens asks whether a coefficient is statistically significant, the ML lens asks how well the fitted model generalizes out-of-sample.'
 );
 
 // Module 11 audit: the three per-column demo components (Estimation/
 // Prediction/Causal) also had hardcoded English labels and body text.
-export const EST_DEMO_LBL = blSame('Same coefficient, Stats-mode lens', 'Coefficient တူတူ၊ Stats-mode Lens');
+export const EST_DEMO_LBL = blSame('Same coefficient, Stats-mode lens');
 export const EST_DEMO_TEXT = blSame(
-  "A frequentist confidence interval like Stats mode's own t CI for the mean treats the parameter as fixed and the interval as random. A posterior distribution flips that: the parameter itself is treated as uncertain. Same-looking interval, different meaning underneath.",
-  'Stats mode ၏ mean အတွက် t CI ကဲ့သို့သော frequentist confidence interval သည် parameter ကို ပုံသေထားပြီး interval ကို ကျပန်းအဖြစ် သတ်မှတ်သည်။ Posterior distribution က ဒါကို ပြောင်းပြန်လှန်သည်: parameter ကိုယ်တိုင်ကို မသေချာဟု သတ်မှတ်သည်။ ပုံစံတူ interval ဖြစ်သော်လည်း အဓိပ္ပာယ် မတူပါ။'
+  "A frequentist confidence interval like Stats mode's own t CI for the mean treats the parameter as fixed and the interval as random. A posterior distribution flips that: the parameter itself is treated as uncertain. Same-looking interval, different meaning underneath."
 );
 export const EST_DEMO_BTN = blSame(
-  'See how estimation is done in Python (Python Hub)',
-  'Estimation ကို Python ဖြင့် မည်သို့ပြုလုပ်သည်ကို ကြည့်ရန် (Python Hub)'
+  'See how estimation is done in Python (Python Hub)'
 );
 
-export const PRED_DEMO_LBL = blSame('Point forecast + prediction interval', 'Point Forecast + Prediction Interval');
+export const PRED_DEMO_LBL = blSame('Point forecast + prediction interval');
 export const PRED_DEMO_TEXT = blSame(
-  '"Gold will trade at $4,180 ± $150 next month" — a single best guess (the dot) plus a band of plausible outcomes (the shaded range), not a claim about a fixed, knowable parameter.',
-  '"ရွှေက လာမယ့်လမှာ $4,180 ± $150 မှာ ရောင်းဝယ်လိမ့်မယ်" — အကောင်းဆုံး ခန့်မှန်းချက်တစ်ခု (အစက်) ပေါင်း ဖြစ်နိုင်ချေရှိသော ရလဒ်အပိုင်းအခြား (အရိပ်ရှိသော range) ဖြစ်ပြီး၊ ပုံသေ၊ သိနိုင်သော parameter အကြောင်း ဆိုလိုချက်မဟုတ်ပါ။'
+  '"Gold will trade at $4,180 ± $150 next month" — a single best guess (the dot) plus a band of plausible outcomes (the shaded range), not a claim about a fixed, knowable parameter.'
 );
 
-export const CONF_DEMO_LBL = blSame('The classic confounder pitfall', 'Classic Confounder အမှား');
+export const CONF_DEMO_LBL = blSame('The classic confounder pitfall');
 export const CONF_DEMO_TEXT = blSame(
-  "A model can predict gold accurately using DXY as a feature — but DXY doesn't cause gold to move. Both react to the same underlying driver (Fed policy). Predictive power alone never tells you which arrows in this diagram are real.",
-  'မော်ဒယ်တစ်ခုသည် DXY ကို feature အဖြစ်သုံးပြီး ရွှေကို တိကျစွာ ခန့်မှန်းနိုင်သည် — သို့သော် DXY သည် ရွှေကို မရွှေ့စေပါ။ နှစ်ခုစလုံးသည် underlying driver တစ်ခုတည်း (Fed မူဝါဒ) ကို တုံ့ပြန်နေခြင်းသာဖြစ်သည်။ Predictive power တစ်ခုတည်းက ဒီပုံထဲက မြားများထဲက ဘယ်ဟာက စစ်မှန်သလဲဆိုတာ ဘယ်တော့မှ မပြောပြနိုင်ပါ။'
+  "A model can predict gold accurately using DXY as a feature — but DXY doesn't cause gold to move. Both react to the same underlying driver (Fed policy). Predictive power alone never tells you which arrows in this diagram are real."
 );
-export const CONF_FED_LABEL = blSame('Fed policy (the real driver)', 'Fed မူဝါဒ (တကယ့် Driver)');
-export const CONF_DXY_LABEL = blSame('DXY', 'DXY');
-export const CONF_GOLD_LABEL = blSame('Gold price', 'ရွှေဈေးနှုန်း');
-export const CONF_PREDICTS_LABEL = blSame('predicts well —', 'ကောင်းစွာ ခန့်မှန်းနိုင် —');
-export const CONF_BUTDOESNT_LABEL = blSame("but doesn't cause", 'ဒါပေမဲ့ မဖြစ်စေပါ'
+export const CONF_FED_LABEL = blSame('Fed policy (the real driver)');
+export const CONF_DXY_LABEL = blSame('DXY');
+export const CONF_GOLD_LABEL = blSame('Gold price');
+export const CONF_PREDICTS_LABEL = blSame('predicts well —');
+export const CONF_BUTDOESNT_LABEL = blSame("but doesn't cause"
 );
 
 // Module 2 Learning Design System retrofit: the three-bucket sorting
@@ -174,57 +135,51 @@ export const CONF_BUTDOESNT_LABEL = blSame("but doesn't cause", 'ဒါပေမ
 // tab exploration. Six items spanning all three buckets, drawn from real
 // gold-forecasting questions this module and Module 6 both use.
 export const EPC_SORT_TITLE = blSame(
-  'Sort each question into the right bucket',
-  'မေးခွန်းတစ်ခုစီကို မှန်ကန်သော container ထဲ ခွဲထည့်ပါ'
+  'Sort each question into the right bucket'
 );
 export const EPC_SORT_INTRO = blSame(
-  'Before exploring the three columns below, try this: each question below is really asking one of Estimation, Prediction, or Causal Inference — sort all six, then check your answers.',
-  'အောက်ပါ ကော်လံသုံးခုကို မစူးစမ်းမီ ဒါကို စမ်းကြည့်ပါ: အောက်ပါ မေးခွန်းတစ်ခုစီသည် Estimation, Prediction, သို့မဟုတ် Causal Inference တစ်ခုခုကို တကယ်မေးနေခြင်းဖြစ်သည် — ခြောက်ခုလုံးကို ခွဲထည့်ပြီး အဖြေများကို စစ်ဆေးပါ။'
+  'Before exploring the three columns below, try this: each question below is really asking one of Estimation, Prediction, or Causal Inference — sort all six, then check your answers.'
 );
-export const EPC_SORT_CHECK_BTN = blSame('Check my answers', 'ကျွန်ုပ်၏ အဖြေများကို စစ်ဆေးပါ');
-export const EPC_SORT_CORRECT_LBL = blSame('Correct', 'မှန်ကန်သည်');
-export const EPC_SORT_ACTUAL_TEMPLATE = blSame('Actually: {bucket}', 'တကယ်တမ်း: {bucket}');
+export const EPC_SORT_CHECK_BTN = blSame('Check my answers');
+export const EPC_SORT_CORRECT_LBL = blSame('Correct');
+export const EPC_SORT_ACTUAL_TEMPLATE = blSame('Actually: {bucket}');
 
 export const EPC_SORT_ITEMS = [
   {
     id: 'next-month-price',
-    text: blSame('What will gold cost next month?', 'ရွှေက လာမယ့်လမှာ ဘယ်လောက်ဖြစ်မလဲ?'),
+    text: blSame('What will gold cost next month?'),
     correctBucket: 'prediction',
   },
   {
     id: 'coefficient-significant',
     text: blSame(
-      "Is the coefficient on real yields in the gold-price regression statistically significant?",
-      'ရွှေဈေးနှုန်း regression ရှိ real yields ၏ coefficient သည် statistically significant ဖြစ်ပါသလား?'
+      "Is the coefficient on real yields in the gold-price regression statistically significant?"
     ),
     correctBucket: 'estimation',
   },
   {
     id: 'rate-cut-cause',
     text: blSame(
-      'Would a Fed rate cut actually cause the price of gold to rise, or would they just move together anyway?',
-      'Fed အတိုးနှုန်းလျှော့ချမှုသည် ရွှေဈေးကို တကယ်ပင် မြင့်တက်စေမည်လား၊ ဒါမှမဟုတ် ဘာဖြစ်ဖြစ် အတူတကွ ရွေ့လျားနေမည်လား?'
+      'Would a Fed rate cut actually cause the price of gold to rise, or would they just move together anyway?'
     ),
     correctBucket: 'causal',
   },
   {
     id: 'ci-width',
     text: blSame(
-      'How confident are we that the true effect of real yields on gold is somewhere between −400 and −224?',
-      'Real yields ၏ ရွှေအပေါ် စစ်မှန်သောသက်ရောက်မှုသည် −400 နှင့် −224 ကြားရှိသည်ဟု ဘယ်လောက်ယုံကြည်ကြသလဲ?'
+      'How confident are we that the true effect of real yields on gold is somewhere between −400 and −224?'
     ),
     correctBucket: 'estimation',
   },
   {
     id: 'tomorrow-direction',
-    text: blSame("Will tomorrow's gold price be higher or lower than today's?", 'မနက်ဖြန် ရွှေဈေးက ဒီနေ့ထက် မြင့်မလား နိမ့်မလား?'),
+    text: blSame("Will tomorrow's gold price be higher or lower than today's?"),
     correctBucket: 'prediction',
   },
   {
     id: 'cb-buying-stops',
     text: blSame(
-      'If central banks stopped buying gold entirely, would the price actually fall as a direct result?',
-      'ဗဟိုဘဏ်များ ရွှေဝယ်ယူမှု လုံးဝရပ်လိုက်ရင် ဈေးနှုန်း တိုက်ရိုက်ရလဒ်အနေဖြင့် တကယ်ကျမည်လား?'
+      'If central banks stopped buying gold entirely, would the price actually fall as a direct result?'
     ),
     correctBucket: 'causal',
   },

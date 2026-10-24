@@ -223,15 +223,6 @@ export default function MLRelationshipMap() {
   const svgRef = useRef(null);
   const wrapRef = useRef(null);
   const tooltipRef = useRef(null);
-  const pinnedLabelSelRef = useRef(null);
-  const lang = useMLUIStore((s) => s.lang);
-  // Read via ref inside the mount effect (below), not the reactive `lang`
-  // directly — the mount effect must stay [] deps (a real dependency would
-  // re-run the whole D3 mount on every language toggle, destroying pan/
-  // zoom/drag state), and this is the standard, lint-clean way to read a
-  // "latest value" from inside an effect without adding it as a dependency.
-  const langRef = useRef(lang);
-  langRef.current = lang;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -567,11 +558,7 @@ export default function MLRelationshipMap() {
       .attr('class', 'mlgraph-row-label')
       .attr('x', 14)
       .attr('fill', (d) => d.color)
-      // level is irrelevant here — every ML_FAMILIES.name is blSame (same
-      // text at both depths) — only lang varies, handled by the effect
-      // below so a language toggle updates these without a full D3 remount.
-      .text((d) => resolveT(d.name, 'beginner', langRef.current));
-    pinnedLabelSelRef.current = pinnedLabelSel;
+      .text((d) => resolveT(d.name, 'beginner'));
 
     function positionPinnedLabels(transform, h) {
       pinnedLabelSel
@@ -600,6 +587,54 @@ export default function MLRelationshipMap() {
         const barelyMoved = t0 && Math.abs(t0.x - t1.x) < 2 && Math.abs(t0.y - t1.y) < 2 && Math.abs(t0.k - t1.k) < 0.001;
         if (barelyMoved) useMLUIStore.getState().selectModel(null);
       });
+
+    // ——— Keyboard access (baseline audit F-04), same model as the formula
+    // map: one tab stop, arrows follow links (right/left) and the family row
+    // (up/down), Enter opens the model’s details, the view follows focus.
+    {
+      const nodeEls = new Map();
+      nodeSel.each(function (d) { nodeEls.set(d.id, this); });
+      const outOf = (id) => simLinks.filter((l) => l.s === id).map((l) => l.t);
+      const into = (id) => simLinks.filter((l) => l.t === id).map((l) => l.s);
+      const rows = {};
+      simNodes.forEach((n) => { (rows[n.ch] ||= []).push(n); });
+      Object.values(rows).forEach((r) => r.sort((a, b) => a.x - b.x));
+      const order = Object.keys(rows).map(Number).sort((a, b) => a - b);
+      let roving = simNodes[0]?.id;
+      const focusNode = (id) => {
+        const el = nodeEls.get(id);
+        if (!el) return;
+        nodeEls.get(roving)?.setAttribute('tabindex', '-1');
+        roving = id;
+        el.setAttribute('tabindex', '0');
+        el.focus({ preventScroll: true });
+        const d = el.__data__;
+        const [sx, sy] = d3.zoomTransform(svg.node()).apply([d.x, d.y]);
+        if (sx < 60 || sy < 60 || sx > width - 60 || sy > height - 60) svg.call(zoomBehavior.translateTo, d.x, d.y);
+      };
+      nodeSel
+        .attr('tabindex', (d) => (d.id === roving ? 0 : -1))
+        .attr('role', 'button')
+        .attr('aria-label', (d) => `${d.name} (${d.short}). ${into(d.id).length} incoming and ${outOf(d.id).length} outgoing connections.`)
+        .attr('aria-describedby', 'mlgraph-kbd-help')
+        .on('keydown', (event, d) => {
+          let target = null;
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); useMLUIStore.getState().selectModel(d.id); return; }
+          if (event.key === 'ArrowRight') target = outOf(d.id)[0];
+          else if (event.key === 'ArrowLeft') target = into(d.id)[0];
+          else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            const row = rows[d.ch];
+            const i = row.findIndex((n) => n.id === d.id);
+            const next = row[i + (event.key === 'ArrowDown' ? 1 : -1)];
+            if (next) target = next.id;
+            else {
+              const r2 = rows[order[order.indexOf(d.ch) + (event.key === 'ArrowDown' ? 1 : -1)]];
+              if (r2) target = (event.key === 'ArrowDown' ? r2[0] : r2[r2.length - 1]).id;
+            }
+          }
+          if (target) { event.preventDefault(); focusNode(target); }
+        });
+    }
 
     svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(initialFit.tx, initialFit.ty).scale(initialFit.scale));
 
@@ -664,19 +699,13 @@ export default function MLRelationshipMap() {
     return unsubscribe;
   }, []);
 
-  // Pinned row labels are bilingual, but the graph itself is an imperative
-  // D3 mount effect ([] deps) that doesn't re-run on a language toggle —
-  // this keeps just the label text in sync without remounting the whole
-  // graph (which would reset pan/zoom/drag state).
-  useEffect(() => {
-    if (pinnedLabelSelRef.current) {
-      pinnedLabelSelRef.current.text((d) => resolveT(d.name, 'beginner', lang));
-    }
-  }, [lang]);
-
   return (
     <div className="mlgraph-canvas-wrap" ref={wrapRef}>
-      <svg ref={svgRef} className="mlgraph-canvas-svg" />
+      <p id="mlgraph-kbd-help" className="visually-hidden">
+        Model graph. Arrow right and left follow connections, arrow up and down move within a model family. Enter opens
+        the model’s details. The Outline view lists every model and its connections without the graph.
+      </p>
+      <svg ref={svgRef} className="mlgraph-canvas-svg" role="group" aria-label="Machine-learning model map" />
       <div className="mlgraph-tooltip" ref={tooltipRef} />
     </div>
   );

@@ -28,15 +28,14 @@ const tabIds = new Set(ML_TABS.map((t) => t.id));
 const misconceptionIds = new Set(Object.keys(MISCONCEPTIONS));
 
 const LEVELS = ['beginner', 'researcher'];
-const LANGS = ['en', 'my'];
 
-/** A bl() field must resolve to real text in all four combinations. */
+/** A bl() field must resolve to real text at both depths. */
 function resolvesEverywhere(content) {
   if (!isBlObject(content)) return false;
-  return LANGS.every((lang) => LEVELS.every((lvl) => {
-    const t = resolveT(content, lvl, lang);
+  return LEVELS.every((lvl) => {
+    const t = resolveT(content, lvl);
     return typeof t === 'string' && t.trim().length > 0;
-  }));
+  });
 }
 
 describe('ladder coverage', () => {
@@ -55,7 +54,7 @@ describe('ladder coverage', () => {
 });
 
 describe('Spark layer — the intuition hook', () => {
-  it('gives every model an analogy that resolves in all four modes', () => {
+  it('gives every model an analogy that resolves at both depths', () => {
     const bad = entries.filter(([, l]) => !resolvesEverywhere(l.spark.analogy)).map(([id]) => id);
     expect(bad).toEqual([]);
   });
@@ -76,17 +75,14 @@ describe('Spark layer — the intuition hook', () => {
 
 describe('Mechanism layer — the hands-on part', () => {
   it('uses only the supported mechanism kinds', () => {
-    // 'retired-lab' marks a ladder whose live-link target was a top-level
-    // tab retired by Master Prompt V3.1 §4; it renders an explicit note
-    // rather than a dead or misleading button.
     for (const [id, l] of entries) {
-      expect(['widget', 'live-link', 'retired-lab'], `${id}.mechanism.kind`).toContain(l.mechanism.kind);
+      expect(['widget', 'live-link'], `${id}.mechanism.kind`).toContain(l.mechanism.kind);
     }
   });
 
-  it('marks a mechanism retired only if its old target really is a retired tab', () => {
+  it('never links a mechanism to a retired tab', () => {
     const wrong = entries
-      .filter(([, l]) => l.mechanism.kind === 'retired-lab' && !Object.hasOwn(RETIRED_ML_TABS, l.mechanism.module))
+      .filter(([, l]) => Object.hasOwn(RETIRED_ML_TABS, l.mechanism.module ?? ''))
       .map(([id, l]) => `${id} -> ${l.mechanism.module}`);
     expect(wrong).toEqual([]);
   });
@@ -160,7 +156,7 @@ describe('Formalism layer — worked example then faded practice', () => {
     expect(identical).toEqual([]);
   });
 
-  it('resolves worked and faded content in all four modes', () => {
+  it('resolves worked and faded content at both depths', () => {
     for (const [id, l] of entries) {
       expect(resolvesEverywhere(l.formalism.worked), `${id} worked`).toBe(true);
       expect(resolvesEverywhere(l.formalism.faded), `${id} faded`).toBe(true);
@@ -193,23 +189,41 @@ describe('Critical Frontier layer — where the analogy breaks', () => {
   });
 });
 
+describe('Phase 8 widgets that replaced the retired-lab links', () => {
+  // Each predict question was written from the formula; these checks keep the
+  // marked answer true if a compute() or a number in the question changes.
+  const c = (id) => MODEL_DEPTH_LADDER[id].mechanism.compute;
+  const near = (a, b, tol = 0.01) => Math.abs(a - b) <= tol;
+  it('agree with their own predict answers', () => {
+    expect(c('ridge_lasso_en')(20)).toBe(0); // λ/2 ≥ 10: exactly zero
+    expect(c('ridge_lasso_en')(2)).toBe(9);
+    expect(near(c('rf')(1e9), 30)).toBe(true); // floor at ρ = 30%
+    expect(c('rf')(1)).toBe(100);
+    expect(near(c('gbm')(10), 5.23)).toBe(true); // 15 × 0.9¹⁰
+    expect(c('xgboost')(0)).toBe(2);
+    expect(c('xgboost')(10)).toBe(1);
+    expect(c('boosting')(0.5)).toBe(0);
+    expect(Math.round(c('arima')(0.8))).toBe(3);
+    expect(c('garch')(0.84)).toBeGreaterThan(5 * c('garch')(0.5));
+    expect(near(c('hybrid')(1), Math.sqrt(40))).toBe(true);
+    expect(c('hybrid')(0)).toBe(10);
+    expect(Math.round(c('lstm')(0.9))).toBe(12);
+  });
+});
+
 describe('audit summary', () => {
   // Composition as it stands after this audit, pinned so a future edit that
   // guts the interactive half — or quietly converts widgets into links —
   // shows up in a diff instead of eroding the module's character silently.
-  it('pins how many ladders are interactive — including the ones that lost it', () => {
+  it('pins how many ladders are interactive', () => {
     // Master Prompt V3.1 §4 retired the Gold/Macro/Micro labs, which 9
-    // ladders linked to as their hands-on layer. Those 9 are now
-    // 'retired-lab' (an explanatory note pointing at Formalism) — a real,
-    // deliberate loss of interactivity, pinned here so it cannot grow
-    // unnoticed. Restoring them means authoring in-place widgets
-    // (docs/UPGRADE_PROGRESS.md, Phase 8). The 2 Playground links survive as
-    // links into the rehomed bias–variance lesson.
+    // ladders linked to as their hands-on layer. Phase 8 gave each of those
+    // an in-place widget (19 → 28), so every ladder is hands-on again. The 2
+    // Playground links survive as links into the rehomed bias–variance lesson.
     const count = (kind) => entries.filter(([, l]) => l.mechanism.kind === kind).length;
-    expect(count('widget') + count('live-link') + count('retired-lab')).toBe(32);
-    expect(count('widget')).toBe(19);
+    expect(count('widget') + count('live-link')).toBe(32);
+    expect(count('widget')).toBe(28);
     expect(count('live-link')).toBe(4);
-    expect(count('retired-lab')).toBe(9);
   });
 
   it('records that most ladders rely on the layer prose rather than a registry entry', () => {

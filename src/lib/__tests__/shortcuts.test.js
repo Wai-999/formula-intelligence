@@ -23,27 +23,40 @@ describe('matchShortcut', () => {
     expect(matchShortcut(key('?'))).toBe('help');
     expect(matchShortcut(key('Escape'))).toBe('escape');
     expect(matchShortcut(key('t'))).toBe('theme');
-    expect(matchShortcut(key('m'))).toBe('mode');
+    expect(matchShortcut(key('f'))).toBe('focus');
     expect(matchShortcut(key('/'))).toBe('search');
-    expect(matchShortcut(key('['))).toBe('prevTab');
-    expect(matchShortcut(key(']'))).toBe('nextTab');
+    expect(matchShortcut(key('['))).toBe('prevPage');
+    expect(matchShortcut(key(']'))).toBe('nextPage');
+  });
+
+  it('no longer claims "m": there are no modes to switch', () => {
+    expect(matchShortcut(key('m'))).toBeNull();
+  });
+
+  it('opens global search with Cmd/Ctrl+K, even from a text field', () => {
+    expect(matchShortcut(key('k', { metaKey: true }))).toBe('globalSearch');
+    expect(matchShortcut(key('K', { ctrlKey: true }))).toBe('globalSearch');
+    expect(matchShortcut(key('k', { ctrlKey: true, target: inInput('INPUT') }))).toBe('globalSearch');
+    expect(matchShortcut(key('k', { ctrlKey: true, altKey: true }))).toBeNull();
+    expect(matchShortcut(key('k'))).toBeNull();
   });
 
   it('accepts the uppercase form, since Shift is how you type ? anyway', () => {
     expect(matchShortcut(key('T'))).toBe('theme');
-    expect(matchShortcut(key('M'))).toBe('mode');
+    expect(matchShortcut(key('F'))).toBe('focus');
   });
 
-  it('maps digits 1-9 to zero-based tab indices', () => {
-    expect(matchShortcut(key('1'))).toBe('tab:0');
-    expect(matchShortcut(key('9'))).toBe('tab:8');
+  it('maps digits 1-7 to the seven primary sections', () => {
+    expect(matchShortcut(key('1'))).toBe('section:0');
+    expect(matchShortcut(key('7'))).toBe('section:6');
+    expect(matchShortcut(key('8'))).toBeNull();
     expect(matchShortcut(key('0'))).toBeNull();
   });
 
   it('NEVER fires while the user is typing', () => {
     // The bug this prevents: pressing "t" mid-sentence in the Lab editor
     // flipping the whole app's theme.
-    for (const k of ['t', 'm', '/', '[', ']', '1', '?']) {
+    for (const k of ['t', 'f', '/', '[', ']', '1', '?']) {
       expect(matchShortcut(key(k, { target: inInput('TEXTAREA') })), k).toBeNull();
       expect(matchShortcut(key(k, { target: inInput('INPUT') })), k).toBeNull();
     }
@@ -71,7 +84,7 @@ describe('matchShortcut', () => {
 describe('the documented table', () => {
   it('documents every key the handler actually implements', () => {
     const documented = SHORTCUTS.flatMap((s) => s.keys);
-    for (const k of ['?', 'Esc', 't', 'm', '/', '[', ']']) {
+    for (const k of ['?', 'Esc', 't', 'f', 'K', '/', '[', ']', '1', '7']) {
       expect(documented, `${k} should be listed in the help overlay`).toContain(k);
     }
   });

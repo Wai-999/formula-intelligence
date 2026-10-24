@@ -40,6 +40,14 @@ jobs:
       - run: npm run build
       # Initial-load JS budget (scripts/check-bundle-budget.mjs).
       - run: npm run budget
+      # Every lesson's Python block and every exercise's reference solution,
+      # run with real CPython + NumPy, must print exactly what the page shows
+      # (scripts/verify-python.mjs). Starters must fail their own tests.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install numpy matplotlib
+      - run: npm run verify:python
       # Accessibility needs a real browser (contrast and focusability depend
       # on computed layout, which jsdom cannot provide), so this runs against
       # the built preview rather than in the unit-test pass.

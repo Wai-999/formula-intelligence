@@ -51,18 +51,18 @@ describe('the validator catches the bug classes this repo has actually shipped',
   const first = (errs) => errs[0] || '';
 
   it('catches bl() called with too few arguments (d3b3ed4, 22 occurrences)', () => {
-    const errs = validateRecord({ f: { kind: 'bl' } }, { f: bl('en-b', 'en-r') }, 'X');
+    const errs = validateRecord({ f: { kind: 'bl' } }, { f: bl('beginner only') }, 'X');
     expect(errs.length).toBeGreaterThan(0);
     expect(first(errs)).toMatch(/missing text/);
   });
 
-  it('catches a bilingual object in a field rendered as a raw string (Fifth Pass)', () => {
-    const errs = validateRecord({ name: { kind: 'string' } }, { name: blSame('a', 'b') }, 'X');
+  it('catches a depth object in a field rendered as a raw string (Fifth Pass)', () => {
+    const errs = validateRecord({ name: { kind: 'string' } }, { name: blSame('a') }, 'X');
     expect(first(errs)).toMatch(/expected a string/);
     expect(first(errs)).toMatch(/useT/); // tells the author the actual fix
   });
 
-  it('catches a plain string where the bilingual contract requires bl()', () => {
+  it('catches a plain string where the contract requires bl()', () => {
     const errs = validateRecord(ML_FAMILY, { id: 1, name: 'Linear', color: '#fff' }, 'X');
     expect(first(errs)).toMatch(/expected a bl\(\)/);
   });

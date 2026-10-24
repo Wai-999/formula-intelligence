@@ -124,17 +124,64 @@ body,
   margin: 0;
 }
 
+/* The app scrolls inside its panes, never the document. "hidden" alone still
+   lets scripts scroll the root (scrollIntoView did, shoving the whole shell
+   up); "clip" forbids it. "hidden" stays as the fallback for old engines. */
+html,
+body {
+  overflow: hidden;
+  overflow: clip;
+}
+
 body {
   font-family: var(--font-sans);
   background: radial-gradient(circle at 16% 0%, var(--bg-tint-1), transparent 28rem),
     radial-gradient(circle at 90% 6%, var(--bg-tint-2), transparent 24rem),
     linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 54%, var(--bg-3) 100%);
   color: var(--text-primary);
-  overflow: hidden;
 }
 
 button {
   font-family: inherit;
+}
+
+/* One visible focus indicator for every control (WCAG 2.4.7 / 2.4.11),
+   shown for keyboard focus only so pointer users don't see rings on click. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reduced motion — the OS setting, or the learner's own choice in Settings
+   (data-motion, src/store/useThemeStore.js). Motion here only ever explains
+   a state change, so removing it loses nothing but the tween. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-motion='reduce'] *,
+[data-motion='reduce'] *::before,
+[data-motion='reduce'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 p, h1, h2, h3 {

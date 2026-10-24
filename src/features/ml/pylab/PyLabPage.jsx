@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePyLabStore } from '../../../store/usePyLabStore.js';
-import { runPython } from '../../../lib/pyodideRunner.js';
+import { runPython, stopPython } from '../../../lib/pyodideRunner.js';
 import { RUNTIME_NOTE } from '../../../data/python/runnability.js';
 import { useUIStore } from '../../../store/useUIStore.js';
 import '../mlPageShared.css';
@@ -111,6 +111,11 @@ export default function PyLabPage() {
             </button>
           )}
           <span className="pylab-hint">⌘/Ctrl + Enter to run</span>
+          {run?.state === 'running' && (
+            <button type="button" className="pylab-run pylab-stop" onClick={stopPython}>
+              <i className="ti ti-player-stop" aria-hidden="true" /> Stop
+            </button>
+          )}
           <button
             type="button" className="pylab-run" onClick={execute}
             disabled={run?.state === 'running'}
@@ -120,15 +125,16 @@ export default function PyLabPage() {
           </button>
         </div>
 
-        {/* Honest limit until Python moves into a Worker (docs/audits/
-            BASELINE_AUDIT.md F-01, MIGRATION_RISKS R-07): code runs on the
-            page's own thread, so a loop that never yields cannot be
-            interrupted — the 30 s timeout only catches code that awaits.
-            "Saved" is true: setCode persists on every keystroke. */}
+        {/* Python runs in a Web Worker (src/lib/python/pyWorker.js), which
+            fixed the freeze (docs/audits/BASELINE_AUDIT.md F-01): Stop and
+            the time limit terminate the worker. What that costs is stated
+            here, not discovered. "Saved" is true: setCode persists on every
+            keystroke. */}
         <p className="pylab-limit" role="note">
-          <i className="ti ti-alert-circle" aria-hidden="true" />
-          Code runs inside this browser tab. A program that never finishes — an infinite loop, say — will freeze the
-          page and cannot be stopped from here; reload the page to recover. Your notebooks are saved as you type.
+          <i className="ti ti-info-circle" aria-hidden="true" />
+          Code runs in a background worker, so the page never freezes. A run that is still going after 30 seconds —
+          an infinite loop, say — is stopped, and so is one you Stop yourself; either way Python restarts, so
+          variables from earlier runs are gone. Your notebooks are saved as you type.
         </p>
 
         <textarea
@@ -153,9 +159,8 @@ export default function PyLabPage() {
               <i className={`ti ${run.ok ? 'ti-check' : 'ti-alert-triangle'}`} aria-hidden="true" />
               {run.ok ? `Output (${run.ms} ms)` : 'Error'}
             </div>
-            {(run.output?.trim() || !run.ok) && (
-              <pre className="pylab-out-body">{run.ok ? run.output : run.error}</pre>
-            )}
+            {run.output?.trim() && <pre className="pylab-out-body">{run.output}</pre>}
+            {!run.ok && <pre className="pylab-out-body pylab-out-err">{run.error}</pre>}
             {run.figures?.length > 0 && (
               <div className="pylab-figs">
                 {run.figures.map((src, i) => (

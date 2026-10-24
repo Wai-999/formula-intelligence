@@ -18,4 +18,13 @@ export const STORAGE_KEYS = {
   mlEntryBannerSeen: 'ml_entry_banner_seen_v1',
   pyLab: 'py_lab_v1',
   theme: 'fi_theme_v1',
+  navPrefs: 'fi_nav_v1',
+  motion: 'fi_motion_v1',
+  // V3.1 learning records — versioned envelopes, src/lib/versioned.js.
+  learning: 'fi_learning_v1',
+  lessons: 'fi_lessons_v1',
+  notes: 'fi_notes_v1',
+  diagnostic: 'fi_diagnostic_v1',
+  projects: 'fi_projects_v1',
+  pyExercises: 'fi_pyex_v1',
 };

@@ -25,7 +25,6 @@ export default function DepthLadder({ nodeId, spark, mechanism, formalism, criti
   const alreadyVisited = useUnderstandingStore((s) => (s.layersByNode[nodeId] || []).length > 0);
   const markLayerEngaged = useUnderstandingStore((s) => s.markLayerEngaged);
   const level = useMLUIStore((s) => s.level);
-  const lang = useMLUIStore((s) => s.lang);
   const jumpedAhead = isPastCompetent() && !alreadyVisited;
   const [active, setActive] = useState(jumpedAhead ? 'formalism' : 'spark');
   const jumpedNote = useT(UI_JUMPED_TO_ADVANCED);
@@ -41,7 +40,7 @@ export default function DepthLadder({ nodeId, spark, mechanism, formalism, criti
     <div className="depth-ladder">
       <div className="depth-ladder-tabs" role="tablist" aria-label="Depth Ladder">
         {LAYERS.map((l) => {
-          const subText = resolveT(l.sub, level, lang);
+          const subText = resolveT(l.sub, level);
           return (
             <button
               key={l.key} type="button" role="tab" aria-selected={active === l.key}

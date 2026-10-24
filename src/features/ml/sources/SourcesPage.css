@@ -51,6 +51,7 @@
   display: block; width: 100%; text-align: left; background: none; border: none;
   border-left: 2px solid transparent; color: var(--text-muted); font-size: 11.5px;
   padding: 3px 8px; cursor: pointer;
+  min-height: 24px; /* WCAG 2.2 target size */
 }
 .src-toc-link:hover { color: var(--primary-text); border-left-color: var(--primary-text); }
 

@@ -19,29 +19,23 @@ const savedPrefs = loadJSON(PREFS_KEY, { level: 'beginner', lang: 'en' });
 // are archived — their code is unreferenced and tree-shaken. Old ids still
 // resolve: see RETIRED_ML_TABS in useUIStore.js.
 export const ML_TABS = [
-  { id: 'pipeline', label: 'Pipeline', title: blSame('Pipeline', 'Pipeline'), icon: 'ti-route', module: 2 },
-  { id: 'modelmap', label: 'Model Map', title: blSame('Model Map', 'Model မြေပုံ'), icon: 'ti-sitemap', module: 3 },
-  { id: 'python', label: 'Python', title: blSame('Python Hub', 'Python Hub'), icon: 'ti-brand-python', module: 10 },
-  { id: 'pylab', label: 'Lab', title: blSame('Python Lab', 'Python Lab'), icon: 'ti-flask-2', module: 11 },
-  { id: 'sources', label: 'Sources', title: blSame('Sources & Data Provenance', 'အရင်းအမြစ်နှင့် ဒေတာ မူလအစ'), icon: 'ti-license', module: 12 },
+  { id: 'pipeline', label: 'Pipeline', title: blSame('Pipeline'), icon: 'ti-route', module: 2 },
+  { id: 'modelmap', label: 'Model Map', title: blSame('Model Map'), icon: 'ti-sitemap', module: 3 },
+  { id: 'python', label: 'Python', title: blSame('Python Hub'), icon: 'ti-brand-python', module: 10 },
+  { id: 'pylab', label: 'Lab', title: blSame('Python Lab'), icon: 'ti-flask-2', module: 11 },
+  { id: 'sources', label: 'Sources', title: blSame('Sources & Data Provenance'), icon: 'ti-license', module: 12 },
 ];
 
 export const useMLUIStore = create((set) => ({
   // Beginner/Researcher depth — cross-cutting, lives at the shell level so
   // every page reads the same value. Persisted like the other user prefs.
   level: savedPrefs.level === 'researcher' ? 'researcher' : 'beginner',
-  // English only (Master Prompt V3.1 §2/§4). Pinned here rather than removed
-  // so every existing useT/resolveT call resolves English with no content
-  // edits — the content's Burmese strings are stripped in a separate,
-  // snapshot-guarded codemod (docs/audits/MIGRATION_RISKS.md R-04). A stored
-  // lang of 'my' is ignored on load; the record keeps its { level, lang }
-  // shape, and only becomes 'en' the next time depth is changed — so a
-  // rolled-back build still reads it, at worst showing English.
-  lang: 'en',
   selectedModelId: null,
 
   setLevel(level) {
     set({ level });
+    // The record keeps its historical { level, lang } shape so a rolled-back
+    // (bilingual) build can still read it; this build is English-only.
     saveJSON(PREFS_KEY, { level, lang: 'en' });
   },
 

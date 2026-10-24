@@ -4,53 +4,123 @@
   flex-direction: column;
 }
 
+/* Hidden until focused, then the first thing on screen (WCAG 2.4.1). */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border: 2px solid var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
 .app-header {
   flex-shrink: 0;
-  height: 48px;
+  height: 52px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 16px;
+  gap: 8px;
+  padding: 0 12px 0 16px;
   background: rgba(var(--panel-rgb), 0.74);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(16px);
-  overflow: hidden;
-}
-
-.app-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.app-title-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 12px var(--success);
-  flex-shrink: 0;
-}
-
-.app-subtitle {
-  font-size: 12px;
-  color: var(--text-faint);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   min-width: 0;
 }
 
-@media (max-width: 560px) {
-  .app-subtitle {
-    display: none;
-  }
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  color: var(--text-primary);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.app-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary-2), var(--primary));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.app-brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.app-search-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  min-width: 36px;
+  margin-left: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-glass);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.app-search-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.app-search-label {
+  min-width: 120px;
+  text-align: left;
 }
 
 .app-header-spacer {
   flex: 1;
+  min-width: 0;
+}
+
+.header-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-glass);
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header-icon-btn:hover,
+.header-icon-btn[aria-current='page'] {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.header-icon-btn .ti {
+  font-size: 17px;
 }
 
 .app-body {
@@ -62,11 +132,80 @@
 .app-main {
   flex: 1;
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main:focus {
+  outline: none;
+}
+
+.page-host {
+  flex: 1;
+  min-height: 0;
   display: flex;
 }
 
+/* Each page is a positioned, clipping box: absolutely positioned
+   descendants (visually-hidden labels, tooltips) are contained here instead
+   of stretching the document — which made the whole shell scrollable and let
+   scrollIntoView shove it out of view. */
 .app-tab-keepalive {
   flex: 1;
   min-width: 0;
   min-height: 0;
+  display: flex;
+  position: relative;
+  overflow: hidden;
 }
+
+.app-tab-keepalive[hidden] {
+  display: none !important;
+}
+
+.page-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: var(--text-faint);
+  font-size: 13px;
+}
+
+/* Focus mode: the page alone. The header stays, holding the way back. */
+.focus-mode .primary-nav,
+.focus-mode .bottom-nav,
+.focus-mode .app-search-btn,
+.focus-mode .app-header-depth {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .app-search-label {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-header-depth,
+  .app-header-settings,
+  .app-search-btn kbd {
+    display: none;
+  }
+
+  .app-search-label {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-brand-name {
+    display: none;
+  }
+
+  .app-header {
+    padding: 0 8px 0 12px;
+  }
+}
+

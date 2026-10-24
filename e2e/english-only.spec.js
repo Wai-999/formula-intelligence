@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { expectNoCrash } from './helpers.js';
-import { TABS } from '../src/store/useUIStore.js';
-import { ML_TABS } from '../src/store/useMLUIStore.js';
+import { PAGES, hashFor } from '../src/app/pages.js';
+import { auditInstances } from '../src/data/curriculum/index.js';
 
 // Master Prompt V3.1 §4: English-only visible UI, with beginner/researcher
 // depth preserved independently of language. The learner below saved
 // Burmese + Researcher before the change — the worst case for both rules.
-const MYANMAR = /[က-႟ꩠ-ꩿ]/g;
+const MYANMAR = /[\u1000-\u109F\uAA60-\uAA7F]/g;
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -16,8 +16,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 const surfaces = [
-  ...TABS.map((t) => `stats/${t.id}`),
-  ...ML_TABS.map((t) => `ml/${t.id}`),
+  ...PAGES.filter((p) => !p.hidden).map((p) => hashFor(p.id).slice(1)),
+  ...auditInstances().map((i) => hashFor(i.page, i.params).slice(1)),
 ];
 
 for (const route of surfaces) {
@@ -30,7 +30,8 @@ for (const route of surfaces) {
 }
 
 test('there is no language switch, and saved depth survives the change', async ({ page }) => {
-  await page.goto('./#ml/pipeline', { waitUntil: 'networkidle' });
+  await page.goto('./#learn/ml', { waitUntil: 'networkidle' });
   await expect(page.getByRole('tablist', { name: 'Language' })).toHaveCount(0);
-  await expect(page.getByRole('tab', { name: 'Researcher' }).first()).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('group', { name: 'Explanation depth' }).getByRole('button', { name: 'Researcher' }))
+    .toHaveAttribute('aria-pressed', 'true');
 });

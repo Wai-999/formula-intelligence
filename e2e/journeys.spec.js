@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { openApp, goToStatsTab, goToMLTab, seedMastery, expectNoCrash, VISIBLE } from './helpers.js';
-import { TABS } from '../src/store/useUIStore.js';
-import { ML_TABS } from '../src/store/useMLUIStore.js';
+import { openApp, openPage, seedMastery, expectNoCrash, VISIBLE } from './helpers.js';
+import { PAGES } from '../src/app/pages.js';
 
 // End-to-end journeys.
 //
@@ -18,7 +17,7 @@ test.describe('learning loop', () => {
     await openApp(page);
 
     // Baseline: a new learner has nothing anywhere.
-    await goToStatsTab(page, 'Dashboard');
+    await openPage(page, 'progress/overview');
     await expect(page.locator(VISIBLE + '.prog-level-num')).toHaveText('1');
     await expect(page.locator(VISIBLE + '.prog-xp')).toContainText('0');
     await expect(page.locator(VISIBLE + '.prog-badge.earned')).toHaveCount(0);
@@ -26,7 +25,7 @@ test.describe('learning loop', () => {
     await seedMastery(page, 12);
 
     // 1. The dashboard's own KPI reflects it.
-    await goToStatsTab(page, 'Dashboard');
+    await openPage(page, 'progress/overview');
     const kpis = page.locator(VISIBLE + '.kpi-val');
     await expect(kpis.nth(1), 'mastered KPI').toHaveText('12');
 
@@ -45,7 +44,7 @@ test.describe('learning loop', () => {
 
     // 4. And a persona track, which measures progress by a different code
     //    path, must land on the same number.
-    await goToStatsTab(page, 'Learning Path');
+    await openPage(page, 'learn/paths');
     const studentCard = page.locator(VISIBLE + '.track-card').first();
     await expect(studentCard.locator('.track-prog')).not.toContainText('0 /');
   });
@@ -54,7 +53,7 @@ test.describe('learning loop', () => {
     await openApp(page);
     await seedMastery(page, 6);
     await page.reload({ waitUntil: 'networkidle' });
-    await goToStatsTab(page, 'Dashboard');
+    await openPage(page, 'progress/overview');
     await expect(page.locator(VISIBLE + '.kpi-val').nth(1)).toHaveText('6');
     await expect(page.locator(VISIBLE + '.prog-xp')).toContainText('300');
   });
@@ -63,11 +62,11 @@ test.describe('learning loop', () => {
 test.describe('cross-feature navigation', () => {
   test('a formula deep-links from the Stats map into its Python Hub entry', async ({ page }) => {
     await openApp(page);
-    await goToStatsTab(page, 'Map');
+    await openPage(page, 'maps/formulas');
 
     // Researcher depth is what exposes the link, and it loads the Hub corpus
     // on demand — the lazy path added in 02494bb.
-    await page.locator('.app-header .ll-btn:has-text("Researcher")').click();
+    await page.locator('.app-header .depth-btn:has-text("Researcher")').click();
     await page.locator('circle.gnode-circle').nth(20).click({ force: true });
     await expect(page.locator(VISIBLE + '.detail-panel.open')).toBeVisible();
     await expect(page.locator(VISIBLE + '.detail-deep')).toBeVisible({ timeout: 10_000 });
@@ -76,15 +75,15 @@ test.describe('cross-feature navigation', () => {
     await page.locator(VISIBLE + '.detail-deep .detail-bridge-btn').click();
     await page.waitForTimeout(900);
 
-    // The Hub is in the other MODE and may never have been mounted.
+    // The Hub is a different page (Practice → Python) and may never have been mounted.
     const openEntry = page.locator(VISIBLE + '.pyentry.open .pyentry-name').first();
     await expect(openEntry).toHaveText(formulaName);
   });
 
-  test('an ML citation opens the Sources tab at the cited section', async ({ page }) => {
+  test('an ML citation opens the Sources page at the cited section', async ({ page }) => {
     await openApp(page);
     // Pipeline, not a domain lab: the labs were retired (Master Prompt V3.1 §4).
-    await goToMLTab(page, 'Pipeline');
+    await openPage(page, 'learn/ml');
 
     const citation = page.locator(VISIBLE + '.ml-citation-link').first();
     await citation.scrollIntoViewIfNeeded();
@@ -114,7 +113,7 @@ test.describe('cross-feature navigation', () => {
     // they were just in the wrong container. So assert the LAYOUT, not just
     // the presence.
     await openApp(page);
-    await goToStatsTab(page, 'Learning Path');
+    await openPage(page, 'learn/paths');
 
     const viewport = page.viewportSize().width;
     const band = await page.locator(VISIBLE + '.tracks').boundingBox();
@@ -142,7 +141,7 @@ test.describe('cross-feature navigation', () => {
 
   test('a track item opens the thing it points at', async ({ page }) => {
     await openApp(page);
-    await goToStatsTab(page, 'Learning Path');
+    await openPage(page, 'learn/paths');
     await page.locator(VISIBLE + '.track-card').first().click();
 
     const item = page.locator(VISIBLE + '.track-item').first();
@@ -156,30 +155,27 @@ test.describe('cross-feature navigation', () => {
 });
 
 test.describe('resilience', () => {
-  test('every tab in both modes renders without tripping a boundary', async ({ page }) => {
+  test('every page renders without tripping a boundary', async ({ page }) => {
+    test.setTimeout(90_000);
     const consoleErrors = [];
     page.on('console', (m) => { if (m.type() === 'error') consoleErrors.push(m.text()); });
     page.on('pageerror', (e) => consoleErrors.push(e.message));
 
     await openApp(page);
-    // From the registries, so a tab added or retired can't leave this list stale.
-    for (const tab of TABS.map((t) => t.label)) {
-      await goToStatsTab(page, tab);
-      await expectNoCrash(page);
-    }
-    for (const tab of ML_TABS.map((t) => t.label)) {
-      await goToMLTab(page, tab);
+    // From the registry, so a page added or retired can't leave this list stale.
+    for (const p of PAGES.filter((x) => !x.hidden)) {
+      await openPage(page, p.id);
       await expectNoCrash(page);
     }
     expect(consoleErrors, 'no console or page errors anywhere').toEqual([]);
   });
 
-  test('keep-alive preserves a tab\'s state across a round trip', async ({ page }) => {
+  test('keep-alive preserves a page\'s state across a round trip', async ({ page }) => {
     await openApp(page);
-    await goToStatsTab(page, 'Map');
+    await openPage(page, 'maps/formulas');
     await page.locator('.app-main input[placeholder*="Search"]').first().fill('variance');
-    await goToStatsTab(page, 'Journal');
-    await goToStatsTab(page, 'Map');
+    await openPage(page, 'notebook/journal');
+    await openPage(page, 'maps/formulas');
     await expect(page.locator('.app-main input[placeholder*="Search"]').first()).toHaveValue('variance');
   });
 
@@ -209,7 +205,7 @@ test.describe('python execution', () => {
 
   test('@heavy a sample runs, an unrunnable one explains itself, and the Lab keeps edits', async ({ page }) => {
     await openApp(page);
-    await goToMLTab(page, 'Python');
+    await openPage(page, 'practice/python');
 
     // 1. A sample that can run, does — with real captured stdout.
     await page.locator(VISIBLE + '.pyentry-header', { hasText: 'Sample Mean' }).first().click();
@@ -229,14 +225,14 @@ test.describe('python execution', () => {
 
     // 3. The Lab runs code the user wrote and keeps it across a reload.
     //    The runtime is already warm here, which is the point.
-    await goToMLTab(page, 'Lab');
+    await openPage(page, 'projects/lab');
     await page.locator(VISIBLE + '.pylab-editor').fill('print("journey test", 6 * 7)');
     await page.locator(VISIBLE + '.pylab-run').click();
     await expect(page.locator(VISIBLE + '.pylab-out-body'))
       .toContainText('journey test 42', { timeout: 150_000 });
 
     await page.reload({ waitUntil: 'networkidle' });
-    await goToMLTab(page, 'Lab');
+    await openPage(page, 'projects/lab');
     await expect(page.locator(VISIBLE + '.pylab-editor')).toHaveValue(/journey test/);
   });
 });

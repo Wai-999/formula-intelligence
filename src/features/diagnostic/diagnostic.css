@@ -1,0 +1,86 @@
+.dx-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(var(--overlay-rgb), 0.1);
+  overflow: hidden;
+}
+
+.dx-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+}
+
+.dx-question {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  background: var(--surface-raised);
+}
+
+.dx-domains {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 12px;
+}
+
+.dx-domain {
+  border: 1px solid var(--border-solid);
+  border-left: 4px solid var(--border-solid-2);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface-raised);
+}
+
+/* Level is carried by the words AND the edge colour, never colour alone. */
+.dx-strong { border-left-color: var(--success); }
+.dx-developing { border-left-color: var(--warning); }
+.dx-gap { border-left-color: var(--danger); }
+
+.dx-domain-title {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.dx-domain-level {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dx-range {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(var(--overlay-rgb), 0.08);
+}
+
+.dx-range-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.35);
+}
+
+.dx-range-dot {
+  position: absolute;
+  top: -2px;
+  width: 4px;
+  height: 14px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--primary-text);
+}
+
+.dx-review summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 32px;
+}
