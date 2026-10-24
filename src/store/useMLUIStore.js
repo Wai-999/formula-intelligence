@@ -27,21 +27,22 @@ export const ML_TABS = [
 ];
 
 export const useMLUIStore = create((set) => ({
-  // Beginner/Researcher depth + English/Burmese language — cross-cutting
-  // toggle (Module 11), lives at the ML-shell level so every ML page reads
-  // the same pair. Persisted like the rest of the app's user prefs.
-  level: savedPrefs.level, // 'beginner' | 'researcher'
-  lang: savedPrefs.lang, // 'en' | 'my'
+  // Beginner/Researcher depth — cross-cutting, lives at the shell level so
+  // every page reads the same value. Persisted like the other user prefs.
+  level: savedPrefs.level === 'researcher' ? 'researcher' : 'beginner',
+  // English only (Master Prompt V3.1 §2/§4). Pinned here rather than removed
+  // so every existing useT/resolveT call resolves English with no content
+  // edits — the content's Burmese strings are stripped in a separate,
+  // snapshot-guarded codemod (docs/audits/MIGRATION_RISKS.md R-04). A stored
+  // lang of 'my' is ignored on load; the record keeps its { level, lang }
+  // shape, and only becomes 'en' the next time depth is changed — so a
+  // rolled-back build still reads it, at worst showing English.
+  lang: 'en',
   selectedModelId: null,
 
   setLevel(level) {
     set({ level });
-    saveJSON(PREFS_KEY, { level, lang: useMLUIStore.getState().lang });
-  },
-
-  setLang(lang) {
-    set({ lang });
-    saveJSON(PREFS_KEY, { level: useMLUIStore.getState().level, lang });
+    saveJSON(PREFS_KEY, { level, lang: 'en' });
   },
 
   selectModel(id) {
