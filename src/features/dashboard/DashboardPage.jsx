@@ -5,6 +5,7 @@ import { useThemeStore } from '../../store/useThemeStore.js';
 import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { useCountUp } from '../../hooks/useCountUp.js';
 import ProgressionPanel from './ProgressionPanel.jsx';
+import BackupPanel from './BackupPanel.jsx';
 import './DashboardPage.css';
 
 function KpiCard({ label, value }) {
@@ -99,6 +100,8 @@ export default function DashboardPage() {
           ))
         )}
       </div>
+
+      <BackupPanel />
     </div>
   );
 }
