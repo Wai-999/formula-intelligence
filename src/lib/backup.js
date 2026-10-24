@@ -93,6 +93,27 @@ export function restoreBackup(backup) {
   return { ok: true, restored: check.keys.length };
 }
 
+// Appearance and navigation choices survive a progress reset: "start my
+// learning over" should not also flip the theme back.
+export const PREFERENCE_KEYS = new Set([
+  STORAGE_KEYS.theme, STORAGE_KEYS.motion, STORAGE_KEYS.navPrefs, STORAGE_KEYS.mlModePrefs,
+]);
+
+/**
+ * Remove every learning record this app owns, keeping preferences. Only call
+ * after the learner has confirmed. Returns the backup taken just before, so
+ * the caller can offer it for download (the reset's undo).
+ */
+export function resetProgress() {
+  const before = createBackup();
+  try {
+    for (const k of appKeys()) if (!PREFERENCE_KEYS.has(k)) localStorage.removeItem(k);
+  } catch {
+    return { ok: false, error: 'Browser storage is unavailable, so nothing was reset.', before };
+  }
+  return { ok: true, before };
+}
+
 export function backupFilename(now = new Date()) {
   return `formula-intelligence-backup-${now.toISOString().slice(0, 10)}.json`;
 }

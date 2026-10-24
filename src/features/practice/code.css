@@ -1,0 +1,95 @@
+.code-ex {
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.code-ex-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.code-prompt {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.code-editor {
+  width: 100%;
+  min-height: 140px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-solid-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-deep);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.55;
+  tab-size: 4;
+  resize: vertical;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.code-setup summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-muted);
+  min-height: 28px;
+}
+
+.code-inline-out {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.code-err {
+  color: var(--text-primary);
+  border-left: 3px solid var(--danger);
+}
+
+.code-tests {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.code-tests .pass .ti { color: var(--success); }
+.code-tests .fail .ti { color: var(--danger); }
+
+.code-test-msg {
+  display: block;
+  margin-left: 22px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.code-fig {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.code-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

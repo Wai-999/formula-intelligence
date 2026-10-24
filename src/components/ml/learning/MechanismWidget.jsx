@@ -25,9 +25,10 @@ export default function MechanismWidget({
           type="range" min={paramMin} max={paramMax} step={paramStep} value={value}
           onChange={(e) => setValue(Number(e.target.value))}
           className="pg-slider"
+          aria-label={label}
         />
       </div>
-      <div className="mechanism-widget-output">
+      <div className="mechanism-widget-output" aria-live="polite">
         <span className="ml-lbl">{outLabel}</span>
         <span className="mechanism-widget-output-value">{output.toFixed(outputDecimals)}{outputSuffix}</span>
       </div>

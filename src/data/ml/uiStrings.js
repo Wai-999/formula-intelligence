@@ -84,11 +84,7 @@ export const UI_UNDERSTANDING_STAT_TEMPLATE = blSame(
   '{touched} nodes explored · {frontier} reached Critical Frontier'
 );
 
-// MixedReviewPanel (D.4 interleaving).
-export const UI_MIXED_REVIEW_LBL = blSame('Mixed review');
 export const UI_NEXT_QUESTION_BTN = blSame('Next question');
-export const UI_MIXED_REVIEW_COLLAPSE = blSame('Collapse');
-export const UI_MIXED_REVIEW_EXPAND = blSame('Cross-domain question available');
 
 // Module 1: one-time ML-mode entry banner (D.3, "User-Trained Model").
 export const UI_ENTRY_BANNER_TITLE = blSame('Before you start clicking around');

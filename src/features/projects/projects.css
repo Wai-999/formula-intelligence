@@ -1,0 +1,47 @@
+.proj {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.proj-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.proj-dataset {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proj-steps {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.proj-step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proj-reflect {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proj a,
+.studio-page a:not(.studio-btn):not(.studio-card-link) {
+  color: var(--accent);
+}

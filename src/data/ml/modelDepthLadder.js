@@ -11,7 +11,9 @@ import { bl, blSame } from '../../lib/mlContent.js';
 // interactive counterpart elsewhere in ML mode (send the learner there
 // instead of building a redundant toy) or 'widget' for a small, genuine,
 // model-specific MechanismWidget otherwise — see BUILD_LOG.md's Phase 1
-// note for why this split exists.
+// note for why this split exists. Nine ladders used to link to the Gold,
+// Macro and Micro labs; when those were retired (Master Prompt V3.1 §4) each
+// got an in-place widget computing the formula its own Formalism layer gives.
 export const MODEL_DEPTH_LADDER = {
   linreg: {
     spark: {
@@ -69,7 +71,17 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'macro', label: blSame('Macro Lab — the LASSO/Elastic Net lens') },
+    mechanism: {
+      // Soft-thresholding: with orthonormal features, minimizing
+      // Σ(y−ŷ)² + λΣ|β| moves an OLS coefficient b to sign(b)·max(|b| − λ/2, 0).
+      kind: 'widget',
+      predict: { question: blSame('OLS gives β = 10. As the Lasso penalty λ keeps growing, does the coefficient level off just above 0, or land exactly on 0?'), options: [blSame('Levels off just above 0'), blSame('Lands exactly on 0 and stays there')], correctIndex: 1 },
+      paramLabel: blSame('Lasso penalty λ (orthonormal features, OLS β = 10)'),
+      paramMin: 0, paramMax: 30, paramDefault: 2, paramStep: 1, paramDecimals: 0,
+      compute: (lam) => Math.max(10 - lam / 2, 0),
+      outputLabel: blSame('Lasso coefficient'),
+      outputDecimals: 1,
+    },
     formalism: {
       worked: bl(
         'OLS gives β=10 for a noisy feature. Add a Lasso penalty λ=2: the coefficient shrinks toward zero, and if the feature is weak enough, Lasso can push it to exactly 0 — dropping it from the model entirely, unlike Ridge which only shrinks toward (but never exactly to) zero.',
@@ -301,7 +313,16 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'macro', label: blSame('Macro Lab — the Random Forest lens') },
+    mechanism: {
+      // Var(ŷ) = ρσ² + (1−ρ)σ²/B, shown as a share of one tree's σ².
+      kind: 'widget',
+      predict: { question: blSame('These trees are correlated (ρ = 0.3). If you keep adding trees forever, what happens to the forest\'s variance?'), options: [blSame('It falls toward zero'), blSame('It levels off at 30% of one tree\'s')], correctIndex: 1 },
+      paramLabel: blSame('Number of trees B (inter-tree correlation ρ = 0.3)'),
+      paramMin: 1, paramMax: 200, paramDefault: 1, paramStep: 1, paramDecimals: 0,
+      compute: (b) => 100 * (0.3 + 0.7 / b),
+      outputLabel: blSame('Forest variance, as a share of one tree\'s'),
+      outputDecimals: 1, outputSuffix: '%',
+    },
     formalism: {
       worked: bl(
         'Three trees predict tomorrow\'s gold move as +$30, -$10, +$50 respectively (each saw a different bootstrap sample). Random Forest\'s prediction is their average: (30-10+50)/3 ≈ $23 — smoothing away each tree\'s individual noise.',
@@ -341,7 +362,17 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'micro', label: blSame('Micro Lab — the Gradient Boosting curve') },
+    mechanism: {
+      // Fₘ = Fₘ₋₁ + ν·hₘ with each hₘ fitting the current residual exactly,
+      // so the residual after M rounds is r₀(1 − ν)ᴹ.
+      kind: 'widget',
+      predict: { question: blSame('With learning rate ν = 0.1, each round removes 10% of what is still left. After 10 rounds, roughly how much of a $15 residual remains?'), options: [blSame('About $1.50'), blSame('About $5.23'), blSame('$0 — it is fully fixed')], correctIndex: 1 },
+      paramLabel: blSame('Boosting rounds M (learning rate ν = 0.1, starting residual $15)'),
+      paramMin: 0, paramMax: 60, paramDefault: 0, paramStep: 1, paramDecimals: 0,
+      compute: (m) => 15 * 0.9 ** m,
+      outputLabel: blSame('Residual still unexplained, in dollars'),
+      outputDecimals: 2,
+    },
     formalism: {
       worked: bl(
         'Tree 1 predicts gold moves +$40 when actual was +$55 — residual error +$15. Tree 2 is fit specifically to predict that leftover +$15, learning to add a correction where Tree 1 undershot. Combined prediction: $40+$15=$55.',
@@ -381,7 +412,18 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the XGBoost lens') },
+    mechanism: {
+      // Closed-form optimal leaf weight w* = −G/(H + λ). Squared-error loss:
+      // each sample has gradient ŷ − y and Hessian 1, so 10 samples whose
+      // residuals sum to 20 give G = −20, H = 10.
+      kind: 'widget',
+      predict: { question: blSame('A leaf holds 10 samples whose residuals average 2.0. What does raising λ from 0 to 10 do to its weight?'), options: [blSame('Nothing — λ only counts leaves'), blSame('Halves it, from 2.0 to 1.0'), blSame('Sets it to exactly 0')], correctIndex: 1 },
+      paramLabel: blSame('L2 penalty λ on leaf weights (10 samples, residuals sum to 20)'),
+      paramMin: 0, paramMax: 40, paramDefault: 0, paramStep: 1, paramDecimals: 0,
+      compute: (lam) => 20 / (10 + lam),
+      outputLabel: blSame('Optimal leaf weight w* = −G / (H + λ)'),
+      outputDecimals: 3,
+    },
     formalism: {
       worked: bl(
         'XGBoost\'s objective adds Ω(f)=γT+½λΣwⱼ² to the loss, where T is the number of leaves and wⱼ their weights. A tree with 20 tiny, barely-useful leaves gets penalized more than one with 5 substantial ones — this is the "automatic guardrail" in concrete math form.',
@@ -565,7 +607,17 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'micro', label: blSame('Micro Lab — Gradient Boosting, a real instance of Boosting') },
+    mechanism: {
+      // AdaBoost's vote weight for a learner with weighted error ε:
+      // α = ½·ln((1 − ε)/ε).
+      kind: 'widget',
+      predict: { question: blSame('A weak learner that is right exactly half the time (error 0.5) gets how much say in the final vote?'), options: [blSame('None (α = 0)'), blSame('Half (α = 0.5)'), blSame('Full (α = 1)')], correctIndex: 0 },
+      paramLabel: blSame('Weak learner\'s weighted error ε'),
+      paramMin: 0.01, paramMax: 0.5, paramDefault: 0.4, paramStep: 0.01, paramDecimals: 2,
+      compute: (e) => 0.5 * Math.log((1 - e) / e),
+      outputLabel: blSame('Vote weight α = ½ ln((1 − ε) / ε)'),
+      outputDecimals: 3,
+    },
     formalism: {
       worked: bl(
         'A weak learner alone gets 60% accuracy. Boosting chains 50 weak learners, each fixing the specific errors of the ensemble so far — the combined ensemble can reach 95%+ accuracy on the same problem, far beyond what any single weak learner could.',
@@ -837,7 +889,17 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the ARIMA lens') },
+    mechanism: {
+      // AR(1): a deviation from the long-run level shrinks by φ each step,
+      // so it halves after ln(0.5)/ln(φ) steps.
+      kind: 'widget',
+      predict: { question: blSame('With φ = 0.8, as in the worked example, about how many days until a $35 deviation has shrunk to $17.50?'), options: [blSame('Under 1 day'), blSame('About 3 days'), blSame('It never shrinks')], correctIndex: 1 },
+      paramLabel: blSame('AR(1) coefficient φ'),
+      paramMin: 0.05, paramMax: 0.99, paramDefault: 0.8, paramStep: 0.01, paramDecimals: 2,
+      compute: (phi) => Math.log(0.5) / Math.log(phi),
+      outputLabel: blSame('Days until a deviation has halved'),
+      outputDecimals: 1,
+    },
     formalism: {
       worked: bl(
         'A simple AR(1) model: next_price = 4015 + 0.8×(today_price − 4015). If today is $4,050 (35 above the long-run level), tomorrow\'s forecast is 4015 + 0.8×35 = $4,043 — reverting most, but not all, of the way back.',
@@ -925,7 +987,17 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the GARCH volatility overlay') },
+    mechanism: {
+      // GARCH(1,1): E[σ²ₜ₊ₕ] − σ̄² = (α + β)ʰ(σ²ₜ − σ̄²), so extra variance
+      // from a shock halves after ln(0.5)/ln(α + β) days.
+      kind: 'widget',
+      predict: { question: blSame('As α + β gets closer to 1, how long does the extra turbulence from one shock linger?'), options: [blSame('Shorter'), blSame('About the same'), blSame('Longer and longer')], correctIndex: 2 },
+      paramLabel: blSame('β, with α = 0.15 as in the worked example'),
+      paramMin: 0.5, paramMax: 0.84, paramDefault: 0.8, paramStep: 0.01, paramDecimals: 2,
+      compute: (beta) => Math.log(0.5) / Math.log(0.15 + beta),
+      outputLabel: blSame('Days until a volatility shock has halved'),
+      outputDecimals: 1,
+    },
     formalism: {
       worked: bl(
         'σ²ₜ = 0.02 + 0.15·ε²ₜ₋₁ + 0.8·σ²ₜ₋₁. If yesterday\'s shock ε was unusually large (ε²=4) and yesterday\'s variance σ²ₜ₋₁ was 1, today\'s variance forecast: 0.02+0.15(4)+0.8(1)=1.42 — noticeably higher than yesterday\'s 1, exactly the "shock raises expected turbulence" behavior.',
@@ -1061,7 +1133,18 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 1,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — compare the ARIMA and XGBoost lenses side by side') },
+    mechanism: {
+      // Illustrative split of ARIMA's residual variance (100 $²): 60 is a
+      // predictable pattern, 40 is pure noise. An ML model that captures a
+      // share k of the pattern leaves error variance 40 + 60(1 − k)².
+      kind: 'widget',
+      predict: { question: blSame('Even an ML model that captures all of the predictable residual pattern leaves some error. Why can the hybrid never reach zero?'), options: [blSame('It can — a perfect ML model removes all error'), blSame('Part of the residual is pure noise that nothing can predict')], correctIndex: 1 },
+      paramLabel: blSame('Share of the predictable residual pattern the ML model captures (illustrative: 60 of ARIMA\'s 100 $² residual variance is pattern, 40 is noise)'),
+      paramMin: 0, paramMax: 1, paramDefault: 0, paramStep: 0.05, paramDecimals: 2,
+      compute: (k) => Math.sqrt(40 + 60 * (1 - k) ** 2),
+      outputLabel: blSame('Hybrid forecast error (RMSE), in dollars'),
+      outputDecimals: 2,
+    },
     formalism: {
       worked: bl(
         'ARIMA forecasts gold at $4,015 for tomorrow. Its historical residuals (actual minus ARIMA-predicted) show a pattern XGBoost detects: residuals tend to be +$25 whenever geopolitical risk spiked recently, something ARIMA structurally can\'t see. Final hybrid forecast: $4,015 + $25 = $4,040.',
@@ -1149,7 +1232,17 @@ export const MODEL_DEPTH_LADDER = {
         correctIndex: 0,
       },
     },
-    mechanism: { kind: 'retired-lab', module: 'gold', label: blSame('Gold Lab — the LSTM lens') },
+    mechanism: {
+      // Cell state Cₜ = fₜ⊙Cₜ₋₁ + iₜ⊙C̃ₜ; with no new input and a constant
+      // forget gate f, an old memory keeps fᵏ of itself after k steps.
+      kind: 'widget',
+      predict: { question: blSame('With the forget gate held at 0.9, how much of an old memory survives 20 steps?'), options: [blSame('About 90%'), blSame('About 12%'), blSame('None')], correctIndex: 1 },
+      paramLabel: blSame('Forget gate fₜ, held constant (no new input)'),
+      paramMin: 0, paramMax: 1, paramDefault: 0.9, paramStep: 0.01, paramDecimals: 2,
+      compute: (f) => 100 * f ** 20,
+      outputLabel: blSame('Share of an old memory left after 20 steps'),
+      outputDecimals: 1, outputSuffix: '%',
+    },
     formalism: {
       worked: bl(
         'A forget gate outputs fₜ=0.9 (close to 1, "keep most of the old memory") when recent inputs look unremarkable, but drops to fₜ=0.1 ("mostly forget") right after a genuinely surprising data point — this learned, input-dependent gating is exactly what lets important old information survive far longer than a fixed 0.5 decay would allow.',

@@ -1,41 +1,57 @@
 import { expect } from '@playwright/test';
+import { pageById, sectionById, sectionHome } from '../src/app/pages.js';
 
-// Every tab that has been visited stays mounted (see useVisitedTabs), so a
-// bare selector matches hidden panes too. Scoping to the visible pane is
-// what makes these assertions mean "on the page the user is looking at".
+// Recently visited pages stay mounted (useKeepAlive), so a bare selector can
+// match hidden panes too. Scoping to the visible pane is what makes these
+// assertions mean "on the page the user is looking at".
 export const VISIBLE = '.app-tab-keepalive:visible ';
 
-export async function openApp(page, { theme } = {}) {
-  await page.goto('./', { waitUntil: 'domcontentloaded' });
-  if (theme) {
-    await page.evaluate((t) => localStorage.setItem('fi_theme_v1', JSON.stringify(t)), theme);
-  }
+export async function openApp(page, { theme, path = './' } = {}) {
+  await page.goto(path, { waitUntil: 'domcontentloaded' });
+  await page.evaluate((t) => {
+    if (t) localStorage.setItem('fi_theme_v1', JSON.stringify(t));
+  }, theme);
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForTimeout(300);
 }
 
-export async function goToStatsTab(page, label) {
-  await page.locator(`.icon-rail-btn[aria-label="${label}"]`).click();
-  await page.waitForTimeout(320);
-}
-
-export async function goToMLTab(page, label) {
-  // Scoped to the mode switcher: the Pipeline page has its own tablist
-  // containing a tab whose name also includes "ML", so a bare role query
-  // matches two elements and fails strict mode.
-  const mlSwitch = page.locator('.mode-switcher-btn', { hasText: /^ML$/ });
-  if (await mlSwitch.getAttribute('aria-selected') !== 'true') {
-    await mlSwitch.click();
-    await page.waitForTimeout(420);
-  }
-  // First ML visit shows a modal that intercepts every subsequent click.
+/**
+ * The first visit to an ML page shows a one-time explainer above the page.
+ * It no longer blocks anything (it is inline, not a modal), but dismissing it
+ * keeps layout-sensitive assertions measuring the page itself.
+ */
+export async function dismissEntryBanner(page) {
   const banner = page.locator('.entry-banner-dismiss');
   if (await banner.count()) {
     await banner.click();
-    await page.waitForTimeout(250);
+    await page.waitForTimeout(150);
   }
-  await page.locator(`.icon-rail-btn[aria-label="${label}"]`).click();
-  await page.waitForTimeout(400);
+}
+
+/**
+ * Open a page the way a learner does: the section in the primary navigation,
+ * then the page in the section's own navigation. Pages outside the primary
+ * sections (Settings, Sources) are opened by their address.
+ */
+export async function openPage(page, pageId) {
+  const def = pageById[pageId];
+  if (!def) throw new Error(`unknown page ${pageId}`);
+  if (!def.section) {
+    await page.evaluate((h) => { window.location.hash = h; }, `#${pageId}`);
+  } else {
+    const primary = page.getByRole('navigation', { name: 'Primary' });
+    await primary.getByRole('link', { name: sectionById[def.section].label, exact: true }).click();
+    const home = sectionHome(def.section);
+    await expect(page.locator('h1.page-title')).toHaveText(pageById[home].title);
+    if (home !== pageId) {
+      const sub = page.getByRole('navigation', { name: `${sectionById[def.section].label} pages` });
+      await sub.getByRole('link', { name: def.title, exact: true }).click();
+    }
+  }
+  await expect(page.locator('h1.page-title')).toHaveText(def.title);
+  await page.waitForLoadState('networkidle');
+  await dismissEntryBanner(page);
+  await page.waitForTimeout(250);
 }
 
 /**
@@ -43,7 +59,8 @@ export async function goToMLTab(page, label) {
  * own bound data so the seed can never drift from the content.
  */
 export async function seedMastery(page, count) {
-  await goToStatsTab(page, 'Map');
+  await openPage(page, 'maps/formulas');
+  await page.locator('g.gnode').first().waitFor({ state: 'attached' });
   const seeded = await page.evaluate((n) => {
     const ids = [...document.querySelectorAll('g.gnode')]
       .map((g) => g.__data__?.id).filter(Boolean).slice(0, n);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import NavSidebar from '../../components/layout/NavSidebar.jsx';
 import GraphCanvas from '../../components/graph/GraphCanvas.jsx';
+import FormulaOutline from './FormulaOutline.jsx';
 import DetailPanel from '../../components/detail/DetailPanel.jsx';
 import { useUIStore } from '../../store/useUIStore.js';
 import './MapPage.css';
@@ -13,6 +14,9 @@ export default function MapPage() {
   // the full screen (see MapPage.css). Harmless on desktop, where the
   // sidebar is always a column and the toggle is not rendered.
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Graph or a plain outline of the same content (F-04). The graph stays
+  // mounted while the outline shows, so its zoom and selection survive.
+  const [view, setView] = useState('graph');
 
   // Consumes Module 10's ML → Stats cross-link (e.g. the Bridge page's
   // "view reg on the Stats map" button), reusing the same linkedConcept
@@ -36,7 +40,12 @@ export default function MapPage() {
       </button>
       <NavSidebar />
       <div className="map-canvas-area">
-        <GraphCanvas />
+        <div className="map-view-toggle" role="group" aria-label="View">
+          <button type="button" aria-pressed={view === 'graph'} onClick={() => setView('graph')}><i className="ti ti-topology-star-3" aria-hidden="true" /> Graph</button>
+          <button type="button" aria-pressed={view === 'outline'} onClick={() => setView('outline')}><i className="ti ti-list-tree" aria-hidden="true" /> Outline</button>
+        </div>
+        <div className="map-view" hidden={view !== 'graph'}><GraphCanvas /></div>
+        {view === 'outline' && <FormulaOutline />}
         <DetailPanel />
       </div>
     </div>

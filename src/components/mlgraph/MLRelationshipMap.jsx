@@ -588,6 +588,54 @@ export default function MLRelationshipMap() {
         if (barelyMoved) useMLUIStore.getState().selectModel(null);
       });
 
+    // ——— Keyboard access (baseline audit F-04), same model as the formula
+    // map: one tab stop, arrows follow links (right/left) and the family row
+    // (up/down), Enter opens the model’s details, the view follows focus.
+    {
+      const nodeEls = new Map();
+      nodeSel.each(function (d) { nodeEls.set(d.id, this); });
+      const outOf = (id) => simLinks.filter((l) => l.s === id).map((l) => l.t);
+      const into = (id) => simLinks.filter((l) => l.t === id).map((l) => l.s);
+      const rows = {};
+      simNodes.forEach((n) => { (rows[n.ch] ||= []).push(n); });
+      Object.values(rows).forEach((r) => r.sort((a, b) => a.x - b.x));
+      const order = Object.keys(rows).map(Number).sort((a, b) => a - b);
+      let roving = simNodes[0]?.id;
+      const focusNode = (id) => {
+        const el = nodeEls.get(id);
+        if (!el) return;
+        nodeEls.get(roving)?.setAttribute('tabindex', '-1');
+        roving = id;
+        el.setAttribute('tabindex', '0');
+        el.focus({ preventScroll: true });
+        const d = el.__data__;
+        const [sx, sy] = d3.zoomTransform(svg.node()).apply([d.x, d.y]);
+        if (sx < 60 || sy < 60 || sx > width - 60 || sy > height - 60) svg.call(zoomBehavior.translateTo, d.x, d.y);
+      };
+      nodeSel
+        .attr('tabindex', (d) => (d.id === roving ? 0 : -1))
+        .attr('role', 'button')
+        .attr('aria-label', (d) => `${d.name} (${d.short}). ${into(d.id).length} incoming and ${outOf(d.id).length} outgoing connections.`)
+        .attr('aria-describedby', 'mlgraph-kbd-help')
+        .on('keydown', (event, d) => {
+          let target = null;
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); useMLUIStore.getState().selectModel(d.id); return; }
+          if (event.key === 'ArrowRight') target = outOf(d.id)[0];
+          else if (event.key === 'ArrowLeft') target = into(d.id)[0];
+          else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            const row = rows[d.ch];
+            const i = row.findIndex((n) => n.id === d.id);
+            const next = row[i + (event.key === 'ArrowDown' ? 1 : -1)];
+            if (next) target = next.id;
+            else {
+              const r2 = rows[order[order.indexOf(d.ch) + (event.key === 'ArrowDown' ? 1 : -1)]];
+              if (r2) target = (event.key === 'ArrowDown' ? r2[0] : r2[r2.length - 1]).id;
+            }
+          }
+          if (target) { event.preventDefault(); focusNode(target); }
+        });
+    }
+
     svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(initialFit.tx, initialFit.ty).scale(initialFit.scale));
 
     let needsRefit = width < 10 || height < 10;
@@ -653,7 +701,11 @@ export default function MLRelationshipMap() {
 
   return (
     <div className="mlgraph-canvas-wrap" ref={wrapRef}>
-      <svg ref={svgRef} className="mlgraph-canvas-svg" />
+      <p id="mlgraph-kbd-help" className="visually-hidden">
+        Model graph. Arrow right and left follow connections, arrow up and down move within a model family. Enter opens
+        the model’s details. The Outline view lists every model and its connections without the graph.
+      </p>
+      <svg ref={svgRef} className="mlgraph-canvas-svg" role="group" aria-label="Machine-learning model map" />
       <div className="mlgraph-tooltip" ref={tooltipRef} />
     </div>
   );

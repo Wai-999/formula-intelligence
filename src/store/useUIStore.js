@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import { ML_TABS } from './useMLUIStore.js';
 import { useToastStore } from './useToastStore.js';
 import { ML_LESSONS } from '../data/ml/lessons.js';
+import { pageById, pageForLegacy, DEFAULT_PAGE } from '../app/pages.js';
+import { loadJSON, saveJSON } from '../lib/storage.js';
+import { STORAGE_KEYS } from '../data/storageKeys.js';
+
+const navPrefs = loadJSON(STORAGE_KEYS.navPrefs, { collapsed: false });
 
 export const TABS = [
   { id: 'map', label: 'Map', icon: 'ti-topology-star-3', ready: true },
@@ -61,7 +66,39 @@ function announce(notice) {
   useToastStore.getState().addToast(notice, 'info', 7000);
 }
 
+// Map an old { mode, tab } onto the page that now hosts it, keeping the
+// legacy fields in step so nothing that still reads them is surprised.
+function legacyPatch(mode, tab) {
+  const tabField = mode === 'ml' ? { mlActiveTab: tab } : { activeTab: tab };
+  return { mode, ...tabField, page: pageForLegacy(mode, tab) ?? DEFAULT_PAGE, pageParams: {} };
+}
+
 export const useUIStore = create((set, get) => ({
+  // The page the shell shows (src/app/pages.js) and its parameters, e.g.
+  // { lessonId } for 'learn/lesson'. This is the source of truth for
+  // navigation since the V3.1 information architecture (§3).
+  page: DEFAULT_PAGE,
+  pageParams: {},
+
+  // Shell chrome. Focus mode hides the navigation while studying (§10
+  // "distraction-free focus mode"); it is per-visit on purpose, so nobody
+  // returns days later to an app with its navigation mysteriously missing.
+  focusMode: false,
+  searchOpen: false,
+  navCollapsed: navPrefs.collapsed === true,
+
+  toggleFocusMode() {
+    set((s) => ({ focusMode: !s.focusMode }));
+  },
+  setSearchOpen(open) {
+    set({ searchOpen: open });
+  },
+  toggleNavCollapsed() {
+    const collapsed = !get().navCollapsed;
+    saveJSON(STORAGE_KEYS.navPrefs, { collapsed });
+    set({ navCollapsed: collapsed });
+  },
+
   activeTab: 'map',
   selectedNodeId: null,
   breadcrumbFrom: null,
@@ -70,8 +107,9 @@ export const useUIStore = create((set, get) => ({
   sessionNodesStudied: new Set(),
   traceChain: null, // { targetId, token } — token forces re-trigger on repeat clicks
 
-  // Mode switcher (Stats | ML). mlActiveTab mirrors activeTab so each mode
-  // remembers its own last-open tab independently across a switch.
+  // Legacy view state. Before V3.1 the app had two modes (Stats | ML), each
+  // with its own tab. Pages and cross-links still call the old setters
+  // below; each now also moves `page`, so every existing link keeps working.
   mode: 'stats',
   mlActiveTab: 'pipeline',
   // Embedded lesson to open on the active ML page (set when a retired tab
@@ -79,16 +117,28 @@ export const useUIStore = create((set, get) => ({
   // cleared by the page that hosts it.
   mlLesson: null,
 
+  /** Navigate to a page of the new information architecture. */
+  goTo(pageId, params = {}) {
+    const page = pageById[pageId] ? pageId : DEFAULT_PAGE;
+    const legacy = pageById[page].legacy;
+    set({
+      page,
+      pageParams: params,
+      ...(legacy ? (legacy.mode === 'ml' ? { mode: 'ml', mlActiveTab: legacy.tab } : { mode: 'stats', activeTab: legacy.tab }) : {}),
+    });
+  },
+
   setMode(mode) {
     // selectedNodeId/traceChain are Stats-graph-specific ids that don't map
     // onto the ML graph's id space, so they're cleared on switch rather than
     // carried over — "reset gracefully where it doesn't make sense to keep".
-    set({ mode, selectedNodeId: null, traceChain: null, breadcrumbFrom: null });
+    const tab = mode === 'ml' ? get().mlActiveTab : get().activeTab;
+    set({ ...legacyPatch(mode, tab), selectedNodeId: null, traceChain: null, breadcrumbFrom: null });
   },
 
   setMLActiveTab(tab) {
     const r = resolveTab('ml', tab);
-    set({ mlActiveTab: r.tab, ...(r.lesson ? { mlLesson: r.lesson } : {}) });
+    set({ ...legacyPatch('ml', r.tab), ...(r.lesson ? { mlLesson: r.lesson } : {}) });
     announce(r.notice);
   },
 
@@ -99,20 +149,18 @@ export const useUIStore = create((set, get) => ({
   openMLLesson(lessonId) {
     const lesson = ML_LESSONS.find((l) => l.id === lessonId);
     if (!lesson) return;
-    set({ mode: 'ml', mlActiveTab: lesson.host, mlLesson: lesson.id, selectedNodeId: null, traceChain: null, breadcrumbFrom: null });
+    set({ ...legacyPatch('ml', lesson.host), mlLesson: lesson.id, selectedNodeId: null, traceChain: null, breadcrumbFrom: null });
   },
 
-  // Shared cross-mode/cross-domain link slice (Module 9's geopolitical-risk
-  // → Gold cross-link, Module 10's Stats↔ML bridge). A "linked concept" is a
-  // small { mode, tab, payload } descriptor; consumers read it once on mount
-  // and clear it, mirroring the existing breadcrumbFrom/viewOnMap pattern.
+  // Shared cross-page link slice (e.g. a Stats formula → its Python Hub
+  // entry). A "linked concept" is a small { tab, payload } descriptor;
+  // consumers read it once on mount and clear it, mirroring the existing
+  // breadcrumbFrom/viewOnMap pattern.
   linkedConcept: null,
 
   navigateToLinkedConcept(mode, tab, payload) {
     const r = resolveTab(mode, tab);
-    set({ mode, linkedConcept: { tab: r.tab, payload } });
-    if (mode === 'ml') set({ mlActiveTab: r.tab, ...(r.lesson ? { mlLesson: r.lesson } : {}) });
-    else set({ activeTab: r.tab });
+    set({ ...legacyPatch(mode, r.tab), linkedConcept: { tab: r.tab, payload }, ...(r.lesson ? { mlLesson: r.lesson } : {}) });
     announce(r.notice);
   },
 
@@ -121,7 +169,7 @@ export const useUIStore = create((set, get) => ({
   },
 
   setActiveTab(tab) {
-    set({ activeTab: resolveTab('stats', tab).tab });
+    set(legacyPatch('stats', resolveTab('stats', tab).tab));
   },
 
   traceFullChain(targetId) {
@@ -145,7 +193,7 @@ export const useUIStore = create((set, get) => ({
   },
 
   viewOnMap(nodeId, fromTab) {
-    set({ activeTab: 'map', selectedNodeId: nodeId, breadcrumbFrom: fromTab });
+    set({ ...legacyPatch('stats', 'map'), selectedNodeId: nodeId, breadcrumbFrom: fromTab });
     get().trackVisit(nodeId);
   },
 

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useUIStore, TABS } from '../store/useUIStore.js';
-import { useMLUIStore, ML_TABS } from '../store/useMLUIStore.js';
+import { useUIStore } from '../store/useUIStore.js';
+import { useMLUIStore } from '../store/useMLUIStore.js';
 import { useThemeStore } from '../store/useThemeStore.js';
 import { matchShortcut, findSearchInput } from '../lib/shortcuts.js';
+import { SECTIONS, pageById, pagesInSection, sectionHome } from '../app/pages.js';
 
 /**
  * Wires the shortcut table to the app. Lives at the shell so it works on
@@ -16,12 +17,15 @@ export function useGlobalShortcuts() {
     function onKeyDown(event) {
       const action = matchShortcut(event);
       if (!action) return;
-
       const ui = useUIStore.getState();
-      const isStats = ui.mode === 'stats';
-      const tabs = isStats ? TABS : ML_TABS;
-      const current = isStats ? ui.activeTab : ui.mlActiveTab;
-      const goTo = (id) => (isStats ? ui.setActiveTab(id) : ui.setMLActiveTab(id));
+
+      if (action === 'globalSearch') {
+        event.preventDefault();
+        ui.setSearchOpen(!ui.searchOpen);
+        return;
+      }
+      // While the search dialog is open it owns the keyboard.
+      if (ui.searchOpen) return;
 
       if (action === 'help') {
         event.preventDefault();
@@ -34,34 +38,35 @@ export function useGlobalShortcuts() {
         // "clear my selection", so one press never does two things.
         if (helpOpen) { setHelpOpen(false); return; }
         if (event.target?.blur && event.target !== document.body) event.target.blur();
-        if (isStats && ui.selectedNodeId) ui.selectNode(null);
-        else if (!isStats && useMLUIStore.getState().selectedModelId) useMLUIStore.getState().selectModel(null);
+        if (ui.page === 'maps/formulas' && ui.selectedNodeId) ui.selectNode(null);
+        else if (ui.page === 'maps/models' && useMLUIStore.getState().selectedModelId) useMLUIStore.getState().selectModel(null);
         return;
       }
 
       if (action === 'theme') { event.preventDefault(); useThemeStore.getState().toggle(); return; }
-      if (action === 'mode') { event.preventDefault(); ui.setMode(isStats ? 'ml' : 'stats'); return; }
+      if (action === 'focus') { event.preventDefault(); ui.toggleFocusMode(); return; }
 
       if (action === 'search') {
         const input = findSearchInput();
-        if (input) { event.preventDefault(); input.focus(); input.select?.(); }
+        event.preventDefault();
+        if (input) { input.focus(); input.select?.(); } else ui.setSearchOpen(true);
         return;
       }
 
-      const index = tabs.findIndex((t) => t.id === current);
-      if (action === 'prevTab') {
-        event.preventDefault();
-        goTo(tabs[(index - 1 + tabs.length) % tabs.length].id);
+      if (action.startsWith('section:')) {
+        const section = SECTIONS[Number(action.slice(8))];
+        if (section) { event.preventDefault(); ui.goTo(sectionHome(section.id)); }
         return;
       }
-      if (action === 'nextTab') {
+
+      if (action === 'prevPage' || action === 'nextPage') {
+        const sectionId = pageById[ui.page]?.section;
+        const pages = sectionId ? pagesInSection(sectionId) : [];
+        if (pages.length < 2) return;
         event.preventDefault();
-        goTo(tabs[(index + 1) % tabs.length].id);
-        return;
-      }
-      if (action.startsWith('tab:')) {
-        const n = Number(action.slice(4));
-        if (tabs[n]) { event.preventDefault(); goTo(tabs[n].id); }
+        const index = Math.max(0, pages.findIndex((p) => p.id === ui.page));
+        const step = action === 'prevPage' ? -1 : 1;
+        ui.goTo(pages[(index + step + pages.length) % pages.length].id);
       }
     }
 
@@ -69,5 +74,5 @@ export function useGlobalShortcuts() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [helpOpen]);
 
-  return { helpOpen, closeHelp: () => setHelpOpen(false) };
+  return { helpOpen, openHelp: () => setHelpOpen(true), closeHelp: () => setHelpOpen(false) };
 }

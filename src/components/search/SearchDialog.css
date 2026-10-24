@@ -1,0 +1,126 @@
+.search-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(var(--panel-rgb), 0.66);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10vh 16px 16px;
+}
+
+.search-card {
+  width: 100%;
+  max-width: 620px;
+  max-height: 76vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px var(--shadow);
+  overflow: hidden;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-field .ti {
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 16px;
+}
+
+.search-field input:focus {
+  outline: none;
+}
+
+.search-card:focus-within {
+  border-color: var(--accent);
+}
+
+.search-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 36px;
+}
+
+.search-close kbd,
+.app-search-btn kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.search-results {
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.search-group + .search-group {
+  margin-top: 6px;
+}
+
+.search-kind {
+  display: block;
+  padding: 8px 10px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.search-option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.search-option.active {
+  background: rgba(139, 92, 246, 0.16);
+}
+
+.search-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.search-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-status {
+  padding: 8px 16px 12px;
+  font-size: 12px;
+  color: var(--text-faint);
+  border-top: 1px solid var(--border);
+}

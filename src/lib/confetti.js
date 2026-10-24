@@ -1,8 +1,9 @@
+import { prefersReducedMotion } from './motion.js';
+
 const COLORS = ['#8b5cf6', '#22d3ee', '#34d399', '#fbbf24', '#fb7185'];
 
 export function fireConfetti() {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduceMotion) return;
+  if (prefersReducedMotion()) return;
 
   const layer = document.createElement('div');
   layer.style.cssText = 'position:fixed;inset:0;z-index:11000;pointer-events:none;overflow:hidden';

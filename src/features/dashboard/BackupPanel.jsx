@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
-import { createBackup, validateBackup, restoreBackup, backupFilename } from '../../lib/backup.js';
+import { createBackup, validateBackup, restoreBackup, resetProgress, backupFilename } from '../../lib/backup.js';
 import { QUARANTINE_KEY } from '../../lib/storage.js';
 import { useToastStore } from '../../store/useToastStore.js';
+import './BackupPanel.css';
 
 function download(backup) {
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
@@ -27,11 +28,13 @@ function quarantinedCount() {
 // file, read what it will replace, then confirm — and the confirm step
 // offers a download of the current progress first, because a restore is the
 // one irreversible thing this panel can do.
-export default function BackupPanel() {
+export default function BackupPanel({ headingLevel = 3, allowReset = false }) {
+  const Heading = `h${headingLevel}`;
   const addToast = useToastStore((s) => s.addToast);
   const fileRef = useRef(null);
   const [pending, setPending] = useState(null); // { backup, count, exportedAt }
   const [error, setError] = useState(null);
+  const [confirmReset, setConfirmReset] = useState(false);
   const setAside = quarantinedCount();
 
   function onExport() {
@@ -71,11 +74,21 @@ export default function BackupPanel() {
     window.location.reload();
   }
 
+  function onReset() {
+    const res = resetProgress();
+    if (!res.ok) {
+      setError(res.error);
+      setConfirmReset(false);
+      return;
+    }
+    window.location.reload();
+  }
+
   const when = pending?.exportedAt ? new Date(pending.exportedAt).toLocaleString() : 'an unknown date';
 
   return (
     <section className="backup-panel" aria-labelledby="backup-title">
-      <h3 id="backup-title">Your data</h3>
+      <Heading id="backup-title">Your data</Heading>
       <p className="backup-note">
         Your progress is stored only in this browser. Download a backup to keep it safe or move it to another device.
       </p>
@@ -85,10 +98,11 @@ export default function BackupPanel() {
           aside rather than deleted. {setAside === 1 ? 'It is' : 'They are'} included in every backup you download.
         </p>
       )}
-      {!pending && (
+      {!pending && !confirmReset && (
         <div className="backup-actions">
           <button type="button" className="backup-btn" onClick={onExport}>Download backup</button>
           <button type="button" className="backup-btn" onClick={() => fileRef.current?.click()}>Restore from backup…</button>
+          {allowReset && <button type="button" className="backup-btn backup-danger" onClick={() => setConfirmReset(true)}>Reset progress…</button>}
           <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={onFile} aria-hidden="true" tabIndex={-1} />
         </div>
       )}
@@ -102,6 +116,20 @@ export default function BackupPanel() {
             <button type="button" className="backup-btn" onClick={onExport}>Download current progress first</button>
             <button type="button" className="backup-btn backup-danger" onClick={onConfirm}>Replace my progress</button>
             <button type="button" className="backup-btn" onClick={() => setPending(null)}>Cancel</button>
+          </div>
+        </div>
+      )}
+      {confirmReset && (
+        <div className="backup-confirm" role="alertdialog" aria-labelledby="reset-confirm-msg">
+          <p id="reset-confirm-msg">
+            This deletes all of your learning progress on this device — reviews, quiz and practice results, the
+            diagnostic, lesson progress, notes and journal entries. Your theme and depth settings are kept. It cannot
+            be undone unless you download a backup first.
+          </p>
+          <div className="backup-actions">
+            <button type="button" className="backup-btn" onClick={onExport}>Download backup first</button>
+            <button type="button" className="backup-btn backup-danger" onClick={onReset}>Delete my progress</button>
+            <button type="button" className="backup-btn" onClick={() => setConfirmReset(false)}>Cancel</button>
           </div>
         </div>
       )}

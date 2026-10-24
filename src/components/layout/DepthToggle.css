@@ -1,0 +1,35 @@
+.depth-toggle {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  background: rgba(var(--overlay-rgb), 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.depth-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  /* WCAG 2.2 target size (24 × 24 minimum). */
+  min-height: 26px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.depth-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Tint + full-contrast text: the accent colour itself fell under 4.5:1 on
+   its own tint in the light theme. */
+.depth-btn.active {
+  background: rgba(34, 211, 238, 0.18);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent);
+}

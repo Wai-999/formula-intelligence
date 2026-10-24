@@ -7,10 +7,11 @@ import { useT } from '../../../lib/mlContent.js';
 import './MisconceptionCallout.css';
 import './EntryMisconceptionBanner.css';
 
-// Module 1's one-time, prominent misconception banner (D.3, "User-Trained
-// Model") shown the first time a learner opens ML mode — separate from
-// MisconceptionCallout's inline in-content version because this one is a
-// gate the learner must actively dismiss, not a passive read-along.
+// Module 1's one-time misconception banner (D.3, "User-Trained Model") shown
+// the first time a learner opens an ML page. It used to be a modal gate; it
+// is now an inline panel above the page (Master Prompt V3.1 §10: "no
+// obstructive overlays") — still prominent, still dismissed once and
+// remembered, but it never blocks the page beneath it.
 export default function EntryMisconceptionBanner() {
   const [dismissed, setDismissed] = useState(() => loadJSON(STORAGE_KEYS.mlEntryBannerSeen, false));
   const entry = MISCONCEPTIONS.userTrainedModel;
@@ -29,15 +30,15 @@ export default function EntryMisconceptionBanner() {
   }
 
   return (
-    <div className="entry-banner-backdrop">
-      <div className="entry-banner-card">
-        <p className="entry-banner-title"><i className="ti ti-flag-3" aria-hidden="true" /> {title}</p>
+    <div className="entry-banner">
+      <section className="entry-banner-card" aria-labelledby="entry-banner-title">
+        <h2 className="entry-banner-title" id="entry-banner-title"><i className="ti ti-flag-3" aria-hidden="true" /> {title}</h2>
         <p className="misconception-lbl"><i className="ti ti-message-question" aria-hidden="true" /> {misconceptionLbl}</p>
         <p className="misconception-belief">{belief}</p>
         <p className="misconception-actually-lbl"><i className="ti ti-arrow-right" aria-hidden="true" /> {actuallyLbl}</p>
         <p className="misconception-truth">{truth}</p>
         <button type="button" className="entry-banner-dismiss" onClick={dismiss}>{dismissBtn}</button>
-      </div>
+      </section>
     </div>
   );
 }

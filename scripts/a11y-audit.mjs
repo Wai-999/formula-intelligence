@@ -12,23 +12,24 @@
 import { chromium } from 'playwright';
 import { AxeBuilder } from '@axe-core/playwright';
 import { spawn } from 'node:child_process';
-import { TABS as REGISTRY_STATS } from '../src/store/useUIStore.js';
-import { ML_TABS as REGISTRY_ML } from '../src/store/useMLUIStore.js';
+import { PAGES, hashFor } from '../src/app/pages.js';
 import { ML_LESSONS } from '../src/data/ml/lessons.js';
+import { auditInstances } from '../src/data/curriculum/index.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const PORT = process.env.A11Y_PORT || 4319;
 const BASE = `http://127.0.0.1:${PORT}/formula-intelligence/`;
-const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-// One page per distinct layout — auditing all 20 tabs doubles the runtime to
-// re-test the same shell. These cover every layout pattern in the app.
-// Every surface, read from the app's own registries. The hand-written lists
-// this replaced covered 11 of 20 surfaces — Pipeline, Story Walk, Flashcards
-// and Error Log were never audited (docs/audits/BASELINE_AUDIT.md F-06) — and
-// named a tab ('Gold') that the V3.1 cleanup retired.
-const STATS_TABS = REGISTRY_STATS.map((t) => t.label);
-const ML_TABS = REGISTRY_ML.map((t) => t.label);
+// Every surface, read from the app's own registries: every listed page of
+// the information architecture (src/app/pages.js), every parameterised page
+// the curriculum declares worth auditing (one per course, every authored
+// lesson), and the embedded ML lessons. The hand-written lists this replaced
+// once covered 11 of 20 surfaces (docs/audits/BASELINE_AUDIT.md F-06).
+const SURFACES = [
+  ...PAGES.filter((p) => !p.hidden).map((p) => ({ label: p.id, hash: hashFor(p.id) })),
+  ...auditInstances().map((i) => ({ label: `${i.page}/${Object.values(i.params)[0]}`, hash: hashFor(i.page, i.params) })),
+];
 
 let server;
 async function serve() {
@@ -108,41 +109,48 @@ async function main() {
 
   const scan = async (label) => record(label, await new AxeBuilder({ page }).withTags(TAGS).analyze());
 
-  for (const tab of STATS_TABS) {
-    await page.locator(`.icon-rail-btn[aria-label="${tab}"]`).click();
-    await page.waitForTimeout(320);
-    await scan(`Stats/${tab}`);
-  }
+  const open = async (hash) => {
+    await page.evaluate((h) => { window.location.hash = h; }, hash);
+    await page.locator('.app-tab-keepalive:visible').first().waitFor();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(450);
+    // First visit to an ML page shows a one-time explainer that would
+    // otherwise be the only thing audited.
+    if (await page.locator('.entry-banner-dismiss').count()) {
+      await page.locator('.entry-banner-dismiss').click();
+      await page.waitForTimeout(250);
+    }
+  };
 
-  await page.getByRole('tab', { name: 'ML' }).click();
-  await page.waitForTimeout(450);
-  // First visit shows a modal that would otherwise be the only thing audited.
-  if (await page.locator('.entry-banner-dismiss').count()) {
-    await page.locator('.entry-banner-dismiss').click();
-    await page.waitForTimeout(250);
-  }
-  for (const tab of ML_TABS) {
-    await page.locator(`.icon-rail-btn[aria-label="${tab}"]`).click();
-    await page.waitForTimeout(400);
-    await scan(`ML/${tab}`);
+  for (const s of SURFACES) {
+    await open(s.hash);
+    await scan(s.label);
   }
 
   // Embedded lessons (src/data/ml/lessons.js) render only when opened, so a
   // scan of their host page alone would never see them.
   for (const lesson of ML_LESSONS) {
-    await page.locator(`.icon-rail-btn[aria-label="${REGISTRY_ML.find((t) => t.id === lesson.host).label}"]`).click();
-    await page.waitForTimeout(300);
+    await open(hashFor('learn/ml'));
     const toggle = page.locator('.app-tab-keepalive:visible .ml-lesson-toggle', { hasText: lesson.title });
     if ((await toggle.getAttribute('aria-expanded')) !== 'true') await toggle.click();
     await page.locator('.app-tab-keepalive:visible .ml-lesson-body').first().waitFor();
     await page.waitForTimeout(600);
-    await scan(`ML/lesson:${lesson.id}`);
+    await scan(`learn/ml#lesson:${lesson.id}`);
   }
+
+  // Phone layout: the bottom bar and its More sheet only exist below 768 px.
+  await page.setViewportSize({ width: 375, height: 760 });
+  await open(hashFor('home'));
+  await scan('phone/home');
+  await page.getByRole('button', { name: 'More' }).click();
+  await page.waitForTimeout(250);
+  await scan('phone/more-sheet');
+  await page.keyboard.press('Escape');
 
   await browser.close();
 
   const found = [...violations.values()].sort((a, b) => b.nodes - a.nodes);
-  const pages = STATS_TABS.length + ML_TABS.length + ML_LESSONS.length;
+  const pages = SURFACES.length + ML_LESSONS.length + 2;
   if (found.length === 0) {
     console.log(`\x1b[32m✓ No WCAG A/AA violations across ${pages} pages (${theme} theme).\x1b[0m`);
     return 0;

@@ -41,7 +41,7 @@ function StorySelectionScreen({ onBegin }) {
   return (
     <div className="sw-content">
       <div className="sw-sel-header">
-        <h1>Choose your investigation</h1>
+        <h2>Choose your investigation</h2>
         <p>Statistics is a detective's toolkit. Pick a real-world case to solve — from raw data to defensible conclusion.</p>
       </div>
       <div className="sw-cards-grid">

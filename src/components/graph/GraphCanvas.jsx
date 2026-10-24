@@ -327,7 +327,75 @@ export default function GraphCanvas() {
     const ty = height / 2 - ((bounds.minY + bounds.maxY) / 2) * fitScale;
     svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(fitScale));
 
-    d3State.current = { nodeSel, linkSel, linksBySource, linksByTarget };
+    // ——— Keyboard access (baseline audit F-04: 0 of 94 nodes were focusable).
+    // One tab stop for the whole graph (roving tabindex). Arrow right/left
+    // follow a link out of / into the focused formula; up/down move along its
+    // chapter row; Enter or Space opens its details. The view pans to keep
+    // the focused node on screen. The Outline view offers the same content
+    // without the graph.
+    const nodeEls = new Map();
+    nodeSel.each(function (d) { nodeEls.set(d.id, this); });
+    const rows = {};
+    simNodes.forEach((n) => { (rows[n.ch] ||= []).push(n); });
+    Object.values(rows).forEach((r) => r.sort((a, b) => a.x - b.x));
+    const chapterOrder = Object.keys(rows).map(Number).sort((a, b) => a - b);
+    let roving = simNodes[0]?.id;
+    const keepVisible = (d) => {
+      const rect = wrap.getBoundingClientRect();
+      const t = d3.zoomTransform(svg.node());
+      const [sx, sy] = t.apply([d.x, d.y]);
+      if (sx < 60 || sy < 60 || sx > rect.width - 60 || sy > rect.height - 60) {
+        svg.transition().duration(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 250)
+          .call(zoomBehavior.translateTo, d.x, d.y);
+      }
+    };
+    const focusNode = (id) => {
+      const el = nodeEls.get(id);
+      if (!el) return;
+      nodeEls.get(roving)?.setAttribute('tabindex', '-1');
+      roving = id;
+      el.setAttribute('tabindex', '0');
+      el.focus({ preventScroll: true });
+      keepVisible(el.__data__);
+    };
+    nodeSel
+      .attr('tabindex', (d) => (d.id === roving ? 0 : -1))
+      .attr('role', 'button')
+      .attr('aria-label', (d) => {
+        const ch = CHAPTERS.find((c) => c.id === d.ch);
+        return `${d.name}: ${d.formula}. ${ch ? ch.name : ''}. ${(linksByTarget[d.id] || []).length} incoming and ${(linksBySource[d.id] || []).length} outgoing links.`;
+      })
+      .attr('aria-describedby', 'graph-kbd-help')
+      .on('keydown', (event, d) => {
+        let target = null;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          useUIStore.getState().selectNode(d.id);
+          useUIStore.getState().clearTraceChain();
+          return;
+        }
+        if (event.key === 'ArrowRight') target = (linksBySource[d.id] || [])[0]?.t;
+        else if (event.key === 'ArrowLeft') target = (linksByTarget[d.id] || [])[0]?.s;
+        else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+          const row = rows[d.ch];
+          const i = row.findIndex((n) => n.id === d.id);
+          const next = row[i + (event.key === 'ArrowDown' ? 1 : -1)];
+          if (next) target = next.id;
+          else {
+            // Off the end of a row: continue into the neighbouring chapter.
+            const ci = chapterOrder.indexOf(d.ch) + (event.key === 'ArrowDown' ? 1 : -1);
+            const r2 = rows[chapterOrder[ci]];
+            if (r2) target = (event.key === 'ArrowDown' ? r2[0] : r2[r2.length - 1]).id;
+          }
+        } else if (event.key === 'Home') target = rows[chapterOrder[0]][0].id;
+        if (target) { event.preventDefault(); focusNode(target); }
+      });
+
+    d3State.current = { nodeSel, linkSel, linksBySource, linksByTarget, focusNode, getRoving: () => roving, setRoving: (id) => {
+      nodeEls.get(roving)?.setAttribute('tabindex', '-1');
+      roving = id;
+      nodeEls.get(id)?.setAttribute('tabindex', '0');
+    } };
 
     // If the rect was degenerate at setup, the fit above used a fallback
     // scale of 1, not a real fit. Correct it the moment a real size arrives.
@@ -366,6 +434,7 @@ export default function GraphCanvas() {
   useEffect(() => {
     const { nodeSel, linkSel } = d3State.current;
     if (!nodeSel || traceChain) return;
+    if (selectedNodeId) d3State.current.setRoving?.(selectedNodeId);
 
     const q = searchQuery.trim().toLowerCase();
 
@@ -461,7 +530,12 @@ export default function GraphCanvas() {
 
   return (
     <div className="graph-canvas-wrap" ref={wrapRef}>
-      <svg ref={svgRef} className="graph-canvas-svg" />
+      <p id="graph-kbd-help" className="visually-hidden">
+        Formula graph. Arrow right follows a link to a formula this one leads to, arrow left goes back along a link,
+        arrow up and down move along the chapter row. Enter opens the formula’s details. The Outline view lists every
+        formula and its links without the graph.
+      </p>
+      <svg ref={svgRef} className="graph-canvas-svg" role="group" aria-label="Formula relationship graph" />
       <div className="graph-tooltip" ref={tooltipRef} />
       <div className="graph-legend">
         <div className="glegend-title">Connections</div>

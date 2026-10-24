@@ -176,3 +176,19 @@
 .glegend-ring-collider {
   border: 1.3px solid #f4f7fb;
 }
+
+/* Keyboard focus on a formula node (F-04). CSS beats D3's presentation
+   attributes, so the ring shows whatever state colour the node has. */
+.gnode:focus {
+  outline: none;
+}
+
+.gnode:focus-visible .gnode-circle {
+  stroke: var(--accent);
+  stroke-width: 4;
+}
+
+.gnode:focus-visible .gnode-label {
+  fill-opacity: 1;
+  font-weight: 700;
+}
