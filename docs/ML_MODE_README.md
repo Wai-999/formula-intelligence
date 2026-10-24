@@ -4,18 +4,25 @@ ML mode is a second, parallel mode alongside the app's original Stats mode (Blum
 
 This document is for whoever adds the next thing to ML mode — most concretely, a 13th domain lab alongside Gold/Macro/Micro/Politics, which now means both the driver/chart/trace scaffold (see "The domain-lab template" below) and the pedagogy layer (see "The Learning Design System" below). `src/lib/domainModel.js`'s own header comment points here for exactly that reason.
 
-## The nine modules, and where their code lives
+> **Status after Master Prompt V3.1 Phase 1 (2026-10-23).** ML mode now has five top-level tabs: Pipeline, Model Map, Python Hub, Python Lab, Sources.
+> - **Playground** and **Evaluation** are no longer tabs; they are lessons embedded in Pipeline, registered in `src/data/ml/lessons.js` and rendered by `src/features/ml/pipeline/MLLessons.jsx`. To add a lesson, add an entry there and a lazy component to `MLLessons.jsx`'s `COMPONENTS`.
+> - **Gold / Macro / Micro / Politics** are archived: their code remains in `src/features/ml/{gold,macro,micro,politics}` but nothing imports it. The "domain-lab template" sections below are kept as history and as a reference for reusing `DriverPanel`/`ForecastBandChart`/`TracePanel` — **do not add a new top-level domain tab**; the V3.1 information architecture (§3) has no place for one.
+> - **English only.** `lang` is pinned to `'en'` in `useMLUIStore`; the language toggle is gone. `bl()`/`blSame()` still carry Burmese arguments until the snapshot-guarded codemod removes them — write **English only** in new content (the Burmese slots may be left as the English text).
+> - **Retired tab ids still resolve** through `resolveTab()` / `RETIRED_ML_TABS` in `src/store/useUIStore.js`. If you retire a tab, add it there; `src/store/__tests__/routes.test.js` checks every retired id lands somewhere real.
+> - Mixed-Review interleaving is unmounted (all its questions depended on the domain labs).
+
+## The modules, and where their code lives
 
 | # | Module | Tab id | Page component | Data file |
 |---|---|---|---|---|
 | 2 | Pipeline | `pipeline` | `src/features/ml/pipeline/PipelinePage.jsx` | `src/data/ml/pipeline.js`, `estimationPredictionCausal.js` |
 | 3 | Model Map | `modelmap` | `src/features/ml/modelmap/ModelMapPage.jsx` | `src/data/ml/models.js` |
-| 4 | Playground | `playground` | `src/features/ml/playground/PlaygroundPage.jsx` | `src/data/ml/playground.js` |
-| 5 | Evaluation | `evaluation` | `src/features/ml/evaluation/EvaluationPage.jsx` | `src/data/ml/evaluation.js` |
-| 6 | Gold | `gold` | `src/features/ml/gold/GoldLabPage.jsx` | `src/data/ml/domains/gold.js` |
-| 7 | Macro | `macro` | `src/features/ml/macro/MacroLabPage.jsx` | `src/data/ml/domains/macro.js` |
-| 8 | Micro | `micro` | `src/features/ml/micro/MicroLabPage.jsx` | `src/data/ml/domains/micro.js`, `src/features/ml/micro/demandModel.js` |
-| 9 | Politics | `politics` | `src/features/ml/politics/PoliticsLabPage.jsx` | `src/data/ml/domains/politics.js`, `src/features/ml/politics/politicsModel.js` |
+| 4 | Playground — *now a Pipeline lesson* | `playground` (retired id) | `src/features/ml/playground/PlaygroundPage.jsx` | `src/data/ml/playground.js` |
+| 5 | Evaluation — *now a Pipeline lesson* | `evaluation` (retired id) | `src/features/ml/evaluation/EvaluationPage.jsx` | `src/data/ml/evaluation.js` |
+| 6 | Gold — *archived* | `gold` (retired id) | `src/features/ml/gold/GoldLabPage.jsx` | `src/data/ml/domains/gold.js` |
+| 7 | Macro — *archived* | `macro` (retired id) | `src/features/ml/macro/MacroLabPage.jsx` | `src/data/ml/domains/macro.js` |
+| 8 | Micro — *archived* | `micro` (retired id) | `src/features/ml/micro/MicroLabPage.jsx` | `src/data/ml/domains/micro.js`, `src/features/ml/micro/demandModel.js` |
+| 9 | Politics — *archived* | `politics` (retired id) | `src/features/ml/politics/PoliticsLabPage.jsx` | `src/data/ml/domains/politics.js`, `src/features/ml/politics/politicsModel.js` |
 | 10 | Python Hub | `python` | `src/features/ml/python/PythonHubPage.jsx` | `src/data/python/index.js` (+ 8 content files) |
 
 (Module numbering starts at 2 because Module 1 is the shared shell/mode-switcher itself — `src/components/layout/AppShell.jsx`, `MLBody.jsx`, `MLIconRail.jsx` — not a tab.)

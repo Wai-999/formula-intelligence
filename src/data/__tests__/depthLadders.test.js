@@ -3,6 +3,8 @@ import { MODEL_DEPTH_LADDER } from '../ml/modelDepthLadder.js';
 import { ML_MODELS } from '../ml/models.js';
 import { MISCONCEPTIONS } from '../ml/misconceptions.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
+import { RETIRED_ML_TABS } from '../../store/useUIStore.js';
+import { mlLessonById } from '../ml/lessons.js';
 import { resolveT } from '../../lib/mlContent.js';
 import { isBlObject } from '../schema.js';
 
@@ -73,10 +75,28 @@ describe('Spark layer — the intuition hook', () => {
 });
 
 describe('Mechanism layer — the hands-on part', () => {
-  it('uses only the two supported mechanism kinds', () => {
+  it('uses only the supported mechanism kinds', () => {
+    // 'retired-lab' marks a ladder whose live-link target was a top-level
+    // tab retired by Master Prompt V3.1 §4; it renders an explicit note
+    // rather than a dead or misleading button.
     for (const [id, l] of entries) {
-      expect(['widget', 'live-link'], `${id}.mechanism.kind`).toContain(l.mechanism.kind);
+      expect(['widget', 'live-link', 'retired-lab'], `${id}.mechanism.kind`).toContain(l.mechanism.kind);
     }
+  });
+
+  it('marks a mechanism retired only if its old target really is a retired tab', () => {
+    const wrong = entries
+      .filter(([, l]) => l.mechanism.kind === 'retired-lab' && !Object.hasOwn(RETIRED_ML_TABS, l.mechanism.module))
+      .map(([id, l]) => `${id} -> ${l.mechanism.module}`);
+    expect(wrong).toEqual([]);
+  });
+
+  it('points every lesson link at a lesson hosted on the linked page', () => {
+    const broken = entries
+      .filter(([, l]) => l.mechanism.kind === 'live-link' && l.mechanism.lesson)
+      .filter(([, l]) => mlLessonById[l.mechanism.lesson]?.host !== l.mechanism.module)
+      .map(([id, l]) => `${id} -> ${l.mechanism.module}#${l.mechanism.lesson}`);
+    expect(broken).toEqual([]);
   });
 
   it('points every live-link at a module that still exists', () => {
@@ -177,12 +197,19 @@ describe('audit summary', () => {
   // Composition as it stands after this audit, pinned so a future edit that
   // guts the interactive half — or quietly converts widgets into links —
   // shows up in a diff instead of eroding the module's character silently.
-  it('keeps every ladder interactive by one of the two means', () => {
-    const widgets = entries.filter(([, l]) => l.mechanism.kind === 'widget').length;
-    const liveLinks = entries.filter(([, l]) => l.mechanism.kind === 'live-link').length;
-    expect(widgets + liveLinks).toBe(32);
-    expect(widgets).toBe(19);
-    expect(liveLinks).toBe(13);
+  it('pins how many ladders are interactive — including the ones that lost it', () => {
+    // Master Prompt V3.1 §4 retired the Gold/Macro/Micro labs, which 9
+    // ladders linked to as their hands-on layer. Those 9 are now
+    // 'retired-lab' (an explanatory note pointing at Formalism) — a real,
+    // deliberate loss of interactivity, pinned here so it cannot grow
+    // unnoticed. Restoring them means authoring in-place widgets
+    // (docs/UPGRADE_PROGRESS.md, Phase 8). The 2 Playground links survive as
+    // links into the rehomed bias–variance lesson.
+    const count = (kind) => entries.filter(([, l]) => l.mechanism.kind === kind).length;
+    expect(count('widget') + count('live-link') + count('retired-lab')).toBe(32);
+    expect(count('widget')).toBe(19);
+    expect(count('live-link')).toBe(4);
+    expect(count('retired-lab')).toBe(9);
   });
 
   it('records that most ladders rely on the layer prose rather than a registry entry', () => {

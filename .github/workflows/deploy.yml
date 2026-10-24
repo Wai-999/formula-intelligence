@@ -38,6 +38,8 @@ jobs:
       - run: npm run validate:content
       - run: npm test
       - run: npm run build
+      # Initial-load JS budget (scripts/check-bundle-budget.mjs).
+      - run: npm run budget
       # Accessibility needs a real browser (contrast and focusability depend
       # on computed layout, which jsdom cannot provide), so this runs against
       # the built preview rather than in the unit-test pass.

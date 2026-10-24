@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { nodeById, chapterColorMap } from '../../data/index.js';
 import { mlNodeById } from '../../data/ml/models.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
+import { mlLessonById } from '../../data/ml/lessons.js';
 import { LEARNING_TRACKS, trackProgress, stageProgress } from '../../data/learningTracks.js';
 import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
@@ -19,6 +20,7 @@ export default function TracksPanel() {
   const viewOnMap = useUIStore((s) => s.viewOnMap);
   const setMLActiveTab = useUIStore((s) => s.setMLActiveTab);
   const setMode = useUIStore((s) => s.setMode);
+  const openMLLesson = useUIStore((s) => s.openMLLesson);
   const selectModel = useMLUIStore((s) => s.selectModel);
   const layersByNode = useUnderstandingStore((s) => s.layersByNode);
 
@@ -44,6 +46,7 @@ export default function TracksPanel() {
       selectModel(item.id);
       return;
     }
+    if (item.kind === 'lesson') { openMLLesson(item.id); return; }
     setMode('ml');
     setMLActiveTab(item.id);
   }
@@ -51,6 +54,7 @@ export default function TracksPanel() {
   function itemLabel(item) {
     if (item.kind === 'formula') return nodeById[item.id]?.name || item.id;
     if (item.kind === 'model') return mlNodeById[item.id]?.name || item.id;
+    if (item.kind === 'lesson') return mlLessonById[item.id]?.title || item.id;
     return ML_TABS.find((t) => t.id === item.id)?.label || item.id;
   }
 
@@ -60,6 +64,7 @@ export default function TracksPanel() {
       return { tag: n ? `Ch ${n.ch}` : '', color: n ? chapterColorMap[n.ch] : null, icon: 'ti-math-function' };
     }
     if (item.kind === 'model') return { tag: 'ML model', color: '#a78bfa', icon: 'ti-binary-tree' };
+    if (item.kind === 'lesson') return { tag: 'Lesson', color: '#22d3ee', icon: 'ti-school' };
     return { tag: 'Module', color: '#22d3ee', icon: 'ti-layout-grid' };
   }
 

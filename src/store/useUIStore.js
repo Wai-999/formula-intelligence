@@ -1,4 +1,7 @@
 import { create } from 'zustand';
+import { ML_TABS } from './useMLUIStore.js';
+import { useToastStore } from './useToastStore.js';
+import { ML_LESSONS } from '../data/ml/lessons.js';
 
 export const TABS = [
   { id: 'map', label: 'Map', icon: 'ti-topology-star-3', ready: true },
@@ -11,6 +14,52 @@ export const TABS = [
   { id: 'errors', label: 'Error Log', icon: 'ti-alert-triangle', ready: true },
   { id: 'journal', label: 'Journal', icon: 'ti-notebook', ready: true },
 ];
+
+export const DEFAULT_TAB = { stats: 'map', ml: 'pipeline' };
+
+// Retired ML tabs and where their teaching lives now (docs/audits/
+// FEATURE_INVENTORY.md §2). `lesson` opens an embedded lesson on the target
+// page; `notice` explains the move once, instead of a silent redirect.
+const LAB_NOTICE = (name) => `The ${name} forecasting lab was retired when ML mode was reorganised into lessons. You're on the ML Pipeline instead.`;
+export const RETIRED_ML_TABS = {
+  bridge: { tab: 'pipeline', notice: 'The Stats ↔ ML comparison page was retired; its comparisons now live in the ML lessons.' },
+  gold: { tab: 'pipeline', notice: LAB_NOTICE('Gold') },
+  macro: { tab: 'pipeline', notice: LAB_NOTICE('Macro (GDP nowcasting)') },
+  micro: { tab: 'pipeline', notice: LAB_NOTICE('Micro (retail demand)') },
+  politics: { tab: 'pipeline', notice: LAB_NOTICE('Politics') },
+  // Rehomed, not retired: these open their lesson on the host page.
+  ...Object.fromEntries(ML_LESSONS.map((l) => [l.retiredTab, {
+    tab: l.host,
+    lesson: l.id,
+    notice: `This tab became the lesson "${l.title}" — opened for you below.`,
+  }])),
+};
+
+/**
+ * Every tab id the app is asked to show — from the URL, a content link, a
+ * saved state or a shortcut — goes through here. Previously an unknown id
+ * was stored as-is and rendered a blank page with no error (production bug,
+ * docs/audits/BASELINE_AUDIT.md §5: every old #ml/bridge bookmark).
+ */
+export function resolveTab(mode, tab) {
+  if (mode === 'ml') {
+    if (ML_TABS.some((t) => t.id === tab)) return { tab, lesson: null, notice: null };
+    const retired = Object.hasOwn(RETIRED_ML_TABS, tab) ? RETIRED_ML_TABS[tab] : null;
+    if (retired) return { tab: retired.tab, lesson: retired.lesson ?? null, notice: retired.notice ?? null };
+    return { tab: DEFAULT_TAB.ml, lesson: null, notice: null };
+  }
+  if (TABS.some((t) => t.id === tab)) return { tab, lesson: null, notice: null };
+  return { tab: DEFAULT_TAB.stats, lesson: null, notice: null };
+}
+
+// One notice per retired destination per session — a bookmark opened twice
+// shouldn't nag twice.
+const noticesShown = new Set();
+function announce(notice) {
+  if (!notice || noticesShown.has(notice)) return;
+  noticesShown.add(notice);
+  useToastStore.getState().addToast(notice, 'info', 7000);
+}
 
 export const useUIStore = create((set, get) => ({
   activeTab: 'map',
@@ -25,6 +74,10 @@ export const useUIStore = create((set, get) => ({
   // remembers its own last-open tab independently across a switch.
   mode: 'stats',
   mlActiveTab: 'pipeline',
+  // Embedded lesson to open on the active ML page (set when a retired tab
+  // resolves to a lesson that now lives inside another page). Consumed and
+  // cleared by the page that hosts it.
+  mlLesson: null,
 
   setMode(mode) {
     // selectedNodeId/traceChain are Stats-graph-specific ids that don't map
@@ -34,7 +87,19 @@ export const useUIStore = create((set, get) => ({
   },
 
   setMLActiveTab(tab) {
-    set({ mlActiveTab: tab });
+    const r = resolveTab('ml', tab);
+    set({ mlActiveTab: r.tab, ...(r.lesson ? { mlLesson: r.lesson } : {}) });
+    announce(r.notice);
+  },
+
+  clearMLLesson() {
+    set({ mlLesson: null });
+  },
+
+  openMLLesson(lessonId) {
+    const lesson = ML_LESSONS.find((l) => l.id === lessonId);
+    if (!lesson) return;
+    set({ mode: 'ml', mlActiveTab: lesson.host, mlLesson: lesson.id, selectedNodeId: null, traceChain: null, breadcrumbFrom: null });
   },
 
   // Shared cross-mode/cross-domain link slice (Module 9's geopolitical-risk
@@ -44,9 +109,11 @@ export const useUIStore = create((set, get) => ({
   linkedConcept: null,
 
   navigateToLinkedConcept(mode, tab, payload) {
-    set({ mode, linkedConcept: { tab, payload } });
-    if (mode === 'ml') set({ mlActiveTab: tab });
-    else set({ activeTab: tab });
+    const r = resolveTab(mode, tab);
+    set({ mode, linkedConcept: { tab: r.tab, payload } });
+    if (mode === 'ml') set({ mlActiveTab: r.tab, ...(r.lesson ? { mlLesson: r.lesson } : {}) });
+    else set({ activeTab: r.tab });
+    announce(r.notice);
   },
 
   clearLinkedConcept() {
@@ -54,7 +121,7 @@ export const useUIStore = create((set, get) => ({
   },
 
   setActiveTab(tab) {
-    set({ activeTab: tab });
+    set({ activeTab: resolveTab('stats', tab).tab });
   },
 
   traceFullChain(targetId) {

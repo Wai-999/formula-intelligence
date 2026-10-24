@@ -1,0 +1,37 @@
+name: CI
+
+# Pull requests previously got no checks at all — deploy.yml runs only on a
+# push to main, so a branch could be merged without lint, tests or a11y ever
+# running (docs/audits/BASELINE_AUDIT.md F-05). This runs the same gates as
+# the deploy job, with no Pages permissions and no deploy step.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run validate:content
+      - run: npm test
+      - run: npm run build
+      - run: npm run budget
+      - run: npx playwright install --with-deps chromium
+      - run: npm run a11y
+      - run: npm run a11y:light
+      - run: npm run e2e
+      - run: npm run e2e:python

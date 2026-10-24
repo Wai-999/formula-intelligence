@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { ML_TABS } from '../../../store/useMLUIStore.js';
 import RESEARCH_MD from '../../../../docs/research/ML-Research-Reference.md?raw';
 import PEDAGOGY_MD from '../../../../docs/research/ML-Mode-Pedagogy-Research.md?raw';
 import DATA_SOURCES_MD from '../../../../docs/DATA_SOURCES.md?raw';
@@ -55,9 +56,15 @@ function ProvenanceView() {
           <header className="src-prov-head">
             <h3>{d.label}</h3>
             <span className="src-prov-sec">Reference §{d.section}</span>
-            <button type="button" className="src-prov-open" onClick={() => setMLActiveTab(d.tab)}>
-              <i className="ti ti-external-link" aria-hidden="true" /> Open the lab
-            </button>
+            {ML_TABS.some((t) => t.id === d.tab) ? (
+              <button type="button" className="src-prov-open" onClick={() => setMLActiveTab(d.tab)}>
+                <i className="ti ti-external-link" aria-hidden="true" /> Open the lab
+              </button>
+            ) : (
+              // The lab was retired (Master Prompt V3.1 §4). Its provenance
+              // stays on record; a button would only bounce to another page.
+              <span className="src-prov-retired">Lab retired — kept for the record</span>
+            )}
           </header>
 
           {d.realParts.length > 0 && (

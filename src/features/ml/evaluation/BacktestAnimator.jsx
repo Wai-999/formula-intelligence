@@ -106,6 +106,7 @@ export default function BacktestAnimator() {
           </button>
           <input
             type="range" min={MIN_TRAIN} max={N - TEST_WINDOW} value={origin}
+            aria-label="Walk-forward training cutoff"
             onChange={(e) => { setPlaying(false); setOrigin(Number(e.target.value)); }}
             className="pg-slider bt-scrub"
           />

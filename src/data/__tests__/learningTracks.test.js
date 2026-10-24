@@ -3,6 +3,7 @@ import { LEARNING_TRACKS, trackProgress, stageProgress } from '../learningTracks
 import { nodes } from '../index.js';
 import { ML_MODELS } from '../ml/models.js';
 import { ML_TABS } from '../../store/useMLUIStore.js';
+import { mlLessonById } from '../ml/lessons.js';
 
 // Tracks are hand-curated references into content that lives elsewhere, so
 // they rot silently: rename a formula id or retire an ML tab and a track
@@ -20,6 +21,7 @@ describe('track references', () => {
       if (i.kind === 'formula') return !formulaIds.has(i.id);
       if (i.kind === 'model') return !modelIds.has(i.id);
       if (i.kind === 'module') return !moduleIds.has(i.id);
+      if (i.kind === 'lesson') return !mlLessonById[i.id];
       return true;
     }).map((i) => `${i.track}/${i.kind}:${i.id}`);
     expect(broken).toEqual([]);
@@ -110,13 +112,14 @@ describe('progress derivation', () => {
     expect(trackProgress(mlTrack, modelsToo).done).toBeGreaterThan(0);
   });
 
-  it('excludes modules from the denominator so 100% stays reachable', () => {
-    // Modules are pages, not cards; they have no mastery signal, and a bar
-    // that can never fill teaches learners to ignore bars.
+  it('excludes modules and lessons from the denominator so 100% stays reachable', () => {
+    // Modules are pages and lessons are sections of one; neither has a
+    // mastery signal, and a bar that can never fill teaches learners to
+    // ignore bars.
     const withModules = LEARNING_TRACKS.find((t) => t.stages.some((s) => s.items.some((i) => i.kind === 'module')));
     expect(withModules).toBeTruthy();
     expect(trackProgress(withModules, all).pct).toBe(100);
-    const counted = withModules.stages.flatMap((s) => s.items).filter((i) => i.kind !== 'module').length;
+    const counted = withModules.stages.flatMap((s) => s.items).filter((i) => i.kind !== 'module' && i.kind !== 'lesson').length;
     expect(trackProgress(withModules, all).total).toBe(counted);
   });
 

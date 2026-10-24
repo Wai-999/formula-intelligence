@@ -145,11 +145,11 @@ export default function PlaygroundPage() {
           </div>
           <div className="pg-control-group">
             <p className="ml-lbl">{noiseLbl}: {noise.toFixed(1)}</p>
-            <input type="range" min="0.1" max="2.5" step="0.1" value={noise} onChange={(e) => setNoise(Number(e.target.value))} className="pg-slider" />
+            <input type="range" aria-label={noiseLbl} min="0.1" max="2.5" step="0.1" value={noise} onChange={(e) => setNoise(Number(e.target.value))} className="pg-slider" />
           </div>
           <div className="pg-control-group">
             <p className="ml-lbl">{complexityLabel}: {complexity}</p>
-            <input type="range" min="1" max={model.max} step="1" value={complexity} onChange={(e) => setComplexity(Number(e.target.value))} className="pg-slider" />
+            <input type="range" aria-label={complexityLabel} min="1" max={model.max} step="1" value={complexity} onChange={(e) => setComplexity(Number(e.target.value))} className="pg-slider" />
           </div>
           <button type="button" className="pg-regen-btn" onClick={() => setSeed((s) => s + 1)}>
             <i className="ti ti-refresh" aria-hidden="true" /> {newSampleBtn}

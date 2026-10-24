@@ -77,6 +77,7 @@ export default function ConceptDriftDemo() {
 
         <input
           type="range" min={breakAt - 4 > 0 ? breakAt - 4 : 0} max={points.length - 1} value={progress}
+          aria-label={timeProgressLbl}
           onChange={(e) => setProgress(Number(e.target.value))}
           className="pg-slider drift-scrub"
         />

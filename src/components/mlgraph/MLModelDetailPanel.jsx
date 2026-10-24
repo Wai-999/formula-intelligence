@@ -15,6 +15,11 @@ import MechanismLiveLink from '../ml/learning/MechanismLiveLink.jsx';
 import MisconceptionCallout from '../ml/learning/MisconceptionCallout.jsx';
 import RetrievalCheck from '../ml/learning/RetrievalCheck.jsx';
 import CompassMeter from '../ml/CompassMeter.jsx';
+// Every layer below uses .ml-body-text / .ml-lbl from the shared ML page
+// sheet. Imported here, not left to whichever ML page loaded first: opened
+// directly (#ml/modelmap), the panel's layer text was unstyled — 16px
+// browser default instead of 12.5px muted body text.
+import '../../features/ml/mlPageShared.css';
 import './MLModelDetailPanel.css';
 
 function EdgeTypeLabel({ type }) {
@@ -37,6 +42,21 @@ function SparkLayer({ ladder, nodeId }) {
 
 function MechanismLayer({ ladder, nodeId }) {
   const m = ladder.mechanism;
+  if (m.kind === 'retired-lab') {
+    // The hands-on lab this model used to link to was a top-level tab that
+    // Master Prompt V3.1 §4 retired. Say so plainly instead of rendering a
+    // button that would land somewhere unrelated; point at the layer that
+    // still teaches the same mechanism. Replacing these with in-place
+    // widgets is tracked in docs/UPGRADE_PROGRESS.md.
+    return (
+      <div className="ml-detail-layer">
+        <p className="ml-body-text">
+          This model's hands-on lab was retired when ML mode was reorganised into lessons. The Formalism layer works
+          through the same mechanism step by step with a worked example.
+        </p>
+      </div>
+    );
+  }
   if (m.kind === 'live-link') {
     return <div className="ml-detail-layer"><MechanismLiveLink mechanism={m} nodeId={nodeId} /></div>;
   }

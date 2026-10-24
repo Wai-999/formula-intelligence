@@ -22,14 +22,26 @@ function writeHash(mode, tab) {
   }
 }
 
+/**
+ * Apply a parsed URL through the store's validated setters, then write the
+ * RESOLVED location back. Without the write-back an unknown or retired id
+ * (e.g. an old #ml/bridge bookmark) stays in the address bar even though the
+ * store corrected itself — the subscription below only fires on a change.
+ */
+function applyParsed({ mode, tab }) {
+  const { setMode, setActiveTab, setMLActiveTab } = useUIStore.getState();
+  setMode(mode);
+  if (tab && mode === 'ml') setMLActiveTab(tab);
+  else if (tab && mode === 'stats') setActiveTab(tab);
+  const state = useUIStore.getState();
+  writeHash(state.mode, state.mode === 'ml' ? state.mlActiveTab : state.activeTab);
+}
+
 /** Call once on app mount. Restores mode/tab from the URL, then keeps the URL in sync going forward. */
 export function initHashSync() {
   const parsed = parseHash();
   if (parsed) {
-    const { setMode, setActiveTab, setMLActiveTab } = useUIStore.getState();
-    setMode(parsed.mode);
-    if (parsed.tab && parsed.mode === 'ml') setMLActiveTab(parsed.tab);
-    else if (parsed.tab && parsed.mode === 'stats') setActiveTab(parsed.tab);
+    applyParsed(parsed);
   } else {
     const { mode, activeTab, mlActiveTab } = useUIStore.getState();
     writeHash(mode, mode === 'ml' ? mlActiveTab : activeTab);
@@ -44,10 +56,7 @@ export function initHashSync() {
   const onHashChange = () => {
     const next = parseHash();
     if (!next) return;
-    const { setMode, setActiveTab, setMLActiveTab } = useUIStore.getState();
-    setMode(next.mode);
-    if (next.tab && next.mode === 'ml') setMLActiveTab(next.tab);
-    else if (next.tab && next.mode === 'stats') setActiveTab(next.tab);
+    applyParsed(next);
   };
   window.addEventListener('hashchange', onHashChange);
 

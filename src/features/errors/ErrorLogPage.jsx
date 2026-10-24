@@ -146,11 +146,11 @@ export default function ErrorLogPage() {
         <span className="err-stat">Total: <b>{errorLog.length}</b></span>
         <span className="err-stat-sep">|</span>
         <span className="err-stat">Unresolved: <b style={{ color: 'var(--danger)' }}>{unresolvedCount}</b></span>
-        <select className="err-filter-sel" value={filterResolved} onChange={(e) => setFilterResolved(e.target.value)}>
+        <select aria-label="Error status" className="err-filter-sel" value={filterResolved} onChange={(e) => setFilterResolved(e.target.value)}>
           <option value="all">All errors</option>
           <option value="unresolved">Unresolved only</option>
         </select>
-        <select className="err-filter-sel" value={filterCh} onChange={(e) => setFilterCh(e.target.value)}>
+        <select aria-label="Chapter" className="err-filter-sel" value={filterCh} onChange={(e) => setFilterCh(e.target.value)}>
           <option value="all">All chapters</option>
           {CHAPTERS.map((c) => (
             <option key={c.id} value={String(c.id)}>{c.name}</option>

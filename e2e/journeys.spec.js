@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { openApp, goToStatsTab, goToMLTab, seedMastery, expectNoCrash, VISIBLE } from './helpers.js';
+import { TABS } from '../src/store/useUIStore.js';
+import { ML_TABS } from '../src/store/useMLUIStore.js';
 
 // End-to-end journeys.
 //
@@ -81,7 +83,8 @@ test.describe('cross-feature navigation', () => {
 
   test('an ML citation opens the Sources tab at the cited section', async ({ page }) => {
     await openApp(page);
-    await goToMLTab(page, 'Gold');
+    // Pipeline, not a domain lab: the labs were retired (Master Prompt V3.1 §4).
+    await goToMLTab(page, 'Pipeline');
 
     const citation = page.locator(VISIBLE + '.ml-citation-link').first();
     await citation.scrollIntoViewIfNeeded();
@@ -159,13 +162,12 @@ test.describe('resilience', () => {
     page.on('pageerror', (e) => consoleErrors.push(e.message));
 
     await openApp(page);
-    for (const tab of ['Map', 'Learning Path', 'Story Walk', 'Flashcards', 'Quiz',
-      'Dashboard', 'Practice', 'Error Log', 'Journal']) {
+    // From the registries, so a tab added or retired can't leave this list stale.
+    for (const tab of TABS.map((t) => t.label)) {
       await goToStatsTab(page, tab);
       await expectNoCrash(page);
     }
-    for (const tab of ['Pipeline', 'Model Map', 'Playground', 'Evaluation', 'Gold',
-      'Macro', 'Micro', 'Politics', 'Python', 'Lab', 'Sources']) {
+    for (const tab of ML_TABS.map((t) => t.label)) {
       await goToMLTab(page, tab);
       await expectNoCrash(page);
     }
