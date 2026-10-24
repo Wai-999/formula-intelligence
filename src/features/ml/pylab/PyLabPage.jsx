@@ -120,6 +120,17 @@ export default function PyLabPage() {
           </button>
         </div>
 
+        {/* Honest limit until Python moves into a Worker (docs/audits/
+            BASELINE_AUDIT.md F-01, MIGRATION_RISKS R-07): code runs on the
+            page's own thread, so a loop that never yields cannot be
+            interrupted — the 30 s timeout only catches code that awaits.
+            "Saved" is true: setCode persists on every keystroke. */}
+        <p className="pylab-limit" role="note">
+          <i className="ti ti-alert-circle" aria-hidden="true" />
+          Code runs inside this browser tab. A program that never finishes — an infinite loop, say — will freeze the
+          page and cannot be stopped from here; reload the page to recover. Your notebooks are saved as you type.
+        </p>
+
         <textarea
           ref={areaRef}
           className="pylab-editor"
