@@ -1,0 +1,663 @@
+{
+  "overflow": [
+    {
+      "id": "ml/pipeline@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 859,
+        "cls": "pv-track-item",
+        "tag": "DIV"
+      }
+    },
+    {
+      "id": "ml/modelmap@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 588,
+        "cls": "ml-detail-panel",
+        "tag": "ASIDE"
+      }
+    },
+    {
+      "id": "ml/playground@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 336,
+        "cls": "mode-switcher",
+        "tag": "DIV"
+      }
+    },
+    {
+      "id": "ml/evaluation@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 354,
+        "cls": "pg-regen-btn",
+        "tag": "BUTTON"
+      }
+    },
+    {
+      "id": "ml/gold@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 575,
+        "cls": "fbc-chart",
+        "tag": "svg"
+      }
+    },
+    {
+      "id": "ml/macro@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 575,
+        "cls": "fbc-chart",
+        "tag": "svg"
+      }
+    },
+    {
+      "id": "ml/micro@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 515,
+        "cls": "dcc-chart",
+        "tag": "svg"
+      }
+    },
+    {
+      "id": "ml/politics@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 336,
+        "cls": "mode-switcher",
+        "tag": "DIV"
+      }
+    },
+    {
+      "id": "ml/python@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 707,
+        "cls": "pyhub-content",
+        "tag": "DIV"
+      }
+    },
+    {
+      "id": "ml/pylab@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 336,
+        "cls": "mode-switcher",
+        "tag": "DIV"
+      }
+    },
+    {
+      "id": "ml/sources@320",
+      "scrollWidth": 334,
+      "innerWidth": 320,
+      "worst": {
+        "right": 1031,
+        "cls": "md-table",
+        "tag": "TABLE"
+      }
+    }
+  ],
+  "crashes": [],
+  "consoleErrors": [],
+  "legacy": [
+    {
+      "hash": "#ml/bridge",
+      "finalHash": "#ml/bridge",
+      "visiblePanes": 0,
+      "visibleTextLen": 0,
+      "mlTitle": "",
+      "crashCards": 0,
+      "consoleErrors": 0
+    },
+    {
+      "hash": "#ml/gold",
+      "finalHash": "#ml/gold",
+      "visiblePanes": 1,
+      "visibleTextLen": 2482,
+      "mlTitle": "Gold",
+      "crashCards": 0,
+      "consoleErrors": 0
+    },
+    {
+      "hash": "#ml/doesnotexist",
+      "finalHash": "#ml/doesnotexist",
+      "visiblePanes": 0,
+      "visibleTextLen": 0,
+      "mlTitle": "",
+      "crashCards": 0,
+      "consoleErrors": 0
+    },
+    {
+      "hash": "#stats/nope",
+      "finalHash": "#stats/nope",
+      "visiblePanes": 0,
+      "visibleTextLen": 0,
+      "mlTitle": null,
+      "crashCards": 0,
+      "consoleErrors": 0
+    },
+    {
+      "hash": "#garbage",
+      "finalHash": "#stats/map",
+      "visiblePanes": 1,
+      "visibleTextLen": 2268,
+      "mlTitle": null,
+      "crashCards": 0,
+      "consoleErrors": 0
+    },
+    {
+      "hash": "#ml",
+      "finalHash": "#ml/pipeline",
+      "visiblePanes": 1,
+      "visibleTextLen": 4089,
+      "mlTitle": "Pipeline",
+      "crashCards": 0,
+      "consoleErrors": 0
+    },
+    {
+      "hash": "#stats/map",
+      "finalHash": "#stats/map",
+      "visiblePanes": 1,
+      "visibleTextLen": 2268,
+      "mlTitle": null,
+      "crashCards": 0,
+      "consoleErrors": 0
+    }
+  ],
+  "corrupt": [
+    {
+      "key": "bluman_sr_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sr_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sr_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 1,
+      "consoleErrors": 2,
+      "firstError": "TypeError: Cannot read properties of null (reading 'pct')\n    at http://127.0.0.1:4322/formula-intelligence/assets/DashboardPage-DIlHAXqh.js",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sr_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_quiz_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_quiz_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_quiz_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 1,
+      "consoleErrors": 2,
+      "firstError": "TypeError: Cannot read properties of null (reading 'total')\n    at T (http://127.0.0.1:4322/formula-intelligence/assets/DashboardPage-DIlHAX",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_quiz_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sessions_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sessions_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 1,
+      "consoleErrors": 2,
+      "firstError": "TypeError: r.slice(...).reverse is not a function\n    at T (http://127.0.0.1:4322/formula-intelligence/assets/DashboardPage-DIlHAXqh.js:1:81",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sessions_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 1,
+      "consoleErrors": 2,
+      "firstError": "TypeError: Cannot read properties of null (reading 'slice')\n    at T (http://127.0.0.1:4322/formula-intelligence/assets/DashboardPage-DIlHAX",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sessions_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 1,
+      "consoleErrors": 2,
+      "firstError": "TypeError: r.slice is not a function\n    at T (http://127.0.0.1:4322/formula-intelligence/assets/DashboardPage-DIlHAXqh.js:1:8189)\n    at Eo",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_lp_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_lp_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_lp_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_lp_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sw_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sw_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sw_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_sw_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_errlog_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_errlog_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 0,
+      "consoleErrors": 2,
+      "firstError": "TypeError: e.errorLog.filter is not a function\n    at http://127.0.0.1:4322/formula-intelligence/assets/index-UAg6a-vp.js:10:41257\n    at ht",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_errlog_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 0,
+      "consoleErrors": 2,
+      "firstError": "TypeError: Cannot read properties of null (reading 'filter')\n    at http://127.0.0.1:4322/formula-intelligence/assets/index-UAg6a-vp.js:10:4",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_errlog_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 0,
+      "consoleErrors": 2,
+      "firstError": "TypeError: e.errorLog.filter is not a function\n    at http://127.0.0.1:4322/formula-intelligence/assets/index-UAg6a-vp.js:10:41257\n    at ht",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_journal_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_journal_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 1,
+      "visiblePanes": 1,
+      "consoleErrors": 2,
+      "firstError": "TypeError: e.map is not a function\n    at o (http://127.0.0.1:4322/formula-intelligence/assets/useJournalStore-DcioGx32.js:1:349)\n    at htt",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_journal_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "bluman_journal_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_mode_prefs_v1",
+      "kind": "truncatedJSON",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_mode_prefs_v1",
+      "kind": "wrongType",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_mode_prefs_v1",
+      "kind": "nullValue",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 0,
+      "consoleErrors": 1,
+      "firstError": "pageerror: Cannot read properties of null (reading 'level')",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_mode_prefs_v1",
+      "kind": "futureVersion",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_understanding_v1",
+      "kind": "truncatedJSON",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_understanding_v1",
+      "kind": "wrongType",
+      "target": "#ml/pipeline",
+      "crashCards": 1,
+      "visiblePanes": 0,
+      "consoleErrors": 2,
+      "firstError": "TypeError: Cannot convert undefined or null to object\n    at Object.keys (<anonymous>)\n    at Ce (http://127.0.0.1:4322/formula-intelligence",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_understanding_v1",
+      "kind": "nullValue",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 0,
+      "consoleErrors": 1,
+      "firstError": "pageerror: Cannot read properties of null (reading 'layersByNode')",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "ml_understanding_v1",
+      "kind": "futureVersion",
+      "target": "#ml/pipeline",
+      "crashCards": 1,
+      "visiblePanes": 0,
+      "consoleErrors": 2,
+      "firstError": "TypeError: Cannot convert undefined or null to object\n    at Object.keys (<anonymous>)\n    at Ce (http://127.0.0.1:4322/formula-intelligence",
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "py_lab_v1",
+      "kind": "truncatedJSON",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "py_lab_v1",
+      "kind": "wrongType",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "py_lab_v1",
+      "kind": "nullValue",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "py_lab_v1",
+      "kind": "futureVersion",
+      "target": "#ml/pipeline",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "fi_theme_v1",
+      "kind": "truncatedJSON",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "fi_theme_v1",
+      "kind": "wrongType",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "fi_theme_v1",
+      "kind": "nullValue",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    },
+    {
+      "key": "fi_theme_v1",
+      "kind": "futureVersion",
+      "target": "#stats/dashboard",
+      "crashCards": 0,
+      "visiblePanes": 1,
+      "consoleErrors": 0,
+      "firstError": null,
+      "storedValueAfter": "unchanged"
+    }
+  ],
+  "timing": [
+    {
+      "run": 1,
+      "lcpMs": 188,
+      "cls": 0,
+      "domContentLoadedMs": 161,
+      "loadMs": 163,
+      "transferKB": 162
+    },
+    {
+      "run": 2,
+      "lcpMs": 492,
+      "cls": 0,
+      "domContentLoadedMs": 464,
+      "loadMs": 466,
+      "transferKB": 162
+    },
+    {
+      "run": 3,
+      "lcpMs": 352,
+      "cls": 0,
+      "domContentLoadedMs": 324,
+      "loadMs": 326,
+      "transferKB": 162
+    }
+  ],
+  "burmese": [
+    {
+      "tab": "pipeline",
+      "myanmarChars": 3146
+    },
+    {
+      "tab": "modelmap",
+      "myanmarChars": 664
+    },
+    {
+      "tab": "gold",
+      "myanmarChars": 2241
+    }
+  ]
+}
