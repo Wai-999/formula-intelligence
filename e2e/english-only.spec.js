@@ -6,7 +6,7 @@ import { ML_TABS } from '../src/store/useMLUIStore.js';
 // Master Prompt V3.1 §4: English-only visible UI, with beginner/researcher
 // depth preserved independently of language. The learner below saved
 // Burmese + Researcher before the change — the worst case for both rules.
-const MYANMAR = /[က-႟ꩠ-ꩿ]/g;
+const MYANMAR = /[\u1000-\u109F\uAA60-\uAA7F]/g;
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {

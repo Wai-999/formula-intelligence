@@ -8,10 +8,6 @@ import '../ml/LevelLangToggle.css';
 // a user who set Researcher in ML mode silently gets Beginner in Stats.
 // (The store's name is historical — level/lang were always documented as
 // cross-cutting; only its file location is ML-specific.)
-//
-// The language half is deliberately NOT rendered here. ML mode's content is
-// authored in both English and Burmese; Stats mode's is English-only, so
-// offering a မြန်မာ button would promise a translation that doesn't exist.
 export default function StatsDepthToggle() {
   const level = useMLUIStore((s) => s.level);
   const setLevel = useMLUIStore((s) => s.setLevel);

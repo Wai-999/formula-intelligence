@@ -25,7 +25,6 @@ import './MixedReviewPanel.css';
 export default function MixedReviewPanel() {
   const domainsVisited = useUnderstandingStore((s) => s.domainsVisited);
   const level = useMLUIStore((s) => s.level);
-  const lang = useMLUIStore((s) => s.lang);
   const [open, setOpen] = useState(false);
   const [qIndex, setQIndex] = useState(0);
   const [answered, setAnswered] = useState(null);
@@ -41,9 +40,9 @@ export default function MixedReviewPanel() {
   const eligible = MIXED_REVIEW_QUESTIONS.filter((q) => q.domains.every((d) => domainsVisited.includes(d)));
   if (eligible.length === 0) return null;
   const q = eligible[qIndex % eligible.length];
-  const questionText = resolveT(q.question, level, lang);
-  const optionTexts = q.options.map((o) => resolveT(o, level, lang));
-  const explainText = resolveT(q.explanation, level, lang);
+  const questionText = resolveT(q.question, level);
+  const optionTexts = q.options.map((o) => resolveT(o, level));
+  const explainText = resolveT(q.explanation, level);
 
   function choose(i) {
     setAnswered({ guessIndex: i, correct: i === q.correctIndex });

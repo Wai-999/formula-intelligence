@@ -13,7 +13,8 @@ import { resolveT } from '../../lib/mlContent.js';
 // Previous sessions caught these with one-off scripts that were thrown
 // away afterwards; running them as tests is what stops the next one.
 
-const isBl = (v) => v && typeof v === 'object' && 'en' in v && 'my' in v;
+// Same shape check the schema validator uses: { beginner, researcher }.
+const isBl = (v) => v !== null && typeof v === 'object' && !Array.isArray(v) && 'beginner' in v && 'researcher' in v;
 
 function everyBlObject(value, path, out) {
   if (!value || typeof value !== 'object') return;
@@ -86,11 +87,11 @@ describe('ML model graph', () => {
   });
 });
 
-describe('bilingual content objects', () => {
+describe('depth content objects', () => {
   // The exact bug class fixed in d3b3ed4 (22 occurrences): a bl() call with
   // too few arguments leaves researcher/Burmese text undefined, which
   // renders as silently blank UI rather than an error anyone would notice.
-  it('fully populates all four slots of every bl() object in the ML data', () => {
+  it('fully populates both depths of every bl() object in the ML data', () => {
     const found = [];
     everyBlObject(ML_MODELS, 'ML_MODELS', found);
     everyBlObject(ML_FAMILIES, 'ML_FAMILIES', found);
@@ -98,22 +99,19 @@ describe('bilingual content objects', () => {
     expect(found.length).toBeGreaterThan(500); // sanity: we are actually walking the data
 
     const incomplete = found.filter(([, c]) =>
-      typeof c.en?.beginner !== 'string' || typeof c.en?.researcher !== 'string' ||
-      typeof c.my?.beginner !== 'string' || typeof c.my?.researcher !== 'string'
+      typeof c.beginner !== 'string' || typeof c.researcher !== 'string'
     ).map(([path]) => path);
     expect(incomplete).toEqual([]);
   });
 
-  it('resolves every ML content object to a non-empty string in all four modes', () => {
+  it('resolves every ML content object to a non-empty string at both depths', () => {
     const found = [];
     everyBlObject(ML_MODELS, 'ML_MODELS', found);
     const bad = [];
     for (const [path, c] of found) {
-      for (const lang of ['en', 'my']) {
-        for (const level of ['beginner', 'researcher']) {
-          const out = resolveT(c, level, lang);
-          if (typeof out !== 'string' || out.length === 0) bad.push(`${path} (${lang}/${level})`);
-        }
+      for (const level of ['beginner', 'researcher']) {
+        const out = resolveT(c, level);
+        if (typeof out !== 'string' || out.length === 0) bad.push(`${path} (${level})`);
       }
     }
     expect(bad).toEqual([]);

@@ -223,15 +223,6 @@ export default function MLRelationshipMap() {
   const svgRef = useRef(null);
   const wrapRef = useRef(null);
   const tooltipRef = useRef(null);
-  const pinnedLabelSelRef = useRef(null);
-  const lang = useMLUIStore((s) => s.lang);
-  // Read via ref inside the mount effect (below), not the reactive `lang`
-  // directly — the mount effect must stay [] deps (a real dependency would
-  // re-run the whole D3 mount on every language toggle, destroying pan/
-  // zoom/drag state), and this is the standard, lint-clean way to read a
-  // "latest value" from inside an effect without adding it as a dependency.
-  const langRef = useRef(lang);
-  langRef.current = lang;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -567,11 +558,7 @@ export default function MLRelationshipMap() {
       .attr('class', 'mlgraph-row-label')
       .attr('x', 14)
       .attr('fill', (d) => d.color)
-      // level is irrelevant here — every ML_FAMILIES.name is blSame (same
-      // text at both depths) — only lang varies, handled by the effect
-      // below so a language toggle updates these without a full D3 remount.
-      .text((d) => resolveT(d.name, 'beginner', langRef.current));
-    pinnedLabelSelRef.current = pinnedLabelSel;
+      .text((d) => resolveT(d.name, 'beginner'));
 
     function positionPinnedLabels(transform, h) {
       pinnedLabelSel
@@ -663,16 +650,6 @@ export default function MLRelationshipMap() {
     });
     return unsubscribe;
   }, []);
-
-  // Pinned row labels are bilingual, but the graph itself is an imperative
-  // D3 mount effect ([] deps) that doesn't re-run on a language toggle —
-  // this keeps just the label text in sync without remounting the whole
-  // graph (which would reset pan/zoom/drag state).
-  useEffect(() => {
-    if (pinnedLabelSelRef.current) {
-      pinnedLabelSelRef.current.text((d) => resolveT(d.name, 'beginner', lang));
-    }
-  }, [lang]);
 
   return (
     <div className="mlgraph-canvas-wrap" ref={wrapRef}>

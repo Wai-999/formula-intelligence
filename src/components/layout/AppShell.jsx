@@ -19,8 +19,7 @@ import './AppShell.css';
 // the most-visible unfixed string in the whole audit once found.
 const STATS_SUBTITLE = 'Bluman Elementary Statistics — formula relationship map';
 const ML_SUBTITLE = blSame(
-  'Estimation, prediction & real-world forecasting — machine learning mode',
-  'ခန့်မှန်းခြင်း၊ ကြိုတင်ဟောကိန်းနှင့် လက်တွေ့ကမ္ဘာ့ ခန့်မှန်းချက် — machine learning mode'
+  'Estimation, prediction & real-world forecasting — machine learning mode'
 );
 
 export default function AppShell() {

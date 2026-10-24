@@ -16,7 +16,6 @@ export default function PredictGate({
   predictId, nodeId, layer = 'mechanism', question, options, correctIndex, explain, variant = 'card', children,
 }) {
   const level = useMLUIStore((s) => s.level);
-  const lang = useMLUIStore((s) => s.lang);
   const recordPrediction = useUnderstandingStore((s) => s.recordPrediction);
   const markLayerEngaged = useUnderstandingStore((s) => s.markLayerEngaged);
   const existing = useUnderstandingStore((s) => s.predictions[predictId]);
@@ -27,7 +26,7 @@ export default function PredictGate({
   const predictFirstLbl = useT(UI_PREDICT_FIRST_LBL);
   const compareTemplate = useT(UI_PREDICT_COMPARE_TEMPLATE);
   const correctTemplate = useT(UI_PREDICT_CORRECT_TEMPLATE);
-  const optionTexts = options.map((o) => resolveT(o, level, lang));
+  const optionTexts = options.map((o) => resolveT(o, level));
 
   const resolved = existing || justAnswered;
 

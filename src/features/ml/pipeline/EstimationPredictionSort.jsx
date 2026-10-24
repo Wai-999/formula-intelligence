@@ -19,14 +19,13 @@ export default function EstimationPredictionSort() {
   const [checked, setChecked] = useState(false);
   const markLayerEngaged = useUnderstandingStore((s) => s.markLayerEngaged);
   const level = useMLUIStore((s) => s.level);
-  const lang = useMLUIStore((s) => s.lang);
 
   const title = useT(EPC_SORT_TITLE);
   const intro = useT(EPC_SORT_INTRO);
   const checkBtn = useT(EPC_SORT_CHECK_BTN);
   const correctLbl = useT(EPC_SORT_CORRECT_LBL);
   const actualTemplate = useT(EPC_SORT_ACTUAL_TEMPLATE);
-  const bucketLabels = Object.fromEntries(EPC_COLUMNS.map((c) => [c.id, resolveT(c.label, level, lang)]));
+  const bucketLabels = Object.fromEntries(EPC_COLUMNS.map((c) => [c.id, resolveT(c.label, level)]));
 
   const allAssigned = EPC_SORT_ITEMS.every((item) => assignments[item.id]);
   const correctCount = EPC_SORT_ITEMS.filter((item) => assignments[item.id] === item.correctBucket).length;
@@ -46,7 +45,7 @@ export default function EstimationPredictionSort() {
       <p className="ml-body-text">{intro}</p>
       <div className="epc-sort-items">
         {EPC_SORT_ITEMS.map((item) => {
-          const text = resolveT(item.text, level, lang);
+          const text = resolveT(item.text, level);
           const picked = assignments[item.id];
           const isCorrect = picked === item.correctBucket;
           return (

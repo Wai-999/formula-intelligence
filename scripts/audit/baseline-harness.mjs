@@ -52,7 +52,7 @@ async function measure(page) {
       visibleTextLen: visiblePanes.reduce((n, p) => n + (p.innerText || '').trim().length, 0),
       crashCards: document.querySelectorAll('.errb-card').length,
       hasLangToggle: !!document.querySelector('[class*="lang"] button, button[aria-label*="Burmese" i], button[lang="my"]'),
-      myanmarChars: (document.body.innerText.match(/[က-႟]/g) || []).length,
+      myanmarChars: (document.body.innerText.match(/[\u1000-\u109F]/g) || []).length,
     };
   });
 }

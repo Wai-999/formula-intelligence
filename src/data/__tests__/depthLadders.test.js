@@ -28,15 +28,14 @@ const tabIds = new Set(ML_TABS.map((t) => t.id));
 const misconceptionIds = new Set(Object.keys(MISCONCEPTIONS));
 
 const LEVELS = ['beginner', 'researcher'];
-const LANGS = ['en', 'my'];
 
-/** A bl() field must resolve to real text in all four combinations. */
+/** A bl() field must resolve to real text at both depths. */
 function resolvesEverywhere(content) {
   if (!isBlObject(content)) return false;
-  return LANGS.every((lang) => LEVELS.every((lvl) => {
-    const t = resolveT(content, lvl, lang);
+  return LEVELS.every((lvl) => {
+    const t = resolveT(content, lvl);
     return typeof t === 'string' && t.trim().length > 0;
-  }));
+  });
 }
 
 describe('ladder coverage', () => {
@@ -55,7 +54,7 @@ describe('ladder coverage', () => {
 });
 
 describe('Spark layer — the intuition hook', () => {
-  it('gives every model an analogy that resolves in all four modes', () => {
+  it('gives every model an analogy that resolves at both depths', () => {
     const bad = entries.filter(([, l]) => !resolvesEverywhere(l.spark.analogy)).map(([id]) => id);
     expect(bad).toEqual([]);
   });
@@ -160,7 +159,7 @@ describe('Formalism layer — worked example then faded practice', () => {
     expect(identical).toEqual([]);
   });
 
-  it('resolves worked and faded content in all four modes', () => {
+  it('resolves worked and faded content at both depths', () => {
     for (const [id, l] of entries) {
       expect(resolvesEverywhere(l.formalism.worked), `${id} worked`).toBe(true);
       expect(resolvesEverywhere(l.formalism.faded), `${id} faded`).toBe(true);
