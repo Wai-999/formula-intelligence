@@ -30,6 +30,14 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run budget
+      # Every lesson's Python block and every exercise's reference solution,
+      # run with real CPython + NumPy, must print exactly what the page shows
+      # (scripts/verify-python.mjs). Starters must fail their own tests.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install numpy matplotlib
+      - run: npm run verify:python
       - run: npx playwright install --with-deps chromium
       - run: npm run a11y
       - run: npm run a11y:light

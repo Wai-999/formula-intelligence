@@ -1,0 +1,142 @@
+{
+  "measured": "2026-10-24T19:09:09.585Z",
+  "kind": "LAB ONLY — not field Core Web Vitals",
+  "browser": "Chromium 151.0.7922.34 (Playwright, headless)",
+  "device": "darwin arm64, 4× CPU slowdown",
+  "network": "150 ms RTT, 1.6 Mbit/s down, 750 kbit/s up (CDP emulation)",
+  "viewport": "1280×800",
+  "runs": 3,
+  "statistic": "median",
+  "units": {
+    "fcp": "ms",
+    "lcp": "ms",
+    "tbt": "ms (long-task time past 50 ms, after first paint)",
+    "longTasks": "count over the whole load",
+    "longestTask": "ms",
+    "load": "ms",
+    "cls": "unitless",
+    "transferKB": "KB transferred"
+  },
+  "results": [
+    {
+      "page": "Home (new learner)",
+      "hash": "#home",
+      "cold": {
+        "fcp": 960,
+        "lcp": 2248,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 878,
+        "transferKB": 222
+      },
+      "warm": {
+        "fcp": 52,
+        "lcp": 356,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 30,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Courses",
+      "hash": "#learn/courses",
+      "cold": {
+        "fcp": 968,
+        "lcp": 1348,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 886,
+        "transferKB": 132
+      },
+      "warm": {
+        "fcp": 56,
+        "lcp": 356,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 34,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Lesson: Slope as rate of change",
+      "hash": "#learn/lesson/a1-slope",
+      "cold": {
+        "fcp": 960,
+        "lcp": 2524,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 879,
+        "transferKB": 256
+      },
+      "warm": {
+        "fcp": 64,
+        "lcp": 416,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 35,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Formula map",
+      "hash": "#maps/formulas",
+      "cold": {
+        "fcp": 968,
+        "lcp": 968,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 885,
+        "transferKB": 159
+      },
+      "warm": {
+        "fcp": 56,
+        "lcp": 56,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 33,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Code exercises (Python not started)",
+      "hash": "#practice/code",
+      "cold": {
+        "fcp": 960,
+        "lcp": 2164,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 879,
+        "transferKB": 212
+      },
+      "warm": {
+        "fcp": 52,
+        "lcp": 360,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 31,
+        "transferKB": 2
+      }
+    }
+  ]
+}

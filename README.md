@@ -1,33 +1,25 @@
 # Formula Intelligence
 
-An interactive relationship map for Bluman's *Elementary Statistics* — 94 formulas across 13 chapters, connected by prerequisite, extension, and application links, with a full study toolkit built around it.
+A free, local-first learning platform that takes a learner from uncertain mathematics to data science: algebra, linear algebra, calculus, probability and statistics, machine learning and Python — visual, practised, and stored only on your device.
 
 **Live app:** https://wai-999.github.io/formula-intelligence/
 
-## Features
+## What is in it
 
-- **Map** — a hierarchical, curriculum-ordered graph of every formula. Click a node for its description, real-world usage, prerequisites, dependents, and inventor. Trace a formula's full prerequisite chain with an animated reveal, or highlight its immediate neighborhood.
-- **Learning Path** — pick a target formula and get a step-by-step path from foundational prerequisites up to it, with a mini graph and mastery tracking per step.
-- **Story Walk** — nine case-study investigations (public health, business intelligence, product analytics, and more) that walk through real decisions and apply formulas in context.
-- **Flashcards** — spaced-repetition review across all 94 formulas, filterable by chapter or due-for-review status.
-- **Quiz** — mixed-format quiz mode with running score and streak tracking.
-- **Practice** — three-phase problems (identify the right formula → solve it step by step → interpret the result) for every formula, with real worked scenarios and computed answers.
-- **Dashboard** — mastery overview across all chapters, quiz accuracy, and review load, plus **Your data**: download a backup of all progress and restore it later or on another device.
-- **Error Log** — every wrong answer is logged automatically; classify the mistake type and track recurring patterns.
-- **Journal** — end-of-session reflection prompts plus a full knowledge-state map colored by mastery level.
+- **Learn** — 11 courses in 9 subjects (Prealgebra → Algebra I/II → Precalculus → Calculus I–III, Linear Algebra, Probability & Statistics, Machine Learning & Data Science, Python for Data Science). **20 lessons are written**; the rest of each course is an honest outline. Every lesson follows the same ten steps — the question, before you start, see it (an interactive lab), why it works, worked examples, predict first, practice, checkpoint, in Python, keep going. Also: learning paths and case studies over the Bluman *Elementary Statistics* formula set, and the ML pipeline lessons.
+- **Knowledge Maps** — a Concept map of prerequisites (keyboard-navigable, with an outline view), the 94-formula Bluman map, the 32-model ML map with four-layer depth ladders, and Careers & applications.
+- **Practice** — spaced review of skills you have studied, **Mixed practice** that interleaves subjects, formula flashcards, quizzes, three-phase problems, and **graded Python exercises** that run in your browser.
+- **Projects** — small end-to-end analyses (Anscombe's quartet, a screening test, PCA) with graded steps, plus a free Python lab.
+- **Progress** — skill levels computed from your answers (never from time spent), an optional adaptive **diagnostic** that suggests where to start and says how unsure it is, and an error log.
+- **Notebook** — lesson notes and a reflection journal.
 
-All progress is stored locally in the browser (`localStorage`) — no account or backend required. Saved data that can't be read (for example after a corrupted write) is set aside rather than deleted, and is included in every backup.
+Everything is stored in your browser (`localStorage`): no account, no server, no analytics, no AI tutor. Settings → Privacy exports a full backup; unreadable data is set aside, never deleted. After one visit the app works offline (Python excepted). English only; a Beginner/Researcher depth toggle changes how technical explanations are.
 
-## ML mode
-
-A second, parallel mode — switch via the toggle in the header. Five tabs: the ML pipeline (with embedded lessons on bias–variance and on evaluating a model — metrics with uncertainty, walk-forward validation, SHAP/LIME, drift), a 32-model relationship map, the Python Hub, a Python Lab for your own notebooks, and Sources & data provenance. Every page has a Beginner/Researcher depth toggle. The app is English-only. Older links to retired tabs (Playground, Evaluation, the Gold/Macro/Micro/Politics labs, the Stats↔ML Bridge) still open the right place. No live data — every figure is either cited to `docs/research/ML-Research-Reference.md` or explicitly disclosed as illustrative; see [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md). Architecture and extension guide: [`docs/ML_MODE_README.md`](docs/ML_MODE_README.md).
+**Content status:** all 20 new lessons are AI-drafted and **awaiting independent human math review**; their arithmetic, formulas, Python outputs and citations are machine-checked. See [`docs/CONTENT_QA.md`](docs/CONTENT_QA.md).
 
 ## Tech stack
 
-- [React 19](https://react.dev/) + [Vite](https://vite.dev/)
-- [D3.js](https://d3js.org/) for the force/hierarchical graph rendering, zoom, and drag
-- [Zustand](https://github.com/pmndrs/zustand) for state management
-- [Pyodide](https://pyodide.org/) (loaded on demand from a CDN) to run Python Hub samples in the browser
+React 19 + Vite 8 · Zustand 5 · D3 7 · KaTeX 0.19 (MathML output) · Pyodide 0.28.3 in a Web Worker · Vitest, Playwright, axe-core. Architecture: [`docs/PRODUCT_ARCHITECTURE.md`](docs/PRODUCT_ARCHITECTURE.md).
 
 ## Running locally
 
@@ -36,20 +28,36 @@ npm install
 npm run dev
 ```
 
-Then open the printed local URL. `npm run build` produces a production build in `dist/`; `npm run preview` serves that build locally.
+`npm run build` produces `dist/`; `npm run preview` serves it (the service worker only registers in a production build).
 
 ### Checks
 
 ```bash
 npm run lint && npm run validate:content && npm test
 npm run build && npm run budget       # initial-load JS must stay under 90 KB gzip
-npx playwright install chromium       # once per Playwright version — without it every e2e test fails at launch
-npm run a11y && npm run a11y:light    # axe, every surface, both themes
-npm run e2e                           # end-to-end journeys (npm run e2e:python for the Pyodide journey)
+npm run verify:python                 # needs python3 with numpy + matplotlib
+npx playwright install chromium       # once per Playwright version
+npm run a11y && npm run a11y:light    # axe on every page, both themes
+npm run e2e                           # end-to-end (npm run e2e:python for the Python worker)
+npm run check:citations               # network: fetch every cited source
 ```
+
+Evidence scripts: `npm run evidence:screenshots` (3 breakpoints × 2 themes), `npm run evidence:perf` (lab timings), `npm run docs:curriculum` (regenerates the curriculum map).
 
 ## Deployment
 
-Pull requests run every check above (`.github/workflows/ci.yml`). Pushes to `main` run the same checks and, only if all pass, deploy to GitHub Pages (`.github/workflows/deploy.yml`).
+Pull requests run every check (`.github/workflows/ci.yml`). Pushes to `main` run the same checks and, only if all pass, deploy to GitHub Pages (`.github/workflows/deploy.yml`). Rollback: [`docs/MIGRATION_AND_ROLLBACK.md`](docs/MIGRATION_AND_ROLLBACK.md).
 
-Upgrade status and audits for the V3.1 learning-platform plan: [`docs/UPGRADE_PROGRESS.md`](docs/UPGRADE_PROGRESS.md).
+## Documentation
+
+| | |
+|---|---|
+| Upgrade status, phase results, release scorecard | [`docs/UPGRADE_PROGRESS.md`](docs/UPGRADE_PROGRESS.md) |
+| Curriculum map (generated) | [`docs/CURRICULUM_MAP.md`](docs/CURRICULUM_MAP.md) |
+| Knowledge-graph schema | [`docs/FORMULA_GRAPH_SCHEMA.md`](docs/FORMULA_GRAPH_SCHEMA.md) |
+| Mastery, diagnostic, review, interleaving | [`docs/LEARNING_ASSESSMENT_SPEC.md`](docs/LEARNING_ASSESSMENT_SPEC.md) |
+| Python runtime and its limits | [`docs/PYTHON_RUNTIME_SECURITY.md`](docs/PYTHON_RUNTIME_SECURITY.md) |
+| Design system | [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) |
+| Content QA, accessibility, performance | [`docs/CONTENT_QA.md`](docs/CONTENT_QA.md) · [`docs/ACCESSIBILITY_REPORT.md`](docs/ACCESSIBILITY_REPORT.md) · [`docs/PERFORMANCE_REPORT.md`](docs/PERFORMANCE_REPORT.md) |
+| Baseline audit, feature inventory, risks | [`docs/audits/`](docs/audits/) |
+| Data provenance, ML-mode internals | [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) · [`docs/ML_MODE_README.md`](docs/ML_MODE_README.md) |
