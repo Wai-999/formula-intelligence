@@ -10,7 +10,8 @@
 |---|---|
 | Baseline (Phase 0, production `d1d0ce1`) | 81.4 KB |
 | End of Phase 1 | 73.9 KB |
-| **This release** | **71.9 KB** (67.8 app shell + 3.0 React glue + 1.1 storage keys) |
+| V3.1 release | 71.9 KB |
+| **V4 release** | **71.6 KB** |
 
 How it stays small while the app grew by 20 lessons, 20 labs, a diagnostic, maps and a Python worker:
 
@@ -22,7 +23,21 @@ How it stays small while the app grew by 20 lessons, 20 labs, a diagnostic, maps
 
 Total built JS is 782 KB gzip across 158 files; a learner downloads only what they open.
 
-## Lab timings — `npm run evidence:perf`
+## V4 against V3.1 (same machine, same throttling, same pages)
+
+`docs/audits/evidence/perf-lab-v31.json` (before) and `perf-lab.json` (after); medians of 3 cold loads.
+
+| Page | Cold LCP before → after | Cold transfer before → after |
+|---|---|---|
+| Home (new learner) | 2 248 → **1 328 ms** | 222 → **134 KB** (Home no longer loads the review session and lesson components) |
+| Courses | 1 348 → 1 356 ms | 132 → 132 KB |
+| Lesson: Slope as rate of change | 2 524 → 2 532 ms | 256 → 258 KB |
+| Formula map | 968 → 956 ms | 159 → 159 KB |
+| Code exercises | 2 164 → 2 200 ms | 212 → 227 KB (the six projects’ data — penguins CSV, temperatures, radii — ride with the exercise list) |
+
+CLS 0 and no long tasks on every page, before and after. Differences under ~50 ms are within run-to-run noise.
+
+## Lab timings (V3.1 detail) — `npm run evidence:perf`
 
 `scripts/perf-lab.mjs` → `docs/audits/evidence/perf-lab.json`. Production build served locally; Chromium (Playwright, headless) on an Apple M4 Pro with **4× CPU slowdown** and **150 ms RTT, 1.6 Mbit/s down / 750 kbit/s up** (CDP emulation); 1280 × 800; median of 3 runs. *Cold* = fresh context (empty HTTP cache, no service worker). *Warm* = reload in the same context (service worker active).
 

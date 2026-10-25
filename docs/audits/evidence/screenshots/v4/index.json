@@ -1,0 +1,356 @@
+{
+  "captured": "2026-10-25T00:19:50.784Z",
+  "browser": "Chromium (Playwright)",
+  "shots": [
+    {
+      "file": "home-320-dark.jpg",
+      "page": "#home",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "courses-320-dark.jpg",
+      "page": "#learn/courses",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-a1-break-even-320-dark.jpg",
+      "page": "#learn/lesson/a1-break-even",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-c1-marginal-cost-320-dark.jpg",
+      "page": "#learn/lesson/c1-marginal-cost",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-la-matrix-scores-320-dark.jpg",
+      "page": "#learn/lesson/la-matrix-scores",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "maps-320-dark.jpg",
+      "page": "#learn/maps",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "review-320-dark.jpg",
+      "page": "#practice/review",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "projects-320-dark.jpg",
+      "page": "#apply/projects",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "placement-320-dark.jpg",
+      "page": "#learn/placement",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "progress-320-dark.jpg",
+      "page": "#progress/overview",
+      "width": 320,
+      "height": 720,
+      "theme": "dark"
+    },
+    {
+      "file": "home-768-dark.jpg",
+      "page": "#home",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "courses-768-dark.jpg",
+      "page": "#learn/courses",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-a1-break-even-768-dark.jpg",
+      "page": "#learn/lesson/a1-break-even",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-c1-marginal-cost-768-dark.jpg",
+      "page": "#learn/lesson/c1-marginal-cost",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-la-matrix-scores-768-dark.jpg",
+      "page": "#learn/lesson/la-matrix-scores",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "maps-768-dark.jpg",
+      "page": "#learn/maps",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "review-768-dark.jpg",
+      "page": "#practice/review",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "projects-768-dark.jpg",
+      "page": "#apply/projects",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "placement-768-dark.jpg",
+      "page": "#learn/placement",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "progress-768-dark.jpg",
+      "page": "#progress/overview",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark"
+    },
+    {
+      "file": "home-1280-dark.jpg",
+      "page": "#home",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "courses-1280-dark.jpg",
+      "page": "#learn/courses",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-a1-break-even-1280-dark.jpg",
+      "page": "#learn/lesson/a1-break-even",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-c1-marginal-cost-1280-dark.jpg",
+      "page": "#learn/lesson/c1-marginal-cost",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "lesson-la-matrix-scores-1280-dark.jpg",
+      "page": "#learn/lesson/la-matrix-scores",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "maps-1280-dark.jpg",
+      "page": "#learn/maps",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "review-1280-dark.jpg",
+      "page": "#practice/review",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "projects-1280-dark.jpg",
+      "page": "#apply/projects",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "placement-1280-dark.jpg",
+      "page": "#learn/placement",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "progress-1280-dark.jpg",
+      "page": "#progress/overview",
+      "width": 1280,
+      "height": 800,
+      "theme": "dark"
+    },
+    {
+      "file": "home-320-light.jpg",
+      "page": "#home",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "courses-320-light.jpg",
+      "page": "#learn/courses",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-a1-break-even-320-light.jpg",
+      "page": "#learn/lesson/a1-break-even",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-c1-marginal-cost-320-light.jpg",
+      "page": "#learn/lesson/c1-marginal-cost",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-la-matrix-scores-320-light.jpg",
+      "page": "#learn/lesson/la-matrix-scores",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "maps-320-light.jpg",
+      "page": "#learn/maps",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "review-320-light.jpg",
+      "page": "#practice/review",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "projects-320-light.jpg",
+      "page": "#apply/projects",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "placement-320-light.jpg",
+      "page": "#learn/placement",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "progress-320-light.jpg",
+      "page": "#progress/overview",
+      "width": 320,
+      "height": 720,
+      "theme": "light"
+    },
+    {
+      "file": "home-1280-light.jpg",
+      "page": "#home",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "courses-1280-light.jpg",
+      "page": "#learn/courses",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-a1-break-even-1280-light.jpg",
+      "page": "#learn/lesson/a1-break-even",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-c1-marginal-cost-1280-light.jpg",
+      "page": "#learn/lesson/c1-marginal-cost",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "lesson-la-matrix-scores-1280-light.jpg",
+      "page": "#learn/lesson/la-matrix-scores",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "maps-1280-light.jpg",
+      "page": "#learn/maps",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "review-1280-light.jpg",
+      "page": "#practice/review",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "projects-1280-light.jpg",
+      "page": "#apply/projects",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "placement-1280-light.jpg",
+      "page": "#learn/placement",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    },
+    {
+      "file": "progress-1280-light.jpg",
+      "page": "#progress/overview",
+      "width": 1280,
+      "height": 800,
+      "theme": "light"
+    }
+  ]
+}

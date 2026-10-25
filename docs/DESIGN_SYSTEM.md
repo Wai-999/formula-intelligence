@@ -46,9 +46,9 @@ Contrast is verified by axe on every page in both themes (`docs/ACCESSIBILITY_RE
 
 | Width | Navigation | Header |
 |---|---|---|
-| ≥ 1024 px | labelled sidebar (collapsible, remembered) | full search field, depth toggle |
+| ≥ 1024 px | labelled sidebar with the five destinations (collapsible, remembered) | full search field |
 | 768–1023 px | icon rail with labels on hover/focus | compact |
-| < 768 px | bottom bar: Home · Learn · Maps · Practice · More | icon search; More holds Projects, Progress, Notebook, Settings, Sources, Search, Shortcuts, Depth |
+| < 768 px | bottom bar: Home · Learn · Practice · Apply · Progress (no More menu) | icon search; settings under My Progress |
 
 Focus mode (`f`, or the header button) hides all navigation for reading.
 
@@ -56,7 +56,7 @@ Focus mode (`f`, or the header button) hides all navigation for reading.
 
 `.studio-scroll` (the page's scroll container) · `.studio-page` · `.studio-section` · `.studio-read` · `.studio-lede` · `.studio-h2` · `.studio-h3` · `.studio-eyebrow` · `.studio-muted` · `.studio-grid` · `.studio-card` / `.studio-card-link` · `.studio-row` · `.studio-btn` (40 px tall) / `.studio-btn-primary` / `.studio-btn-small` (32 px) · `.studio-chip` (+ `-ok`, `-warn`, `-bad`, `-accent`) · `.studio-callout` (+ variants) · `.studio-meter` · `.studio-list` · `.studio-fieldset` / `.studio-choice` · `.studio-input` / `.studio-textarea` · `.studio-table-wrap` / `.studio-table`.
 
-Rules: one primary button per view; links look like links (underlined); buttons say what happens ("Check", "Start a new mixed set"); `aria-pressed` for toggles; every control at least 24 × 24 px (WCAG 2.5.8), most 32–40 px.
+Rules: one primary button per view; no streaks, points, badges or confetti (V4 §1, §4); links look like links (underlined); buttons say what happens ("Check", "Start a new mixed set"); `aria-pressed` for toggles; every control at least 24 × 24 px (WCAG 2.5.8), most 32–40 px.
 
 ## Focus
 
@@ -65,6 +65,10 @@ One indicator for every control: `:focus-visible { outline: 2px solid var(--acce
 ## Motion
 
 Motion only explains a change (a panel opening, a value moving); nothing loops for decoration. Two off-switches, both honoured everywhere: the OS `prefers-reduced-motion`, and Settings → Motion → *Reduce motion* (`data-motion="reduce"` on `<html>`, stored in `fi_motion_v1`), which sets every animation and transition to ~0 ms. Lab tweens and D3 transitions read the same setting (`src/lib/motion.js`).
+
+## Disclosures and views
+
+Optional depth is a disclosure, never a separate place: lessons put the readiness check, derivation, assumptions, Python and reading behind `<details>` (`.lesson-disclosure`, a 44 px summary row). Several views of one thing are a `ViewSwitch` (`src/components/layout/ViewSwitch.jsx`): links styled as a segmented control, each a real address.
 
 ## Labs
 

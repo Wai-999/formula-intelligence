@@ -4,14 +4,15 @@ Target: WCAG 2.2 AA for core flows (§13). This report separates what automated 
 
 ## Automated: axe-core on every surface, both themes
 
-`npm run a11y` (dark) and `npm run a11y:light` against the production build, tags `wcag2a, wcag2aa, wcag21a, wcag21aa, wcag22aa`. Surfaces come from the app's own registries, so a new page is audited automatically: every listed page in `src/app/pages.js`, one page per course, every authored lesson, the embedded ML lessons, and the phone layout of Home and the More sheet.
+`npm run a11y` (dark) and `npm run a11y:light` against the production build, tags `wcag2a, wcag2aa, wcag21a, wcag21aa, wcag22aa`. Surfaces come from the app's own registries, so a new page is audited automatically: every listed page in `src/app/pages.js`, one page per course, every authored lesson, the embedded ML lessons, and the phone layout of Home and a lesson.
 
 | Run | Surfaces | Violations |
 |---|---|---|
 | Baseline (Phase 0) | 11 of 20 surfaces | green, but on partial coverage |
 | End of Phase 1 | 16/16 | 0 (3 production violation types fixed) |
-| **This release** | **59 pages, dark** | **0** |
-| **This release** | **59 pages, light** | **0** |
+| V3.1 release | 59 pages, dark and light | 0 |
+| **V4 release** | **60 pages, dark** (default font and the CI-like DejaVu Sans) | **0** |
+| **V4 release** | **60 pages, light** (default font and DejaVu Sans) | **0** |
 
 Fixed during Phases 2–10 because the audit found them: radio choices whose only label was rendered math (now named from `toPlainText` of the math); 24 px target size on Python-library and Sources table-of-contents links; an unlabelled phone search button; a scrollable display-math region that was not keyboard-focusable (focusable now, only when it overflows); light-theme contrast of the active depth button; the Model Map mechanism slider had no accessible name (now labelled, output announced politely).
 
@@ -28,13 +29,14 @@ Axe cannot judge meaning, reading order, or whether an explanation makes sense w
 | Focus after navigation | `v31.spec.js`, `journeys.spec.js` | The new page's `<h1>` receives focus; `document.title` updates |
 | Graphs (baseline F-04) | `v31.spec.js` | Formula map, Model map and Concept map: Tab into the graph, arrow keys move between nodes, Enter opens details; each map also has an Outline (text) view |
 | Search | `v31.spec.js` | Ctrl/⌘+K opens global search; typing + Enter goes to a lesson (`/` focuses a page's own search box) |
-| Section keys | `v31.spec.js` | 1–7 jump between sections; `[` `]` move between pages; shortcuts pause in text fields |
-| Phone navigation | `v31.spec.js` | Bottom bar; More opens a labelled dialog and moves focus into it; Esc closes it and returns focus to More (focus is not trapped inside the sheet) |
+| Section keys | `v31.spec.js` | `1`–`5` jump to the five destinations (`6` does nothing); `[` `]` move between a section's tabs; shortcuts pause in text fields |
+| Phone navigation | `v31.spec.js` | Bottom bar holds all five destinations (V4 removed the More menu); the desktop navigation has exactly five |
+| V4 usability tasks a–e | `v4-usability.spec.js` | At 1280 px and 375 px: lesson within 2 clicks of Home; resume in one action; finish a lesson and its transfer task using only the lesson's “Next” button and the keyboard; “See connections” → concept map; Home → My Progress → Settings → backup downloaded and restored |
 | Focus mode | `v31.spec.js` | Hides navigation, restores it |
 | Labs without pictures | `v31.spec.js` | Numbers view and live readout give the same information as the plot |
 | MathML | `v31.spec.js` | Lesson math renders `<math>` for screen readers |
 | Theme + motion | `v31.spec.js`, `journeys.spec.js`, `theme.test.js` | System/light/dark persist; Settings → Reduce motion sets and persists `data-motion="reduce"` (unit) |
-| **No horizontal overflow at 320 px** | `v31.spec.js` | Every registry page, every course, every lesson (59 surfaces) — fixes baseline F-07 |
+| **No horizontal overflow at 320 px** | `v31.spec.js` | Every registry page, every course, every lesson (56 surfaces) — fixes baseline F-07 |
 | English only | `english-only.spec.js` | No Myanmar glyphs on any surface; depth toggle is a labelled `aria-pressed` group |
 
 ## Design-level measures

@@ -19,30 +19,29 @@ Formula Intelligence is a static, local-first single-page app on GitHub Pages: n
 
 ## Information architecture — `src/app/pages.js`
 
-Seven sections; each page has one id `section/page`, one title and one `<h1>`.
+**Five destinations** since V4 (`docs/v4/SIMPLIFICATION_PLAN.md`; V3.1 had seven). Each page has one id `section/page`, one title and one `<h1>`. Tabs are a section's sub-navigation; pages *behind* a tab (`nav: false`, `parent`) are reached from it and show it as current.
 
-| Section | Pages |
-|---|---|
-| Home | Home (continue, review, diagnostic, gaps, progress, project) |
-| Learn | Courses · Course (param) · Lesson (param) · Learning paths · Case studies · ML pipeline |
-| Knowledge Maps | Concept map (param) · Formula map · Model map · Careers & applications |
-| Practice | Review (formula flashcards) · **Mixed practice** · Quiz · Problems · Code exercises · Python library |
-| Projects | Projects · Python lab |
-| Progress | Overview · Diagnostic · Error log |
-| Notebook | Journal · Lesson notes |
-| — | Settings · Sources |
+| Destination | Tabs | Behind a tab |
+|---|---|---|
+| Home | — (resume hero, one primary action, a small summary) | |
+| Learn | Courses · Placement · ML pipeline · Maps | Course, Lesson (behind Courses); Concept map, Formula map, Model map, Careers & applications, Formula paths (behind Maps) |
+| Practice | Review (skills due + mixed practice) · Formula drills (flashcards · quiz · problems, one page with three views) | |
+| Apply | Projects · Case studies · Code exercises · Python lab | Python library (behind the lab) |
+| My Progress | Overview · Notebook (lesson notes · journal) · Error log · Settings | |
+| — | Sources & data provenance (linked from Settings, lessons and projects) | |
 
 The registry drives the navigation, the breadcrumb, `document.title`, global search, the axe audit, the English-only e2e sweep and the 320 px overflow sweep, so a new page is covered by all of them automatically.
 
-**Routing** (`src/lib/hashRoute.js`): `#section/page[/param]`. Legacy hashes (`#stats/<tab>`, `#ml/<tab>`) map through each page's `legacy` field; retired tabs map to their new home with a notice (`RETIRED_ML_TABS` in `src/store/useUIStore.js`). The initial hash is applied before the first render so deep links and the skip link work on load. Unknown pages and unknown lesson ids render an explanation, never a blank page.
+**Routing** (`src/lib/hashRoute.js`): `#section/page[/param]`. Legacy hashes (`#stats/<tab>`, `#ml/<tab>`) map through the `LEGACY` table and V3.1 ids through `RENAMED` (both in `pages.js`, both tested); retired tabs map to their new home with a notice (`RETIRED_ML_TABS` in `src/store/useUIStore.js`). The initial hash is applied before the first render so deep links and the skip link work on load. Unknown pages and unknown lesson ids render an explanation, never a blank page.
 
 ## Shell — `src/components/layout/`
 
-- `AppShell` — skip link → header (brand, search, depth toggle, focus mode, theme, settings) → `PrimaryNav` → `main#main-content` (`PageHeader` + `PageHost`) → `BottomNav` (phones) → toasts, search dialog, shortcuts overlay.
-- `PrimaryNav` — labelled sidebar ≥ 1024 px (collapsible, remembered), icon rail 768–1023 px, hidden < 768 px where `BottomNav` takes over (Home, Learn, Maps, Practice, More).
+- `AppShell` — skip link → header (brand, search, focus mode, theme, settings) → `PrimaryNav` → `main#main-content` (`PageHeader` + `PageHost`) → `BottomNav` (phones) → toasts, search dialog, shortcuts overlay. The beginner/researcher depth is a setting (Settings → Learning), no longer a header switch.
+- `PrimaryNav` — labelled sidebar ≥ 1024 px (collapsible, remembered), icon rail 768–1023 px, hidden < 768 px where `BottomNav` takes over with all five destinations (no More menu).
 - `PageHeader` — breadcrumb, the page's single `<h1>` (focused after navigation), section tabs, and `document.title`.
 - **Keep-alive** (`src/hooks/useKeepAlive.js`): the five most recently used pages stay mounted (hidden) so a map's zoom or a half-written answer survives a detour; older ones unmount. Hidden panes are `position: relative; overflow: hidden` so their off-screen helpers cannot stretch the document.
-- Focus mode hides the navigation; `f` toggles it. Keyboard shortcuts: `src/lib/shortcuts.js`.
+- `ViewSwitch` — one page, several views, each a real address (`#practice/formulas/quiz`), so views are bookmarkable and keep their own state.
+- Focus mode hides the navigation; `f` toggles it. Keyboard shortcuts (`1`–`5` for the destinations): `src/lib/shortcuts.js`.
 
 ## Content and learning data flow
 
@@ -52,8 +51,9 @@ lessons/*.js (lazy) ─> LessonPage ─┼─> ItemCard ─> useLearningStore.re
 competencies.js ─┘                 └─> LabHost ─> labs/registry.js (lazy per lab)
 concepts.js + formulas.js + lessons + projects + applications ─> graph.js ─> Concept map, Careers & applications
 evidence ─> mastery.js (computed) ─> Home, Progress
-evidence ─> reviewSchedule.js (cards) ─> Home review
+evidence ─> reviewSchedule.js (cards) ─> Practice → Review
 diagnostic itemBank ─> diagnostic.js ─> useDiagnosticStore ─> placement ─> Home "next lesson"
+evidence ─> learningSignals.js ─> My Progress → Your learning signals
 ```
 
 - Lesson bodies are separate chunks (`load: () => import(...)`), so the course list never loads lesson text.
@@ -75,11 +75,11 @@ New records use **versioned envelopes** (`src/lib/versioned.js`): `{ schemaVersi
 
 ## Labs — `src/features/labs/`
 
-20 labs in `registry.js`, each lazy. 19 are built on a shared kit: `LabFrame` (title, controls, plot, live numeric readout, and a **numbers view** — a table/text alternative to the picture), `Slider`, `Segmented`, `Plot`. The 20th, bias–variance, is the rehomed ML Playground (text readouts of training and validation error, no table view). The math lives in helpers (`linalg.js`, `calc.js`, `optimize.js`, `prob.js`, `fit.js`) tested against closed-form cases in `src/features/labs/__tests__/labMath.test.js`, separately from the drawing.
+23 labs in `registry.js`, each lazy. 22 are built on a shared kit: `LabFrame` (title, controls, plot, live numeric readout, and a **numbers view** — a table/text alternative to the picture), `Slider`, `Segmented`, `Plot`. The other, bias–variance, is the rehomed ML Playground (text readouts of training and validation error, no table view). The math lives in helpers (`linalg.js`, `calc.js`, `optimize.js`, `prob.js`, `fit.js`, and `business.js` for the V4 break-even, marginal-cost and scoring labs) tested against closed-form cases in `src/features/labs/__tests__/labMath.test.js`, separately from the drawing.
 
 ## Python — `src/lib/pyodideRunner.js`, `src/lib/python/pyWorker.js`
 
-Worker client with `runPython`, `gradePython`, `stopPython`; timeout or Stop terminates the worker and a fresh one starts on the next run. Grading runs tests in a fresh namespace with numeric tolerances. Full details and limits: `docs/PYTHON_RUNTIME_SECURITY.md`.
+Worker client with `runPython`, `gradePython`, `stopPython`; timeout or Stop terminates the worker and a fresh one starts on the next run. Grading runs tests in a fresh namespace with numeric tolerances. Every coding exercise also has a no-code path (the reference output and a question about it). Full details and limits: `docs/PYTHON_RUNTIME_SECURITY.md`.
 
 ## Offline — `src/sw/serviceWorker.template.js`
 
