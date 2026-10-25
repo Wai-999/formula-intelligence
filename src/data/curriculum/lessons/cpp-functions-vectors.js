@@ -5,6 +5,8 @@ import { item, num, choice, multi } from '../lessonKit.js';
 // The gym numbers are illustrative.
 
 const raw = [12, -1, 30, 25, -1, 8];
+// The lesson's clamp(x, lo, hi), for recomputing answers.
+const clamp = (x, lo, hi) => (x < lo ? lo : x > hi ? hi : x);
 const kept = raw.filter((c) => c !== -1);
 
 export default {
@@ -68,7 +70,7 @@ export default {
       problem: 'With `int clamp(int x, int lo, int hi) { if (x < lo) return lo; if (x > hi) return hi; return x; }`, what is `clamp(212, 40, 200)`?',
       steps: ['212 is not below 40.', '212 is above 200, so the second `return` runs.', 'The result is 200; the rest of the function does not run.'],
       answer: '200',
-      check: { value: 200, compute: () => Math.min(Math.max(212, 40), 200) },
+      check: { value: 200, compute: () => clamp(212, 40, 200) },
     },
     {
       title: 'Copy or reference?',
@@ -119,7 +121,7 @@ export default {
     item({
       id: 'cpp-fn.p6', competency: 'cpp.functions', difficulty: 3, level: 'transfer',
       prompt: 'A heart-rate monitor clamps readings to the range 40–200 with `clamp(x, 40, 200)` from the worked example. What is `clamp(212, 40, 200) + clamp(35, 40, 200) + clamp(72, 40, 200)`?',
-      answer: num(312), compute: () => [212, 35, 72].map((x) => Math.min(Math.max(x, 40), 200)).reduce((a, b) => a + b, 0), hints: ['Clamp each reading separately: 212 → 200, 35 → 40.'],
+      answer: num(312), compute: () => [212, 35, 72].map((x) => clamp(x, 40, 200)).reduce((a, b) => a + b, 0), hints: ['Clamp each reading separately: 212 → 200, 35 → 40.'],
       solution: '$200 + 40 + 72 = 312$. (Clamping hides sensor faults — a real monitor should also flag them.)',
     }),
   ],
