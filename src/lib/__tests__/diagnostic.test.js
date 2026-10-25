@@ -22,7 +22,7 @@ function simulate(policy) {
 }
 
 describe('item bank', () => {
-  it('is versioned, covers all eight domains, and has at least two items per competency', () => {
+  it('is versioned, covers every domain, and has at least two items per competency', () => {
     expect(BANK_VERSION).toMatch(/^dx-/);
     for (const d of DOMAINS) expect(DX_ITEMS.some((i) => i.domain === d.id), d.id).toBe(true);
     const counts = {};
@@ -73,7 +73,7 @@ describe('adaptive procedure', () => {
     for (const d of DOMAINS) expect(consistent.filter((x) => x.domain === d.id).length, d.id).toBeLessThanOrEqual(2);
     const mixed = simulate((it) => it.difficulty <= 2).responses; // right at d1–2, wrong at d3
     for (const d of DOMAINS) expect(mixed.filter((x) => x.domain === d.id).length, d.id).toBeLessThanOrEqual(3);
-    expect(mixed.length).toBeLessThanOrEqual(24);
+    expect(mixed.length).toBeLessThanOrEqual(DOMAINS.length * 3);
   });
 
   it('respects skipped domains and skipped questions', () => {

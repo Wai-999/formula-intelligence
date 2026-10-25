@@ -88,7 +88,7 @@ function FirstRun() {
       <div className="home-first-options">
         <a className="home-option primary" href={hashFor('learn/placement')} onClick={() => chooseFirstRun('diagnostic')}>
           <span className="home-option-title"><i className="ti ti-route" aria-hidden="true" /> Take the placement check</span>
-          <span className="home-option-text">About 15 short, low-stakes questions suggest where to start. Skippable, private, and only a suggestion.</span>
+          <span className="home-option-text">About 20 short, low-stakes questions suggest where to start. Skippable, private, and only a suggestion.</span>
         </a>
         <button
           type="button"

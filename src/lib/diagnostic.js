@@ -169,6 +169,7 @@ export function recommend(estimates) {
   if (strong('algebra') && !strong('linalg')) alsoConsider.push({ course: 'linear-algebra', why: 'Your algebra looks ready for vectors and matrices.' });
   if (strong('algebra') && !strong('statistics')) alsoConsider.push({ course: 'prob-stats', why: 'Your algebra looks ready for probability and statistics.' });
   if (!strong('python')) alsoConsider.push({ course: 'python-ds', why: 'Python can be learned alongside the mathematics from the start.' });
+  if (!strong('cs')) alsoConsider.push({ course: 'cpp-fundamentals', why: 'C++ programming (for Ohlone CS-102) can be learned alongside the mathematics; it needs only algebra.' });
   if (!course) {
     course = strong('statistics') && strong('linalg') && strong('python') ? 'ml-foundations' : 'calculus-2';
     reasons.push('Every step of the mathematics path looked strong in this short screen.');

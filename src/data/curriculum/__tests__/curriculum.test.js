@@ -53,7 +53,7 @@ describe('catalog', () => {
   });
 
   it('covers every subject the spec lists for Learn (§3)', () => {
-    expect(SUBJECTS.map((s) => s.title)).toEqual(['Mathematics Foundations', 'Algebra', 'Precalculus', 'Linear Algebra', 'Calculus', 'Probability & Statistics', 'Machine Learning', 'Python for Data Science', 'Applied Projects']);
+    expect(SUBJECTS.map((s) => s.title)).toEqual(['Mathematics Foundations', 'Algebra', 'Precalculus', 'Linear Algebra', 'Calculus', 'Probability & Statistics', 'Machine Learning', 'Python for Data Science', 'Computer Science (C++)', 'Applied Projects']);
   });
 
   it('keeps Algebra and Linear Algebra separate (§5 “do not conflate”)', () => {

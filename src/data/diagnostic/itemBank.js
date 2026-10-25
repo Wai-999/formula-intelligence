@@ -8,9 +8,10 @@ import { item, num, choice, multi } from '../curriculum/lessonKit.js';
 // calibrated against learner data, so the engine treats difficulties as
 // rough and reports wide uncertainty — and the UI says so.
 //
-// Blueprint: eight domains; every competency tested has at least two items.
+// Blueprint: nine domains (V5 added C++ & discrete math); every competency
+// tested has at least two items.
 
-export const BANK_VERSION = 'dx-2026.10-2'; // -2 (V5): two chain-rule items
+export const BANK_VERSION = 'dx-2026.10-2'; // -2 (V5): chain-rule items and the C++ & discrete-math area
 
 const dx = (domain, fields) => item({ domain, ...fields });
 
@@ -96,6 +97,15 @@ export const DX_ITEMS = [
   dx('python', { id: 'dx.p6', competency: 'py.debugging', difficulty: 3, prompt: 'A loop `for i in range(len(xs)): total = total + xs[i+1]` crashes. Why?', answer: choice(['On the last pass, i + 1 is past the end of the list (IndexError)', 'range cannot take len(xs)', 'total is a string', 'Lists cannot be indexed'], 0), solution: 'When i is the last index, xs[i + 1] does not exist.' }),
   dx('python', { id: 'dx.p7', competency: 'py.numpy', difficulty: 3, prompt: 'What is `np.array([1, 2, 3]) * np.array([4, 5, 6])`?', answer: choice(['array([ 4, 10, 18])', '32', 'array([5, 7, 9])', 'an error'], 0), solution: 'Arithmetic on arrays is elementwise.' }),
   dx('python', { id: 'dx.p8', competency: 'py.numpy', difficulty: 3, prompt: 'What is `np.zeros((2, 3)).shape`?', answer: choice(['(2, 3)', '(3, 2)', '6', '(6,)'], 0), solution: 'Two rows, three columns.' }),
+
+  // ——— C++ programming & discrete math (V5) ———
+  dx('cs', { id: 'dx.k1', competency: 'cpp.basics', difficulty: 1, prompt: 'What does this C++ print? `int x = 7; x = x + 3; std::cout << x * 2;`', answer: num(20), compute: () => (7 + 3) * 2, solution: '$x$ becomes 10, and $10 \\times 2 = 20$.' }),
+  dx('cs', { id: 'dx.k2', competency: 'cpp.basics', difficulty: 2, prompt: 'What does `std::cout << 7 / 2 << " " << 7 % 2;` print?', answer: choice(['3 1', '3.5 1', '3 0', '4 1'], 0), solution: 'Both operands are ints, so `7 / 2` is integer division (3) and `7 % 2` is the remainder (1).' }),
+  dx('cs', { id: 'dx.k3', competency: 'cpp.basics', difficulty: 2, prompt: 'How many times does the body of `for (int i = 0; i < 10; i += 3) { … }` run?', answer: num(4), compute: () => [0, 3, 6, 9].length, solution: '$i$ takes the values 0, 3, 6 and 9; at 12 the condition fails. Four times.' }),
+  dx('cs', { id: 'dx.k4', competency: 'dm.logic', difficulty: 1, prompt: '`p` is true and `q` is false. Is `p && !q` true or false?', answer: choice(['true', 'false'], 0), solution: '`!q` is true, and true AND true is true.' }),
+  dx('cs', { id: 'dx.k5', competency: 'dm.logic', difficulty: 3, prompt: 'Which statement is the negation of “every test passed”?', answer: choice(['Some test failed', 'Every test failed', 'No test passed', 'Some test passed'], 0), solution: 'Not (for all, P) is (there exists, not P): at least one test failed.' }),
+  dx('cs', { id: 'dx.k6', competency: 'ds.complexity', difficulty: 3, prompt: 'An algorithm takes time proportional to $n^2$. Doubling the input size multiplies its running time by about how much?', answer: num(4), compute: () => 2 ** 2, solution: '$(2n)^2 = 4n^2$: about four times as long.' }),
+  dx('cs', { id: 'dx.k7', competency: 'ds.complexity', difficulty: 2, prompt: 'How many times does the body of `for (int i = 1; i < 1024; i *= 2) { … }` run?', answer: num(10), compute: () => Math.log2(1024), solution: '$i$ = 1, 2, 4, …, 512: ten values, because $2^{10} = 1024$ stops the loop.' }),
 ];
 
 export const dxItemById = Object.fromEntries(DX_ITEMS.map((i) => [i.id, i]));

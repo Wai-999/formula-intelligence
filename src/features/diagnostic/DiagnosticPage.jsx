@@ -237,7 +237,7 @@ export default function DiagnosticPage() {
         {!shown && (
           <div className="studio-section studio-read">
             <p className="studio-lede">
-              About 15–20 short questions across eight areas — arithmetic to Python — to suggest where to start. It adapts:
+              About 18–25 short questions across nine areas — arithmetic to Python and C++ — to suggest where to start. It adapts:
               a correct answer leads to a harder question, a miss to an easier one.
             </p>
             <ul className="lesson-ul">
