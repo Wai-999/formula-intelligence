@@ -32,4 +32,5 @@ export const LABS = {
   limits: { title: 'Limits: approaching from both sides', required: null, load: () => import('./LimitLab.jsx') },
   // V5 Computer Science (C++) track.
   'code-trace': { title: 'Code tracing', required: null, load: () => import('./TraceLab.jsx') },
+  'stack-queue': { title: 'Stack and queue, side by side', required: null, load: () => import('./StackQueueLab.jsx') },
 };

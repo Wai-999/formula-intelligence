@@ -120,6 +120,8 @@ export const CONCEPTS = [
   c('c.cpp-functions', 'Functions, references and vectors in C++', 'computer-science', 'cpp-functions', ['c.cpp-loops', 'c.functions'], 'Packaging steps under a name; passing by value, by reference and by const reference; storing data in vectors.'),
   c('c.oop-classes', 'Classes, encapsulation and invariants', 'computer-science', 'oop-classes', ['c.cpp-functions'], 'Data hidden behind member functions that keep a promise about it.'),
   c('c.object-lifetime', 'Constructors, destructors and object lifetime', 'computer-science', 'oop-lifetime', ['c.oop-classes'], 'When objects are created and destroyed, and how destructors release resources (RAII).'),
+  c('c.big-o', 'Running time and big-O', 'computer-science', 'ds-complexity', ['c.cpp-loops', 'c.exponentials'], 'How the cost of an algorithm grows with the size of its input, ignoring constant factors.'),
+  c('c.stack-queue', 'Stacks and queues', 'computer-science', 'ds-linear', ['c.cpp-functions', 'c.big-o'], 'Last in, first out versus first in, first out — and building each so both operations are constant time.'),
 ];
 
 // Non-prerequisite relationships (§7). Direction reads "source TYPE target".

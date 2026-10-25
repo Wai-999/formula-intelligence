@@ -154,6 +154,52 @@ private:
       { name: 'a negative delivery throws and changes nothing', call: '[] { Inventory s(2); try { s.add(-3); } catch (const std::invalid_argument&) { return s.count(); } return -1; }()', expect: '2' },
     ],
   },
+  {
+    id: 'cpp.longest-wait',
+    lesson: 'ds-stacks-queues',
+    competency: 'ds.linear',
+    title: 'The longest wait in a queue',
+    file: 'longest_wait.cpp',
+    prompt: 'Patients are seen first come, first served by one doctor; each visit takes `serviceMinutes`. Given the arrival times in order, return the longest time anyone waits before being seen. Arrivals `{0, 2, 3, 10}` with 5-minute visits give 7.',
+    type: 'int',
+    starter: `#include <algorithm>
+#include <vector>
+
+// Longest wait (in minutes) before being seen, first come first served,
+// one server, each visit serviceMinutes long. arrivals is in time order.
+int longestWait(const std::vector<int>& arrivals, int serviceMinutes) {
+    int nextFree = 0;  // when the doctor is next free
+    int worst = 0;
+    // TODO: for each arrival, start = later of (arrival, nextFree);
+    //       update worst and nextFree.
+    (void)arrivals;
+    (void)serviceMinutes;
+    (void)nextFree;
+    return worst;
+}`,
+    solution: `#include <algorithm>
+#include <vector>
+
+// Longest wait (in minutes) before being seen, first come first served,
+// one server, each visit serviceMinutes long. arrivals is in time order.
+int longestWait(const std::vector<int>& arrivals, int serviceMinutes) {
+    int nextFree = 0;  // when the doctor is next free
+    int worst = 0;
+    for (int a : arrivals) {
+        int start = std::max(a, nextFree);
+        worst = std::max(worst, start - a);
+        nextFree = start + serviceMinutes;
+    }
+    return worst;
+}`,
+    tests: [
+      { name: 'the clinic morning', call: 'longestWait({0, 2, 3, 10}, 5)', expect: '7' },
+      { name: 'nobody arrives', call: 'longestWait({}, 5)', expect: '0' },
+      { name: 'one patient never waits', call: 'longestWait({4}, 5)', expect: '0' },
+      { name: 'three arrive together', call: 'longestWait({0, 0, 0}, 4)', expect: '8' },
+      { name: 'arrivals spaced out', call: 'longestWait({0, 10, 20}, 5)', expect: '0' },
+    ],
+  },
 ];
 
 export const cppExerciseById = Object.fromEntries(CPP_EXERCISES.map((e) => [e.id, e]));

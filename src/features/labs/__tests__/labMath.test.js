@@ -6,6 +6,7 @@ import { descend } from '../optimize.js';
 import { leastSquares } from '../fit.js';
 import { breakEven, profitAt, cost, marginalCost, differenceQuotient, matVec, standardize } from '../business.js';
 import { compose, centralDifference, chainRule, chainMistake, approach, limitVerdict } from '../bridges.js';
+import { runOps, checkBrackets, longestWait } from '../structures.js';
 
 // The labs' arithmetic, checked against cases whose answers are known in
 // closed form (acceptance test 4: "check numerical results against known
@@ -222,5 +223,32 @@ describe('bridge labs (V5: composition, chain rule, limits)', () => {
       expect(limitVerdict((w) => (w <= 2 ? 5 : 9), 2, h), `jump ${h}`).toEqual({ kind: 'jump', left: 5, right: 9 });
       expect(limitVerdict((x) => 1 / ((x - 1) * (x - 1)), 1, h).kind, `blow-up ${h}`).toBe('unbounded');
     }
+  });
+});
+
+describe('data structures (V5)', () => {
+  it('the same operations: a stack gives back the newest item, a queue the oldest', () => {
+    const add = (value) => ({ op: 'add', value });
+    const states = runOps([add(1), add(2), add(3), { op: 'remove' }, add(4), { op: 'remove' }, { op: 'remove' }]);
+    expect(states.map((s) => s.fromStack).filter((x) => x !== null)).toEqual([3, 4, 2]);
+    expect(states.map((s) => s.fromQueue).filter((x) => x !== null)).toEqual([1, 2, 3]);
+    expect(states.at(-1)).toMatchObject({ stack: [1], queue: [4] });
+    expect(runOps([{ op: 'remove' }])[0]).toMatchObject({ fromStack: 'empty', fromQueue: 'empty' });
+  });
+
+  it('bracket check: depth, mismatches and unclosed brackets', () => {
+    expect(checkBrackets('([{}])')).toEqual({ ok: true, maxDepth: 3, failAt: -1 });
+    expect(checkBrackets('(]')).toMatchObject({ ok: false, failAt: 1 });
+    expect(checkBrackets('((').ok).toBe(false);
+    expect(checkBrackets(')').ok).toBe(false);
+    expect(checkBrackets('a[b(c)d]e').ok).toBe(true);
+  });
+
+  it('longest wait in a first-come, first-served line matches the C++ exercise tests', () => {
+    expect(longestWait([0, 2, 3, 10], 5)).toBe(7);
+    expect(longestWait([], 5)).toBe(0);
+    expect(longestWait([4], 5)).toBe(0);
+    expect(longestWait([0, 0, 0], 4)).toBe(8);
+    expect(longestWait([0, 10, 20], 5)).toBe(0);
   });
 });
