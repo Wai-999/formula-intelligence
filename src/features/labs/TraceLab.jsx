@@ -50,6 +50,7 @@ export default function TraceLab({ program = 'cafe-total' }) {
 
   return (
     <LabFrame
+      className="lab-stepper"
       title={`Trace it: ${t.title}`}
       intro="The highlighted line has just run. Before each step, predict which variable changes and to what — then press Step and check."
       onReset={() => setI(-1)}

@@ -58,6 +58,7 @@ export default function StackQueueLab() {
 
   return (
     <LabFrame
+      className="lab-stepper"
       title="Stack and queue, side by side"
       intro="Every operation goes to both containers. Before each removal, predict what each one gives back."
       presets={PRESETS}

@@ -749,3 +749,11 @@
 .ind-new {
   fill: rgba(34, 211, 238, 0.55);
 }
+
+/* Step-by-step labs on narrow screens: the Step buttons and the variables
+   come first, so a learner can step without scrolling past the code. */
+@media (max-width: 900px) {
+  .lab-stepper .lab-controls {
+    order: -1;
+  }
+}

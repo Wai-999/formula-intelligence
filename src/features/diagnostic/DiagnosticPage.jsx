@@ -103,7 +103,7 @@ function Results({ attempt, onRetake }) {
             </a>
           )}
         </div>
-        <p className="studio-muted">Not sure? Start earlier: revisiting familiar ground costs a little time; a gap costs more later. <button type="button" className="link-btn" onClick={onRetake}>Retake the placement check</button></p>
+        <p className="studio-muted">Not sure? Start earlier: revisiting familiar ground costs a little time; a gap costs more later.{!thin && <> <button type="button" className="link-btn" onClick={onRetake}>Retake the placement check</button></>}</p>
       </div>
 
       {rec.alsoConsider.length > 0 && (

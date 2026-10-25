@@ -15,11 +15,11 @@ import './labs.css';
  *    the picture — the lab is fully usable with the figure hidden
  *  - constraints/annotations: what the lab limits and what to notice
  */
-export function LabFrame({ title, intro, presets, activePreset, onPreset, onReset, controls, figure, readout, table, constraints, annotations }) {
+export function LabFrame({ title, intro, presets, activePreset, onPreset, onReset, controls, figure, readout, table, constraints, annotations, className = '' }) {
   const [showTable, setShowTable] = useState(false);
   const id = useId();
   return (
-    <section className="lab" aria-labelledby={`${id}-t`}>
+    <section className={`lab ${className}`.trim()} aria-labelledby={`${id}-t`}>
       <div className="lab-head">
         <h3 className="lab-title" id={`${id}-t`}><i className="ti ti-flask" aria-hidden="true" /> {title}</h3>
         <div className="lab-head-actions">

@@ -83,7 +83,7 @@ function CourseRow({ code, target, lessons }) {
           <span className="prep-course-title"><strong>{c.code}</strong> {c.title} <span className="studio-muted">· {c.units} units</span></span>
           <span className="studio-row prep-chips">
             {matches.length > 0
-              ? matches.slice(0, 2).map((a) => <span key={a.id} className="studio-chip studio-chip-ok"><i className="ti ti-arrow-right" aria-hidden="true" /> {campus(a)}{a.receivingCourse.split(' ').slice(0, 2).join(' ')}{a.sending.some((all) => all.length > 1) ? ' (with another course)' : ''}</span>)
+              ? matches.slice(0, 2).map((a) => <span key={a.id} className="studio-chip studio-chip-ok"><i className="ti ti-arrow-right" aria-hidden="true" /> Counts as {campus(a) || `${t.short} `}{a.receivingCourse.split(' ').slice(0, 2).join(' ')}{a.sending.some((all) => all.length > 1) ? ' (with another course)' : ''}</span>)
               : <span className="studio-chip">Not in {t.agreement}</span>}
             <span className="studio-chip">{cov.written} lesson{cov.written === 1 ? '' : 's'} written here · {cov.planned} planned</span>
           </span>
