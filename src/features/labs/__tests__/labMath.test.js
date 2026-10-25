@@ -7,6 +7,7 @@ import { leastSquares } from '../fit.js';
 import { breakEven, profitAt, cost, marginalCost, differenceQuotient, matVec, standardize } from '../business.js';
 import { compose, centralDifference, chainRule, chainMistake, approach, limitVerdict } from '../bridges.js';
 import { runOps, checkBrackets, longestWait } from '../structures.js';
+import { compareTable, EXPRESSIONS, oddSum, triangleSum } from '../logic.js';
 
 // The labs' arithmetic, checked against cases whose answers are known in
 // closed form (acceptance test 4: "check numerical results against known
@@ -250,5 +251,33 @@ describe('data structures (V5)', () => {
     expect(longestWait([4], 5)).toBe(0);
     expect(longestWait([0, 0, 0], 4)).toBe(8);
     expect(longestWait([0, 10, 20], 5)).toBe(0);
+  });
+});
+
+describe('logic and induction (V5)', () => {
+  const same = (a, b) => compareTable(a, b).every((r) => r.same);
+
+  it('truth tables confirm De Morgan and the contrapositive, and reject the converse and the common bug', () => {
+    expect(same('not-and', 'nots-or')).toBe(true);
+    expect(same('not-or', 'nots-and')).toBe(true);
+    expect(same('implies', 'contrapositive')).toBe(true);
+    expect(same('implies', 'converse')).toBe(false);
+    expect(compareTable('not-and', 'nots-and').filter((r) => !r.same)).toHaveLength(2);
+    expect(compareTable('and', 'and')).toHaveLength(4);
+  });
+
+  it('each expression’s C++ form computes the same truth function as its label says', () => {
+    // Evaluate the C++ spelling with JavaScript's identical operators.
+    for (const e of EXPRESSIONS) {
+      const js = new Function('p', 'q', `return ${e.cpp};`);
+      for (const p of [false, true]) for (const q of [false, true]) expect(js(p, q), `${e.id} ${p} ${q}`).toBe(e.f(p, q));
+    }
+  });
+
+  it('the induction lab’s sums match their closed forms', () => {
+    for (let n = 1; n <= 50; n += 1) {
+      expect(oddSum(n)).toBe(n * n);
+      expect(triangleSum(n)).toBe(Array.from({ length: n }, (_, i) => i + 1).reduce((a, b) => a + b, 0));
+    }
   });
 });

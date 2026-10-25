@@ -121,6 +121,8 @@ export const CONCEPTS = [
   c('c.oop-classes', 'Classes, encapsulation and invariants', 'computer-science', 'oop-classes', ['c.cpp-functions'], 'Data hidden behind member functions that keep a promise about it.'),
   c('c.object-lifetime', 'Constructors, destructors and object lifetime', 'computer-science', 'oop-lifetime', ['c.oop-classes'], 'When objects are created and destroyed, and how destructors release resources (RAII).'),
   c('c.big-o', 'Running time and big-O', 'computer-science', 'ds-complexity', ['c.cpp-loops', 'c.exponentials'], 'How the cost of an algorithm grows with the size of its input, ignoring constant factors.'),
+  c('c.logic', 'Propositional logic and truth tables', 'computer-science', 'dm-logic', [], 'Statements joined with and, or, not and implies; equivalence checked on every case.'),
+  c('c.induction', 'Mathematical induction', 'computer-science', 'dm-induction', ['c.proof', 'c.sequences-series'], 'Proving a statement for every whole number from a base case and a step from k to k + 1.'),
   c('c.stack-queue', 'Stacks and queues', 'computer-science', 'ds-linear', ['c.cpp-functions', 'c.big-o'], 'Last in, first out versus first in, first out — and building each so both operations are constant time.'),
 ];
 

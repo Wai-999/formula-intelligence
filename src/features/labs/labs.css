@@ -674,3 +674,78 @@
   color: var(--text-primary);
   font-weight: 700;
 }
+
+/* A labelled native select, for labs with many choices. */
+.lab-select {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.lab-select select {
+  min-height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--border-solid-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+}
+
+/* Truth-table lab. */
+.tt-wrap {
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.tt-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tt-table th,
+.tt-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.tt-table th {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.tt-table tr.is-diff td {
+  background: rgba(248, 113, 113, 0.14);
+  font-weight: 700;
+}
+
+.tt-verdict {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Induction lab: unit squares on a grid. */
+.ind-cell {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.ind-old {
+  fill: rgba(139, 92, 246, 0.45);
+}
+
+.ind-new {
+  fill: rgba(34, 211, 238, 0.55);
+}

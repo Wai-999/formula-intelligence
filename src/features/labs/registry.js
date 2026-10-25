@@ -33,4 +33,6 @@ export const LABS = {
   // V5 Computer Science (C++) track.
   'code-trace': { title: 'Code tracing', required: null, load: () => import('./TraceLab.jsx') },
   'stack-queue': { title: 'Stack and queue, side by side', required: null, load: () => import('./StackQueueLab.jsx') },
+  'truth-table': { title: 'Truth tables', required: null, load: () => import('./TruthTableLab.jsx') },
+  induction: { title: 'Induction: one more layer', required: null, load: () => import('./InductionLab.jsx') },
 };
