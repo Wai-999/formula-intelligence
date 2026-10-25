@@ -5,6 +5,7 @@ import { posterior, confusionAt, rocAuc, rocCurve, brier, ppv } from '../prob.js
 import { descend } from '../optimize.js';
 import { leastSquares } from '../fit.js';
 import { breakEven, profitAt, cost, marginalCost, differenceQuotient, matVec, standardize } from '../business.js';
+import { compose, centralDifference, chainRule, chainMistake, approach, limitVerdict } from '../bridges.js';
 
 // The labs' arithmetic, checked against cases whose answers are known in
 // closed form (acceptance test 4: "check numerical results against known
@@ -183,5 +184,43 @@ describe('applied labs (V4 exemplars)', () => {
     // Standardized columns have mean 0.
     const Z = standardize(X);
     for (let j = 0; j < 3; j += 1) close(Z.reduce((a, r) => a + r[j], 0), 0, 1e-9);
+  });
+});
+
+describe('bridge labs (V5: composition, chain rule, limits)', () => {
+  const square = { g: (x) => 3 * x + 1, dg: () => 3, f: (u) => u * u, df: (u) => 2 * u };
+
+  it('composition runs the inner function first', () => {
+    close(compose(square.f, square.g)(2), 49);
+    close(compose(square.g, square.f)(2), 13);
+  });
+
+  it('chain rule equals the measured slope; the common mistake does not', () => {
+    close(chainRule(square, 2), 42);
+    close(centralDifference(compose(square.f, square.g), 2), 42, 1e-6);
+    close(chainMistake(square, 2), 12);
+    // √(x² + 9) at 4: x / √(x² + 9) = 0.8; the mistake reads 1/(2√4)·8 = 2.
+    const root = { g: (x) => x * x + 9, dg: (x) => 2 * x, f: Math.sqrt, df: (u) => 1 / (2 * Math.sqrt(u)) };
+    close(chainRule(root, 4), 0.8);
+    close(chainMistake(root, 4), 2);
+    // A constant outer rate makes the mistake harmless (the balloon preset).
+    const balloon = { g: (t) => 4 * t + 0.1 * t * t, dg: (t) => 4 + 0.2 * t, f: (h) => 15 - 0.0065 * h, df: () => -0.0065 };
+    close(chainRule(balloon, 10), -0.039, 1e-12);
+    close(chainMistake(balloon, 10), chainRule(balloon, 10), 1e-15);
+  });
+
+  it('one-sided readings never evaluate f at a, and tell a hole, a jump and a blow-up apart', () => {
+    const hole = (x) => (x * x - 4) / (x - 2);
+    const left = approach(hole, 2, -1, [0.1, 0.001]);
+    expect(left.map((r) => r.x)).toEqual([1.9, 1.999]);
+    close(left[1].y, 3.999, 1e-9);
+    const corner = (m) => (m <= 5 ? 20 : 20 + 10 * (m - 5));
+    for (const h of [0.01, 0.001]) {
+      expect(limitVerdict(hole, 2, h).kind, `hole ${h}`).toBe('agree');
+      expect(limitVerdict(corner, 5, h).kind, `corner ${h}`).toBe('agree');
+      expect(limitVerdict((x) => Math.sin(x) / x, 0, h).kind, `sinc ${h}`).toBe('agree');
+      expect(limitVerdict((w) => (w <= 2 ? 5 : 9), 2, h), `jump ${h}`).toEqual({ kind: 'jump', left: 5, right: 9 });
+      expect(limitVerdict((x) => 1 / ((x - 1) * (x - 1)), 1, h).kind, `blow-up ${h}`).toBe('unbounded');
+    }
   });
 });

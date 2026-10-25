@@ -27,4 +27,7 @@ export const LABS = {
   'break-even': { title: 'Break-even: revenue against total cost', required: null, load: () => import('./BreakEvenLab.jsx') },
   'marginal-cost': { title: 'Marginal cost: derivative versus difference quotient', required: null, load: () => import('./MarginalCostLab.jsx') },
   'matrix-scores': { title: 'Scores as a matrix–vector product', required: null, load: () => import('./MatrixScoresLab.jsx') },
+  // V5 vertical slice: Algebra II → Precalculus → Calculus I.
+  'composition-chain': { title: 'Composition and the chain rule', required: null, load: () => import('./ChainLab.jsx') },
+  limits: { title: 'Limits: approaching from both sides', required: null, load: () => import('./LimitLab.jsx') },
 };
