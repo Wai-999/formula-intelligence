@@ -3,9 +3,10 @@ import { LabFrame } from './LabKit.jsx';
 import { TRACES, parseStep } from '../../data/cpp/traces.js';
 
 // Code tracing (V5.1 §3 CS-102: "read code → predict output → trace values").
-// Step through a C++ program one line at a time and watch every variable.
-// The steps are not hand-written guesses: scripts/verify-cpp.mjs compiles an
-// instrumented copy of each program and checks it prints exactly these steps.
+// Step through a C++ or Python program one line at a time and watch every
+// variable. The steps are not hand-written guesses: scripts/verify-cpp.mjs
+// (C++) and scripts/verify-python.mjs (Python) run an instrumented copy of
+// each program and check it prints exactly these steps.
 
 function changesBetween(prev, cur) {
   const before = Object.fromEntries(prev?.vars ?? []);
@@ -84,7 +85,10 @@ export default function TraceLab({ program = 'cafe-total' }) {
         }),
       }}
       annotations={t.annotations}
-      constraints={[
+      constraints={t.language === 'python' ? [
+        'This is a replay of the program’s real steps, checked by running it with Python; the code cannot be edited here.',
+        'To change the program, copy it into Apply → Python lab and run it.',
+      ] : [
         'This is a replay of the compiled program’s real steps, not a C++ interpreter: you cannot edit the code here.',
         'To change the program, download it, compile it with g++ or clang++, and run it yourself.',
       ]}

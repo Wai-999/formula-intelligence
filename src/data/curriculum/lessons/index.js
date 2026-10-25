@@ -561,6 +561,27 @@ export const LESSONS = [
     review: AI_DRAFT,
     load: () => import('./ml-calibration-fairness.js'),
   },
+  // V5 Python for Data Science: the first lesson of the sequence.
+  {
+    id: 'py-first-steps',
+    title: 'Python first steps: lists, loops and an honest average',
+    course: 'python-ds',
+    unit: 'py-basics',
+    minutes: 40,
+    difficulty: 'introductory',
+    summary: 'Trace a Python loop over a list, see how / and // differ from C++ division, and average a log that has gaps — reporting what is missing instead of hiding it.',
+    competencies: ['py.basics', 'py.collections', 'py.debugging'],
+    concepts: ['c.py-basics', 'c.py-collections'],
+    prerequisites: ['c.expressions'],
+    formulas: [],
+    labs: ['code-trace'],
+    next: [],
+    formulaMap: [],
+    models: [],
+    review: AI_DRAFT,
+    applied: true,
+    load: () => import('./py-first-steps.js'),
+  },
   // V5 Computer Science (C++) track.
   {
     id: 'cpp-loops-trace',

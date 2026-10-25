@@ -16,6 +16,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LESSONS } from '../src/data/curriculum/lessons/index.js';
 import { PY_EXERCISES } from '../src/data/python/exercises.js';
+import { TRACES, stepsFromOutput } from '../src/data/cpp/traces.js';
 
 const PY = process.env.PYTHON || 'python3';
 
@@ -52,6 +53,25 @@ function run(label, code, expected) {
 for (const l of LESSONS) {
   const body = (await l.load()).default;
   if (body.python) run(`lesson ${l.id}`, body.python.code, body.python.output); // C++-only lessons: scripts/verify-cpp.mjs
+}
+
+// Trace-lab programs written in Python: the program prints its output, and
+// its instrumented twin prints exactly the steps the lab shows.
+for (const [id, t] of Object.entries(TRACES)) {
+  if (t.language !== 'python') continue;
+  run(`trace ${id} (program output)`, t.code, t.output);
+  const file = join(dir, 'trace.py');
+  writeFileSync(file, t.instrumented);
+  const r = spawnSync(PY, ['-I', file], { cwd: dir, encoding: 'utf8', timeout: 60_000 });
+  ran += 1;
+  const { steps, plain } = stepsFromOutput((r.stdout ?? '').replace(/\s+$/, ''));
+  const same = r.status === 0 && steps.join('\n') === t.trace.join('\n') && plain.join('\n') === t.output;
+  if (same) console.log(`✓ trace ${id} (${t.trace.length} steps)`);
+  else {
+    failed += 1;
+    const i = steps.findIndex((x, k) => x !== t.trace[k]);
+    console.log(`\n✗ trace ${id}: step ${i + 1} expected ${t.trace[i]}, printed ${steps[i]} (exit ${r.status})`);
+  }
 }
 
 // Graded exercises: the reference solution must pass its own tests.

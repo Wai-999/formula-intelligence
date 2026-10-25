@@ -250,7 +250,86 @@ int main() {
     std::cout << "@L23 alive=" << names() << "\\n";
 }`,
   },
+
+  // Python programs use the same format; scripts/verify-python.mjs runs
+  // them (language: 'python') and scripts/verify-cpp.mjs skips them.
+  'commute-average': {
+    language: 'python',
+    title: 'Averaging a week of commutes',
+    file: 'commute.py',
+    code: `times = [42, 35, 51]
+total = 0
+for t in times:
+    total += t
+average = total / len(times)
+print(round(average, 1))`,
+    output: '42.7',
+    notes: {
+      1: 'A list holds the three commute times, in order.',
+      2: 'The running total starts at 0.',
+      3: 'The for loop takes the next value from the list and calls it t.',
+      4: 'The body adds that value to the total.',
+      5: 'In Python, / always gives a decimal (float) result.',
+      6: 'round(…, 1) only changes what is printed; average keeps all its digits.',
+    },
+    annotations: [
+      'A Python for-loop visits each item of the list once; there is no index to get wrong.',
+      'Unlike in C++, the loop variable t still exists after the loop (it keeps the last value).',
+    ],
+    trace: [
+      'L1 times=[42,35,51]',
+      'L2 times=[42,35,51] total=0',
+      'L3 times=[42,35,51] total=0 t=42',
+      'L4 times=[42,35,51] total=42 t=42',
+      'L3 times=[42,35,51] total=42 t=35',
+      'L4 times=[42,35,51] total=77 t=35',
+      'L3 times=[42,35,51] total=77 t=51',
+      'L4 times=[42,35,51] total=128 t=51',
+      'L5 times=[42,35,51] total=128 t=51 average=42.666666666666664',
+      'L6 times=[42,35,51] total=128 t=51 average=42.666666666666664 | 42.7',
+    ],
+    instrumented: `def show(v):
+    return "[" + ",".join(str(x) for x in v) + "]" if isinstance(v, list) else str(v)
+
+def snap(line, **kv):
+    print("@L%d " % line + " ".join(k + "=" + show(v) for k, v in kv.items()))
+
+times = [42, 35, 51]
+snap(1, times=times)
+total = 0
+snap(2, times=times, total=total)
+for t in times:
+    snap(3, times=times, total=total, t=t)
+    total += t
+    snap(4, times=times, total=total, t=t)
+average = total / len(times)
+snap(5, times=times, total=total, t=t, average=average)
+print(round(average, 1))
+snap(6, times=times, total=total, t=t, average=average)`,
+  },
 };
+
+/**
+ * Turn an instrumented program's stdout into trace steps: each "@" line is
+ * a snapshot, and plain lines printed since the previous snapshot belong to
+ * it (" | " + lines joined with "⏎"). Returns { steps, plain }. Shared by
+ * scripts/verify-cpp.mjs and scripts/verify-python.mjs.
+ */
+export function stepsFromOutput(stdout) {
+  const steps = [];
+  const plain = [];
+  let pending = [];
+  for (const line of stdout.split('\n')) {
+    if (line.startsWith('@')) {
+      steps.push(pending.length ? `${line.slice(1)} | ${pending.join('⏎')}` : line.slice(1));
+      pending = [];
+    } else {
+      plain.push(line);
+      pending.push(line);
+    }
+  }
+  return { steps, plain };
+}
 
 /**
  * "L8 total=14 h=0" → { line: 8, vars: [['total', '14'], ['h', '0']], prints: [] };

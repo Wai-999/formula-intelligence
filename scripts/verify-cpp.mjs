@@ -19,7 +19,7 @@ import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir, platform } from 'node:os';
 import { join } from 'node:path';
 import { LESSONS } from '../src/data/curriculum/lessons/index.js';
-import { TRACES } from '../src/data/cpp/traces.js';
+import { TRACES, stepsFromOutput } from '../src/data/cpp/traces.js';
 import { CPP_EXERCISES, exerciseSource } from '../src/data/cpp/exercises.js';
 
 const CXX = process.env.CXX || 'g++';
@@ -91,6 +91,7 @@ for (const l of LESSONS) {
 
 // 2. Trace-lab programs: the program itself, then its instrumented twin.
 for (const [id, t] of Object.entries(TRACES)) {
+  if (t.language === 'python') continue; // scripts/verify-python.mjs
   expectOutput(`trace ${id} (program output)`, t.code, t.output);
   const b = build(t.instrumented);
   if (b.error) {
@@ -98,18 +99,7 @@ for (const [id, t] of Object.entries(TRACES)) {
     continue;
   }
   const r = exec(b.exe);
-  const steps = [];
-  const plain = [];
-  let pending = [];
-  for (const line of r.out.split('\n')) {
-    if (line.startsWith('@')) {
-      steps.push(pending.length ? `${line.slice(1)} | ${pending.join('⏎')}` : line.slice(1));
-      pending = [];
-    } else {
-      plain.push(line);
-      pending.push(line);
-    }
-  }
+  const { steps, plain } = stepsFromOutput(r.out);
   const same = steps.length === t.trace.length && steps.every((s, i) => s === t.trace[i]);
   const firstDiff = steps.findIndex((s, i) => s !== t.trace[i]);
   report(`trace ${id} (${t.trace.length} steps)`, r.status === 0 && same && plain.join('\n') === t.output,
