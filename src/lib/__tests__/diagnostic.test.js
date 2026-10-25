@@ -138,6 +138,26 @@ describe('recommendation', () => {
     const weak = recommend(est({}));
     expect(weak.alsoConsider.map((a) => a.course)).not.toContain('linear-algebra');
   });
+
+  it('says “not enough evidence” when a deciding area rests on one answer, or nothing was answered (V5.1 §13.4)', () => {
+    const r = recommend(est({ arithmetic: 'strong', algebra: 'developing' }).map((e) => (e.domain === 'algebra' ? { ...e, answered: 1, correct: 0 } : e)));
+    expect(r.course).toBe('algebra-1');
+    expect(r.evidence).toBe('insufficient');
+    expect(r.reasons.join(' ')).toMatch(/not enough evidence/);
+    // A thin area beyond the deciding one does not change the verdict.
+    expect(recommend(est({ arithmetic: 'strong', algebra: 'developing' }).map((e) => (e.domain === 'calculus' ? { ...e, answered: 1 } : e))).evidence).toBe('sufficient');
+    const none = recommend(DOMAINS.map((d) => ({ domain: d.id, level: 'not-assessed', correct: 0, answered: 0, confidence: 'none' })));
+    expect(none.course).toBe('prealgebra');
+    expect(none.evidence).toBe('insufficient');
+    expect(none.reasons.join(' ')).toMatch(/default, not a finding/);
+  });
+
+  it('labels a single answered question as insufficient evidence for its area', () => {
+    const one = [{ item: 'dx.a3', domain: 'arithmetic', difficulty: 2, ok: true }];
+    expect(assessDomain('arithmetic', one, false).evidence).toBe('insufficient');
+    const two = [...one, { item: 'dx.a6', domain: 'arithmetic', difficulty: 3, ok: true }];
+    expect(assessDomain('arithmetic', two, false).evidence).toBe('sufficient');
+  });
 });
 
 describe('start earlier / start here / skip ahead (V4 §6)', () => {

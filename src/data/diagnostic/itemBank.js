@@ -10,7 +10,7 @@ import { item, num, choice, multi } from '../curriculum/lessonKit.js';
 //
 // Blueprint: eight domains; every competency tested has at least two items.
 
-export const BANK_VERSION = 'dx-2026.10-1';
+export const BANK_VERSION = 'dx-2026.10-2'; // -2 (V5): two chain-rule items
 
 const dx = (domain, fields) => item({ domain, ...fields });
 
@@ -74,6 +74,8 @@ export const DX_ITEMS = [
   dx('calculus', { id: 'dx.c4', competency: 'calc.derivative', difficulty: 3, prompt: 'What is the slope of the tangent to $y = x^2$ at $x = 5$?', answer: num(10), compute: () => 2 * 5, solution: 'The derivative $2x$ at 5: 10.' }),
   dx('calculus', { id: 'dx.c5', competency: 'calc.integral', difficulty: 3, prompt: 'What is the area under $y = 2x$ from $x = 0$ to $x = 3$?', answer: num(9), compute: () => 0.5 * 3 * 6, solution: 'A triangle: $\\tfrac12 \\cdot 3 \\cdot 6 = 9$.' }),
   dx('calculus', { id: 'dx.c6', competency: 'calc.integral', difficulty: 3, prompt: 'Compute $\\int_0^2 x^2\\,dx$. (Three decimals.)', answer: num(8 / 3, 0.0006), compute: () => 8 / 3, solution: '$\\tfrac{x^3}{3}\\Big|_0^2 = \\tfrac83$.' }),
+  dx('calculus', { id: 'dx.c7', competency: 'calc.rules', difficulty: 3, prompt: 'If $y = (2x + 1)^2$, what is $\\dfrac{dy}{dx}$ at $x = 1$?', answer: num(12), compute: () => 2 * (2 * 1 + 1) * 2, solution: 'Chain rule: $2(2x + 1) \\cdot 2$, which is 12 at $x = 1$.' }),
+  dx('calculus', { id: 'dx.c8', competency: 'calc.rules', difficulty: 2, prompt: 'A car burns 0.06 litres of fuel per km and drives at 80 km/h. How many litres per hour does it burn?', answer: num(4.8), compute: () => 0.06 * 80, solution: 'Rates multiply: $0.06 \\times 80 = 4.8$ litres per hour.' }),
 
   // ——— Statistics & probability ———
   dx('statistics', { id: 'dx.s1', competency: 'stats.descriptive', difficulty: 1, prompt: 'What is the mean of 4, 8, 6 and 2?', answer: num(5), compute: () => 20 / 4, solution: '$20/4 = 5$.' }),

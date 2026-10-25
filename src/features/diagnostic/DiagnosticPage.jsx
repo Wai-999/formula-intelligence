@@ -73,12 +73,20 @@ function Results({ attempt, onRetake }) {
   const [manual, setManual] = useState(placement?.course ?? attempt.result.course);
   const rec = attempt.result;
   const choice = placementChoices(rec.course);
+  // Attempts saved before V5 have no `evidence` field; they keep their old wording.
+  const thin = rec.evidence === 'insufficient';
   return (
     <div className="studio-section">
       <div className="studio-callout">
-        <p className="studio-eyebrow">Suggested starting point — provisional</p>
+        <p className="studio-eyebrow">{thin ? 'Not enough evidence yet — a default, not a finding' : 'Suggested starting point — provisional'}</p>
         <h2 className="studio-h2">{courseById[rec.course]?.title}</h2>
         <ul className="lesson-ul">{rec.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
+        {thin && (
+          <p className="dx-thin">
+            <button type="button" className="studio-btn" onClick={onRetake}>Answer more questions</button>
+            <span className="studio-muted">Two or more answers per area are needed before the check suggests anything with confidence.</span>
+          </p>
+        )}
         {/* V4 §6: the suggestion is reversible in one click, in either direction. */}
         <div className="studio-row dx-choices" role="group" aria-label="Where to start" style={{ marginTop: 10 }}>
           {choice.earlier && (
@@ -115,7 +123,7 @@ function Results({ attempt, onRetake }) {
             <p className="dx-domain-level">{LEVEL_TEXT[e.level]}</p>
             {e.level !== 'not-assessed' ? (
               <>
-                <p className="studio-muted">{e.correct} of {e.answered} correct · {e.confidence} confidence</p>
+                <p className="studio-muted">{e.correct} of {e.answered} correct · {e.evidence === 'insufficient' ? 'too few answers to judge' : `${e.confidence} confidence`}</p>
                 {/* Ability estimate ± 1 SD on a −3…3 scale: a wide bar means the screen could not tell. */}
                 <div className="dx-range" aria-hidden="true">
                   <span className="dx-range-band" style={{ left: `${Math.max(0, ((e.mean - e.sd + 3) / 6) * 100)}%`, width: `${Math.min(100, ((2 * e.sd) / 6) * 100)}%` }} />

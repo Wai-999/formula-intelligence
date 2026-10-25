@@ -6,6 +6,7 @@ import { useLearningStore } from '../../store/useLearningStore.js';
 import { useDiagnosticStore } from '../../store/useDiagnosticStore.js';
 import { useWorkStore } from '../../store/useWorkStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
+import { useStudyPlanStore } from '../../store/useStudyPlanStore.js';
 import { dueCards } from '../../lib/reviewSchedule.js';
 import { assessAll } from '../../lib/mastery.js';
 import { hashFor } from '../../app/pages.js';
@@ -27,6 +28,50 @@ function nextLesson(placementCourse, lessons) {
     if (id) return { id, course: c.id, fromPlacement: c.id === placementCourse };
   }
   return null;
+}
+
+const BOX_LABEL = { 15: '15 minutes', '30-45': '30–45 minutes', '60-90': '60–90 minutes' };
+
+/**
+ * V5.1 §4: a session sized to the time the learner has today. A plan, not a
+ * quota — every step is a link, the lesson button above stays the one
+ * primary action, and choosing nothing is fine.
+ */
+function SessionPlan({ due, lessonId, project }) {
+  const timebox = useStudyPlanStore((s) => s.timebox);
+  const setTimebox = useStudyPlanStore((s) => s.setTimebox);
+  const lesson = lessonId ? lessonById[lessonId] : null;
+  const review = due.length > 0 && { href: hashFor('practice/review'), text: `Review ${due.length} due skill${due.length > 1 ? 's' : ''} in Practice (about 10 minutes)` };
+  const study = lesson && { href: hashFor('learn/lesson', { lessonId }), text: `Work through “${lesson.title}” (about ${lesson.minutes} minutes)` };
+  const quick = lesson && { href: hashFor('learn/lesson', { lessonId }), text: `Answer the “Try it” questions in “${lesson.title}”` };
+  const apply = { href: hashFor('apply/projects'), text: project ? `Do one step of the project “${project.title}”` : 'Start one step of a real-world project in Apply' };
+  const steps = {
+    15: [review || quick].filter(Boolean),
+    '30-45': [study, review].filter(Boolean),
+    '60-90': [study, review, apply].filter(Boolean),
+  }[timebox] ?? [];
+
+  return (
+    <section className="home-timebox" aria-label="Today's session">
+      <fieldset className="home-timebox-choices">
+        <legend className="studio-eyebrow">How much time do you have today?</legend>
+        {Object.keys(BOX_LABEL).map((b) => (
+          <label key={b} className={timebox === b ? 'on' : ''}>
+            <input type="radio" name="home-timebox" value={b} checked={timebox === b} onChange={() => setTimebox(b)} />
+            {BOX_LABEL[b]}
+          </label>
+        ))}
+      </fieldset>
+      {timebox && (
+        steps.length > 0
+          ? <ol className="home-timebox-steps">{steps.map((s) => <li key={s.text}><a href={s.href}>{s.text}</a></li>)}</ol>
+          : <p className="studio-muted">Nothing is waiting: pick any course in Learn, or a project in Apply.</p>
+      )}
+      <p className="studio-muted home-timebox-note">
+        A rhythm that fits a 30–40 hour work week: three to five short sessions and one longer practical task a week. No streaks and no daily quota — a skipped day costs nothing.
+      </p>
+    </section>
+  );
 }
 
 function FirstRun() {
@@ -113,6 +158,8 @@ export default function HomePage() {
             </>
           ) : <p className="studio-lede">You have completed every written lesson. New lessons will appear in Learn as they are written.</p>}
         </section>
+
+        <SessionPlan due={due} lessonId={primary} project={activeProject} />
 
         <section aria-labelledby="home-summary">
           <h2 id="home-summary" className="studio-eyebrow">At a glance</h2>

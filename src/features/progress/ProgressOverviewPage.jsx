@@ -33,6 +33,31 @@ function Signal({ title, value, detail, help }) {
   );
 }
 
+// V5.1 §13.4: what the evidence behind a skill consists of. Hinted answers are
+// shown, never hidden — hints help learning; they just are not unassisted evidence.
+const BREAKDOWN = [
+  ['attempted', 'Questions attempted'],
+  ['correctWithHints', 'Right after a hint'],
+  ['correctUnassisted', 'Right without a hint'],
+  ['transferUnassisted', 'Unfamiliar problems, no hint'],
+  ['delayedRetrieval', 'Right again on a later day'],
+];
+
+function EvidenceBreakdown({ b }) {
+  return (
+    <>
+      <dl className="prog-breakdown">
+        {BREAKDOWN.map(([k, label]) => (
+          <div key={k}><dt>{label}</dt><dd>{b[k]}</dd></div>
+        ))}
+      </dl>
+      {b.repeatExposures > 0 && (
+        <p className="studio-muted">{b.repeatExposures} of these were questions you had seen before; a repeat counts once, with your latest answer.</p>
+      )}
+    </>
+  );
+}
+
 export default function ProgressOverviewPage() {
   const evidence = useLearningStore((s) => s.evidence);
   const attempts = useDiagnosticStore((s) => s.attempts);
@@ -84,7 +109,9 @@ export default function ProgressOverviewPage() {
                               {LEVEL_LABEL[a.level]} · {a.correctItems} of {a.distinctItems} different questions right
                             </span>
                           </summary>
-                          <ul className="lesson-ul">{a.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
+                          <p className="prog-next"><strong>Next:</strong> {a.nextStep}</p>
+                          <EvidenceBreakdown b={a.breakdown} />
+                          {a.level !== 'mastered' && <ul className="lesson-ul">{a.reasons.map((r) => <li key={r}>{r}</li>)}</ul>}
                         </details>
                       </li>
                     );

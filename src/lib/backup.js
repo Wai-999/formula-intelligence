@@ -97,6 +97,7 @@ export function restoreBackup(backup) {
 // learning over" should not also flip the theme back.
 export const PREFERENCE_KEYS = new Set([
   STORAGE_KEYS.theme, STORAGE_KEYS.motion, STORAGE_KEYS.navPrefs, STORAGE_KEYS.mlModePrefs,
+  STORAGE_KEYS.studyPlan,
 ]);
 
 /**
