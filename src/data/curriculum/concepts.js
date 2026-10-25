@@ -117,6 +117,9 @@ export const CONCEPTS = [
   // Computer Science (C++) — V5
   c('c.cpp-basics', 'C++ types, expressions and input/output', 'computer-science', 'cpp-types-io', ['c.expressions'], 'Typed variables, integer and floating-point arithmetic, and console input and output.'),
   c('c.cpp-loops', 'Loops and tracing in C++', 'computer-science', 'cpp-control', ['c.cpp-basics', 'c.inequalities'], 'Repeating a block while a condition holds, and following every variable step by step.'),
+  c('c.cpp-functions', 'Functions, references and vectors in C++', 'computer-science', 'cpp-functions', ['c.cpp-loops', 'c.functions'], 'Packaging steps under a name; passing by value, by reference and by const reference; storing data in vectors.'),
+  c('c.oop-classes', 'Classes, encapsulation and invariants', 'computer-science', 'oop-classes', ['c.cpp-functions'], 'Data hidden behind member functions that keep a promise about it.'),
+  c('c.object-lifetime', 'Constructors, destructors and object lifetime', 'computer-science', 'oop-lifetime', ['c.oop-classes'], 'When objects are created and destroyed, and how destructors release resources (RAII).'),
 ];
 
 // Non-prerequisite relationships (§7). Direction reads "source TYPE target".

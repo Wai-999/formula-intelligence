@@ -51,6 +51,109 @@ int countBelow(const std::vector<int>& v, int limit) {
       { name: 'negative readings', call: 'countBelow({-3, 0, 5}, 0)', expect: '1' },
     ],
   },
+  {
+    id: 'cpp.average-valid',
+    lesson: 'cpp-functions-vectors',
+    competency: 'cpp.functions',
+    title: 'Average only the valid readings',
+    file: 'average_valid.cpp',
+    prompt: 'A sensor writes −1 when it fails. Write `averageValid(v)`: the mean of the readings that are not negative, or 0.0 when there are none. Take `v` by `const` reference — the function only reads it.',
+    type: 'double',
+    starter: `#include <vector>
+
+// Mean of the non-negative readings in v; 0.0 if there are none.
+double averageValid(const std::vector<double>& v) {
+    double sum = 0.0;
+    int n = 0;
+    // TODO: add up the non-negative readings and count them.
+    (void)v;
+    (void)sum;
+    (void)n;
+    return 0.0;
+}`,
+    solution: `#include <vector>
+
+// Mean of the non-negative readings in v; 0.0 if there are none.
+double averageValid(const std::vector<double>& v) {
+    double sum = 0.0;
+    int n = 0;
+    for (double x : v) {
+        if (x >= 0.0) {
+            sum += x;
+            ++n;
+        }
+    }
+    return n == 0 ? 0.0 : sum / n;
+}`,
+    tests: [
+      { name: 'skips a failed reading', call: 'averageValid({2.0, 4.0, -1.0})', expect: '3.0' },
+      { name: 'no readings at all', call: 'averageValid({})', expect: '0.0' },
+      { name: 'only failed readings', call: 'averageValid({-1.0, -1.0})', expect: '0.0' },
+      { name: 'zero is a valid reading', call: 'averageValid({0.0, 10.0})', expect: '5.0' },
+      { name: 'a single reading', call: 'averageValid({1.5})', expect: '1.5' },
+    ],
+  },
+  {
+    id: 'cpp.inventory-invariant',
+    lesson: 'cpp-classes-invariants',
+    competency: 'cpp.oop',
+    title: 'An inventory that can never go negative',
+    file: 'inventory.cpp',
+    prompt: 'Finish the `Inventory` class so its count can never be negative: the constructor and `add` throw `std::invalid_argument` for negative numbers, and `remove(n)` returns `false` and changes nothing when `n` is negative or more than the stock.',
+    type: 'int',
+    starter: `#include <stdexcept>
+
+// Stock of one product. Invariant (to enforce): count_ is never negative.
+class Inventory {
+public:
+    explicit Inventory(int start) : count_(start) {
+        // TODO: throw std::invalid_argument if start is negative.
+    }
+    bool remove(int n) {
+        // TODO: refuse (return false) when n is negative or larger than count_.
+        count_ -= n;
+        return true;
+    }
+    void add(int n) {
+        // TODO: throw std::invalid_argument if n is negative.
+        count_ += n;
+    }
+    int count() const { return count_; }
+
+private:
+    int count_;
+};`,
+    solution: `#include <stdexcept>
+
+// Stock of one product. Invariant: count_ is never negative.
+class Inventory {
+public:
+    explicit Inventory(int start) : count_(start) {
+        if (start < 0) throw std::invalid_argument("negative starting stock");
+    }
+    bool remove(int n) {
+        if (n < 0 || n > count_) return false;
+        count_ -= n;
+        return true;
+    }
+    void add(int n) {
+        if (n < 0) throw std::invalid_argument("negative delivery");
+        count_ += n;
+    }
+    int count() const { return count_; }
+
+private:
+    int count_;
+};`,
+    tests: [
+      { name: 'remove within the stock', call: '[] { Inventory s(10); s.remove(3); return s.count(); }()', expect: '7' },
+      { name: 'removing more than the stock is refused', call: '[] { Inventory s(5); bool ok = s.remove(8); return ok ? -1 : s.count(); }()', expect: '5' },
+      { name: 'removing a negative amount is refused', call: '[] { Inventory s(5); bool ok = s.remove(-2); return ok ? -1 : s.count(); }()', expect: '5' },
+      { name: 'add, then remove everything', call: '[] { Inventory s(0); s.add(4); s.remove(4); return s.count(); }()', expect: '0' },
+      { name: 'a negative starting stock throws', call: '[] { try { Inventory s(-2); return s.count(); } catch (const std::invalid_argument&) { return -1; } }()', expect: '-1' },
+      { name: 'a negative delivery throws and changes nothing', call: '[] { Inventory s(2); try { s.add(-3); } catch (const std::invalid_argument&) { return s.count(); } return -1; }()', expect: '2' },
+    ],
+  },
 ];
 
 export const cppExerciseById = Object.fromEntries(CPP_EXERCISES.map((e) => [e.id, e]));

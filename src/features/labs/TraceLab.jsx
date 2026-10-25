@@ -83,10 +83,7 @@ export default function TraceLab({ program = 'cafe-total' }) {
           return [n + 1, s.line, ...names.map((k) => vals[k] ?? '—'), s.prints.join(' / ') || ''];
         }),
       }}
-      annotations={[
-        'A for-loop checks its condition before every pass — including the last check, which fails and ends the loop.',
-        'A variable declared in the for-statement (like h) stops existing when the loop ends.',
-      ]}
+      annotations={t.annotations}
       constraints={[
         'This is a replay of the compiled program’s real steps, not a C++ interpreter: you cannot edit the code here.',
         'To change the program, download it, compile it with g++ or clang++, and run it yourself.',
