@@ -8,6 +8,11 @@
 // own tests and every predict-output block prints exactly its stated output.
 //
 // Datasets used here are listed with their provenance in src/data/projects.
+// The six V4 project exercises live in projectExercises.js; the no-code path
+// for these core exercises in noCode.js.
+
+import { PROJECT_EXERCISES } from './projectExercises.js';
+import { NO_CODE } from './noCode.js';
 
 const ANSCOMBE = `x = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
 y1 = [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]
@@ -27,7 +32,7 @@ const BODY = `import numpy as np
 height = np.array([2.0, 0.0, -1.0, 3.0, -4.0])   # centred, cm (synthetic)
 span = np.array([1.0, 1.0, -2.0, 4.0, -4.0])`;
 
-export const PY_EXERCISES = [
+const CORE_EXERCISES = [
   {
     id: 'py.slope-fn',
     type: 'implement',
@@ -315,6 +320,11 @@ export const PY_EXERCISES = [
     hints: ['`eigh` returns eigenvalues in ascending order: the last column is PC1.'],
     packages: ['numpy'],
   },
+];
+
+export const PY_EXERCISES = [
+  ...CORE_EXERCISES.map((e) => (NO_CODE[e.id] ? { ...e, noCode: NO_CODE[e.id] } : e)),
+  ...PROJECT_EXERCISES,
 ];
 
 export const pyExerciseById = Object.fromEntries(PY_EXERCISES.map((e) => [e.id, e]));

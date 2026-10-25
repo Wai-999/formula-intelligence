@@ -117,6 +117,22 @@ const MATH_PATH = [
   { course: 'calculus-1', domain: 'calculus' },
 ];
 
+// The order a learner can step through, for "start earlier / skip ahead"
+// (V4 §6). The mathematics path, continued through the calculus sequence.
+const PLACEMENT_PATH = [...MATH_PATH.map((s) => s.course), 'calculus-2', 'calculus-3'];
+
+/**
+ * The three choices shown with a recommendation: one step earlier, the
+ * recommendation itself, one step ahead. A course off the mathematics path
+ * (ML, statistics, Python) steps back to its first prerequisite and has no
+ * "ahead". Either neighbour is null when there is none.
+ */
+export function placementChoices(course) {
+  const i = PLACEMENT_PATH.indexOf(course);
+  if (i === -1) return { earlier: courseById[course]?.prerequisites?.[0] ?? null, here: course, ahead: null };
+  return { earlier: PLACEMENT_PATH[i - 1] ?? null, here: course, ahead: PLACEMENT_PATH[i + 1] ?? null };
+}
+
 /**
  * A transparent recommendation from domain estimates:
  * { course, reasons: [..], strengths: [..], gaps: [..], alsoConsider: [{ course, why }] }

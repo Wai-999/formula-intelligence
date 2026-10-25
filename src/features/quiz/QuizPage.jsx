@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { CHAPTERS, nodes } from '../../data/index.js';
 import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { useToastStore } from '../../store/useToastStore.js';
-import { fireConfetti } from '../../lib/confetti.js';
 import './QuizPage.css';
 
 const DEFAULT_CARD = { ef: 2.5, interval: 1, reps: 0, due: 0, rating: 0, reviews: 0 };
@@ -84,7 +83,6 @@ export default function QuizPage() {
 
     recordQuizAnswer(isCorrect, nextBest);
 
-    if (isCorrect && nextTotal >= 10 && nextCorrect === nextTotal) fireConfetti();
   }
 
   const stepperPct = Math.min(100, totalCount * 10);
@@ -110,8 +108,6 @@ export default function QuizPage() {
 
       <div className="quiz-score-bar">
         <span>Score: <b>{correctCount}</b> / <b>{totalCount}</b></span>
-        <span>Streak: <b>{streak}</b></span>
-        <span>Best: <b>{best}</b></span>
       </div>
 
       <div className="quiz-stepper"><div className="quiz-stepper-fill" style={{ width: `${stepperPct}%` }} /></div>

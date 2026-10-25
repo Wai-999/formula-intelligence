@@ -23,4 +23,8 @@ export const LABS = {
   'decision-boundary': { title: 'Classification decision boundaries', required: 'classification decision boundaries', load: () => import('./BoundaryLab.jsx') },
   'cross-validation': { title: 'Cross-validation and leakage', required: null, load: () => import('./CrossValidationLab.jsx') },
   calibration: { title: 'Calibration and group error rates', required: null, load: () => import('./CalibrationLab.jsx') },
+  // V4 applied exemplars.
+  'break-even': { title: 'Break-even: revenue against total cost', required: null, load: () => import('./BreakEvenLab.jsx') },
+  'marginal-cost': { title: 'Marginal cost: derivative versus difference quotient', required: null, load: () => import('./MarginalCostLab.jsx') },
+  'matrix-scores': { title: 'Scores as a matrix–vector product', required: null, load: () => import('./MatrixScoresLab.jsx') },
 };

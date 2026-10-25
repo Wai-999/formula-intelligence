@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useRef } from 'react';
 import { useUIStore } from '../../store/useUIStore.js';
-import { pageById, sectionById, pagesInSection, hashFor } from '../../app/pages.js';
+import { pageById, sectionById, pagesInSection, hashFor, isMLPage, tabOf } from '../../app/pages.js';
 import { pageMeta, usePageMetaVersion } from '../../app/pageMeta.js';
 import './PageHeader.css';
 
@@ -33,7 +33,10 @@ export default function PageHeader() {
     headingRef.current?.focus({ preventScroll: true });
   }, [key, meta.title, page]);
 
-  const isML = def?.legacy?.mode === 'ml';
+  const isML = isMLPage(page);
+  // A page reached from a tab (a map behind Maps, a lesson behind Courses)
+  // shows that tab as where you are.
+  const currentTab = tabOf(page);
 
   return (
     <div className="page-header">
@@ -67,10 +70,11 @@ export default function PageHeader() {
         <nav className="section-nav" aria-label={`${sectionById[def.section].label} pages`}>
           <ul>
             {siblings.map((p) => {
-              const active = p.id === page;
+              const active = p.id === currentTab;
+              const exact = p.id === page;
               return (
                 <li key={p.id}>
-                  <a href={hashFor(p.id)} className={`section-nav-link${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>
+                  <a href={hashFor(p.id)} className={`section-nav-link${active ? ' active' : ''}`} aria-current={exact ? 'page' : active ? 'true' : undefined}>
                     {p.title}
                   </a>
                 </li>

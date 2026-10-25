@@ -35,13 +35,19 @@ Tests: `src/lib/__tests__/versioned.test.js` (10: missing; corrupt JSON quaranti
 
 ## Backup, restore, reset — `src/lib/backup.js`
 
-- **Export** (Settings → Privacy, and Progress → Your data): every key this app owns, plus the quarantine, as one JSON file, byte-exact.
+- **Export** (My Progress → Settings → Privacy and your data): every key this app owns, plus the quarantine, as one JSON file, byte-exact.
 - **Import**: validated before anything is written; a confirmation step names what will be replaced; writes are rolled back if storage fills mid-way.
 - **Reset progress**: needs confirmation; takes a backup first and offers it for download; removes learning records only — **preferences survive** (`PREFERENCE_KEYS`: theme, motion, navigation, depth). Tested in `e2e/v31.spec.js` and `backup.test.js`.
 
+## V4 (simplification) — what changed
+
+- **Addresses.** Every V3.1 page id that moved is mapped by `RENAMED` in `src/app/pages.js` (table in `docs/v4/SIMPLIFICATION_PLAN.md`); `#practice/review` now means the new Review page (it was the formula flashcards, which moved to `#practice/formulas/flashcards`).
+- **Learner data.** No key, shape or meaning changes. New evidence records may carry two extra fields, `x` (transfer item) and `h` (hint opened first); older records lack them, and readers treat absence as unknown. A rollback to V3.1 ignores the fields.
+- **Removed features with stored data:** none. The XP/badge panel was removed from Progress, but it computed everything from existing records and stored nothing of its own; the journal's entries are untouched (only its streak message went).
+
 ## Old links
 
-Every pre-upgrade URL still lands somewhere sensible (`src/lib/hashRoute.js`): `#stats/<tab>` and `#ml/<tab>` map to the new `#section/page` ids through each page's `legacy` field; the six retired ML tabs land on their new home with a one-line notice; unknown ids explain themselves. Tested by `e2e/legacy-routes.spec.js` (every legacy hash, plus Back-button behaviour) and `routes.test.js`.
+Every pre-upgrade URL still lands somewhere sensible (`src/lib/hashRoute.js`): `#stats/<tab>` and `#ml/<tab>` map to the current `#section/page` ids through the `LEGACY` table, and V3.1 ids through `RENAMED` (both in `src/app/pages.js`, unit-tested in `src/app/__tests__/pages.test.js`); the six retired ML tabs land on their new home with a one-line notice; unknown ids explain themselves. Tested by `e2e/legacy-routes.spec.js` (every legacy hash, plus Back-button behaviour) and `routes.test.js`.
 
 ## Rolling back a release
 

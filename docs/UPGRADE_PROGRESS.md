@@ -1,8 +1,25 @@
-# Upgrade Progress — Master Prompt V3.1
+# Upgrade Progress
 
-**Current state:** Phases 0–10 code-complete. 20 lessons content-complete, **0 review-complete** (independent human math review BLOCKED). Production release: this branch, once its PR's checks pass and it is merged (owner-authorized: "update the latest version and deploy", "make sure everything in the file is executed and deploy").
-**Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged as `3f6ddcb`) → **`upgrade/v3.1-phases2-10`** (English-only step B + Phases 2–10, one PR), all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign work is untouched (decision D1 still open).
+**Current state (2026-10-24):** V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) implemented on `upgrade/v4-simple-applied`; released when its PR passes CI and is merged (owner: "push and deploy after upgrade"). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
+**Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged `3f6ddcb`) → `upgrade/v3.1-phases2-10` (merged `9c21ac2`) → `fix/entry-banner-wording` (merged `a103f32`) → **`upgrade/v4-simple-applied`**, all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign is untouched (decision D1 still open).
 **Merge/deploy policy:** PRs only; CI runs every gate on the PR; `main` deploys only when the same gates pass again.
+
+## V4 — simple, applied learning
+
+Deliverables (V4 §12), all in `docs/v4/`: [AUDIT](v4/AUDIT.md) · [COURSE_RESEARCH](v4/COURSE_RESEARCH.md) · [SIMPLIFICATION_PLAN](v4/SIMPLIFICATION_PLAN.md) · [CURRICULUM](v4/CURRICULUM.md) · [LESSON_TEMPLATE](v4/LESSON_TEMPLATE.md) · [APPLIED_PROJECTS](v4/APPLIED_PROJECTS.md) · [TEST_REPORT](v4/TEST_REPORT.md). Screenshots: before `docs/audits/evidence/screenshots/v31/`, after `docs/audits/evidence/screenshots/v4/`.
+
+| V4 phase | Done | Evidence | Status |
+|---|---|---|---|
+| 0 Inspect and measure | Live build and code audited; 9 reference courses and 3 datasets verified at source with licences | `AUDIT.md`, `COURSE_RESEARCH.md` | **Done** |
+| 1 Simplify | 7 → **5 destinations** (Home, Learn, Practice, Apply, My Progress); maps behind Learn → Maps + "See connections"; practice and review consolidated; Python under Apply; notebook and settings under My Progress; header depth switch → setting; streaks, badges, confetti removed; every V3.1 and pre-V3.1 address redirects | `pages.test.js`, `legacy-routes.spec.js` (41 addresses, plus rehomed lessons and Back) | **Done** |
+| 2 Lesson model + 3 exemplars | Every lesson in six steps; Break-even, Marginal cost, Scoring customers with 3 new labs | `curriculum.test.js`, `labMath.test.js`, `verify:python` | **Done** — user testing **BLOCKED** |
+| 3 Pathways | Routes documented; placement offers start earlier / here / skip ahead; recommendations unchanged | `CURRICULUM.md`, `diagnostic.test.js` | **Partial**: no new courses (V4 §10 defers expansion until learners have tested the basic loop) |
+| 4 Applied projects | Six projects, 3 real + 3 labelled synthetic datasets, graded steps with no-code paths; learning signals defined and computed per learner | `APPLIED_PROJECTS.md`, `learningSignals.test.js` | **Done** |
+| 5 Polish and expand | — | — | **Not started** by design (V4 §10) |
+
+**Blocked / unverified (stated, not hidden):** independent math review of 23 lessons; user testing of the exemplars and of the five usability tasks with real learners (they pass as scripts); screen-reader testing; Lighthouse and field Core Web Vitals; Pyodide SRI (F-09).
+
+## V3.1 (Master Prompt V3.1, released 2026-10-24)
 
 ## Status vocabulary (§17)
 *Code-complete*: behaviour, tests and docs exist. *Content-complete*: every planned lesson and assessment of a course is authored. *Review-complete*: an independent human reviewer has signed off. *Production-released*: deployed to GitHub Pages and verified there.

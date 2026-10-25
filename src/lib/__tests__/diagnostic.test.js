@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { estimateAbility, assessDomain, nextItem, recommend } from '../diagnostic.js';
+import { estimateAbility, assessDomain, nextItem, recommend, placementChoices } from '../diagnostic.js';
 import { DX_ITEMS, BANK_VERSION } from '../../data/diagnostic/itemBank.js';
 import { DOMAINS, competencyById } from '../../data/curriculum/competencies.js';
 import { checkAnswer } from '../answers.js';
@@ -137,5 +137,23 @@ describe('recommendation', () => {
     expect(r.alsoConsider.map((a) => a.course)).toEqual(expect.arrayContaining(['linear-algebra', 'prob-stats', 'python-ds']));
     const weak = recommend(est({}));
     expect(weak.alsoConsider.map((a) => a.course)).not.toContain('linear-algebra');
+  });
+});
+
+describe('start earlier / start here / skip ahead (V4 §6)', () => {
+  it('offers one step either way along the mathematics path', () => {
+    expect(placementChoices('algebra-2')).toEqual({ earlier: 'algebra-1', here: 'algebra-2', ahead: 'precalculus' });
+    expect(placementChoices('calculus-1')).toEqual({ earlier: 'precalculus', here: 'calculus-1', ahead: 'calculus-2' });
+  });
+
+  it('has no earlier step before Prealgebra and no step past Calculus III', () => {
+    expect(placementChoices('prealgebra').earlier).toBeNull();
+    expect(placementChoices('calculus-3').ahead).toBeNull();
+  });
+
+  it('steps back to the first prerequisite of a course off the path', () => {
+    const c = placementChoices('ml-foundations');
+    expect(c.earlier).toBe('prob-stats');
+    expect(c.ahead).toBeNull();
   });
 });

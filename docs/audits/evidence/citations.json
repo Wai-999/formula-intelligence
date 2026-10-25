@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-24T18:10:03.793Z",
+  "checkedAt": "2026-10-25T00:11:04.255Z",
   "results": [
     {
       "url": "https://openstax.org/books/prealgebra-2e/pages/5-6-ratios-and-rate",
@@ -43,6 +43,17 @@
       "verdict": "OK",
       "citedBy": [
         "lesson pa-equation-balance: Solve Equations Using the Division and Multiplication Properties of Equality (§8.2)"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/7-1-systems-of-linear-equations-two-variables",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/7-1-systems-of-linear-equations-two-variables",
+      "status": 200,
+      "title": "7.1 Systems of Linear Equations: Two Variables - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a1-break-even: 7.1 Systems of Linear Equations: Two Variables — “Using Systems of Equations to Investigate Profits”",
+        "formula f.break-even"
       ]
     },
     {
@@ -130,6 +141,27 @@
       "citedBy": [
         "lesson la-projection: Lecture 15: Projections onto subspaces",
         "formula f.projection"
+      ]
+    },
+    {
+      "url": "https://numpy.org/doc/stable/reference/generated/numpy.matmul.html",
+      "finalUrl": "https://numpy.org/doc/stable/reference/generated/numpy.matmul.html",
+      "status": 200,
+      "title": "numpy.matmul &#8212; NumPy v2.5 Manual",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson la-matrix-scores: numpy.matmul",
+        "formula f.matrix-vector"
+      ]
+    },
+    {
+      "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=ko",
+      "status": 200,
+      "title": "숫자 데이터: 정규화 &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson la-matrix-scores: Numerical data: Normalization"
       ]
     },
     {
@@ -233,6 +265,17 @@
       "verdict": "OK",
       "citedBy": [
         "lesson c1-derivative: Floating-Point Arithmetic: Issues and Limitations"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/calculus-volume-1/pages/3-4-derivatives-as-rates-of-change",
+      "finalUrl": "https://openstax.org/books/calculus-volume-1/pages/3-4-derivatives-as-rates-of-change",
+      "status": 200,
+      "title": "3.4 Derivatives as Rates of Change - Calculus Volume 1 | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson c1-marginal-cost: 3.4 Derivatives as Rates of Change — “Changes in Cost and Revenue”",
+        "formula f.marginal-cost"
       ]
     },
     {
@@ -396,9 +439,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=pt-br",
       "status": 200,
-      "title": "Classification: Accuracy, recall, precision, and related metrics &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Classificação: acurácia, recall, precisão e métricas relacionadas &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: Accuracy, recall, precision, and related metrics"
@@ -406,9 +449,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=uk",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc",
       "status": 200,
-      "title": "Класифікація: ROC й AUC &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Classification: ROC and AUC &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: ROC and AUC"
@@ -475,6 +518,46 @@
       "verdict": "OK",
       "citedBy": [
         "lesson ml-calibration-fairness: Fair prediction with disparate impact"
+      ]
+    },
+    {
+      "url": "https://www.metoffice.gov.uk/hadobs/hadcet/data/download.html",
+      "finalUrl": "https://www.metoffice.gov.uk/hadobs/hadcet/data/download.html",
+      "status": 200,
+      "title": "Met Office Hadley Centre Central England Temperature Data Download",
+      "verdict": "OK",
+      "citedBy": [
+        "dataset ds.cet"
+      ]
+    },
+    {
+      "url": "https://github.com/allisonhorst/palmerpenguins",
+      "finalUrl": "https://github.com/allisonhorst/palmerpenguins",
+      "status": 200,
+      "title": "GitHub - allisonhorst/palmerpenguins: A great intro dataset for data exploration &amp; visualization (alternative to iris). · GitHub",
+      "verdict": "OK",
+      "citedBy": [
+        "dataset ds.penguins"
+      ]
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0090081",
+      "finalUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081",
+      "status": 200,
+      "title": "Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis) | PLOS One",
+      "verdict": "OK",
+      "citedBy": [
+        "dataset ds.penguins (secondary)"
+      ]
+    },
+    {
+      "url": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
+      "finalUrl": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
+      "status": 200,
+      "title": "UCI Machine Learning Repository",
+      "verdict": "OK",
+      "citedBy": [
+        "dataset ds.wdbc"
       ]
     },
     {

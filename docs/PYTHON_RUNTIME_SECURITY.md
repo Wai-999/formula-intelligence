@@ -43,7 +43,11 @@ A Web Worker is **a responsiveness boundary, not a security sandbox**:
 
 `gradePython(exercise, code)` runs, in a **fresh namespace** each time: the exercise's `setup`, then the learner's code, then each named test. A test passes if it raises nothing; an `AssertionError` shows the test's own message as the reason (e.g. "slope((-1, 4), (3, -4)) should be -2 — check the order of subtraction"). Tests compare numbers with tolerances (`math.isclose`, `numpy.allclose`), never printed digits.
 
-`npm run verify:python` runs every exercise's reference solution with real CPython + NumPy and requires all its tests to pass, and runs every **starter** to make sure it fails — an exercise whose starter already passes is a broken exercise. It also runs every lesson's Python block and requires its output to match the "Expected output" printed on the page exactly. Current result: **37/37**. Runs in CI.
+`npm run verify:python` runs every exercise's reference solution with real CPython + NumPy and requires all its tests to pass, and runs every **starter** to make sure it fails — an exercise whose starter already passes is a broken exercise. It also runs every lesson's Python block and requires its output to match the "Expected output" printed on the page exactly, and every exercise's **no-code output** (below) against what the reference solution really prints. Current result: **78/78** (CPython 3 with NumPy and pandas). Runs in CI.
+
+## The no-code path (V4 §8)
+
+Python must not become a barrier to learning the mathematics. Every coding exercise (26 of 29; the other three are already about reading code) offers "Not coding yet? Read the result instead": the reference solution's printed output and a question about what it means. It runs no code in the browser, downloads nothing, and is not recorded as Python evidence. Every exercise can also be downloaded as a `.py` file with its setup and tests, to run locally with `python3`.
 
 ## Offline
 

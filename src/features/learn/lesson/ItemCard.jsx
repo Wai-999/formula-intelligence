@@ -47,6 +47,8 @@ export default function ItemCard({ item, source, index, onFirstAttempt }) {
         ok: r.correct,
         difficulty: hinted ? 1 : item.difficulty,
         transfer: !hinted && item.transfer,
+        transferItem: !!item.transfer,
+        hinted,
         source,
       });
       onFirstAttempt?.(item.id, r.correct);

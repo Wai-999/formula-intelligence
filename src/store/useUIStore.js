@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { ML_TABS } from './useMLUIStore.js';
 import { useToastStore } from './useToastStore.js';
 import { ML_LESSONS } from '../data/ml/lessons.js';
-import { pageById, pageForLegacy, DEFAULT_PAGE } from '../app/pages.js';
+import { pageById, pageForLegacy, legacyOf, DEFAULT_PAGE } from '../app/pages.js';
 import { loadJSON, saveJSON } from '../lib/storage.js';
 import { STORAGE_KEYS } from '../data/storageKeys.js';
 
@@ -70,7 +70,8 @@ function announce(notice) {
 // legacy fields in step so nothing that still reads them is surprised.
 function legacyPatch(mode, tab) {
   const tabField = mode === 'ml' ? { mlActiveTab: tab } : { activeTab: tab };
-  return { mode, ...tabField, page: pageForLegacy(mode, tab) ?? DEFAULT_PAGE, pageParams: {} };
+  const target = pageForLegacy(mode, tab) ?? { page: DEFAULT_PAGE, params: {} };
+  return { mode, ...tabField, page: target.page, pageParams: target.params };
 }
 
 export const useUIStore = create((set, get) => ({
@@ -120,7 +121,7 @@ export const useUIStore = create((set, get) => ({
   /** Navigate to a page of the new information architecture. */
   goTo(pageId, params = {}) {
     const page = pageById[pageId] ? pageId : DEFAULT_PAGE;
-    const legacy = pageById[page].legacy;
+    const legacy = legacyOf(page, params);
     set({
       page,
       pageParams: params,

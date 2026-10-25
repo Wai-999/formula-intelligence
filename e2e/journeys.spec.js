@@ -13,37 +13,21 @@ import { PAGES } from '../src/app/pages.js';
 // Every assertion below is a thing a user would notice.
 
 test.describe('learning loop', () => {
-  test('mastery flows through dashboard, XP, badges and tracks consistently', async ({ page }) => {
+  test('formula mastery reaches My Progress and the formula tracks consistently', async ({ page }) => {
     await openApp(page);
 
     // Baseline: a new learner has nothing anywhere.
     await openPage(page, 'progress/overview');
-    await expect(page.locator(VISIBLE + '.prog-level-num')).toHaveText('1');
-    await expect(page.locator(VISIBLE + '.prog-xp')).toContainText('0');
-    await expect(page.locator(VISIBLE + '.prog-badge.earned')).toHaveCount(0);
+    await expect(page.locator(`${VISIBLE}#prog-formulas + p`)).toContainText('0 of 94 formulas mastered');
 
     await seedMastery(page, 12);
 
-    // 1. The dashboard's own KPI reflects it.
+    // My Progress counts the same mastered formulas the flashcards record.
     await openPage(page, 'progress/overview');
-    const kpis = page.locator(VISIBLE + '.kpi-val');
-    await expect(kpis.nth(1), 'mastered KPI').toHaveText('12');
+    await expect(page.locator(`${VISIBLE}#prog-formulas + p`)).toContainText('12 of 94 formulas mastered');
 
-    // 2. XP is derived from the SAME facts, so it must agree — 12 mastered
-    //    formulas at 50 XP each. A mismatch here means the dashboard and the
-    //    progression panel disagree about the same learner.
-    await expect(page.locator(VISIBLE + '.prog-xp')).toContainText('600');
-    await expect(page.locator(VISIBLE + '.prog-level-num')).toHaveText('4');
-
-    // 3. Badges follow from the same source.
-    const earned = page.locator(VISIBLE + '.prog-badge.earned .prog-badge-name');
-    await expect(earned).toContainText(['First recall']);
-    const names = await earned.allInnerTexts();
-    expect(names).toContain('Ten mastered');
-    expect(names, 'a 24-formula badge must NOT be earned at 12').not.toContain('Quarter of the map');
-
-    // 4. And a persona track, which measures progress by a different code
-    //    path, must land on the same number.
+    // And a persona track, which measures progress by a different code
+    // path, must agree that something is mastered.
     await openPage(page, 'learn/paths');
     const studentCard = page.locator(VISIBLE + '.track-card').first();
     await expect(studentCard.locator('.track-prog')).not.toContainText('0 /');
@@ -54,19 +38,21 @@ test.describe('learning loop', () => {
     await seedMastery(page, 6);
     await page.reload({ waitUntil: 'networkidle' });
     await openPage(page, 'progress/overview');
-    await expect(page.locator(VISIBLE + '.kpi-val').nth(1)).toHaveText('6');
-    await expect(page.locator(VISIBLE + '.prog-xp')).toContainText('300');
+    await expect(page.locator(`${VISIBLE}#prog-formulas + p`)).toContainText('6 of 94 formulas mastered');
   });
 });
 
 test.describe('cross-feature navigation', () => {
   test('a formula deep-links from the Stats map into its Python Hub entry', async ({ page }) => {
     await openApp(page);
-    await openPage(page, 'maps/formulas');
+    await openPage(page, 'learn/formulas');
 
     // Researcher depth is what exposes the link, and it loads the Hub corpus
-    // on demand — the lazy path added in 02494bb.
-    await page.locator('.app-header .depth-btn:has-text("Researcher")').click();
+    // on demand — the lazy path added in 02494bb. Since V4 the depth is a
+    // setting (Settings → Learning), not a header switch.
+    await openPage(page, 'progress/settings');
+    await page.getByRole('radio', { name: /Researcher/ }).check();
+    await openPage(page, 'learn/formulas');
     await page.locator('circle.gnode-circle').nth(20).click({ force: true });
     await expect(page.locator(VISIBLE + '.detail-panel.open')).toBeVisible();
     await expect(page.locator(VISIBLE + '.detail-deep')).toBeVisible({ timeout: 10_000 });
@@ -75,7 +61,7 @@ test.describe('cross-feature navigation', () => {
     await page.locator(VISIBLE + '.detail-deep .detail-bridge-btn').click();
     await page.waitForTimeout(900);
 
-    // The Hub is a different page (Practice → Python) and may never have been mounted.
+    // The Hub is a different page (Apply → Python library) and may never have been mounted.
     const openEntry = page.locator(VISIBLE + '.pyentry.open .pyentry-name').first();
     await expect(openEntry).toHaveText(formulaName);
   });
@@ -172,10 +158,10 @@ test.describe('resilience', () => {
 
   test('keep-alive preserves a page\'s state across a round trip', async ({ page }) => {
     await openApp(page);
-    await openPage(page, 'maps/formulas');
+    await openPage(page, 'learn/formulas');
     await page.locator('.app-main input[placeholder*="Search"]').first().fill('variance');
-    await openPage(page, 'notebook/journal');
-    await openPage(page, 'maps/formulas');
+    await openPage(page, 'progress/notebook');
+    await openPage(page, 'learn/formulas');
     await expect(page.locator('.app-main input[placeholder*="Search"]').first()).toHaveValue('variance');
   });
 
@@ -205,7 +191,7 @@ test.describe('python execution', () => {
 
   test('@heavy a sample runs, an unrunnable one explains itself, and the Lab keeps edits', async ({ page }) => {
     await openApp(page);
-    await openPage(page, 'practice/python');
+    await openPage(page, 'apply/library');
 
     // 1. A sample that can run, does — with real captured stdout.
     await page.locator(VISIBLE + '.pyentry-header', { hasText: 'Sample Mean' }).first().click();
@@ -225,14 +211,14 @@ test.describe('python execution', () => {
 
     // 3. The Lab runs code the user wrote and keeps it across a reload.
     //    The runtime is already warm here, which is the point.
-    await openPage(page, 'projects/lab');
+    await openPage(page, 'apply/lab');
     await page.locator(VISIBLE + '.pylab-editor').fill('print("journey test", 6 * 7)');
     await page.locator(VISIBLE + '.pylab-run').click();
     await expect(page.locator(VISIBLE + '.pylab-out-body'))
       .toContainText('journey test 42', { timeout: 150_000 });
 
     await page.reload({ waitUntil: 'networkidle' });
-    await openPage(page, 'projects/lab');
+    await openPage(page, 'apply/lab');
     await expect(page.locator(VISIBLE + '.pylab-editor')).toHaveValue(/journey test/);
   });
 });

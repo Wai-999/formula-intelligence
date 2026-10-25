@@ -80,6 +80,7 @@ export const COMPETENCIES = [
   { id: 'py.collections', domain: 'python', title: 'Use lists and dictionaries' },
   { id: 'py.numpy', domain: 'python', title: 'Compute with NumPy arrays and broadcasting' },
   { id: 'py.debugging', domain: 'python', title: 'Find and fix a bug from an error message' },
+  { id: 'py.data', domain: 'python', title: 'Clean, summarize and chart a real dataset with pandas' },
 ];
 
 export const competencyById = Object.fromEntries(COMPETENCIES.map((c) => [c.id, c]));

@@ -45,19 +45,19 @@ export function buildIndex() {
     out.push(entry('page', p.id, p.title, p.section ? p.section[0].toUpperCase() + p.section.slice(1) : 'App', [p.id], { page: p.id }));
   }
   for (const n of nodes) {
-    out.push(entry('formula', n.id, n.name, `${n.formula ?? n.short ?? ''} · ${chapterTitle[n.ch] ?? `Chapter ${n.ch}`}`, [n.desc, n.use, ...(n.tags ?? [])], { page: 'maps/formulas', formula: n.id }));
+    out.push(entry('formula', n.id, n.name, `${n.formula ?? n.short ?? ''} · ${chapterTitle[n.ch] ?? `Chapter ${n.ch}`}`, [n.desc, n.use, ...(n.tags ?? [])], { page: 'learn/formulas', formula: n.id }));
   }
   for (const m of ML_MODELS) {
-    out.push(entry('model', m.id, m.name, m.short ?? 'Model map', [resolveT(m.howItWorks, 'beginner'), resolveT(m.usageAreas, 'beginner')], { page: 'maps/models', model: m.id }));
+    out.push(entry('model', m.id, m.name, m.short ?? 'Model map', [resolveT(m.howItWorks, 'beginner'), resolveT(m.usageAreas, 'beginner')], { page: 'learn/models', model: m.id }));
   }
   for (const l of ML_LESSONS) {
     out.push(entry('lesson', `ml-${l.id}`, l.title, 'Machine Learning · ML pipeline', [l.summary, ...(l.topics ?? [])], { page: 'learn/ml', mlLesson: l.id }));
   }
   for (const x of PY_EXERCISES.filter((e) => !e.project)) {
-    out.push(entry('exercise', x.id, x.title, 'Practice · Code exercises', [x.prompt, x.type], { page: 'practice/code' }));
+    out.push(entry('exercise', x.id, x.title, 'Practice · Code exercises', [x.prompt, x.type], { page: 'apply/exercises' }));
   }
   for (const pr of PROJECTS) {
-    out.push(entry('project', pr.id, pr.title, 'Projects', [pr.summary], { page: 'projects/list' }));
+    out.push(entry('project', pr.id, pr.title, 'Projects', [pr.summary], { page: 'apply/projects' }));
   }
   for (const e of curriculumEntries()) {
     out.push(entry(e.kind, e.id, e.title, e.subtitle, e.keywords, e.target));

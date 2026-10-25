@@ -156,14 +156,13 @@ async function main() {
     await scan(`learn/ml#lesson:${lesson.id}`);
   }
 
-  // Phone layout: the bottom bar and its More sheet only exist below 768 px.
+  // Phone layout: the bottom bar only exists below 768 px. (V4 removed the
+  // More sheet: all five destinations fit in the bar.)
   await page.setViewportSize({ width: 375, height: 760 });
   await open(hashFor('home'));
   await scan('phone/home');
-  await page.getByRole('button', { name: 'More' }).click();
-  await page.waitForTimeout(250);
-  await scan('phone/more-sheet');
-  await page.keyboard.press('Escape');
+  await open(hashFor('learn/lesson', { lessonId: 'a1-break-even' }));
+  await scan('phone/lesson');
 
   await browser.close();
 

@@ -1,5 +1,5 @@
 {
-  "measured": "2026-10-24T19:09:09.585Z",
+  "measured": "2026-10-25T00:19:08.321Z",
   "kind": "LAB ONLY — not field Core Web Vitals",
   "browser": "Chromium 151.0.7922.34 (Playwright, headless)",
   "device": "darwin arm64, 4× CPU slowdown",
@@ -22,90 +22,18 @@
       "page": "Home (new learner)",
       "hash": "#home",
       "cold": {
-        "fcp": 960,
-        "lcp": 2248,
+        "fcp": 956,
+        "lcp": 1328,
         "cls": 0,
         "tbt": 0,
         "longTasks": 0,
         "longestTask": 0,
-        "load": 878,
-        "transferKB": 222
-      },
-      "warm": {
-        "fcp": 52,
-        "lcp": 356,
-        "cls": 0,
-        "tbt": 0,
-        "longTasks": 0,
-        "longestTask": 0,
-        "load": 30,
-        "transferKB": 2
-      }
-    },
-    {
-      "page": "Courses",
-      "hash": "#learn/courses",
-      "cold": {
-        "fcp": 968,
-        "lcp": 1348,
-        "cls": 0,
-        "tbt": 0,
-        "longTasks": 0,
-        "longestTask": 0,
-        "load": 886,
-        "transferKB": 132
+        "load": 873,
+        "transferKB": 134
       },
       "warm": {
         "fcp": 56,
-        "lcp": 356,
-        "cls": 0,
-        "tbt": 0,
-        "longTasks": 0,
-        "longestTask": 0,
-        "load": 34,
-        "transferKB": 2
-      }
-    },
-    {
-      "page": "Lesson: Slope as rate of change",
-      "hash": "#learn/lesson/a1-slope",
-      "cold": {
-        "fcp": 960,
-        "lcp": 2524,
-        "cls": 0,
-        "tbt": 0,
-        "longTasks": 0,
-        "longestTask": 0,
-        "load": 879,
-        "transferKB": 256
-      },
-      "warm": {
-        "fcp": 64,
-        "lcp": 416,
-        "cls": 0,
-        "tbt": 0,
-        "longTasks": 0,
-        "longestTask": 0,
-        "load": 35,
-        "transferKB": 2
-      }
-    },
-    {
-      "page": "Formula map",
-      "hash": "#maps/formulas",
-      "cold": {
-        "fcp": 968,
-        "lcp": 968,
-        "cls": 0,
-        "tbt": 0,
-        "longTasks": 0,
-        "longestTask": 0,
-        "load": 885,
-        "transferKB": 159
-      },
-      "warm": {
-        "fcp": 56,
-        "lcp": 56,
+        "lcp": 352,
         "cls": 0,
         "tbt": 0,
         "longTasks": 0,
@@ -115,26 +43,98 @@
       }
     },
     {
-      "page": "Code exercises (Python not started)",
-      "hash": "#practice/code",
+      "page": "Courses",
+      "hash": "#learn/courses",
       "cold": {
         "fcp": 960,
-        "lcp": 2164,
+        "lcp": 1356,
         "cls": 0,
         "tbt": 0,
         "longTasks": 0,
         "longestTask": 0,
-        "load": 879,
-        "transferKB": 212
+        "load": 874,
+        "transferKB": 132
       },
       "warm": {
-        "fcp": 52,
-        "lcp": 360,
+        "fcp": 56,
+        "lcp": 356,
         "cls": 0,
         "tbt": 0,
         "longTasks": 0,
         "longestTask": 0,
-        "load": 31,
+        "load": 33,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Lesson: Slope as rate of change",
+      "hash": "#learn/lesson/a1-slope",
+      "cold": {
+        "fcp": 960,
+        "lcp": 2532,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 874,
+        "transferKB": 258
+      },
+      "warm": {
+        "fcp": 68,
+        "lcp": 416,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 36,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Formula map",
+      "hash": "#learn/formulas",
+      "cold": {
+        "fcp": 956,
+        "lcp": 956,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 874,
+        "transferKB": 159
+      },
+      "warm": {
+        "fcp": 60,
+        "lcp": 60,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 38,
+        "transferKB": 2
+      }
+    },
+    {
+      "page": "Code exercises (Python not started)",
+      "hash": "#apply/exercises",
+      "cold": {
+        "fcp": 960,
+        "lcp": 2200,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 874,
+        "transferKB": 227
+      },
+      "warm": {
+        "fcp": 72,
+        "lcp": 372,
+        "cls": 0,
+        "tbt": 0,
+        "longTasks": 0,
+        "longestTask": 0,
+        "load": 42,
         "transferKB": 2
       }
     }

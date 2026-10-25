@@ -14,7 +14,7 @@ export const SHORTCUTS = [
   { keys: ['⌘/Ctrl', 'K'], label: 'Search lessons, formulas, models and pages', group: 'General' },
   { keys: ['/'], label: 'Focus the search box on this page', group: 'General' },
   { keys: ['f'], label: 'Focus mode: hide the navigation while you study', group: 'General' },
-  { keys: ['1', '–', '7'], label: 'Home, Learn, Maps, Practice, Projects, Progress, Notebook', group: 'Navigation' },
+  { keys: ['1', '–', '5'], label: 'Home, Learn, Practice, Apply, My Progress', group: 'Navigation' },
   { keys: ['['], label: 'Previous page in this section', group: 'Navigation' },
   { keys: [']'], label: 'Next page in this section', group: 'Navigation' },
   { keys: ['⌘/Ctrl', 'Enter'], label: 'Run the code (Python Lab)', group: 'Python' },
@@ -52,7 +52,7 @@ export function matchShortcut(event) {
     case '[': return 'prevPage';
     case ']': return 'nextPage';
     default:
-      if (/^[1-7]$/.test(event.key)) return `section:${Number(event.key) - 1}`;
+      if (/^[1-5]$/.test(event.key)) return `section:${Number(event.key) - 1}`;
       return null;
   }
 }

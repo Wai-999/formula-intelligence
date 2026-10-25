@@ -47,7 +47,7 @@ export default function CoursePage({ courseId }) {
             <p className="studio-muted">
               Comes after: {course.prerequisites.map((p, i) => (
                 <span key={p}>{i > 0 && ', '}<a href={hashFor('learn/course', { courseId: p })}>{courseById[p].title}</a></span>
-              ))}. Not sure you are ready? <a href={hashFor('progress/diagnostic')}>Take the diagnostic</a> — or start here anyway; nothing is locked.
+              ))}. Not sure you are ready? <a href={hashFor('learn/placement')}>Take the placement check</a> — or start here anyway; nothing is locked.
             </p>
           )}
           <div className="studio-row">
@@ -86,7 +86,7 @@ export default function CoursePage({ courseId }) {
                       <h3 className="studio-h3" style={{ marginTop: 10 }}>Builds on</h3>
                       <p className="studio-muted">
                         {u.prerequisites.map((p, i) => (
-                          <span key={p}>{i > 0 && ', '}<a href={hashFor('maps/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></span>
+                          <span key={p}>{i > 0 && ', '}<a href={hashFor('learn/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></span>
                         ))}
                       </p>
                     </>

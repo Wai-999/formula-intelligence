@@ -1,12 +1,11 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { useUIStore } from '../../store/useUIStore.js';
 import { initHashSync } from '../../lib/hashRoute.js';
-import { pageById, hashFor } from '../../app/pages.js';
+import { isMLPage, hashFor } from '../../app/pages.js';
 import PrimaryNav from './PrimaryNav.jsx';
 import BottomNav from './BottomNav.jsx';
 import PageHeader from './PageHeader.jsx';
 import PageHost from './PageHost.jsx';
-import DepthToggle from './DepthToggle.jsx';
 import ThemeToggle from './ThemeToggle.jsx';
 import ShortcutsOverlay from './ShortcutsOverlay.jsx';
 import SearchDialog from '../search/SearchDialog.jsx';
@@ -21,17 +20,21 @@ const EntryMisconceptionBanner = lazy(() => import('../ml/learning/EntryMisconce
 const IS_MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
 /**
- * The V3.1 shell (§3, §10): header with search, depth, theme and settings;
- * seven primary sections as a sidebar, rail or bottom bar depending on width;
+ * The shell: a header with search, focus mode, theme and settings; five
+ * destinations (V4 §3) as a sidebar, rail or bottom bar depending on width;
  * one page header with the page's only <h1>; and the page itself.
+ *
+ * The beginner/researcher depth switch left the header in V4: it is a
+ * setting (Settings → Learning), and lessons put derivations behind
+ * "Go deeper" instead.
  */
 export default function AppShell() {
   const page = useUIStore((s) => s.page);
   const focusMode = useUIStore((s) => s.focusMode);
   const toggleFocusMode = useUIStore((s) => s.toggleFocusMode);
   const setSearchOpen = useUIStore((s) => s.setSearchOpen);
-  const { helpOpen, openHelp, closeHelp } = useGlobalShortcuts();
-  const isML = pageById[page]?.legacy?.mode === 'ml';
+  const { helpOpen, closeHelp } = useGlobalShortcuts();
+  const isML = isMLPage(page);
 
   useEffect(() => initHashSync(), []);
 
@@ -51,7 +54,6 @@ export default function AppShell() {
           <kbd aria-hidden="true">{IS_MAC ? '⌘K' : 'Ctrl K'}</kbd>
         </button>
         <div className="app-header-spacer" />
-        <div className="app-header-depth"><DepthToggle /></div>
         <button
           type="button"
           className="header-icon-btn"
@@ -64,7 +66,7 @@ export default function AppShell() {
           <i className={`ti ${focusMode ? 'ti-arrows-minimize' : 'ti-arrows-maximize'}`} aria-hidden="true" />
         </button>
         <ThemeToggle />
-        <a className="header-icon-btn app-header-settings" href={hashFor('settings')} title="Settings" aria-label="Settings" aria-current={page === 'settings' ? 'page' : undefined}>
+        <a className="header-icon-btn app-header-settings" href={hashFor('progress/settings')} title="Settings" aria-label="Settings" aria-current={page === 'progress/settings' ? 'page' : undefined}>
           <i className="ti ti-settings" aria-hidden="true" />
         </a>
       </header>
@@ -76,7 +78,7 @@ export default function AppShell() {
           <PageHost />
         </main>
       </div>
-      <BottomNav onShowShortcuts={openHelp} />
+      <BottomNav />
       <ToastStack />
       <SearchDialog />
       <ShortcutsOverlay open={helpOpen} onClose={closeHelp} />

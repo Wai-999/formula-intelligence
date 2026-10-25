@@ -2,6 +2,7 @@ import { useThemeStore } from '../../store/useThemeStore.js';
 import { useMLUIStore } from '../../store/useMLUIStore.js';
 import { SHORTCUTS } from '../../lib/shortcuts.js';
 import BackupPanel from '../dashboard/BackupPanel.jsx';
+import { hashFor } from '../../app/pages.js';
 import '../../styles/studio.css';
 import './SettingsPage.css';
 
@@ -17,8 +18,8 @@ const MOTION_CHOICES = [
 ];
 
 const DEPTH_CHOICES = [
-  { id: 'beginner', label: 'Beginner', hint: 'Plain-language explanations first.' },
-  { id: 'researcher', label: 'Researcher', hint: 'Technical explanations with notation and assumptions up front.' },
+  { id: 'beginner', label: 'Beginner (recommended)', hint: 'Plain-language explanations first. Lessons keep derivations behind “Go deeper”, so nothing is hidden for good.' },
+  { id: 'researcher', label: 'Researcher', hint: 'Technical explanations with notation and assumptions up front, in the machine-learning pages and model ladders.' },
 ];
 
 function Choices({ legend, name, choices, value, onChange }) {
@@ -65,10 +66,10 @@ export default function SettingsPage() {
         </section>
 
         <section className="studio-section" aria-labelledby="set-privacy">
-          <h2 id="set-privacy" className="studio-h2">Privacy</h2>
+          <h2 id="set-privacy" className="studio-h2">Privacy and your data</h2>
           <div className="studio-read studio-muted settings-privacy">
             <p>
-              Everything you do here — progress, diagnostic answers, notes, code — is stored only in this browser on
+              Everything you do here — progress, placement answers, notes, code — is stored only in this browser on
               this device. Nothing is sent to a server, there is no account, and there is no analytics or tracking.
             </p>
             <p>
@@ -83,7 +84,7 @@ export default function SettingsPage() {
           <h2 id="set-offline" className="studio-h2">Offline use</h2>
           <div className="studio-read studio-muted settings-privacy">
             <p>
-              After one visit with a connection, the whole app — lessons, labs, maps, practice, the diagnostic, notes and
+              After one visit with a connection, the whole app — lessons, labs, maps, practice, the placement check, notes and
               progress — keeps working without one. You can also install it from your browser’s menu.
             </p>
             <p>
@@ -92,6 +93,15 @@ export default function SettingsPage() {
               a connection too.
             </p>
           </div>
+        </section>
+
+        <section className="studio-section" aria-labelledby="set-sources">
+          <h2 id="set-sources" className="studio-h2">Where the content comes from</h2>
+          <p className="studio-muted studio-read">
+            Every figure and dataset says whether it is real or illustrative, and cites its source. The full list, with licences,
+            is on <a href={hashFor('sources')}>Sources &amp; data provenance</a>. Lessons are drafts awaiting independent
+            mathematical review, and say so.
+          </p>
         </section>
 
         <section className="studio-section" aria-labelledby="set-keys">

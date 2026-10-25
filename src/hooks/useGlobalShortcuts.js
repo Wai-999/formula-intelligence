@@ -3,7 +3,7 @@ import { useUIStore } from '../store/useUIStore.js';
 import { useMLUIStore } from '../store/useMLUIStore.js';
 import { useThemeStore } from '../store/useThemeStore.js';
 import { matchShortcut, findSearchInput } from '../lib/shortcuts.js';
-import { SECTIONS, pageById, pagesInSection, sectionHome } from '../app/pages.js';
+import { SECTIONS, pageById, pagesInSection, sectionHome, tabOf } from '../app/pages.js';
 
 /**
  * Wires the shortcut table to the app. Lives at the shell so it works on
@@ -38,8 +38,8 @@ export function useGlobalShortcuts() {
         // "clear my selection", so one press never does two things.
         if (helpOpen) { setHelpOpen(false); return; }
         if (event.target?.blur && event.target !== document.body) event.target.blur();
-        if (ui.page === 'maps/formulas' && ui.selectedNodeId) ui.selectNode(null);
-        else if (ui.page === 'maps/models' && useMLUIStore.getState().selectedModelId) useMLUIStore.getState().selectModel(null);
+        if (ui.page === 'learn/formulas' && ui.selectedNodeId) ui.selectNode(null);
+        else if (ui.page === 'learn/models' && useMLUIStore.getState().selectedModelId) useMLUIStore.getState().selectModel(null);
         return;
       }
 
@@ -64,7 +64,8 @@ export function useGlobalShortcuts() {
         const pages = sectionId ? pagesInSection(sectionId) : [];
         if (pages.length < 2) return;
         event.preventDefault();
-        const index = Math.max(0, pages.findIndex((p) => p.id === ui.page));
+        // A page behind a tab (a map behind Maps) counts as that tab.
+        const index = Math.max(0, pages.findIndex((p) => p.id === tabOf(ui.page)));
         const step = action === 'prevPage' ? -1 : 1;
         ui.goTo(pages[(index + step + pages.length) % pages.length].id);
       }

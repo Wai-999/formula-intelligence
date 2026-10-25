@@ -14,7 +14,7 @@ test.describe('python worker', () => {
   });
 
   test('@heavy an infinite loop is stopped, the page stays responsive, and Python recovers', async ({ page }) => {
-    await page.goto('./#projects/lab', { waitUntil: 'networkidle' });
+    await page.goto('./#apply/lab', { waitUntil: 'networkidle' });
     const editor = page.locator(VISIBLE + '.pylab-editor');
 
     // Warm the runtime first, so the timing below measures the loop, not the download.
@@ -49,7 +49,7 @@ test.describe('python worker', () => {
   });
 
   test('@heavy a graded exercise reports per-check results with tolerance', async ({ page }) => {
-    await page.goto('./#practice/code', { waitUntil: 'networkidle' });
+    await page.goto('./#apply/exercises', { waitUntil: 'networkidle' });
     const ex = page.locator(VISIBLE + '.code-ex').filter({ hasText: 'Write a slope function' });
     const editor = ex.locator('textarea');
     // A wrong answer first: the checks say what failed.
@@ -65,8 +65,18 @@ test.describe('python worker', () => {
     expect(saved.results['py.slope-fn'].passed).toBe(true);
   });
 
+  test('@heavy a project step with real data and pandas grades in the browser (V4 §7)', async ({ page }) => {
+    await page.goto('./#apply/projects', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Clean a public dataset and tell its story' }).click();
+    const ex = page.locator(VISIBLE + '.code-ex').filter({ hasText: 'Penguins: missing values' });
+    await ex.locator('textarea').fill('missing = df.isna().sum().to_dict()\nclean = df.dropna(subset=MEASURES)\n');
+    await ex.getByRole('button', { name: 'Check my code' }).click();
+    // pandas is a further download on top of Python itself.
+    await expect(ex).toContainText('All checks passed.', { timeout: 220_000 });
+  });
+
   test('@heavy importing a package outside the allowlist fails clearly, without a network fetch', async ({ page }) => {
-    await page.goto('./#projects/lab', { waitUntil: 'networkidle' });
+    await page.goto('./#apply/lab', { waitUntil: 'networkidle' });
     await page.locator(VISIBLE + '.pylab-editor').fill('import requests');
     await page.locator(VISIBLE + '.pylab-run').filter({ hasText: 'Run' }).click();
     await expect(page.locator(VISIBLE + '.pylab-out-err')).toContainText('only the standard library and', { timeout: 180_000 });

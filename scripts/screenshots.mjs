@@ -11,19 +11,19 @@ import { join } from 'node:path';
 import { hashFor } from '../src/app/pages.js';
 import { startPreview } from './lib/preview.mjs';
 
-const OUT = 'docs/audits/evidence/screenshots/v31';
+const OUT = process.env.SHOT_DIR || 'docs/audits/evidence/screenshots/v4';
 const WIDTHS = [{ w: 320, h: 720 }, { w: 768, h: 1024 }, { w: 1280, h: 800 }];
 const SHOTS = [
   ['home', hashFor('home')],
   ['courses', hashFor('learn/courses')],
-  ['lesson-a1-slope', hashFor('learn/lesson', { lessonId: 'a1-slope' })],
-  ['lesson-la-matrix-transform', hashFor('learn/lesson', { lessonId: 'la-matrix-transform' })],
-  ['concept-map', hashFor('maps/concepts')],
-  ['formula-map', hashFor('maps/formulas')],
-  ['mixed-practice', hashFor('practice/mixed')],
-  ['code-exercises', hashFor('practice/code')],
-  ['diagnostic', hashFor('progress/diagnostic')],
-  ['settings', hashFor('settings')],
+  ['lesson-a1-break-even', hashFor('learn/lesson', { lessonId: 'a1-break-even' })],
+  ['lesson-c1-marginal-cost', hashFor('learn/lesson', { lessonId: 'c1-marginal-cost' })],
+  ['lesson-la-matrix-scores', hashFor('learn/lesson', { lessonId: 'la-matrix-scores' })],
+  ['maps', hashFor('learn/maps')],
+  ['review', hashFor('practice/review')],
+  ['projects', hashFor('apply/projects')],
+  ['placement', hashFor('learn/placement')],
+  ['progress', hashFor('progress/overview')],
 ];
 
 const { base, stop } = await startPreview(process.env.SHOT_PORT || 4325);

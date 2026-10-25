@@ -43,9 +43,16 @@ export async function openPage(page, pageId) {
     await primary.getByRole('link', { name: sectionById[def.section].label, exact: true }).click();
     const home = sectionHome(def.section);
     await expect(page.locator('h1.page-title')).toHaveText(pageById[home].title);
-    if (home !== pageId) {
+    // A page behind a tab (a map behind Maps, the library behind the Python
+    // lab) is reached through that tab's page, as a learner would.
+    const tab = def.parent ?? pageId;
+    if (home !== tab) {
       const sub = page.getByRole('navigation', { name: `${sectionById[def.section].label} pages` });
-      await sub.getByRole('link', { name: def.title, exact: true }).click();
+      await sub.getByRole('link', { name: pageById[tab].title, exact: true }).click();
+      await expect(page.locator('h1.page-title')).toHaveText(pageById[tab].title);
+    }
+    if (tab !== pageId) {
+      await page.locator(`${VISIBLE}a`, { hasText: def.title }).first().click();
     }
   }
   await expect(page.locator('h1.page-title')).toHaveText(def.title);
@@ -59,7 +66,7 @@ export async function openPage(page, pageId) {
  * own bound data so the seed can never drift from the content.
  */
 export async function seedMastery(page, count) {
-  await openPage(page, 'maps/formulas');
+  await openPage(page, 'learn/formulas');
   await page.locator('g.gnode').first().waitFor({ state: 'attached' });
   const seeded = await page.evaluate((n) => {
     const ids = [...document.querySelectorAll('g.gnode')]

@@ -17,7 +17,7 @@ describe('useKeepAlive', () => {
   });
 
   it('keeps the pages you are moving between', () => {
-    expect(run(['home', 'maps/formulas', 'home', 'maps/formulas'])).toEqual(['home', 'maps/formulas']);
+    expect(run(['home', 'learn/formulas', 'home', 'learn/formulas'])).toEqual(['home', 'learn/formulas']);
   });
 
   it('drops the least recently seen page past the limit', () => {

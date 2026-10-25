@@ -24,7 +24,7 @@ test.describe('home and first run', () => {
   test('a new learner sees three ways to start, with one primary action', async ({ page }) => {
     await page.goto('./#home', { waitUntil: 'networkidle' });
     await expect(page.getByRole('heading', { name: 'Where would you like to start?' })).toBeVisible();
-    await expect(page.locator('a.home-option.primary')).toContainText('Take the diagnostic');
+    await expect(page.locator('a.home-option.primary')).toContainText('Take the placement check');
     await expect(page.getByRole('button', { name: /Start from Prealgebra/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Explore first/ })).toBeVisible();
     await expect(page.locator('.home-option.primary')).toHaveCount(1);
@@ -46,7 +46,7 @@ test.describe('lessons', () => {
     await page.setViewportSize({ width: 320, height: 700 });
     await page.goto(`./${hashFor('learn/lesson', { lessonId: 'a1-slope' })}`, { waitUntil: 'networkidle' });
     await expect(page.locator('h1.page-title')).toHaveText('Slope as rate of change');
-    const checkpoint = page.locator(VISIBLE + '[data-section="checkpoint"]');
+    const checkpoint = page.locator(VISIBLE + '[data-section="check"]');
     // Item 1: numeric. Focus the field by keyboard: Tab from the section heading.
     await checkpoint.locator('h2').focus();
     await page.keyboard.press('Tab');
@@ -104,8 +104,8 @@ test.describe('lessons', () => {
 
 test.describe('diagnostic', () => {
   test('adapts, can be stopped, reports uncertainty and reasons, and can be overridden', async ({ page }) => {
-    await page.goto('./#progress/diagnostic', { waitUntil: 'networkidle' });
-    await page.getByRole('button', { name: 'Start the diagnostic' }).click();
+    await page.goto('./#learn/placement', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Start the placement check' }).click();
     // Skip one area entirely, answer a few, then stop early.
     await page.getByRole('button', { name: /I haven’t studied/ }).click();
     for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Skip this question' }).click();
@@ -114,6 +114,10 @@ test.describe('diagnostic', () => {
     await expect(page.getByText(/not a placement test, a grade, or an official/)).toBeVisible();
     await expect(page.locator('.dx-domain').first()).toBeVisible();
     await expect(page.getByText('Not assessed').first()).toBeVisible();
+    // V4 §6: the suggestion comes with a one-click way to start earlier.
+    const where = page.getByRole('group', { name: 'Where to start' });
+    await expect(where.getByRole('link', { name: /^Start here:/ })).toBeVisible();
+    expect(await where.getByRole('link', { name: /^(Start earlier|Skip ahead):/ }).count()).toBeGreaterThan(0);
     await page.getByLabel('Choose your own starting point instead').selectOption('linear-algebra');
     await page.getByRole('button', { name: 'Use this' }).click();
     await expect(page.getByText(/Current starting point: Linear Algebra \(your choice\)/)).toBeVisible();
@@ -128,13 +132,13 @@ test.describe('diagnostic', () => {
 
 test.describe('practice', () => {
   test('mixed practice unlocks with two subjects and alternates between them (D2)', async ({ page }) => {
-    await page.goto(`./${hashFor('practice/mixed')}`, { waitUntil: 'networkidle' });
+    await page.goto(`./${hashFor('practice/review')}`, { waitUntil: 'networkidle' });
     await expect(page.getByRole('heading', { name: 'Open lessons from two subjects first' })).toBeVisible();
     await page.goto(`./${hashFor('learn/lesson', { lessonId: 'a1-slope' })}`);
     await expect(page.locator('h1.page-title')).toHaveText('Slope as rate of change');
     await page.goto(`./${hashFor('learn/lesson', { lessonId: 'la-dot-product' })}`);
     await expect(page.locator('h1.page-title')).toContainText('dot product');
-    await page.goto(`./${hashFor('practice/mixed')}`);
+    await page.goto(`./${hashFor('practice/review')}`);
     const label = page.locator('#mixed-q');
     await expect(label).toContainText('Question 1 of 6');
     const subjectAt = async () => (await label.textContent()).split('·')[1].trim();
@@ -151,7 +155,7 @@ test.describe('practice', () => {
 
 test.describe('maps', () => {
   test('the concept map is keyboard-navigable and deep-linkable', async ({ page }) => {
-    await page.goto(`./${hashFor('maps/concepts', { conceptId: 'c.dot-product' })}`, { waitUntil: 'networkidle' });
+    await page.goto(`./${hashFor('learn/concepts', { conceptId: 'c.dot-product' })}`, { waitUntil: 'networkidle' });
     await expect(page.locator(VISIBLE + '.cmap-detail h2')).toHaveText('The dot product');
     const node = page.locator(VISIBLE + '.cmap-node[aria-pressed="true"]');
     await node.focus();
@@ -163,7 +167,7 @@ test.describe('maps', () => {
   });
 
   test('the formula map can be explored from the keyboard (F-04)', async ({ page }) => {
-    await page.goto('./#maps/formulas', { waitUntil: 'networkidle' });
+    await page.goto('./#learn/formulas', { waitUntil: 'networkidle' });
     await page.locator('g.gnode[tabindex="0"]').first().waitFor({ state: 'attached' });
     await page.locator('g.gnode[tabindex="0"]').focus();
     await page.keyboard.press('ArrowRight');
@@ -174,7 +178,7 @@ test.describe('maps', () => {
   });
 
   test('the model map can be explored from the keyboard (F-04)', async ({ page }) => {
-    await page.goto('./#maps/models', { waitUntil: 'networkidle' });
+    await page.goto('./#learn/models', { waitUntil: 'networkidle' });
     await page.locator('g.mlgnode[tabindex="0"]').first().waitFor({ state: 'attached' });
     await page.locator('g.mlgnode[tabindex="0"]').focus();
     await page.keyboard.press('ArrowDown');
@@ -197,17 +201,21 @@ test.describe('shell', () => {
 
   test('number keys jump between sections and [ ] move within one', async ({ page }) => {
     await page.goto('./#home', { waitUntil: 'networkidle' });
-    await page.keyboard.press('4');
+    await page.keyboard.press('3');
     await expect(page).toHaveURL(/#practice\/review$/);
     await page.keyboard.press(']');
-    await expect(page).toHaveURL(/#practice\/mixed$/);
+    await expect(page).toHaveURL(/#practice\/formulas$/);
     await page.keyboard.press('[');
     await expect(page).toHaveURL(/#practice\/review$/);
+    await page.keyboard.press('5');
+    await expect(page).toHaveURL(/#progress\/overview$/);
+    await page.keyboard.press('6'); // there are only five destinations
+    await expect(page).toHaveURL(/#progress\/overview$/);
   });
 
   test('theme: system, light and dark persist from Settings', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
-    await page.goto('./#settings', { waitUntil: 'networkidle' });
+    await page.goto('./#progress/settings', { waitUntil: 'networkidle' });
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light'); // follows the system by default
     await page.getByRole('radio', { name: 'Dark' }).check();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
@@ -218,7 +226,7 @@ test.describe('shell', () => {
   });
 
   test('reset progress needs confirmation and keeps preferences', async ({ page }) => {
-    await page.goto('./#settings', { waitUntil: 'networkidle' });
+    await page.goto('./#progress/settings', { waitUntil: 'networkidle' });
     await page.evaluate(() => {
       localStorage.setItem('bluman_journal_v1', '[{"id":1,"text":"x"}]');
       localStorage.setItem('fi_theme_v1', '"dark"');
@@ -255,15 +263,21 @@ test.describe('shell', () => {
     await expect(page.locator('#main-content')).toBeFocused();
   });
 
-  test('phones get a bottom bar with an accessible More menu', async ({ page }) => {
+  test('phones get all five destinations in the bottom bar, with no More menu', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 760 });
     await page.goto('./#home', { waitUntil: 'networkidle' });
-    const more = page.getByRole('button', { name: 'More' });
-    await more.click();
-    await expect(page.getByRole('dialog', { name: 'More' })).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(page.getByRole('dialog', { name: 'More' })).toBeHidden();
-    await expect(more).toBeFocused();
+    const bar = page.locator('.bottom-nav');
+    await expect(bar.getByRole('link')).toHaveText(['Home', 'Learn', 'Practice', 'Apply', 'Progress']);
+    await expect(page.getByRole('button', { name: 'More' })).toHaveCount(0);
+    await bar.getByRole('link', { name: 'Apply' }).click();
+    await expect(page.locator('h1.page-title')).toHaveText('Projects');
+  });
+
+  test('the desktop navigation has exactly five destinations (V4 §3)', async ({ page }) => {
+    await page.goto('./#home', { waitUntil: 'networkidle' });
+    const nav = page.locator('.primary-nav');
+    await expect(nav.locator('.primary-nav-label')).toHaveText(['Home', 'Learn', 'Practice', 'Apply', 'My Progress']);
+    await expect(page.locator('.app-header .depth-btn')).toHaveCount(0);
   });
 });
 

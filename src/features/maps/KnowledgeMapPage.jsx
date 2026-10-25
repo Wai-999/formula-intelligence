@@ -89,7 +89,7 @@ export default function KnowledgeMapPage() {
                   <strong>{conceptById[id].title}</strong>
                 </button>
                 <small>
-                  <a href={hashFor('maps/concepts', { conceptId: id })}>On the concept map</a>
+                  <a href={hashFor('learn/concepts', { conceptId: id })}>On the concept map</a>
                   {lesson && <> · <a href={hashFor('learn/lesson', { lessonId: lesson.id })}>Lesson</a></>}
                 </small>
               </div>
