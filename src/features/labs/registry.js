@@ -30,6 +30,8 @@ export const LABS = {
   // V5 vertical slice: Algebra II → Precalculus → Calculus I.
   'composition-chain': { title: 'Composition and the chain rule', required: null, load: () => import('./ChainLab.jsx') },
   limits: { title: 'Limits: approaching from both sides', required: null, load: () => import('./LimitLab.jsx') },
+  'log-scale': { title: 'Exponential growth on two scales', required: null, load: () => import('./LogScaleLab.jsx') },
+  'unit-circle': { title: 'The unit circle', required: null, load: () => import('./UnitCircleLab.jsx') },
   // V5 Computer Science (C++) track.
   'code-trace': { title: 'Code tracing', required: null, load: () => import('./TraceLab.jsx') },
   'stack-queue': { title: 'Stack and queue, side by side', required: null, load: () => import('./StackQueueLab.jsx') },

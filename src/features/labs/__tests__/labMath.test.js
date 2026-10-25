@@ -8,6 +8,7 @@ import { breakEven, profitAt, cost, marginalCost, differenceQuotient, matVec, st
 import { compose, centralDifference, chainRule, chainMistake, approach, limitVerdict } from '../bridges.js';
 import { runOps, checkBrackets, longestWait } from '../structures.js';
 import { compareTable, EXPRESSIONS, oddSum, triangleSum } from '../logic.js';
+import { doublingTime, toRadians, piFraction, circlePoint } from '../growth.js';
 
 // The labs' arithmetic, checked against cases whose answers are known in
 // closed form (acceptance test 4: "check numerical results against known
@@ -279,5 +280,24 @@ describe('logic and induction (V5)', () => {
       expect(oddSum(n)).toBe(n * n);
       expect(triangleSum(n)).toBe(Array.from({ length: n }, (_, i) => i + 1).reduce((a, b) => a + b, 0));
     }
+  });
+});
+
+describe('growth and the unit circle (V5)', () => {
+  it('doubling time is ln 2 / ln(1 + r), close to the rule of 70 only for small r', () => {
+    close(doublingTime(0.06), 11.895661, 1e-6);
+    close(1.06 ** doublingTime(0.06), 2, 1e-12);
+    expect(Math.abs(doublingTime(0.01) - 70)).toBeLessThan(0.5);
+    expect(Math.abs(doublingTime(0.7) - 1)).toBeGreaterThan(0.3);
+  });
+
+  it('radians, exact π fractions and points on the unit circle', () => {
+    close(toRadians(180), Math.PI);
+    expect([0, 30, 45, 90, 150, 180, 270, 360].map(piFraction)).toEqual(['0', 'π/6', 'π/4', 'π/2', '5π/6', 'π', '3π/2', '2π']);
+    expect(circlePoint(Math.PI / 2)).toEqual([0, 1]);
+    const [x, y] = circlePoint(toRadians(150));
+    close(x, -Math.sqrt(3) / 2, 1e-12);
+    close(y, 0.5, 1e-12);
+    for (let d = 0; d < 360; d += 15) { const [c, s] = circlePoint(toRadians(d)); close(c * c + s * s, 1, 1e-12); }
   });
 });

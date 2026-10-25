@@ -24,7 +24,7 @@ test.describe('V5 journeys', () => {
   test('a student comparing transfer routes sees verified, earlier-year and unverified facts, dated and sourced', async ({ page }) => {
     await page.goto('./#home', { waitUntil: 'networkidle' });
     await openPage(page, 'learn/courses');
-    await page.locator(VISIBLE + 'a', { hasText: 'Preparing for Ohlone’s Data Science A.S.?' }).click();
+    await page.locator(VISIBLE + 'a', { hasText: 'Ohlone Data Science prep' }).click();
     await expect(page.locator('h1.page-title')).toHaveText('Ohlone Data Science prep');
     const prep = page.locator(VISIBLE);
     await expect(prep.getByText(DISCLAIMER)).toBeVisible();
