@@ -124,16 +124,25 @@ export const studyAlignmentFor = Object.fromEntries(STUDY_ALIGNMENT.map((s) => [
  *   taught    a mapped unit has at least one written lesson
  *   outline   mapped units exist, but no lesson is written yet
  *   none      nothing on the site covers it
- * Returns { topics: [{ topic, units, lessons, status }], taught, total }.
+ * Returns { topics: [{ topic, units, lessons, status }], taught, total,
+ * written, planned } — written: distinct lessons in the mapped units;
+ * planned: lesson titles in those units that are not written yet.
  */
 export function studyCoverage(code) {
   const s = studyAlignmentFor[code];
-  if (!s) return { topics: [], taught: 0, total: 0 };
+  if (!s) return { topics: [], taught: 0, total: 0, written: 0, planned: 0 };
   const topics = Object.entries(s.topics).map(([topic, units]) => {
     const lessons = units.flatMap((u) => unitById[u]?.lessons ?? []);
     return { topic, units, lessons: [...new Set(lessons)], status: lessons.length ? 'taught' : units.length ? 'outline' : 'none' };
   });
-  return { topics, taught: topics.filter((t) => t.status === 'taught').length, total: topics.length };
+  const units = [...new Set(Object.values(s.topics).flat())];
+  return {
+    topics,
+    taught: topics.filter((t) => t.status === 'taught').length,
+    total: topics.length,
+    written: new Set(units.flatMap((u) => unitById[u]?.lessons ?? [])).size,
+    planned: units.reduce((n, u) => n + (unitById[u]?.planned.length ?? 0), 0),
+  };
 }
 
 /** Site courses a learner would use to study for an Ohlone course, in order: readiness first, then the courses its units belong to. */

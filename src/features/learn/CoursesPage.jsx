@@ -19,9 +19,13 @@ export default function CoursesPage() {
     <div className="studio-scroll">
       <div className="studio-page">
         <p className="studio-lede">
-          Nine subjects, from prealgebra to machine learning. Courses with written lessons are marked; the others show
+          Ten subjects, from prealgebra to machine learning and C++. Courses with written lessons are marked; the others show
           their full outline — objectives, units and prerequisites — so you can see where they lead before they are filled in.
         </p>
+        <a className="studio-card studio-card-link prep-entry" href={hashFor('learn/prep')}>
+          <span className="studio-h3"><i className="ti ti-school" aria-hidden="true" /> Preparing for Ohlone’s Data Science A.S.?</span>
+          <span className="studio-muted">See each required course, what this site teaches for it, and what SJSU, CSU East Bay and UC campuses accept — with official sources and dates.</span>
+        </a>
         {placement?.course && (
           <p className="studio-callout">
             Your current starting point is <a href={hashFor('learn/course', { courseId: placement.course })}><strong>{COURSES.find((c) => c.id === placement.course)?.title}</strong></a>

@@ -110,7 +110,9 @@ test.describe('diagnostic', () => {
     await page.getByRole('button', { name: /I haven’t studied/ }).click();
     for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Skip this question' }).click();
     await page.getByRole('button', { name: 'Stop and see results' }).click();
-    await expect(page.getByText('Suggested starting point — provisional')).toBeVisible();
+    // Nothing was answered, so V5.1 §13.4's explicit outcome applies: not enough evidence.
+    await expect(page.getByText('Not enough evidence yet — a default, not a finding')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Answer more questions' })).toBeVisible();
     await expect(page.getByText(/not a placement test, a grade, or an official/)).toBeVisible();
     await expect(page.locator('.dx-domain').first()).toBeVisible();
     await expect(page.getByText('Not assessed').first()).toBeVisible();

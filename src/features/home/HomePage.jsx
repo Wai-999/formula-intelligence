@@ -188,6 +188,12 @@ export default function HomePage() {
                 <span>{activeProject ? 'project in progress' : 'real-world projects with data'}</span>
               </a>
             </li>
+            <li>
+              <a href={hashFor('learn/prep')}>
+                <strong>Ohlone Data Science prep</strong>
+                <span>required courses and transfer targets, with sources</span>
+              </a>
+            </li>
           </ul>
         </section>
       </div>

@@ -58,6 +58,8 @@ describe('college data', () => {
     const calc = studyCoverage('MATH-101A');
     expect(calc.total).toBe(6);
     expect(calc.topics.find((t) => t.topic.startsWith('Limits')).status).toBe('taught');
+    expect(calc.written).toBeGreaterThanOrEqual(calc.taught - 1);
+    expect(studyCoverage('CS-102').planned).toBeGreaterThan(studyCoverage('CS-102').written);
     const asm = studyCoverage('CS-118');
     expect(asm.taught).toBe(0);
     expect(asm.topics.every((t) => t.status === 'none')).toBe(true);

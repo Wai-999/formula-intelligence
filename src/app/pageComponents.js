@@ -12,6 +12,7 @@ export const PAGE_COMPONENTS = {
   'learn/course': lazy(() => import('../features/learn/CoursePage.jsx')),
   'learn/lesson': lazy(() => import('../features/learn/LessonPage.jsx')),
   'learn/placement': lazy(() => import('../features/diagnostic/DiagnosticPage.jsx')),
+  'learn/prep': lazy(() => import('../features/college/MajorPrepPage.jsx')),
   'learn/ml': lazy(() => import('../features/ml/pipeline/PipelinePage.jsx')),
   'learn/maps': lazy(() => import('../features/maps/MapsHubPage.jsx')),
   'learn/concepts': lazy(() => import('../features/maps/ConceptMapPage.jsx')),

@@ -1,0 +1,158 @@
+/* Learn → Ohlone prep. Official records and self-study are told apart by
+   words and labelled chips, never by colour alone. */
+
+.prep-disclaimer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.prep-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.prep-targets legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.prep-targets label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-solid-2);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.prep-targets label.on {
+  border-color: var(--primary);
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.prep-targets input {
+  accent-color: var(--primary);
+}
+
+.prep-targets label:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.prep-next {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.prep-courses,
+.prep-list,
+.prep-topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.prep-courses {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prep-course {
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.prep-course > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.prep-course > summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.prep-course-title {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.prep-chips {
+  gap: 6px;
+}
+
+.prep-course-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.prep-list > li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.prep-source {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.prep-topics > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  padding: 6px 0 6px 12px;
+  border-left: 3px solid var(--border-solid-2);
+  margin-bottom: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.prep-topics > li.is-taught {
+  border-left-color: var(--success);
+}
+
+.prep-topics > li.is-outline {
+  border-left-color: var(--warning);
+}
+
+.prep-topic {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.prep-agreement {
+  margin-top: 10px;
+}

@@ -19,6 +19,9 @@ export const STATUS_LABEL = {
   unverified: 'Not yet verified',
 };
 
+/** Shown, word for word, on every page that presents academic information (V5.1 §7). */
+export const DISCLAIMER = 'Formula Intelligence is a self-study tool. It does not award college credit, determine college placement, waive prerequisites, or guarantee transfer admission.';
+
 /** When these sources were read (the learner's local date). Re-check before each term. */
 export const CHECKED = '2026-10-24';
 
