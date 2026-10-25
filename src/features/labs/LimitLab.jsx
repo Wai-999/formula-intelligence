@@ -49,31 +49,53 @@ const LIMIT_PRESETS = [
   },
 ];
 
+/** y-range of f over [x0, x1], skipping x = a and non-finite values, padded. */
+function rangeNear(f, a, x0, x1) {
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (let i = 0; i <= 200; i++) {
+    const x = x0 + ((x1 - x0) * i) / 200;
+    const y = x === a ? NaN : f(x);
+    if (Number.isFinite(y)) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
+  }
+  const pad = (hi - lo) * 0.15 || Math.max(Math.abs(hi) * 0.01, 0.01);
+  return [lo - pad, hi + pad];
+}
+
 export default function LimitLab() {
   const [id, setId] = useState('hole');
   const [h, setH] = useState(0.5);
+  const [zoom, setZoom] = useState('whole');
   const p = LIMIT_PRESETS.find((q) => q.id === id);
   const { a, v } = p;
+  const zoomed = zoom === 'zoom';
+  const xr = zoomed ? [a - 4 * h, a + 4 * h] : p.xr;
+  const yr = zoomed ? rangeNear(p.f, a, xr[0], xr[1]) : p.yr;
+  const digits = zoomed ? Math.max(2, Math.ceil(-Math.log10(h)) + 1) : 2;
 
   const left = p.f(a - h);
   const right = p.f(a + h);
   const close = h <= 0.01;
   const verdict = limitVerdict(p.f, a, h);
-  const [y0, y1] = p.yr;
+  const [y0, y1] = yr;
   const inView = (y) => Number.isFinite(y) && y >= y0 && y <= y1;
 
   const readout = `At ${v} = ${fmt(a)}: ${p.at}. From the left, f(${fmt(a - h, 3)}) = ${fmt(left, 6)}; from the right, f(${fmt(a + h, 3)}) = ${fmt(right, 6)}. `
     + (close ? p.conclusion : 'Still far from the point — shrink h to see where the readings settle.');
 
   const figure = (
-    <Plot x={p.xr} y={p.yr} xLabel={v} yLabel={`f(${v})`}>
+    <Plot x={xr} y={yr} xLabel={v} yLabel={`f(${v})`} digits={digits} pad={digits > 2 ? 46 : 34}>
       {({ sx, sy }) => (
         <g>
           <line className="lab-ghost" x1={sx(a)} x2={sx(a)} y1={sy(y0)} y2={sy(y1)} />
-          {p.pieces.map(([s, e]) => <path key={s} className="lab-curve" d={pathOf(p.f, s, e, sx, sy, 240, p.yr)} />)}
-          {p.dots.map((d) => <circle key={`${d.x},${d.y}`} className={d.open ? 'lab-open' : 'lab-point'} cx={sx(d.x)} cy={sy(d.y)} r="5" />)}
+          {p.pieces.map(([s0, e0]) => {
+            const s1 = Math.max(s0, xr[0]);
+            const e1 = Math.min(e0, xr[1]);
+            return s1 < e1 && <path key={s0} className="lab-curve" d={pathOf(p.f, s1, e1, sx, sy, 240, yr)} />;
+          })}
           {inView(left) && <circle className="lab-point-2" cx={sx(a - h)} cy={sy(left)} r="5" />}
           {inView(right) && <rect className="lab-point-2" x={sx(a + h) - 5} y={sy(right) - 5} width="10" height="10" />}
+          {p.dots.filter((d) => d.y >= y0 && d.y <= y1).map((d) => <circle key={`${d.x},${d.y}`} className={d.open ? 'lab-open' : 'lab-point'} cx={sx(d.x)} cy={sy(d.y)} r="5" />)}
           <text className="lab-label-muted" x={sx(a) + 6} y={sy(y1) + 14}>{v} = {fmt(a)}</text>
         </g>
       )}
@@ -90,12 +112,13 @@ export default function LimitLab() {
       presets={LIMIT_PRESETS}
       activePreset={id}
       onPreset={setId}
-      onReset={() => { setId('hole'); setH(0.5); }}
+      onReset={() => { setId('hole'); setH(0.5); setZoom('whole'); }}
       figure={figure}
       readout={readout}
       controls={(
         <>
           <Segmented label="Distance h from a" options={STEPS.map((s) => ({ value: s, label: String(s) }))} value={h} onChange={setH} />
+          <Segmented label="View" options={[{ value: 'whole', label: 'Whole graph' }, { value: 'zoom', label: 'Zoom in around a' }]} value={zoom} onChange={setZoom} />
           <dl className="lab-stat">
             <dt>From the left</dt><dd>{fmt(left, 6)}</dd>
             <dt>From the right</dt><dd>{fmt(right, 6)}</dd>

@@ -83,7 +83,7 @@ export default function ChainLab() {
   );
 
   const inner = (
-    <Plot x={p.xr} y={uRange} height={220} xLabel={xn} yLabel={`${un} = g(${xn})`}>
+    <Plot x={p.xr} y={uRange} width={340} height={180} xLabel={xn} yLabel={`${un} = g(${xn})`}>
       {({ sx, sy }) => (
         <g>
           <path className="lab-curve" d={pathOf(p.g, x0, x1, sx, sy)} />
@@ -96,7 +96,7 @@ export default function ChainLab() {
   );
 
   const outer = (
-    <Plot x={uRange} y={yRange} height={220} xLabel={un} yLabel={`${yn} = f(${un})`}>
+    <Plot x={uRange} y={yRange} width={340} height={180} xLabel={un} yLabel={`${yn} = f(${un})`}>
       {({ sx, sy }) => (
         <g>
           <path className="lab-curve" d={pathOf(p.f, uRange[0], uRange[1], sx, sy)} />
@@ -110,7 +110,7 @@ export default function ChainLab() {
 
   const figure = (
     <div className="chain-figs">
-      <div className="chain-main">{composite}</div>
+      <div>{composite}</div>
       <div>{inner}</div>
       <div>{outer}</div>
     </div>
