@@ -1,8 +1,8 @@
 // Official sources behind every academic claim on Learn → Ohlone prep
 // (V5.1 §2, §13.6). One record per document actually read, with the
 // academic year it applies to and the date it was read. Only official
-// institutional pages and ASSIST appear here; nothing on this site is an
-// articulation, a placement or credit — see ./README in docs/major-prep.
+// institutional pages and ASSIST appear here. Nothing on this site is an
+// articulation, a placement or credit (docs/major-prep/ACADEMIC_EVIDENCE.md).
 //
 // Statuses (V5.1 §2):
 //   verified-current     official source for the applicable academic year

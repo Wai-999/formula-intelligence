@@ -21,6 +21,7 @@
     "e2e:python": "playwright test --grep @heavy",
     "verify:python": "node scripts/verify-python.mjs",
     "verify:cpp": "node scripts/verify-cpp.mjs",
+    "validate:college": "node scripts/validate-college-data.mjs",
     "check:citations": "node scripts/check-citations.mjs",
     "docs:curriculum": "node scripts/curriculum-map.mjs",
     "evidence:screenshots": "node scripts/screenshots.mjs",

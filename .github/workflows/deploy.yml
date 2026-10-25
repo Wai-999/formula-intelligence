@@ -36,6 +36,9 @@ jobs:
       # and logic regressions (the kind FIX_LOG is full of) shipped freely.
       - run: npm run lint
       - run: npm run validate:content
+      # Academic data: official sources, current vs earlier years, no
+      # unverified "verified" claims (scripts/validate-college-data.mjs).
+      - run: npm run validate:college
       - run: npm test
       - run: npm run build
       # Initial-load JS budget (scripts/check-bundle-budget.mjs).
