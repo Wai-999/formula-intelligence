@@ -3,6 +3,7 @@ import MathText, { MathBlock } from '../../components/math/MathText.jsx';
 import LabHost from '../labs/LabHost.jsx';
 import ItemCard from './lesson/ItemCard.jsx';
 import PredictCard from './lesson/PredictCard.jsx';
+import CppPanel from './CppPanel.jsx';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
 import { courseById, unitById } from '../../data/curriculum/catalog.js';
 import { CONCEPTS } from '../../data/curriculum/concepts.js';
@@ -373,27 +374,30 @@ export default function LessonPage({ lessonId }) {
                 <ul className="lesson-ul">{body.apply.limits.map((l) => <li key={l}><MathText text={l} /></li>)}</ul>
               </div>
             )}
-            <details className="lesson-disclosure" open={Boolean(body.apply)}>
-              <summary>Optional: the same idea in Python</summary>
-              <MathText as="p" className="lesson-p" text={body.python.intro} />
-              <pre className="lesson-code" tabIndex={0} aria-label="Python code"><code>{body.python.code}</code></pre>
-              <p className="studio-eyebrow">Expected output</p>
-              <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Expected output"><code>{body.python.output}</code></pre>
-              <MathText as="p" className="studio-muted" text={body.python.explain} />
-              <div className="studio-row">
-                <button
-                  type="button"
-                  className="studio-btn studio-btn-small"
-                  onClick={() => {
-                    usePyLabStore.getState().create(`${meta.title} (lesson)`, body.python.code);
-                    useUIStore.getState().goTo('apply/lab');
-                  }}
-                >
-                  <i className="ti ti-player-play" aria-hidden="true" /> Run it in the Python lab
-                </button>
-                <span className="studio-muted">Runs in your browser; the first run downloads Python (about 10 MB). Not coding yet? The questions above are the whole lesson.</span>
-              </div>
-            </details>
+            {body.cpp && <CppPanel lessonId={meta.id} cpp={body.cpp} open={Boolean(body.apply) && !body.python} />}
+            {body.python && (
+              <details className="lesson-disclosure" open={Boolean(body.apply)}>
+                <summary>Optional: the same idea in Python</summary>
+                <MathText as="p" className="lesson-p" text={body.python.intro} />
+                <pre className="lesson-code" tabIndex={0} aria-label="Python code"><code>{body.python.code}</code></pre>
+                <p className="studio-eyebrow">Expected output</p>
+                <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Expected output"><code>{body.python.output}</code></pre>
+                <MathText as="p" className="studio-muted" text={body.python.explain} />
+                <div className="studio-row">
+                  <button
+                    type="button"
+                    className="studio-btn studio-btn-small"
+                    onClick={() => {
+                      usePyLabStore.getState().create(`${meta.title} (lesson)`, body.python.code);
+                      useUIStore.getState().goTo('apply/lab');
+                    }}
+                  >
+                    <i className="ti ti-player-play" aria-hidden="true" /> Run it in the Python lab
+                  </button>
+                  <span className="studio-muted">Runs in your browser; the first run downloads Python (about 10 MB). Not coding yet? The questions above are the whole lesson.</span>
+                </div>
+              </details>
+            )}
           </Section>
 
           <Section lessonId={meta.id} id="check" title="Check understanding" n={6}>

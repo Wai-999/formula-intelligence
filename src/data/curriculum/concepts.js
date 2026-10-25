@@ -113,6 +113,10 @@ export const CONCEPTS = [
   c('c.py-collections', 'Lists and dictionaries', 'python', 'py-collections', ['c.py-basics'], 'Storing and transforming collections of values.'),
   c('c.py-debugging', 'Debugging Python', 'python', 'py-debugging', ['c.py-basics'], 'Reading tracebacks and testing hypotheses about a bug.'),
   c('c.numpy', 'NumPy arrays and broadcasting', 'python', 'py-numpy', ['c.py-collections', 'c.vectors'], 'Whole-array arithmetic, broadcasting rules and floating-point limits.'),
+
+  // Computer Science (C++) — V5
+  c('c.cpp-basics', 'C++ types, expressions and input/output', 'computer-science', 'cpp-types-io', ['c.expressions'], 'Typed variables, integer and floating-point arithmetic, and console input and output.'),
+  c('c.cpp-loops', 'Loops and tracing in C++', 'computer-science', 'cpp-control', ['c.cpp-basics', 'c.inequalities'], 'Repeating a block while a condition holds, and following every variable step by step.'),
 ];
 
 // Non-prerequisite relationships (§7). Direction reads "source TYPE target".

@@ -483,3 +483,87 @@
   stroke: var(--primary-text);
   stroke-width: 2;
 }
+
+/* Trace lab: a code listing with the current line marked, and the output. */
+.trace-figure {
+  display: flex;
+  flex-direction: column;
+}
+
+.trace-code {
+  margin: 0;
+  padding: 10px 0;
+  overflow-x: auto;
+  background: var(--surface-deep);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.trace-line {
+  display: block;
+  padding-right: 12px;
+  white-space: pre;
+}
+
+.trace-line.is-current {
+  background: rgba(139, 92, 246, 0.24);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.trace-ln {
+  display: inline-block;
+  width: 2.4em;
+  margin-right: 0.9em;
+  text-align: right;
+  color: var(--text-faint);
+  user-select: none;
+}
+
+.trace-console {
+  border-top: 1px solid var(--border);
+  padding: 8px 12px 10px;
+}
+
+.trace-console-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.trace-console pre {
+  margin: 4px 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.trace-buttons .trace-step {
+  border-color: var(--primary);
+}
+
+.trace-buttons .lab-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.trace-vars > div {
+  display: contents;
+}
+
+.trace-vars .is-changed dd {
+  color: var(--primary-text);
+}
+
+.trace-changed {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

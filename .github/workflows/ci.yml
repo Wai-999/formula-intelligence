@@ -38,6 +38,12 @@ jobs:
           python-version: '3.12'
       - run: pip install numpy matplotlib pandas
       - run: npm run verify:python
+      # Every C++ program the site shows is compiled (C++17, -Wall -Wextra
+      # -pedantic -Werror, address and UB sanitizers) and run: lesson
+      # programs print what the page says, trace-lab steps match an
+      # instrumented build, reference solutions pass, starters fail
+      # (scripts/verify-cpp.mjs). ubuntu-latest ships g++.
+      - run: npm run verify:cpp
       - run: npx playwright install --with-deps chromium
       - run: npm run a11y
       - run: npm run a11y:light

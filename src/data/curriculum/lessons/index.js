@@ -521,6 +521,27 @@ export const LESSONS = [
     review: AI_DRAFT,
     load: () => import('./ml-calibration-fairness.js'),
   },
+  // V5 Computer Science (C++) track.
+  {
+    id: 'cpp-loops-trace',
+    title: 'Loops you can trace',
+    course: 'cpp-fundamentals',
+    unit: 'cpp-control',
+    minutes: 45,
+    difficulty: 'introductory',
+    summary: 'Predict what a C++ loop prints, trace its variables line by line, find the off-by-one bug, and write a loop that summarises a day of bakery sales.',
+    competencies: ['cpp.basics', 'cpp.debugging'],
+    concepts: ['c.cpp-loops'],
+    prerequisites: ['c.cpp-basics', 'c.inequalities'],
+    formulas: [],
+    labs: ['code-trace'],
+    next: [],
+    formulaMap: [],
+    models: [],
+    review: AI_DRAFT,
+    applied: true,
+    load: () => import('./cpp-loops-trace.js'),
+  },
 ];
 
 export const lessonById = Object.fromEntries(LESSONS.map((l) => [l.id, l]));

@@ -51,7 +51,7 @@ function run(label, code, expected) {
 
 for (const l of LESSONS) {
   const body = (await l.load()).default;
-  run(`lesson ${l.id}`, body.python.code, body.python.output);
+  if (body.python) run(`lesson ${l.id}`, body.python.code, body.python.output); // C++-only lessons: scripts/verify-cpp.mjs
 }
 
 // Graded exercises: the reference solution must pass its own tests.
