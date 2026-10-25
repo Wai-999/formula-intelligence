@@ -547,3 +547,84 @@
   background: none;
   border: 1px dashed var(--border);
 }
+
+/* ——— V4 lesson: disclosures, connections ——— */
+/* "Go deeper", assumptions, the readiness check and further reading: present
+   for anyone who wants them, out of the way of anyone who does not. */
+.lesson-disclosure {
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  padding: 0 14px;
+  background: var(--surface-glass);
+}
+
+.lesson-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  list-style: none;
+}
+
+.lesson-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-disclosure > summary::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform 0.15s ease;
+  color: var(--primary-text);
+}
+
+.lesson-disclosure[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.lesson-disclosure[open] {
+  padding-bottom: 14px;
+}
+
+.lesson-disclosure[open] > summary {
+  margin-bottom: 4px;
+}
+
+.lesson-disclosure > :not(summary) + :not(summary) {
+  margin-top: 10px;
+}
+
+.lesson-connections {
+  display: grid;
+  gap: 12px 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  padding: 14px 16px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.lesson-connections > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.lesson-connections .studio-list {
+  gap: 2px;
+}
+
+.lesson-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-muted);
+}

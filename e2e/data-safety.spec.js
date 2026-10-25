@@ -51,7 +51,7 @@ test('backup: download, wipe, restore from file — identical state', async ({ p
     localStorage.setItem('feynman_x_bar', JSON.stringify({ text: 'mean', score: 0.8 }));
     localStorage.setItem('fi_theme_v1', JSON.stringify('light'));
   });
-  await page.goto('./#stats/dashboard', { waitUntil: 'domcontentloaded' });
+  await page.goto('./#progress/settings', { waitUntil: 'domcontentloaded' });
   await page.reload({ waitUntil: 'networkidle' });
 
   const appState = () => page.evaluate(() => {
@@ -88,7 +88,7 @@ test('backup: download, wipe, restore from file — identical state', async ({ p
 });
 
 test('backup: a non-backup file is refused without touching progress', async ({ page }) => {
-  await page.goto('./#stats/dashboard', { waitUntil: 'domcontentloaded' });
+  await page.goto('./#progress/settings', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.setItem('bluman_journal_v1', '[{"id":1,"text":"keep me"}]'));
   await page.reload({ waitUntil: 'networkidle' });
   await page.locator(VISIBLE + '.backup-panel input[type="file"]').setInputFiles({

@@ -35,6 +35,9 @@ const FORMULA_DERIVATIONS = [
   ['f.svd-eigen', 'f.directional-variance'],
   ['f.partial-def', 'f.derivative-def'],
   ['f.unit-rate', 'f.proportion'],
+  ['f.break-even', 'f.linear-solution'],
+  ['f.marginal-cost', 'f.derivative-def'],
+  ['f.matrix-vector', 'f.dot'],
 ];
 
 export function buildKnowledgeGraph({ exercises = [] } = {}) {

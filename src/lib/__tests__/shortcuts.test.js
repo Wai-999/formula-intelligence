@@ -46,10 +46,10 @@ describe('matchShortcut', () => {
     expect(matchShortcut(key('F'))).toBe('focus');
   });
 
-  it('maps digits 1-7 to the seven primary sections', () => {
+  it('maps digits 1-5 to the five destinations', () => {
     expect(matchShortcut(key('1'))).toBe('section:0');
-    expect(matchShortcut(key('7'))).toBe('section:6');
-    expect(matchShortcut(key('8'))).toBeNull();
+    expect(matchShortcut(key('5'))).toBe('section:4');
+    expect(matchShortcut(key('6'))).toBeNull();
     expect(matchShortcut(key('0'))).toBeNull();
   });
 
@@ -84,7 +84,7 @@ describe('matchShortcut', () => {
 describe('the documented table', () => {
   it('documents every key the handler actually implements', () => {
     const documented = SHORTCUTS.flatMap((s) => s.keys);
-    for (const k of ['?', 'Esc', 't', 'f', 'K', '/', '[', ']', '1', '7']) {
+    for (const k of ['?', 'Esc', 't', 'f', 'K', '/', '[', ']', '1', '5']) {
       expect(documented, `${k} should be listed in the help overlay`).toContain(k);
     }
   });

@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { nodes } from '../../data/index.js';
 import { CHAPTERS, chapterTextColor } from '../../data/chapters.js';
 import { useThemeStore } from '../../store/useThemeStore.js';
-import { useJournalStore, calcStreak } from '../../store/useJournalStore.js';
+import { useJournalStore } from '../../store/useJournalStore.js';
 import { useMasteryStore } from '../../store/useMasteryStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import './JournalPage.css';
@@ -34,12 +34,12 @@ function confColor(conf) {
   return { color: '#34d399', bg: 'rgba(52,211,153,.1)' };
 }
 
-function StreakBar({ entries }) {
-  const streak = calcStreak(entries);
-  if (streak === 0) return <div className="jnl-streak-bar">Start your streak today — write your first entry below.</div>;
-  if (streak === 1) return <div className="jnl-streak-bar"><b>1-day streak</b> — great start, come back tomorrow!</div>;
-  if (streak >= 7) return <div className="jnl-streak-bar"><b>{streak}-day streak</b> — exceptional consistency!</div>;
-  return <div className="jnl-streak-bar"><b>{streak} days</b> in a row</div>;
+// A plain count — no streaks: missing a day is not a failure (V4 §4 rules
+// out streak pressure, the same reason reviews never punish late days).
+function EntriesSummary({ entries }) {
+  if (!entries.length) return <div className="jnl-streak-bar">No entries yet. Write one below whenever a session is worth reflecting on.</div>;
+  const last = entries.reduce((a, e) => (e.date > a ? e.date : a), '');
+  return <div className="jnl-streak-bar"><b>{entries.length} entr{entries.length === 1 ? 'y' : 'ies'}</b> · last written {new Date(`${last}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</div>;
 }
 
 function EntryForm() {
@@ -312,7 +312,7 @@ export default function JournalPage() {
   return (
     <div className="jnl-page">
       <div className="jnl-left">
-        <StreakBar entries={entries} />
+        <EntriesSummary entries={entries} />
         <div className="jnl-left-scroll">
           <EntryForm />
           <div className="jnl-prev-hdr">Previous entries</div>

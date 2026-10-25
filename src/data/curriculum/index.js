@@ -21,7 +21,7 @@ export function searchEntries() {
   }
   for (const k of CONCEPTS) {
     const course = conceptUnitCourse(k);
-    out.push({ kind: 'concept', id: k.id, title: k.title, subtitle: course ? courseById[course].title : 'Concept', keywords: [k.summary], target: { page: 'maps/concepts', params: { conceptId: k.id } } });
+    out.push({ kind: 'concept', id: k.id, title: k.title, subtitle: course ? courseById[course].title : 'Concept', keywords: [k.summary], target: { page: 'learn/concepts', params: { conceptId: k.id } } });
   }
   return out;
 }

@@ -25,7 +25,7 @@ export default function CoursesPage() {
         {placement?.course && (
           <p className="studio-callout">
             Your current starting point is <a href={hashFor('learn/course', { courseId: placement.course })}><strong>{COURSES.find((c) => c.id === placement.course)?.title}</strong></a>
-            {placement.source === 'diagnostic' ? ' (from your diagnostic — provisional, change it any time on the Diagnostic page).' : ' (your choice).'}
+            {placement.source === 'diagnostic' ? ' (from your placement check — provisional, change it any time under Learn → Placement).' : ' (your choice).'}
           </p>
         )}
         {SUBJECTS.map((s) => {
@@ -37,7 +37,7 @@ export default function CoursesPage() {
                 <p className="studio-muted">{s.summary}</p>
               </div>
               {courses.length === 0 && s.id === 'projects' && (
-                <a className="studio-card studio-card-link" href={hashFor('projects/list')}>
+                <a className="studio-card studio-card-link" href={hashFor('apply/projects')}>
                   <span className="studio-h3">Applied projects</span>
                   <span className="studio-muted">Guided, end-to-end analyses live under Projects.</span>
                 </a>

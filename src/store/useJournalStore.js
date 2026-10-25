@@ -18,22 +18,6 @@ function saveTarget(v) {
   }
 }
 
-export function calcStreak(entries) {
-  if (!entries || !entries.length) return 0;
-  const today = new Date().toISOString().slice(0, 10);
-  const dates = new Set(entries.map((e) => e.date));
-  let streak = 0;
-  const cursor = new Date(today);
-  for (let i = 0; i < 365; i++) {
-    const ds = cursor.toISOString().slice(0, 10);
-    if (dates.has(ds)) {
-      streak++;
-      cursor.setDate(cursor.getDate() - 1);
-    } else break;
-  }
-  return streak;
-}
-
 export const useJournalStore = create((set, get) => ({
   entries: loadJSON(STORAGE_KEYS.journal, []),
   targetDate: loadTarget(),

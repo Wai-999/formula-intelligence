@@ -3,6 +3,7 @@ import { usePyLabStore } from '../../../store/usePyLabStore.js';
 import { runPython, stopPython } from '../../../lib/pyodideRunner.js';
 import { RUNTIME_NOTE } from '../../../data/python/runnability.js';
 import { useUIStore } from '../../../store/useUIStore.js';
+import { hashFor } from '../../../app/pages.js';
 import '../mlPageShared.css';
 import './PyLabPage.css';
 
@@ -95,6 +96,9 @@ export default function PyLabPage() {
           <i className="ti ti-device-floppy" aria-hidden="true" />
           Saved in this browser only. {RUNTIME_NOTE}
         </p>
+        <a className="pylab-library-link" href={hashFor('apply/library')}>
+          <i className="ti ti-books" aria-hidden="true" /> Python library: ready-made snippets
+        </a>
       </aside>
 
       <div className="pylab-main">

@@ -22,6 +22,7 @@ export const CONCEPTS = [
 
   // Algebra
   c('c.linear-equations', 'Multi-step linear equations', 'algebra', 'a1-linear-eq', ['c.equations'], 'Equations with variables on both sides, solved by repeated balancing.'),
+  c('c.break-even', 'Break-even analysis', 'algebra', 'a1-linear-eq', ['c.linear-equations'], 'Profit as a linear function of quantity; the quantity where it is zero, and what the model assumes.'),
   c('c.slope', 'Slope as rate of change', 'algebra', 'a1-linear-rel', ['c.ratios', 'c.coordinate-plane'], 'Rise over run: how much y changes per unit change in x.'),
   c('c.slope-intercept', 'Slope–intercept form', 'algebra', 'a1-linear-rel', ['c.slope', 'c.equations'], 'Every non-vertical line is y = mx + b: a starting value plus a constant rate.'),
   c('c.line-fit', 'Fitting a line to data', 'algebra', 'a1-linear-rel', ['c.slope-intercept', 'c.descriptive'], 'The least-squares line makes the sum of squared vertical errors as small as possible.'),
@@ -52,6 +53,7 @@ export const CONCEPTS = [
   c('c.dot-product', 'The dot product', 'linear-algebra', 'la-vectors', ['c.vectors', 'c.norms'], 'Multiply matching components and add: a number that measures alignment.'),
   c('c.projection', 'Projection onto a vector', 'linear-algebra', 'la-vectors', ['c.dot-product'], 'The closest point on a line to a given vector, and the orthogonal leftover.'),
   c('c.matrices', 'Matrices and matrix multiplication', 'linear-algebra', 'la-matrices', ['c.dot-product'], 'Rectangular arrays; each entry of a product is a dot product.'),
+  c('c.matrix-vector', 'Matrix–vector products as weighted scores', 'linear-algebra', 'la-matrices', ['c.dot-product'], 'A data matrix times a weight vector: one dot product per row, with a shape rule and a units trap.'),
   c('c.linear-transformations', 'Linear transformations', 'linear-algebra', 'la-matrices', ['c.matrices', 'c.functions'], 'Functions that preserve addition and scaling — exactly the ones a matrix can represent.'),
   c('c.determinant-inverse', 'Determinants and inverses', 'linear-algebra', 'la-matrices', ['c.linear-transformations'], 'How much a transformation scales area, and whether it can be undone.'),
   c('c.elimination', 'Gaussian elimination', 'linear-algebra', 'la-systems', ['c.matrices', 'c.systems'], 'Row operations that reduce a system to one you can solve by back-substitution.'),
@@ -66,6 +68,7 @@ export const CONCEPTS = [
 
   // Calculus
   c('c.derivative', 'The derivative', 'calculus', 'c1-derivative', ['c.limits', 'c.slope'], 'The instantaneous rate of change: the limit of average rates over shrinking intervals.'),
+  c('c.marginal', 'Marginal analysis', 'calculus', 'c1-derivative', ['c.derivative'], 'The derivative as the cost (or revenue) of one more unit, and its limits when cost jumps.'),
   c('c.derivative-rules', 'Derivative rules', 'calculus', 'c1-rules', ['c.derivative'], 'Power, product and quotient rules: derivatives without limits every time.'),
   c('c.chain-rule', 'The chain rule', 'calculus', 'c1-rules', ['c.derivative-rules', 'c.composition-inverse'], 'The derivative of a composition is the product of the derivatives along the chain.'),
   c('c.optimization-1d', 'Extrema and optimization', 'calculus', 'c1-applications', ['c.derivative-rules'], 'Maxima and minima occur where the derivative is zero or undefined, or at endpoints.'),

@@ -1,0 +1,59 @@
+.prog-domain {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prog-skill summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  min-height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.prog-skill[open] summary {
+  margin-bottom: 6px;
+}
+
+.signals {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+}
+
+.signal {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.signal-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.signal-value {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.signal-help {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-faint);
+}

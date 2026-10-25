@@ -4,6 +4,7 @@ import { gradePython, runPython, stopPython } from '../../lib/pyodideRunner.js';
 import { useWorkStore } from '../../store/useWorkStore.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
 import { competencyById } from '../../data/curriculum/competencies.js';
+import { toPlainText } from '../../lib/mathFormat.js';
 import './code.css';
 
 const TYPE_LABEL = {
@@ -53,6 +54,50 @@ function ChoiceCheck({ ex, onResult }) {
   );
 }
 
+/**
+ * V4 §8: the same idea without writing code. Shows what the reference
+ * solution prints (verified by scripts/verify-python.mjs) and asks what it
+ * means. Not recorded as Python evidence — it is not a coding skill.
+ */
+function NoCodePath({ ex }) {
+  const [open, setOpen] = useState(false);
+  const [choice, setChoice] = useState(null);
+  const [done, setDone] = useState(null);
+  const id = useId();
+  const q = ex.noCode.question;
+  return (
+    <div className="code-nocode">
+      <button type="button" className="link-btn" aria-expanded={open} aria-controls={`${id}-nc`} onClick={() => setOpen((v) => !v)}>
+        {open ? 'Hide the no-code version' : 'Not coding yet? Read the result instead'}
+      </button>
+      {open && (
+        <div id={`${id}-nc`} className="code-nocode-body">
+          <p className="studio-muted">Running the reference solution prints:</p>
+          <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Output of the reference solution">{ex.noCode.output}</pre>
+          <fieldset className="item-choices" disabled={done !== null}>
+            <legend className="studio-h3"><MathText text={q.prompt} /></legend>
+            {q.choices.map((c, i) => (
+              <label key={i} className={`item-choice${choice === i ? ' on' : ''}${done !== null && i === q.correct ? ' answer' : ''}`}>
+                <input type="radio" name={id} aria-label={toPlainText(c)} checked={choice === i} onChange={() => setChoice(i)} />
+                <MathText text={c} />
+              </label>
+            ))}
+          </fieldset>
+          {done === null ? (
+            <button type="button" className="studio-btn studio-btn-small" disabled={choice === null} onClick={() => setDone(choice === q.correct)}>Check</button>
+          ) : (
+            <div className={`studio-callout ${done ? 'studio-callout-ok' : 'studio-callout-bad'}`} role="status">
+              <p className="item-verdict">{done ? 'Correct.' : 'Not quite.'}</p>
+              <MathText as="p" text={q.explain} />
+              <p className="studio-muted">This does not count toward your Python skills — when you are ready, try the code above.</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CodeExercise({ ex }) {
   const draft = useWorkStore((s) => s.drafts[ex.id]);
   const result = useWorkStore((s) => s.results[ex.id]);
@@ -71,7 +116,7 @@ export default function CodeExercise({ ex }) {
   const evidence = (ok) => {
     if (recorded.current) return;
     recorded.current = true;
-    record({ competency: ex.competency, item: ex.id, ok, difficulty: hints ? 1 : 2, source: 'practice' });
+    record({ competency: ex.competency, item: ex.id, ok, difficulty: hints ? 1 : 2, source: 'practice', hinted: hints > 0 });
   };
 
   async function check() {
@@ -117,6 +162,7 @@ export default function CodeExercise({ ex }) {
         </div>
       </div>
       <MathText as="p" className="code-prompt" text={ex.prompt} />
+      {ex.noCode && <NoCodePath ex={ex} />}
 
       {choiceType ? (
         <>

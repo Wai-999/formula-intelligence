@@ -23,8 +23,8 @@ const PAGES = [
   ['Home (new learner)', hashFor('home')],
   ['Courses', hashFor('learn/courses')],
   ['Lesson: Slope as rate of change', hashFor('learn/lesson', { lessonId: 'a1-slope' })],
-  ['Formula map', hashFor('maps/formulas')],
-  ['Code exercises (Python not started)', hashFor('practice/code')],
+  ['Formula map', hashFor('learn/formulas')],
+  ['Code exercises (Python not started)', hashFor('apply/exercises')],
 ];
 
 // Installed before any page script: collects paint, LCP, layout shifts and

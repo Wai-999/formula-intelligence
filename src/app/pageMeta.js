@@ -29,6 +29,10 @@ export function pageMeta(pageId, params = {}) {
   const base = section && section.id !== 'home'
     ? [{ label: section.label, page: sectionHome(section.id), params: {} }]
     : [];
+  // A page behind a tab gets that tab as a step ("Learn / Maps / Concept
+  // map"), unless the tab is where the section link already goes.
+  const parent = page.parent && pageById[page.parent];
+  if (parent && parent.id !== sectionHome(section?.id)) base.push({ label: parent.title, page: parent.id, params: {} });
   const custom = resolvers[pageId]?.(params);
   if (custom) {
     return { title: custom.title, crumbs: [...base, ...(custom.crumbs ?? []), { label: custom.title }] };

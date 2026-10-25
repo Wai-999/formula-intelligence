@@ -41,7 +41,7 @@ function renderAll(text) {
   }
 }
 
-const itemsOf = (b) => [...b.priorCheck, ...b.practice, ...b.checkpoint];
+const itemsOf = (b) => [...b.priorCheck, ...b.practice, ...(b.apply?.items ?? []), ...b.checkpoint];
 
 describe('catalog', () => {
   it('has unique subject, course and unit ids, and every course in a known subject', () => {

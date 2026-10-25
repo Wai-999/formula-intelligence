@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install numpy matplotlib
+      - run: pip install numpy matplotlib pandas
       - run: npm run verify:python
       # Accessibility needs a real browser (contrast and focusability depend
       # on computed layout, which jsdom cannot provide), so this runs against

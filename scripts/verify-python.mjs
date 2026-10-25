@@ -65,6 +65,9 @@ for (const ex of PY_EXERCISES) {
     continue;
   }
   const harness = `${ex.setup ?? ''}\n${ex.solution}\n\n# ---- tests ----\n${ex.tests.map((t) => t.code).join('\n')}\nprint("ALL TESTS PASSED")`;
+  // The no-code path shows what the reference solution prints; it must be
+  // exactly that (V4 §8 — a learner who is not coding reads this output).
+  if (ex.noCode) run(`exercise ${ex.id} (no-code output)`, `${ex.setup ?? ''}\n${ex.solution}\n${ex.noCode.show}`, ex.noCode.output);
   run(`exercise ${ex.id} (reference solution)`, harness, 'ALL TESTS PASSED');
   // And the untouched starter must NOT pass: tests that accept the starter
   // would grade nothing.

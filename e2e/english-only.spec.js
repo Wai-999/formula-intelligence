@@ -32,6 +32,7 @@ for (const route of surfaces) {
 test('there is no language switch, and saved depth survives the change', async ({ page }) => {
   await page.goto('./#learn/ml', { waitUntil: 'networkidle' });
   await expect(page.getByRole('tablist', { name: 'Language' })).toHaveCount(0);
-  await expect(page.getByRole('group', { name: 'Explanation depth' }).getByRole('button', { name: 'Researcher' }))
-    .toHaveAttribute('aria-pressed', 'true');
+  // Since V4 the depth is a setting (Settings → Learning), not a header switch.
+  await page.goto('./#progress/settings', { waitUntil: 'networkidle' });
+  await expect(page.getByRole('group', { name: 'Explanation depth' }).getByRole('radio', { name: 'Researcher' })).toBeChecked();
 });

@@ -29,7 +29,7 @@ export default function CodeExercisesPage() {
           <p className="studio-muted">
             {solved} of {PY_EXERCISES.length} solved (including project steps). The first check downloads Python (about 10 MB,
             once); after that it works offline only if your browser kept it cached. Code runs in a background worker and is
-            stopped after 20 seconds, so an endless loop cannot freeze the page. Drafts are saved on this device.
+            stopped after 20 seconds, so an endless loop cannot freeze the page. Drafts are saved on this device. Not coding yet? Every coding exercise has a no-code version that shows the result and asks what it means. Ready-made snippets: the <a href={hashFor('apply/library')}>Python library</a>.
           </p>
         </div>
         <div className="studio-row" role="group" aria-label="Exercise type">

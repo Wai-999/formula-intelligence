@@ -55,6 +55,17 @@ export const FORMULAS = [
   }),
 
   // ——— Algebra I ———
+  F('f.break-even', 'Break-even quantity', 'q^* = \\frac{F}{p - v}', {
+    variables: [v('F', 'fixed costs per period', 'dollars'), v('p', 'price per unit', 'dollars'), v('v', 'variable cost per unit', 'dollars'), v('q^*', 'units needed for zero profit', 'units')],
+    assumptions: ['Constant price and constant variable cost per unit.', 'Fixed costs do not change with volume in the range considered.'],
+    domain: ['$p > v$ (otherwise no quantity breaks even when $F > 0$).'],
+    interpretation: 'Fixed costs divided by what each unit contributes toward them.',
+    pitfalls: ['Dividing by the price instead of the margin $p - v$.', 'Treating $q^*$ as independent of price: in reality a higher price sells fewer units.'],
+    application: 'Pricing, opening a shop, deciding whether a promotion or a new supplier pays.',
+    python: 'q_star = F / (p - v)',
+    concept: 'c.break-even', lesson: 'a1-break-even', claim: 'identity',
+    references: ['https://openstax.org/books/college-algebra-2e/pages/7-1-systems-of-linear-equations-two-variables'],
+  }),
   F('f.slope', 'Slope of a line through two points', 'm = \\frac{y_2 - y_1}{x_2 - x_1}', {
     variables: [v('m', 'slope (rate of change)', 'units of y per unit of x'), v('(x_1, y_1),\\ (x_2, y_2)', 'two distinct points on the line', 'as measured')],
     assumptions: ['Both points lie on the same non-vertical line.'],
@@ -107,6 +118,17 @@ export const FORMULAS = [
   }),
 
   // ——— Linear algebra ———
+  F('f.matrix-vector', 'Matrix–vector product', '(X\\mathbf w)_i = \\sum_{j=1}^{d} x_{ij} w_j', {
+    variables: [v('X', 'data matrix, n rows by d columns'), v('\\mathbf w', 'weight vector with d entries'), v('(X\\mathbf w)_i', 'score of row i')],
+    assumptions: ['$X$ has as many columns as $\\mathbf w$ has entries.'],
+    domain: ['$X$ is $n \\times d$, $\\mathbf w$ is $d \\times 1$; the product is $n \\times 1$.'],
+    interpretation: 'Each entry is the dot product of one row with the weights.',
+    pitfalls: ['Mismatched shapes.', 'Reading weights as importance when columns have different units or scales.'],
+    application: 'Scoring customers, linear-model predictions, cost of many recipes at once.',
+    python: 'scores = X @ w',
+    concept: 'c.matrix-vector', lesson: 'la-matrix-scores', claim: 'definition',
+    references: ['https://numpy.org/doc/stable/reference/generated/numpy.matmul.html'],
+  }),
   F('f.dot', 'Dot product', '\\mathbf u \\cdot \\mathbf v = \\sum_{i=1}^{n} u_i v_i', {
     variables: [v('\\mathbf u, \\mathbf v', 'vectors with n components')],
     assumptions: ['Both vectors have the same number of components.'],
@@ -202,6 +224,17 @@ export const FORMULAS = [
   }),
 
   // ——— Calculus ———
+  F('f.marginal-cost', 'Marginal cost of a quadratic cost', "C(q) = F + aq + bq^2 \\;\\Rightarrow\\; C'(q) = a + 2bq", {
+    variables: [v('C(q)', 'total cost of q units', 'dollars'), v("C'(q)", 'marginal cost', 'dollars per unit'), v('F, a, b', 'fixed cost and cost coefficients')],
+    assumptions: ['Cost is a smooth function of output over the range considered.'],
+    domain: ['$q \\ge 0$, within the range of output the cost model was fitted to.'],
+    interpretation: "The rate at which cost rises per extra unit; the next unit costs exactly $C'(q) + b$.",
+    pitfalls: ['Confusing marginal cost with average cost $C(q)/q$.', 'Using a derivative across a step in costs (a new shift or machine).'],
+    application: 'Pricing extra orders, choosing output, comparing a bulk offer with its cost.',
+    python: 'def dC(q): return a + 2 * b * q',
+    concept: 'c.marginal', lesson: 'c1-marginal-cost', claim: 'theorem',
+    references: ['https://openstax.org/books/calculus-volume-1/pages/3-4-derivatives-as-rates-of-change'],
+  }),
   F('f.derivative-def', 'Derivative (limit definition)', "f'(a) = \\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h}", {
     variables: [v("f'(a)", 'instantaneous rate of change at a', 'units of f per unit of x'), v('h', 'step size, never 0 inside the limit')],
     assumptions: ['f is defined around a.'],

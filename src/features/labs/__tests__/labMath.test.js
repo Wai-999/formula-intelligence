@@ -4,6 +4,7 @@ import { eigen2, covariance2, nextEliminationStep, analyzeEchelon } from '../lin
 import { posterior, confusionAt, rocAuc, rocCurve, brier, ppv } from '../prob.js';
 import { descend } from '../optimize.js';
 import { leastSquares } from '../fit.js';
+import { breakEven, profitAt, cost, marginalCost, differenceQuotient, matVec, standardize } from '../business.js';
 
 // The labs' arithmetic, checked against cases whose answers are known in
 // closed form (acceptance test 4: "check numerical results against known
@@ -151,5 +152,36 @@ describe('optimization and fitting', () => {
     close(r.m, 0.6);
     close(r.b, 2.2);
     expect(Number.isNaN(leastSquares([2, 2], [1, 3]).m)).toBe(true); // vertical data: no slope
+  });
+});
+
+describe('applied labs (V4 exemplars)', () => {
+  it('break-even: F / (p − v), and none when the margin is not positive', () => {
+    expect(breakEven({ F: 1200, p: 18, v: 10 })).toBe(150);
+    close(breakEven({ F: 500, p: 12, v: 5 }), 500 / 7);
+    expect(breakEven({ F: 1200, p: 9, v: 10 })).toBe(Infinity);
+    expect(profitAt({ F: 1200, p: 18, v: 10 }, 150)).toBe(0);
+    expect(profitAt({ F: 1200, p: 18, v: 10 }, 200)).toBe(400);
+  });
+
+  it('marginal cost: the difference quotient of a quadratic is a + 2bq + bh exactly', () => {
+    const m = { F: 200, a: 1.5, b: 0.002 };
+    expect(cost(m, 300)).toBeCloseTo(830, 9);
+    close(marginalCost(m, 300), 2.7);
+    for (const h of [50, 10, 1, 0.1]) close(differenceQuotient(m, 300, h), 1.5 + 2 * 0.002 * 300 + 0.002 * h, 1e-6);
+    // A $1 error in one record adds 1/h.
+    close(differenceQuotient(m, 300, 0.01, 0, 1) - differenceQuotient(m, 300, 0.01), 100, 1e-6);
+  });
+
+  it('matrix–vector scores and standardization match NumPy', () => {
+    const X = [[8, 25, 12], [2, 80, 3], [5, 40, 20], [1, 15, 1]];
+    const s = matVec(X, [3, 0.2, 0.5]);
+    [35, 23.5, 33, 6.5].forEach((v, i) => close(s[i], v));
+    // np.round(((X - X.mean(0)) / X.std(0)) @ np.ones(3), 2) → [1.25, 0.09, 1.82, -3.16]
+    const z = matVec(standardize(X), [1, 1, 1]);
+    [1.25, 0.09, 1.82, -3.16].forEach((v, i) => close(Math.round(z[i] * 100) / 100, v));
+    // Standardized columns have mean 0.
+    const Z = standardize(X);
+    for (let j = 0; j < 3; j += 1) close(Z.reduce((a, r) => a + r[j], 0), 0, 1e-9);
   });
 });

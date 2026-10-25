@@ -23,15 +23,15 @@ test('acceptance 7: lessons, labs, maps and the diagnostic work offline; Python 
   await expect(page.locator(VISIBLE + '.lab').first()).toBeVisible();
   expect(await page.locator(VISIBLE + 'math').count()).toBeGreaterThan(10);
 
-  await page.evaluate(() => { location.hash = '#maps/concepts'; });
+  await page.evaluate(() => { location.hash = '#learn/concepts'; });
   await expect(page.locator(VISIBLE + '.cmap-node').first()).toBeVisible();
 
-  await page.evaluate(() => { location.hash = '#progress/diagnostic'; });
-  await page.getByRole('button', { name: 'Start the diagnostic' }).click();
+  await page.evaluate(() => { location.hash = '#learn/placement'; });
+  await page.getByRole('button', { name: 'Start the placement check' }).click();
   await expect(page.locator('.dx-question')).toBeVisible();
 
   // Python cannot download offline — and says why instead of hanging.
-  await page.evaluate(() => { location.hash = '#projects/lab'; });
+  await page.evaluate(() => { location.hash = '#apply/lab'; });
   await page.locator(VISIBLE + '.pylab-run').filter({ hasText: 'Run' }).click();
   await expect(page.locator(VISIBLE + '.pylab-out-err')).toContainText('you may be offline', { timeout: 30_000 });
   await context.setOffline(false);

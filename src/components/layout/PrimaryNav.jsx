@@ -3,7 +3,7 @@ import { SECTIONS, pageById, sectionHome, hashFor } from '../../app/pages.js';
 import './PrimaryNav.css';
 
 /**
- * The seven primary sections (§3), as real links so they can be opened in a
+ * The five destinations (V4 §3), as real links so they can be opened in a
  * new tab, bookmarked and read out as links. One component serves two
  * layouts, chosen purely by CSS: a labelled sidebar from 1024 px (which the
  * learner can collapse to icons) and a compact labelled rail from 768 px.

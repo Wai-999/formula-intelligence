@@ -23,19 +23,18 @@ import './learn.css';
 
 const conceptById = Object.fromEntries(CONCEPTS.map((c) => [c.id, c]));
 
-// The ten elements of §6, in teaching order: understand → visualize →
-// derive → practice → apply → review.
+// Six steps, one scrollable page (V4 §4): why it matters → understand →
+// see it → try it → use it → check understanding. The ten authored elements
+// of every lesson (V3.1 §6) are all still here, regrouped: notation, the
+// readiness check, worked examples and the result under Understand, with
+// the derivation and the assumptions behind "Go deeper" disclosures.
 const SECTIONS = [
-  { id: 'question', title: 'The question' },
-  { id: 'before', title: 'Before you start' },
+  { id: 'matters', title: 'Why it matters' },
+  { id: 'understand', title: 'Understand' },
   { id: 'see', title: 'See it' },
-  { id: 'why', title: 'Why it works' },
-  { id: 'examples', title: 'Worked examples' },
-  { id: 'predict', title: 'Predict first' },
-  { id: 'practice', title: 'Practice' },
-  { id: 'checkpoint', title: 'Checkpoint' },
-  { id: 'python', title: 'In Python' },
-  { id: 'next', title: 'Keep going' },
+  { id: 'try', title: 'Try it' },
+  { id: 'use', title: 'Use it' },
+  { id: 'check', title: 'Check understanding' },
 ];
 
 function scrollToSection(lessonId, id) {
@@ -84,8 +83,39 @@ function NotesBox({ lessonId }) {
   return (
     <div className="lesson-notes">
       <label htmlFor={`notes-${lessonId}`} className="studio-h3">Your notes</label>
-      <textarea id={`notes-${lessonId}`} className="studio-textarea" value={text} onChange={(e) => onChange(e.target.value)} placeholder="What clicked? What is still fuzzy? Notes are saved on this device and collected in Notebook → Lesson notes." />
+      <textarea id={`notes-${lessonId}`} className="studio-textarea" value={text} onChange={(e) => onChange(e.target.value)} placeholder="What clicked? What is still fuzzy? Notes are saved on this device and collected in My Progress → Notebook." />
       <p className="studio-muted" role="status">{state === 'saved' ? 'Saved.' : state === 'typing' ? 'Saving…' : ''}</p>
+    </div>
+  );
+}
+
+/**
+ * "See connections" (V4 §3): what this lesson builds on and leads to, its
+ * concepts on the concept map, and the statistics formulas and ML models it
+ * touches — on demand, at the top of the lesson.
+ */
+function Connections({ meta, id }) {
+  const lists = [
+    { title: 'Builds on', items: meta.prerequisites.map((c) => ({ key: c, node: <a href={hashFor('learn/concepts', { conceptId: c })}>{conceptById[c]?.title ?? c}</a> })) },
+    { title: 'Teaches', items: meta.concepts.map((c) => ({ key: c, node: <a href={hashFor('learn/concepts', { conceptId: c })}>{conceptById[c]?.title ?? c}</a> })) },
+    {
+      title: 'Used in statistics and ML',
+      items: [
+        ...meta.formulaMap.filter((fid) => nodeById[fid]).map((fid) => ({ key: fid, node: <button type="button" className="link-btn" onClick={() => useUIStore.getState().viewOnMap(fid, null)}>{nodeById[fid].name} (formula map)</button> })),
+        ...meta.models.filter((m) => mlNodeById[m]).map((m) => ({ key: m, node: <button type="button" className="link-btn" onClick={() => { useUIStore.getState().goTo('learn/models'); useMLUIStore.getState().selectModel(m); }}>{mlNodeById[m].name} (model map)</button> })),
+      ],
+    },
+    { title: 'Leads to', items: meta.next.filter((n) => lessonById[n]).map((n) => ({ key: n, node: <a href={hashFor('learn/lesson', { lessonId: n })}>{lessonById[n].title}</a> })) },
+  ].filter((l) => l.items.length);
+  return (
+    <div id={id} className="lesson-connections" role="region" aria-label="Connections">
+      {lists.map((l) => (
+        <div key={l.title}>
+          <p className="studio-eyebrow">{l.title}</p>
+          <ul className="studio-list lesson-builds-on">{l.items.map((x) => <li key={x.key}>{x.node}</li>)}</ul>
+        </div>
+      ))}
+      {meta.concepts[0] && <p><a className="link-btn" href={hashFor('learn/concepts', { conceptId: meta.concepts[0] })}>Open the full concept map here</a></p>}
     </div>
   );
 }
@@ -147,9 +177,9 @@ export default function LessonPage({ lessonId }) {
   const meta = lessonById[lessonId];
   const [body, setBody] = useState(null);
   const [loadError, setLoadError] = useState(null);
-  const [current, setCurrent] = useState('question');
+  const [current, setCurrent] = useState('matters');
+  const [showConnections, setShowConnections] = useState(false);
   const openLesson = useLearningStore((s) => s.openLesson);
-  const level = useMLUIStore((s) => s.level);
   const rootRef = useRef(null);
 
   useEffect(() => {
@@ -170,7 +200,7 @@ export default function LessonPage({ lessonId }) {
     const update = () => {
       timer = 0;
       const line = root.getBoundingClientRect().top + 120;
-      let cur = 'question';
+      let cur = 'matters';
       for (const sec of root.querySelectorAll('.lesson-section')) {
         if (sec.getBoundingClientRect().top <= line) cur = sec.dataset.section;
       }
@@ -196,14 +226,18 @@ export default function LessonPage({ lessonId }) {
   if (loadError) return <div className="studio-page"><p className="studio-callout studio-callout-bad">This lesson could not be loaded. Check your connection and reload the page.</p></div>;
   if (!body) return <div className="page-loading" role="status">Loading the lesson…</div>;
 
-  const idx = SECTIONS.findIndex((s) => s.id === current);
+  const idx = Math.max(0, SECTIONS.findIndex((s) => s.id === current));
   const nextSection = SECTIONS[idx + 1];
-  const levels = ['scaffolded', 'independent', 'transfer'];
+  const tryItems = body.practice.filter((p) => p.level !== 'transfer');
+  // Use it: the lesson's real-world task (V4 lessons), then the transfer
+  // questions — the idea in settings the lesson did not show.
+  const useItems = [...(body.apply?.items ?? []), ...body.practice.filter((p) => p.level === 'transfer')];
+  const nextLessonId = meta.next.find((n) => lessonById[n]);
 
   return (
     <div className="studio-scroll lesson-scroll" ref={rootRef}>
       <div className="lesson-progress" aria-label="Lesson progress">
-        <span className="lesson-progress-text">Section {idx + 1} of {SECTIONS.length} · {SECTIONS[idx].title}</span>
+        <span className="lesson-progress-text">Step {idx + 1} of {SECTIONS.length} · {SECTIONS[idx].title}</span>
         <span className="lesson-progress-bar" aria-hidden="true"><span style={{ width: `${((idx + 1) / SECTIONS.length) * 100}%` }} /></span>
         {nextSection && (
           <button type="button" className="studio-btn studio-btn-small" onClick={() => scrollToSection(meta.id, nextSection.id)}>
@@ -220,16 +254,26 @@ export default function LessonPage({ lessonId }) {
             <div className="studio-row">
               <span className="studio-chip"><i className="ti ti-clock" aria-hidden="true" /> about {meta.minutes} min</span>
               <span className="studio-chip"><i className="ti ti-stairs" aria-hidden="true" /> {meta.difficulty}</span>
-              <span className="studio-chip studio-chip-warn" title="See Sources and docs/CONTENT_QA.md"><i className="ti ti-alert-triangle" aria-hidden="true" /> Awaiting independent math review</span>
+              <span className="studio-chip studio-chip-warn" title="See Sources and docs/CONTENT_QA.md"><i className="ti ti-alert-triangle" aria-hidden="true" /> Draft: awaiting independent math review</span>
+              <button
+                type="button"
+                className="studio-btn studio-btn-small"
+                aria-expanded={showConnections}
+                aria-controls={`lesson-${meta.id}-connections`}
+                onClick={() => setShowConnections((v) => !v)}
+              >
+                <i className="ti ti-share" aria-hidden="true" /> {showConnections ? 'Hide connections' : 'See connections'}
+              </button>
             </div>
+            {showConnections && <Connections meta={meta} id={`lesson-${meta.id}-connections`} />}
           </header>
 
-          <Section lessonId={meta.id} id="question" title="The question" n={1}>
+          <Section lessonId={meta.id} id="matters" title="Why it matters" n={1}>
             <div className="studio-callout lesson-question"><MathText as="p" text={body.intuition.question} /></div>
             {body.intuition.body.map((p, i) => <MathText key={i} as="p" className="lesson-p" text={p} />)}
           </Section>
 
-          <Section lessonId={meta.id} id="before" title="Before you start" n={2}>
+          <Section lessonId={meta.id} id="understand" title="Understand" n={2}>
             <h3 className="studio-h3">Notation</h3>
             <dl className="lesson-glossary">
               {body.glossary.map((g) => (
@@ -239,64 +283,28 @@ export default function LessonPage({ lessonId }) {
                 </div>
               ))}
             </dl>
-            <h3 className="studio-h3">Quick check: do you have what this lesson builds on?</h3>
-            <p className="studio-muted">
-              It uses {meta.prerequisites.map((p, i) => (
-                <span key={p}>{i > 0 && ', '}<a href={hashFor('maps/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></span>
-              ))}. If these two feel shaky, the linked concepts show where they are taught.
-            </p>
-            {body.priorCheck.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="prior" />)}
-          </Section>
-
-          <Section lessonId={meta.id} id="see" title="See it" n={3}>
-            <MathText as="p" className="lesson-p" text={body.visualization.intro} />
-            <LabHost id={body.visualization.lab} config={body.visualization.config} />
-            <p className="studio-muted lesson-alt"><strong>Without the picture:</strong> {body.visualization.textAlternative}</p>
-            {body.visualization.more?.map((m) => (
-              <div key={m.lab} className="lesson-more-lab">
-                <h3 className="studio-h3">Going further</h3>
-                <MathText as="p" className="lesson-p" text={m.intro} />
-                <LabHost id={m.lab} config={m.config} />
-              </div>
-            ))}
-          </Section>
-
-          <Section lessonId={meta.id} id="why" title="Why it works" n={4}>
-            <MathText as="p" className="lesson-p" text={body.derivation.intro} />
-            <ol className="lesson-steps">
-              {body.derivation.steps.map((s, i) => (
-                <li key={i}>
-                  <MathText as="p" text={s.say} />
-                  {s.math && <MathBlock tex={s.math} />}
-                </li>
-              ))}
-            </ol>
-            <div className="lesson-two">
-              <div>
-                <h3 className="studio-h3">Assumptions</h3>
-                <ul className="lesson-ul">{body.derivation.assumptions.map((a) => <li key={a}><MathText text={a} /></li>)}</ul>
-              </div>
-              <div>
-                <h3 className="studio-h3">Domain and restrictions</h3>
-                <ul className="lesson-ul">{body.derivation.domain.map((a) => <li key={a}><MathText text={a} /></li>)}</ul>
-              </div>
-            </div>
-            {meta.formulas.map((fid) => formulaById[fid] && (
-              <div key={fid} className="lesson-formula">
-                <p className="studio-eyebrow">Result · {formulaById[fid].claim}</p>
-                <MathBlock tex={formulaById[fid].latex} label={formulaById[fid].title} />
-              </div>
-            ))}
-          </Section>
-
-          <Section lessonId={meta.id} id="examples" title="Worked examples" n={5}>
+            <details className="lesson-disclosure">
+              <summary>Ready? Two quick checks on what this builds on</summary>
+              <p className="studio-muted">
+                This lesson uses {meta.prerequisites.map((p, i) => (
+                  <span key={p}>{i > 0 && ', '}<a href={hashFor('learn/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></span>
+                ))}. If these feel shaky, the linked concepts show where they are taught.
+              </p>
+              {body.priorCheck.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="prior" />)}
+            </details>
             {body.examples.map((ex) => (
               <article key={ex.title} className="lesson-example">
-                <h3 className="studio-h3">{ex.title}</h3>
+                <h3 className="studio-h3">Worked example: {ex.title}</h3>
                 <MathText as="p" text={ex.problem} />
-                <ol className="lesson-steps compact">{ex.steps.map((s, i) => <li key={i}><MathText text={s} /></li>)}</ol>
+                <ol className="lesson-steps compact">{ex.steps.map((st, i) => <li key={i}><MathText text={st} /></li>)}</ol>
                 <p className="lesson-answer"><MathText text={ex.answer} /></p>
               </article>
+            ))}
+            {meta.formulas.map((fid) => formulaById[fid] && (
+              <div key={fid} className="lesson-formula">
+                <p className="studio-eyebrow">The result · {formulaById[fid].claim}</p>
+                <MathBlock tex={formulaById[fid].latex} label={formulaById[fid].title} />
+              </div>
             ))}
             {body.counterexample && (
               <div className="studio-callout studio-callout-warn">
@@ -305,88 +313,114 @@ export default function LessonPage({ lessonId }) {
                 {body.counterexample.body.map((p, i) => <MathText key={i} as="p" text={p} />)}
               </div>
             )}
-          </Section>
-
-          <Section lessonId={meta.id} id="predict" title="Predict first" n={6}>
-            <PredictCard predict={body.predict} />
-          </Section>
-
-          <Section lessonId={meta.id} id="practice" title="Practice" n={7}>
-            <p className="studio-muted">Three levels: scaffolded (steps given), independent (just the question), and transfer (the idea in a new setting). Hints never cost you anything except that the item then counts as an easier one.</p>
-            {levels.map((lv) => {
-              const items = body.practice.filter((p) => p.level === lv);
-              if (!items.length) return null;
-              return (
-                <div key={lv} className="lesson-level">
-                  <h3 className="studio-h3">{lv[0].toUpperCase() + lv.slice(1)}</h3>
-                  {items.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" />)}
+            <details className="lesson-disclosure">
+              <summary>Go deeper: why it works</summary>
+              <MathText as="p" className="lesson-p" text={body.derivation.intro} />
+              <ol className="lesson-steps">
+                {body.derivation.steps.map((st, i) => (
+                  <li key={i}>
+                    <MathText as="p" text={st.say} />
+                    {st.math && <MathBlock tex={st.math} />}
+                  </li>
+                ))}
+              </ol>
+            </details>
+            <details className="lesson-disclosure">
+              <summary>Assumptions and limits</summary>
+              <div className="lesson-two">
+                <div>
+                  <h4 className="studio-h3">Assumptions</h4>
+                  <ul className="lesson-ul">{body.derivation.assumptions.map((a) => <li key={a}><MathText text={a} /></li>)}</ul>
                 </div>
-              );
-            })}
+                <div>
+                  <h4 className="studio-h3">Domain and restrictions</h4>
+                  <ul className="lesson-ul">{body.derivation.domain.map((a) => <li key={a}><MathText text={a} /></li>)}</ul>
+                </div>
+              </div>
+            </details>
           </Section>
 
-          <Section lessonId={meta.id} id="checkpoint" title="Checkpoint" n={8}>
+          <Section lessonId={meta.id} id="see" title="See it" n={3}>
+            <MathText as="p" className="lesson-p" text={body.visualization.intro} />
+            <LabHost id={body.visualization.lab} config={body.visualization.config} />
+            <p className="studio-muted lesson-alt"><strong>Without the picture:</strong> {body.visualization.textAlternative}</p>
+            {body.visualization.more?.map((m) => (
+              <details key={m.lab} className="lesson-disclosure lesson-more-lab">
+                <summary>Go deeper: another view</summary>
+                <MathText as="p" className="lesson-p" text={m.intro} />
+                <LabHost id={m.lab} config={m.config} />
+              </details>
+            ))}
+          </Section>
+
+          <Section lessonId={meta.id} id="try" title="Try it" n={4}>
+            <PredictCard predict={body.predict} />
+            <p className="studio-muted">From guided to independent. Hints never cost anything, except that the question then counts as an easier one; every attempt gets an explanation.</p>
+            {tryItems.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" />)}
+          </Section>
+
+          <Section lessonId={meta.id} id="use" title="Use it" n={5}>
+            {body.apply ? (
+              <>
+                <div className="studio-callout"><MathText as="p" text={body.apply.scenario} /></div>
+                {body.apply.steps?.length > 0 && <ol className="lesson-steps compact">{body.apply.steps.map((st, i) => <li key={i}><MathText text={st} /></li>)}</ol>}
+              </>
+            ) : <p className="studio-muted">The idea in settings the lesson did not show — the real test of understanding it.</p>}
+            {useItems.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" />)}
+            {body.apply?.limits?.length > 0 && (
+              <div className="studio-callout studio-callout-warn">
+                <p className="studio-eyebrow">Where this model breaks</p>
+                <ul className="lesson-ul">{body.apply.limits.map((l) => <li key={l}><MathText text={l} /></li>)}</ul>
+              </div>
+            )}
+            <details className="lesson-disclosure" open={Boolean(body.apply)}>
+              <summary>Optional: the same idea in Python</summary>
+              <MathText as="p" className="lesson-p" text={body.python.intro} />
+              <pre className="lesson-code" tabIndex={0} aria-label="Python code"><code>{body.python.code}</code></pre>
+              <p className="studio-eyebrow">Expected output</p>
+              <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Expected output"><code>{body.python.output}</code></pre>
+              <MathText as="p" className="studio-muted" text={body.python.explain} />
+              <div className="studio-row">
+                <button
+                  type="button"
+                  className="studio-btn studio-btn-small"
+                  onClick={() => {
+                    usePyLabStore.getState().create(`${meta.title} (lesson)`, body.python.code);
+                    useUIStore.getState().goTo('apply/lab');
+                  }}
+                >
+                  <i className="ti ti-player-play" aria-hidden="true" /> Run it in the Python lab
+                </button>
+                <span className="studio-muted">Runs in your browser; the first run downloads Python (about 10 MB). Not coding yet? The questions above are the whole lesson.</span>
+              </div>
+            </details>
+          </Section>
+
+          <Section lessonId={meta.id} id="check" title="Check understanding" n={6}>
             <CheckpointSection meta={meta} items={body.checkpoint} />
-          </Section>
-
-          <Section lessonId={meta.id} id="python" title="In Python" n={9}>
-            <MathText as="p" className="lesson-p" text={body.python.intro} />
-            <pre className="lesson-code" tabIndex={0} aria-label="Python code"><code>{body.python.code}</code></pre>
-            <p className="studio-eyebrow">Expected output</p>
-            <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Expected output"><code>{body.python.output}</code></pre>
-            <MathText as="p" className="studio-muted" text={body.python.explain} />
-            <div className="studio-row">
-              <button
-                type="button"
-                className="studio-btn studio-btn-small"
-                onClick={() => {
-                  usePyLabStore.getState().create(`${meta.title} (lesson)`, body.python.code);
-                  useUIStore.getState().goTo('projects/lab');
-                }}
-              >
-                <i className="ti ti-player-play" aria-hidden="true" /> Run it in the Python lab
-              </button>
-              <span className="studio-muted">Runs in your browser; the first run downloads Python (about 10 MB).</span>
-            </div>
-          </Section>
-
-          <Section lessonId={meta.id} id="next" title="Keep going" n={10}>
-            <div className="lesson-two">
-              <div>
-                <h3 className="studio-h3">Further reading</h3>
-                <ul className="lesson-ul">
-                  {body.reading.map((r) => (
-                    <li key={r.url}>
-                      <a href={r.url} target="_blank" rel="noopener noreferrer">{r.title}</a> — {r.source}. <span className="studio-muted">{r.note}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="studio-h3">Connections</h3>
-                <ul className="lesson-ul">
-                  {meta.concepts.map((c) => <li key={c}>Concept: <a href={hashFor('maps/concepts', { conceptId: c })}>{conceptById[c]?.title}</a> on the concept map</li>)}
-                  {meta.formulaMap.map((id) => nodeById[id] && (
-                    <li key={id}>Formula map: <button type="button" className="link-btn" onClick={() => useUIStore.getState().viewOnMap(id, null)}>{nodeById[id].name}</button></li>
-                  ))}
-                  {meta.models.map((id) => mlNodeById[id] && (
-                    <li key={id}>Model map: <button type="button" className="link-btn" onClick={() => { useUIStore.getState().goTo('maps/models'); useMLUIStore.getState().selectModel(id); }}>{mlNodeById[id].name}</button></li>
-                  ))}
-                  {meta.next.map((id) => (lessonById[id]
-                    ? <li key={id}>Next: <a href={hashFor('learn/lesson', { lessonId: id })}>{lessonById[id].title}</a></li>
-                    : null))}
-                </ul>
-              </div>
-            </div>
-            <h3 className="studio-h3">Review</h3>
-            <p className="studio-muted">Skills from this lesson come back for a short review on an expanding schedule (1, 3, 7, 14, 30, 60 days). Missing a day never resets anything; due reviews simply wait for you on Home.</p>
+            {nextLessonId && (
+              <p className="lesson-next">
+                Recommended next: <a className="studio-btn studio-btn-primary" href={hashFor('learn/lesson', { lessonId: nextLessonId })}>{lessonById[nextLessonId].title} →</a>
+              </p>
+            )}
+            <h3 className="studio-h3">Your skills from this lesson</h3>
+            <p className="studio-muted">They come back for a short review on an expanding schedule (1, 3, 7, 14, 30, 60 days) under Practice → Review. Missing a day never resets anything.</p>
             <CompetencyStatus ids={meta.competencies} />
-            {level === 'beginner' && <p className="studio-muted">Tip: switch the depth to Researcher in the header for more technical explanations elsewhere in the app.</p>}
+            <details className="lesson-disclosure">
+              <summary>Further reading</summary>
+              <ul className="lesson-ul">
+                {body.reading.map((r) => (
+                  <li key={r.url}>
+                    <a href={r.url} target="_blank" rel="noopener noreferrer">{r.title}</a> — {r.source}. <span className="studio-muted">{r.note}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
           </Section>
 
           <nav className="lesson-pager" aria-label="Lessons in this unit">
             {neighbours.prev ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.prev.id })}>← {neighbours.prev.title}</a> : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>← {course.title}</a>}
-            {neighbours.next ? <a className="studio-btn studio-btn-primary" href={hashFor('learn/lesson', { lessonId: neighbours.next.id })}>{neighbours.next.title} →</a> : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Back to the course →</a>}
+            {neighbours.next ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.next.id })}>{neighbours.next.title} →</a> : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Back to the course →</a>}
           </nav>
         </article>
 
@@ -403,12 +437,6 @@ export default function LessonPage({ lessonId }) {
               ))}
             </ol>
           </nav>
-          <div>
-            <p className="studio-eyebrow">Builds on</p>
-            <ul className="studio-list lesson-builds-on">
-              {meta.prerequisites.map((p) => <li key={p}><a href={hashFor('maps/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></li>)}
-            </ul>
-          </div>
           <NotesBox lessonId={meta.id} />
         </aside>
       </div>

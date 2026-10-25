@@ -123,7 +123,7 @@ export default function BackupPanel({ headingLevel = 3, allowReset = false }) {
         <div className="backup-confirm" role="alertdialog" aria-labelledby="reset-confirm-msg">
           <p id="reset-confirm-msg">
             This deletes all of your learning progress on this device — reviews, quiz and practice results, the
-            diagnostic, lesson progress, notes and journal entries. Your theme and depth settings are kept. It cannot
+            placement checks, lesson progress, notes and journal entries. Your theme and depth settings are kept. It cannot
             be undone unless you download a backup first.
           </p>
           <div className="backup-actions">

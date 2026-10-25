@@ -151,3 +151,12 @@
   display: flex; gap: 6px; align-items: flex-start;
   border-left: 3px solid var(--warning); padding: 2px 0 2px 8px;
 }
+
+.pylab-library-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  font-size: 13px;
+  color: var(--accent);
+}

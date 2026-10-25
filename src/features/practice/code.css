@@ -93,3 +93,24 @@
   flex-direction: column;
   gap: 10px;
 }
+
+/* The no-code path (V4 §8) sits right under the prompt, before the editor. */
+.code-nocode {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.code-nocode .link-btn {
+  align-self: flex-start;
+  min-height: 24px;
+}
+
+.code-nocode-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+}

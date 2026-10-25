@@ -5,8 +5,7 @@ import { useLearningStore } from '../../store/useLearningStore.js';
 import { interleave } from '../../lib/interleave.js';
 import { hashFor } from '../../app/pages.js';
 import ItemCard from '../learn/lesson/ItemCard.jsx';
-import '../../styles/studio.css';
-import '../learn/learn.css';
+import { lessonItems } from '../../data/curriculum/lessonItems.js';
 
 const SET_SIZE = 6;
 const subjectOf = (lesson) => courseById[lesson.course]?.subject;
@@ -14,9 +13,9 @@ const subjectOf = (lesson) => courseById[lesson.course]?.subject;
 /**
  * Mixed practice (decision D2): questions from different subjects, one at a
  * time and alternating, drawn from lessons the learner has opened. See
- * src/lib/interleave.js for the ordering rule.
+ * src/lib/interleave.js for the ordering rule. Part of Practice → Review.
  */
-export default function MixedPracticePage() {
+export default function MixedPractice() {
   const lessons = useLearningStore((s) => s.lessons);
   const [round, setRound] = useState(0);
   const [set, setSet] = useState(null);
@@ -42,7 +41,7 @@ export default function MixedPracticePage() {
       const bySubject = {};
       for (const { lesson, body } of loaded) {
         const key = subjectOf(lesson);
-        for (const item of [...body.practice, ...body.checkpoint]) (bySubject[key] ??= []).push({ ...item, lessonId: lesson.id });
+        for (const item of lessonItems(body)) (bySubject[key] ??= []).push({ ...item, lessonId: lesson.id });
       }
       const pools = Object.entries(bySubject).map(([key, items]) => ({ key, items }));
       setSet(interleave(pools, { size: SET_SIZE, lastAnswered: (id) => latest[id] ?? 0 }));
@@ -60,22 +59,16 @@ export default function MixedPracticePage() {
   ).filter((l) => !subjects.includes(subjectOf(l)));
 
   return (
-    <div className="studio-scroll">
-      <div className="studio-page">
-        <div className="studio-section studio-read">
-          <p className="studio-lede">
-            Questions from different subjects, mixed together. Each one starts with deciding which idea applies — the
-            part a block of similar questions never makes you practise.
-          </p>
-          <p className="studio-muted">
-            Drawn from lessons you have opened, least recently answered first, never two in a row from the same subject.
-            Your first answer to each counts toward your skills and review schedule.
-          </p>
-        </div>
+    <>
+        <p className="studio-muted studio-read">
+          Questions from different subjects, mixed together, so each one starts with deciding which idea applies — the
+          part a block of similar questions never makes you practise. Drawn from lessons you have opened, least recently
+          answered first, never two in a row from the same subject.
+        </p>
 
         {!ready && (
           <section className="studio-section studio-card" aria-labelledby="mixed-locked">
-            <h2 id="mixed-locked" className="studio-h3">Open lessons from two subjects first</h2>
+            <h3 id="mixed-locked" className="studio-h3">Open lessons from two subjects first</h3>
             <p className="studio-muted">
               {subjects.length === 0
                 ? 'You have not opened a lesson yet.'
@@ -97,9 +90,9 @@ export default function MixedPracticePage() {
 
         {current && (
           <section className="studio-section" aria-labelledby="mixed-q">
-            <h2 id="mixed-q" className="studio-eyebrow">
+            <h3 id="mixed-q" className="studio-eyebrow">
               Question {index + 1} of {set.length} · {subjectById[current.key]?.title}
-            </h2>
+            </h3>
             <ItemCard
               key={`${round}-${current.item.id}`}
               item={current.item}
@@ -123,7 +116,7 @@ export default function MixedPracticePage() {
 
         {done && (
           <section className="studio-section studio-card" aria-labelledby="mixed-done">
-            <h2 id="mixed-done" className="studio-h3">Set finished</h2>
+            <h3 id="mixed-done" className="studio-h3">Set finished</h3>
             <p className="studio-muted">
               {right} of {set.length} right on the first try
               {Object.keys(firstTry).length < set.length ? ` (${set.length - Object.keys(firstTry).length} skipped)` : ''}.
@@ -132,7 +125,6 @@ export default function MixedPracticePage() {
             <button type="button" className="studio-btn" onClick={() => setRound((r) => r + 1)}>Start a new mixed set</button>
           </section>
         )}
-      </div>
-    </div>
+    </>
   );
 }

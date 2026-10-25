@@ -91,6 +91,23 @@
   border-color: var(--border-strong);
 }
 
+/* A list laid out by its container (a grid of cards), without bullets. */
+.studio-list-plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.studio-card-link .studio-h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-card-link .studio-h3 .ti {
+  color: var(--primary-text);
+}
+
 .studio-section {
   display: flex;
   flex-direction: column;

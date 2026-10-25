@@ -133,7 +133,7 @@ function Detail({ id, onSelect }) {
               return (
                 <li key={e.target}>
                   <button type="button" className="link-btn" onClick={() => {
-                    if (isModel) { useUIStore.getState().goTo('maps/models'); useMLUIStore.getState().selectModel(e.target.slice(6)); }
+                    if (isModel) { useUIStore.getState().goTo('learn/models'); useMLUIStore.getState().selectModel(e.target.slice(6)); }
                     else useUIStore.getState().viewOnMap(e.target.slice(7), null);
                   }}>{isModel ? 'Model map' : 'Formula map'}: {node?.title}</button>
                 </li>
@@ -143,7 +143,7 @@ function Detail({ id, onSelect }) {
         </div>
       )}
       {apps.length > 0 && (
-        <p className="studio-muted">Applied in: {apps.map((a) => a.title).join(', ')} (<a href={hashFor('maps/knowledge')}>careers & applications</a>).</p>
+        <p className="studio-muted">Applied in: {apps.map((a) => a.title).join(', ')} (<a href={hashFor('learn/careers')}>careers & applications</a>).</p>
       )}
     </div>
   );

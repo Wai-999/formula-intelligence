@@ -3,7 +3,7 @@ import MathText from '../../components/math/MathText.jsx';
 import { DX_ITEMS, BANK_VERSION, dxItemById } from '../../data/diagnostic/itemBank.js';
 import { DOMAINS } from '../../data/curriculum/competencies.js';
 import { COURSES, courseById } from '../../data/curriculum/catalog.js';
-import { nextItem, assessDomain, recommend, LEVEL_TEXT } from '../../lib/diagnostic.js';
+import { nextItem, assessDomain, recommend, placementChoices, LEVEL_TEXT } from '../../lib/diagnostic.js';
 import { checkAnswer } from '../../lib/answers.js';
 import { toPlainText } from '../../lib/mathFormat.js';
 import { useDiagnosticStore } from '../../store/useDiagnosticStore.js';
@@ -72,18 +72,30 @@ function Results({ attempt, onRetake }) {
   const setPlacement = useDiagnosticStore((s) => s.setPlacement);
   const [manual, setManual] = useState(placement?.course ?? attempt.result.course);
   const rec = attempt.result;
+  const choice = placementChoices(rec.course);
   return (
     <div className="studio-section">
       <div className="studio-callout">
         <p className="studio-eyebrow">Suggested starting point — provisional</p>
         <h2 className="studio-h2">{courseById[rec.course]?.title}</h2>
         <ul className="lesson-ul">{rec.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
-        <div className="studio-row" style={{ marginTop: 10 }}>
+        {/* V4 §6: the suggestion is reversible in one click, in either direction. */}
+        <div className="studio-row dx-choices" role="group" aria-label="Where to start" style={{ marginTop: 10 }}>
+          {choice.earlier && (
+            <a className="studio-btn" href={hashFor('learn/course', { courseId: choice.earlier })} onClick={() => setPlacement(choice.earlier, 'manual')}>
+              Start earlier: {courseById[choice.earlier]?.title}
+            </a>
+          )}
           <a className="studio-btn studio-btn-primary" href={hashFor('learn/course', { courseId: rec.course })} onClick={() => setPlacement(rec.course, 'diagnostic', attempt.id)}>
-            Start {courseById[rec.course]?.title}
+            Start here: {courseById[rec.course]?.title}
           </a>
-          <button type="button" className="studio-btn" onClick={onRetake}>Retake the diagnostic</button>
+          {choice.ahead && (
+            <a className="studio-btn" href={hashFor('learn/course', { courseId: choice.ahead })} onClick={() => setPlacement(choice.ahead, 'manual')}>
+              Skip ahead: {courseById[choice.ahead]?.title}
+            </a>
+          )}
         </div>
+        <p className="studio-muted">Not sure? Start earlier: revisiting familiar ground costs a little time; a gap costs more later. <button type="button" className="link-btn" onClick={onRetake}>Retake the placement check</button></p>
       </div>
 
       {rec.alsoConsider.length > 0 && (
@@ -129,7 +141,7 @@ function Results({ attempt, onRetake }) {
           </select>
           <button type="button" className="studio-btn" onClick={() => setPlacement(manual, 'manual')}>Use this</button>
         </div>
-        {placement && <p className="studio-muted" role="status">Current starting point: {courseById[placement.course]?.title} ({placement.source === 'manual' ? 'your choice' : placement.source === 'diagnostic' ? 'from a diagnostic' : 'chosen at start'}).</p>}
+        {placement && <p className="studio-muted" role="status">Current starting point: {courseById[placement.course]?.title} ({placement.source === 'manual' ? 'your choice' : placement.source === 'diagnostic' ? 'from a placement check' : 'chosen at start'}).</p>}
       </div>
 
       <details className="dx-review">
@@ -227,7 +239,7 @@ export default function DiagnosticPage() {
               <li>The result is a provisional suggestion with its uncertainty shown, not an official placement. You can override it or retake it any time.</li>
             </ul>
             <div className="studio-row">
-              <button type="button" className="studio-btn studio-btn-primary" onClick={start}>Start the diagnostic</button>
+              <button type="button" className="studio-btn studio-btn-primary" onClick={start}>Start the placement check</button>
               <a className="studio-btn" href={hashFor('learn/courses')}>Skip it and browse courses</a>
             </div>
           </div>

@@ -66,29 +66,38 @@
   color: var(--text-muted);
 }
 
-.home-grid {
+/* One compact row of facts, each a way in — not a dashboard of cards. */
+.home-summary {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
 }
 
-.home-grid .studio-h3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.home-grid .studio-h3 .ti {
-  color: var(--primary-text);
-}
-
-.home .link-btn {
-  align-self: flex-start;
-  text-align: left;
-}
-
-.home-review {
+.home-summary a {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-md);
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-summary a:hover {
+  border-color: var(--border-strong);
+}
+
+.home-summary strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.home-summary span {
+  font-size: 13px;
+  color: var(--text-muted);
 }
