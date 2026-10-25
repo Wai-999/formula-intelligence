@@ -24,6 +24,7 @@
     "validate:college": "node scripts/validate-college-data.mjs",
     "check:citations": "node scripts/check-citations.mjs",
     "docs:curriculum": "node scripts/curriculum-map.mjs",
+    "docs:college": "node scripts/college-report.mjs",
     "evidence:screenshots": "node scripts/screenshots.mjs",
     "evidence:perf": "node scripts/perf-lab.mjs"
   },

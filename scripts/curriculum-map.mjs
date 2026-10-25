@@ -26,7 +26,7 @@ Generated from \`src/data/curriculum/catalog.js\` by \`npm run docs:curriculum\`
 
 ## Recommended path
 
-Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. (These are the \`prerequisites\` in the table below.) The diagnostic places a learner on the first five steps (\`MATH_PATH\` in \`src/lib/diagnostic.js\`).
+Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. The C++ track (V5) runs alongside too: C++ Programming Fundamentals → Object-Oriented Programming in C++ → Data Structures and Algorithms, with Discrete Structures after C++ Fundamentals — mirroring Ohlone's CS-102 → CS-116 → CS-124 and CS-102 → CS-113. (These are the \`prerequisites\` in the table below.) The diagnostic places a learner on the first five steps (\`MATH_PATH\` in \`src/lib/diagnostic.js\`).
 
 ## Courses
 `);

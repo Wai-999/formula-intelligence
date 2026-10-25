@@ -4,13 +4,13 @@ Generated from `src/data/curriculum/catalog.js` by `npm run docs:curriculum` —
 
 **Status words.** *Authored* means the lesson's content exists in `src/data/curriculum/lessons/` with all ten §6 elements. *Planned* means only a title exists. A course is **partial** when some of its lessons are authored and **outline** when none are; no course is complete. Every authored lesson is an **AI draft awaiting independent human math review** (`review.status: 'awaiting-human-review'`, reviewer `null`) — content-complete for this slice, not review-complete.
 
-**Totals:** 9 subjects · 11 courses · 71 units · **23 authored lessons** · 139 planned lesson titles · 47 competencies in 8 domains · 23 interactive labs.
+**Totals:** 10 subjects · 15 courses · 96 units · **35 authored lessons** · 172 planned lesson titles · 58 competencies in 9 domains · 31 interactive labs.
 
 **Algebra and Linear Algebra are separate subjects** (§5): Algebra I/II build symbolic fluency with one-variable functions; Linear Algebra starts from vectors and matrices and lists Algebra I as a prerequisite, never the other way round.
 
 ## Recommended path
 
-Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. (These are the `prerequisites` in the table below.) The diagnostic places a learner on the first five steps (`MATH_PATH` in `src/lib/diagnostic.js`).
+Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. The C++ track (V5) runs alongside too: C++ Programming Fundamentals → Object-Oriented Programming in C++ → Data Structures and Algorithms, with Discrete Structures after C++ Fundamentals — mirroring Ohlone's CS-102 → CS-116 → CS-124 and CS-102 → CS-113. (These are the `prerequisites` in the table below.) The diagnostic places a learner on the first five steps (`MATH_PATH` in `src/lib/diagnostic.js`).
 
 ## Courses
 
@@ -18,15 +18,19 @@ Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calcu
 |---|---|---|---|---|---|---|
 | Prealgebra | Mathematics Foundations | partial | 6 | 2 | 13 | — |
 | Algebra I | Algebra | partial | 7 | 4 | 13 | prealgebra |
-| Algebra II | Algebra | outline | 8 | 0 | 14 | algebra-1 |
-| Geometry, Trigonometry & Precalculus | Precalculus | outline | 8 | 0 | 12 | algebra-2 |
+| Algebra II | Algebra | partial | 8 | 2 | 11 | algebra-1 |
+| Geometry, Trigonometry & Precalculus | Precalculus | partial | 8 | 2 | 9 | algebra-2 |
 | Linear Algebra | Linear Algebra | partial | 9 | 6 | 19 | algebra-1 |
-| Calculus I — Limits and Derivatives | Calculus | partial | 4 | 2 | 8 | precalculus |
+| Calculus I — Limits and Derivatives | Calculus | partial | 4 | 3 | 7 | precalculus |
 | Calculus II — Integrals and Series | Calculus | partial | 3 | 2 | 8 | calculus-1 |
 | Calculus III — Multivariable Calculus and Optimization | Calculus | partial | 4 | 2 | 9 | calculus-2, linear-algebra |
 | Probability & Statistics | Probability & Statistics | partial | 8 | 2 | 14 | algebra-1 |
 | Machine Learning & Data Science | Machine Learning | partial | 8 | 3 | 14 | prob-stats, linear-algebra |
-| Python for Data Science | Python for Data Science | outline | 6 | 0 | 15 | — |
+| Python for Data Science | Python for Data Science | partial | 6 | 1 | 14 | — |
+| C++ Programming Fundamentals | Computer Science (C++) | partial | 7 | 2 | 12 | — |
+| Object-Oriented Programming in C++ | Computer Science (C++) | partial | 6 | 1 | 9 | cpp-fundamentals |
+| Data Structures and Algorithms | Computer Science (C++) | partial | 6 | 1 | 10 | cpp-oop |
+| Discrete Structures | Computer Science (C++) | partial | 6 | 2 | 10 | cpp-fundamentals |
 
 ## Mathematics Foundations
 
@@ -63,7 +67,7 @@ Linear equations and relationships, functions, systems, polynomials and quadrati
 | Quadratic functions and equations | outline | — | Solving quadratics; Graphs of quadratics | alg.quadratics |
 | Exponents and exponential models | outline | — | Exponent rules; Exponential growth and decay | alg.exp-log |
 
-### Algebra II — outline
+### Algebra II — partial
 
 Polynomial and rational functions, complex numbers, exponentials and logarithms, sequences and series, and first proofs. About 60 hours when complete.
 
@@ -71,8 +75,8 @@ Polynomial and rational functions, complex numbers, exponentials and logarithms,
 |---|---|---|---|---|
 | Polynomial and rational functions | outline | — | Polynomial functions; Rational functions | alg.quadratics |
 | Complex numbers | outline | — | The imaginary unit; Complex arithmetic | alg.quadratics |
-| Exponential and logarithmic functions | outline | — | Logarithms; Exponential equations; The number e | alg.exp-log |
-| Inverse and composite functions | outline | — | Composition; Inverse functions | func.compose-inverse |
+| Exponential and logarithmic functions | partial | **Exponentials and logarithms: growth and how to undo it** | The number e and continuous growth | alg.exp-log |
+| Inverse and composite functions | partial | **Composite and inverse functions** | Graphs of inverses and restricted domains | func.compose-inverse |
 | Sequences and series | outline | — | Arithmetic and geometric sequences; Finite and infinite geometric series | alg.exp-log |
 | Transformations of functions | outline | — | Shifts, stretches and reflections | func.transform |
 | Nonlinear systems and inequalities | outline | — | Nonlinear systems | alg.systems |
@@ -82,7 +86,7 @@ Polynomial and rational functions, complex numbers, exponentials and logarithms,
 
 Geometry, trigonometry, vectors in the plane and the function toolkit calculus assumes.
 
-### Geometry, Trigonometry & Precalculus — outline
+### Geometry, Trigonometry & Precalculus — partial
 
 Essential geometry, the unit circle, trigonometric functions, vectors in the plane, parametric and polar forms, and limit intuition. About 60 hours when complete.
 
@@ -90,12 +94,12 @@ Essential geometry, the unit circle, trigonometric functions, vectors in the pla
 |---|---|---|---|---|
 | Essential geometry | outline | — | Similarity and the Pythagorean theorem | trig.unit-circle |
 | Vectors in the plane | outline | — | Components, magnitude and direction | trig.vectors-plane |
-| Angles and the unit circle | outline | — | Radians; The unit circle | trig.unit-circle |
+| Angles and the unit circle | authored | **Radians and the unit circle** | — | trig.unit-circle |
 | Trigonometric functions and identities | outline | — | Graphs of sine and cosine; Identities | trig.identities |
 | Inverse trigonometry and periodic models | outline | — | Inverse trigonometric functions; Periodic models | trig.identities |
 | Parametric and polar coordinates | outline | — | Parametric equations; Polar coordinates | trig.unit-circle |
 | The function toolkit | outline | — | Function families | func.transform, func.compose-inverse |
-| Limit intuition | outline | — | Approaching a value | calc.limits |
+| Limit intuition | authored | **Limits: what a function approaches** | — | calc.limits |
 
 ## Linear Algebra
 
@@ -129,7 +133,7 @@ Limits, continuity, the derivative from first principles, derivative rules, and 
 |---|---|---|---|---|
 | Limits and continuity | outline | — | Limits; Continuity | calc.limits |
 | The derivative | authored | **The derivative from first principles**<br>**Marginal cost: what does one more unit cost?** | — | calc.derivative |
-| Derivative rules | outline | — | Power, product and quotient rules; The chain rule; Implicit differentiation and related rates | calc.rules (no diagnostic item) |
+| Derivative rules | partial | **The chain rule: rates that multiply** | Power, product and quotient rules; Implicit differentiation and related rates | calc.rules |
 | Applications of derivatives | outline | — | Extrema; Curve sketching; Optimization | calc.optimization (no diagnostic item) |
 
 ### Calculus II — Integrals and Series — partial
@@ -195,18 +199,75 @@ How to know whether a model works: validation, metrics, calibration and fairness
 
 Python, NumPy and the habits that make numerical code trustworthy.
 
-### Python for Data Science — outline
+### Python for Data Science — partial
 
 Python from first principles to NumPy, with graded exercises that run in your browser. About 50 hours when complete.
 
 | Unit | Status | Authored lessons | Planned lessons | Exit competencies |
 |---|---|---|---|---|
-| Python basics | outline | — | Values and variables; Functions; Control flow | py.basics |
+| Python basics | partial | **Python first steps: lists, loops and an honest average** | Functions; Conditions and control flow | py.basics |
 | Lists and dictionaries | outline | — | Lists; Dictionaries | py.collections |
 | Debugging | outline | — | Reading tracebacks | py.debugging |
 | NumPy arrays and broadcasting | outline | — | Arrays; Broadcasting; Floating-point precision | py.numpy |
 | pandas, matplotlib, SciPy and scikit-learn | outline | — | pandas DataFrames; Plotting; SciPy; scikit-learn | py.numpy |
 | Reproducible, tested code | outline | — | Testing numerical code; Clean code | py.debugging |
+
+## Computer Science (C++)
+
+C++ programming, object-oriented design, data structures and the discrete mathematics behind algorithms.
+
+### C++ Programming Fundamentals — partial
+
+From a first compiled program to functions, vectors and files: read code, predict its output, trace it, debug it, then write and test your own. About 70 hours when complete.
+
+| Unit | Status | Authored lessons | Planned lessons | Exit competencies |
+|---|---|---|---|---|
+| Programs, compilers and the toolchain | outline | — | Your first compiled program; Reading compiler messages | cpp.basics |
+| Types, operators, conversions and input/output | outline | — | Types and operators; Integer division and conversions; Console input and output | cpp.basics |
+| Branches and loops | partial | **Loops you can trace** | Boolean logic and branching | cpp.basics, cpp.debugging (no diagnostic item) |
+| Functions, scope, vectors and strings | partial | **Functions and vectors: copies versus references** | Strings and text processing; Testing a function | cpp.functions (no diagnostic item) |
+| Decomposition and file processing | outline | — | Structured decomposition; Reading files robustly | cpp.functions (no diagnostic item), cpp.debugging (no diagnostic item) |
+| References and pointers | outline | — | References and pointers | cpp.functions (no diagnostic item) |
+| A complete small program | outline | — | Capstone: console data summarizer | cpp.functions (no diagnostic item), cpp.debugging (no diagnostic item) |
+
+### Object-Oriented Programming in C++ — partial
+
+Classes that keep their promises: encapsulation, constructors and destructors, object lifetime, operator overloading, inheritance, polymorphism, templates and exceptions. About 70 hours when complete.
+
+| Unit | Status | Authored lessons | Planned lessons | Exit competencies |
+|---|---|---|---|---|
+| Classes, encapsulation and invariants | partial | **Classes that keep their promises** | const correctness | cpp.oop (no diagnostic item) |
+| Constructors, destructors and object lifetime | outline | — | Object lifetime; RAII and ownership | cpp.oop (no diagnostic item) |
+| Operator and function overloading | outline | — | Overloading operators | cpp.oop (no diagnostic item) |
+| Composition, inheritance and polymorphism | outline | — | Composition and inheritance; Virtual functions and polymorphism | cpp.oop (no diagnostic item) |
+| Templates and exceptions | outline | — | Function and class templates; Exceptions | cpp.oop (no diagnostic item), cpp.debugging (no diagnostic item) |
+| A tested multi-file object model | outline | — | Capstone: an inventory object model | cpp.oop (no diagnostic item) |
+
+### Data Structures and Algorithms — partial
+
+Stacks, queues, lists, trees and hash tables, recursion, searching and sorting — implemented in C++ and analysed with big-O. About 80 hours when complete.
+
+| Unit | Status | Authored lessons | Planned lessons | Exit competencies |
+|---|---|---|---|---|
+| Algorithm analysis and recursion | outline | — | Counting steps and big-O; Recursion and the call stack | ds.complexity |
+| Vectors, linked lists, stacks and queues | partial | **Stacks and queues: who gets served next?** | Linked lists | ds.linear (no diagnostic item) |
+| Hash tables | outline | — | Hash tables | ds.trees-hash (no diagnostic item) |
+| Trees and heaps | outline | — | Binary trees and traversals; Binary search trees; Heaps and priority queues | ds.trees-hash (no diagnostic item) |
+| Searching and sorting | outline | — | Binary search; Sorting algorithms | ds.complexity |
+| Graphs | outline | — | Graph representations and traversal | dm.graphs (no diagnostic item) |
+
+### Discrete Structures — partial
+
+Logic, sets, functions and relations, proof techniques, induction, counting, graphs and trees, and discrete probability — the mathematics of algorithms. About 70 hours when complete.
+
+| Unit | Status | Authored lessons | Planned lessons | Exit competencies |
+|---|---|---|---|---|
+| Propositional and predicate logic | partial | **Logic you can compute: truth tables and De Morgan** | Quantifiers and negation | dm.logic |
+| Sets, functions and relations | outline | — | Sets; Functions and relations | dm.logic |
+| Proof techniques | outline | — | Direct and contrapositive proof; Proof by contradiction | dm.proof (no diagnostic item) |
+| Induction and recursion | partial | **Proof by induction** | Recursive definitions and strong induction | dm.proof (no diagnostic item) |
+| Counting and discrete probability | outline | — | Permutations and combinations; Discrete probability | dm.counting (no diagnostic item) |
+| Graphs and trees | outline | — | Graphs; Trees | dm.graphs (no diagnostic item) |
 
 ## Authored lessons
 
@@ -218,6 +279,10 @@ Python from first principles to NumPy, with graded exercises that run in your br
 | Slope as rate of change (`a1-slope`) | Algebra I | alg.slope | slope | 35 | awaiting-human-review |
 | Slope–intercept form (`a1-slope-intercept`) | Algebra I | alg.slope-intercept | function-transformations | 35 | awaiting-human-review |
 | Fitting a line to data (`a1-line-fit`) | Algebra I | alg.line-fit | least-squares | 45 | awaiting-human-review |
+| Composite and inverse functions (`a2-composition`) | Algebra II | func.compose-inverse | composition-chain | 40 | awaiting-human-review |
+| Exponentials and logarithms: growth and how to undo it (`a2-exp-log`) | Algebra II | alg.exp-log | log-scale | 45 | awaiting-human-review |
+| Radians and the unit circle (`pc-unit-circle`) | Geometry, Trigonometry & Precalculus | trig.unit-circle | unit-circle | 45 | awaiting-human-review |
+| Limits: what a function approaches (`pc-limits`) | Geometry, Trigonometry & Precalculus | calc.limits | limits | 40 | awaiting-human-review |
 | Vectors and the dot product (`la-dot-product`) | Linear Algebra | la.vector-ops, la.dot-product | vectors-dot | 40 | awaiting-human-review |
 | Projection onto a vector (`la-projection`) | Linear Algebra | la.projection | vectors-dot | 40 | awaiting-human-review |
 | Matrix–vector products: scoring customers (`la-matrix-scores`) | Linear Algebra | la.matrix-mult | matrix-scores | 40 | awaiting-human-review |
@@ -226,6 +291,7 @@ Python from first principles to NumPy, with graded exercises that run in your br
 | Principal components and the SVD (`la-svd-pca`) | Linear Algebra | la.svd-pca | svd-pca | 50 | awaiting-human-review |
 | The derivative from first principles (`c1-derivative`) | Calculus I — Limits and Derivatives | calc.derivative | slope | 45 | awaiting-human-review |
 | Marginal cost: what does one more unit cost? (`c1-marginal-cost`) | Calculus I — Limits and Derivatives | calc.derivative | marginal-cost | 40 | awaiting-human-review |
+| The chain rule: rates that multiply (`c1-chain-rule`) | Calculus I — Limits and Derivatives | calc.rules | composition-chain | 45 | awaiting-human-review |
 | Area as a limit of Riemann sums (`c2-riemann`) | Calculus II — Integrals and Series | calc.integral | riemann | 45 | awaiting-human-review |
 | Taylor polynomials (`c2-taylor`) | Calculus II — Integrals and Series | calc.series | taylor | 45 | awaiting-human-review |
 | Partial derivatives and the gradient (`c3-gradient`) | Calculus III — Multivariable Calculus and Optimization | calc.gradient, calc.optimization | gradient-hessian | 50 | awaiting-human-review |
@@ -235,8 +301,15 @@ Python from first principles to NumPy, with graded exercises that run in your br
 | Validation, cross-validation and leakage (`ml-validation`) | Machine Learning & Data Science | ml.validation | cross-validation | 45 | awaiting-human-review |
 | Confusion matrix, precision, recall and ROC (`ml-classification-metrics`) | Machine Learning & Data Science | ml.classification-metrics | decision-boundary | 50 | awaiting-human-review |
 | Calibration and fairness checks (`ml-calibration-fairness`) | Machine Learning & Data Science | ml.calibration-fairness | calibration | 45 | awaiting-human-review |
+| Python first steps: lists, loops and an honest average (`py-first-steps`) | Python for Data Science | py.basics, py.collections, py.debugging | code-trace | 40 | awaiting-human-review |
+| Loops you can trace (`cpp-loops-trace`) | C++ Programming Fundamentals | cpp.basics, cpp.debugging | code-trace | 45 | awaiting-human-review |
+| Functions and vectors: copies versus references (`cpp-functions-vectors`) | C++ Programming Fundamentals | cpp.functions, cpp.debugging | code-trace | 45 | awaiting-human-review |
+| Classes that keep their promises (`cpp-classes-invariants`) | Object-Oriented Programming in C++ | cpp.oop | code-trace | 45 | awaiting-human-review |
+| Stacks and queues: who gets served next? (`ds-stacks-queues`) | Data Structures and Algorithms | ds.linear, ds.complexity | stack-queue | 45 | awaiting-human-review |
+| Logic you can compute: truth tables and De Morgan (`dm-logic`) | Discrete Structures | dm.logic | truth-table | 40 | awaiting-human-review |
+| Proof by induction (`dm-induction`) | Discrete Structures | dm.proof | induction | 45 | awaiting-human-review |
 
 ## Diagnostic coverage
 
-32 of 47 competencies have diagnostic items (at least 2 each; 64 items). Not covered: `arith.exponents`, `arith.coordinates`, `alg.line-fit`, `la.projection`, `la.eigen`, `la.svd-pca`, `calc.rules`, `calc.series`, `calc.gradient`, `calc.optimization`, `stats.inference`, `ml.validation`, `ml.classification-metrics`, `ml.calibration-fairness`, `py.data` — mostly beyond the placement path, which only needs to choose between Prealgebra and Calculus I.
+36 of 58 competencies have diagnostic items (at least 2 each; 73 items). Not covered: `arith.exponents`, `arith.coordinates`, `alg.line-fit`, `la.projection`, `la.eigen`, `la.svd-pca`, `calc.series`, `calc.gradient`, `calc.optimization`, `stats.inference`, `ml.validation`, `ml.classification-metrics`, `ml.calibration-fairness`, `py.data`, `cpp.functions`, `cpp.debugging`, `cpp.oop`, `ds.linear`, `ds.trees-hash`, `dm.proof`, `dm.counting`, `dm.graphs` — mostly beyond the placement path, which only needs to choose between Prealgebra and Calculus I.
 
