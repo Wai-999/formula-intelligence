@@ -200,6 +200,60 @@ int longestWait(const std::vector<int>& arrivals, int serviceMinutes) {
       { name: 'arrivals spaced out', call: 'longestWait({0, 10, 20}, 5)', expect: '0' },
     ],
   },
+  {
+    id: 'cpp.sensor-mean',
+    project: 'proj.sensor-log',
+    competency: 'cpp.functions',
+    title: 'Validate sensor readings in C++',
+    file: 'sensor_mean.cpp',
+    prompt: 'Write `meanValid(values)`: the mean of the readings that parse completely as numbers and lie between −40 and 60 °C, or 0.0 if none do. Empty strings, text such as `"ERR"`, trailing junk such as `"21.5abc"`, and out-of-range values are skipped.',
+    type: 'double',
+    starter: `#include <cstdlib>
+#include <string>
+#include <vector>
+
+// Mean of the valid readings (numbers from -40 to 60); 0.0 if none are valid.
+double meanValid(const std::vector<std::string>& values) {
+    // TODO: skip values that are empty, not numbers, or outside -40..60.
+    // This naive version averages everything atof can read.
+    double sum = 0.0;
+    for (const std::string& v : values) sum += std::atof(v.c_str());
+    return values.empty() ? 0.0 : sum / static_cast<double>(values.size());
+}`,
+    solution: `#include <cstddef>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+// Mean of the valid readings (numbers from -40 to 60); 0.0 if none are valid.
+double meanValid(const std::vector<std::string>& values) {
+    double sum = 0.0;
+    int n = 0;
+    for (const std::string& v : values) {
+        double x = 0.0;
+        std::size_t used = 0;
+        try {
+            x = std::stod(v, &used);
+        } catch (const std::invalid_argument&) {
+            continue;  // empty or not a number
+        } catch (const std::out_of_range&) {
+            continue;  // too large for a double
+        }
+        if (used != v.size()) continue;  // trailing junk such as "21.5abc"
+        if (x < -40.0 || x > 60.0) continue;
+        sum += x;
+        ++n;
+    }
+    return n == 0 ? 0.0 : sum / n;
+}`,
+    tests: [
+      { name: 'the greenhouse morning', call: 'meanValid({"18.2", "18.9", "", "19.6", "ERR", "21.4", "-999", "23.1", "85.0", "24.8", "25.3", "26.0", "26.4"})', expect: '203.7 / 9' },
+      { name: 'nothing valid', call: 'meanValid({"", "ERR", "-999"})', expect: '0.0' },
+      { name: 'trailing junk is rejected', call: 'meanValid({"21.5", "21.5abc"})', expect: '21.5' },
+      { name: 'the range limits are valid', call: 'meanValid({"-40", "60"})', expect: '10.0' },
+      { name: 'no readings at all', call: 'meanValid({})', expect: '0.0' },
+    ],
+  },
 ];
 
 export const cppExerciseById = Object.fromEntries(CPP_EXERCISES.map((e) => [e.id, e]));

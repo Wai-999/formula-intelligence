@@ -35,7 +35,7 @@ export function CompileHelp({ file }) {
   );
 }
 
-function Exercise({ ex }) {
+export function CppExercise({ ex }) {
   const [shown, setShown] = useState(false);
   return (
     <div className="cpp-exercise">
@@ -86,7 +86,7 @@ export default function CppPanel({ lessonId, cpp, open }) {
         <span className="studio-muted">Not coding yet? The questions above are the whole lesson.</span>
       </div>
       <CompileHelp file={cpp.file} />
-      {exercises.map((ex) => <Exercise key={ex.id} ex={ex} />)}
+      {exercises.map((ex) => <CppExercise key={ex.id} ex={ex} />)}
     </details>
   );
 }

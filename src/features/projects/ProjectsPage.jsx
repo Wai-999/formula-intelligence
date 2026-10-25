@@ -6,6 +6,8 @@ import { lessonById } from '../../data/curriculum/lessons/index.js';
 import { useWorkStore } from '../../store/useWorkStore.js';
 import { hashFor } from '../../app/pages.js';
 import CodeExercise from '../practice/CodeExercise.jsx';
+import { CppExercise, CompileHelp } from '../learn/CppPanel.jsx';
+import { cppExerciseById } from '../../data/cpp/exercises.js';
 import '../../styles/studio.css';
 import '../learn/learn.css';
 import './projects.css';
@@ -16,6 +18,50 @@ import './projects.css';
 // and the limits of the answer. Progress is saved on this device.
 
 const STEP_KIND = { interpret: 'Interpret', decide: 'Decide' };
+
+// V5.1 §13.5: an editorial rubric, 0–2 per dimension, each with a reason.
+// It describes the project's design; it is not a validated measure of
+// whether anyone transfers the skill to real life.
+const RUBRIC = [
+  ['problem', 'Authentic decision or problem'],
+  ['provenance', 'Data provenance and reproducibility'],
+  ['method', 'Correct mathematical and computational method'],
+  ['interpretation', 'Interpretation with uncertainty and limits'],
+  ['transfer', 'Independent transfer beyond the worked example'],
+];
+
+function Rubric({ rubric }) {
+  const total = RUBRIC.reduce((n, [k]) => n + rubric[k][0], 0);
+  return (
+    <details className="lesson-disclosure">
+      <summary>How this project is designed: {total} of 10 on our rubric</summary>
+      <p className="studio-muted">An editorial self-assessment of the project’s design (0 = missing, 1 = partly, 2 = fully) — not a tested measure of learning.</p>
+      <table className="studio-table proj-rubric">
+        <thead><tr><th scope="col">Dimension</th><th scope="col">Score</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          {RUBRIC.map(([k, label]) => <tr key={k}><th scope="row">{label}</th><td>{rubric[k][0]} / 2</td><td>{rubric[k][1]}</td></tr>)}
+        </tbody>
+      </table>
+    </details>
+  );
+}
+
+/** A C++ step: done on the learner's own computer, so completion is self-reported. */
+function CppStep({ p, st }) {
+  const state = useWorkStore((s) => s.projects[p.id]);
+  const updateStep = useWorkStore((s) => s.updateStep);
+  const ex = cppExerciseById[st.cppExercise];
+  return (
+    <>
+      <CppExercise ex={ex} />
+      <CompileHelp file={ex.file} />
+      <label className="studio-choice">
+        <input type="checkbox" checked={!!state?.steps?.[st.id]?.done} onChange={(e) => updateStep(p.id, st.id, { done: e.target.checked })} />
+        <span>My program passes all {ex.tests.length} tests (your own report — the site cannot run C++)</span>
+      </label>
+    </>
+  );
+}
 
 function Dataset({ id }) {
   const d = datasetById[id];
@@ -61,8 +107,8 @@ function Project({ p }) {
   const state = useWorkStore((s) => s.projects[p.id]);
   const results = useWorkStore((s) => s.results);
   const doneCount = p.steps.filter((st) => (st.exercise ? results[st.exercise]?.passed : state?.steps?.[st.id]?.done)).length;
-  const calc = p.steps.filter((st) => st.exercise);
-  const after = p.steps.filter((st) => !st.exercise);
+  const calc = p.steps.filter((st) => st.exercise || st.cppExercise);
+  const after = p.steps.filter((st) => !st.exercise && !st.cppExercise);
 
   return (
     <section className="proj" aria-labelledby={`proj-${p.id}`}>
@@ -98,7 +144,7 @@ function Project({ p }) {
         {calc.map((st) => (
           <li key={st.id} className="proj-step">
             <p className="studio-h3">{st.title}</p>
-            <CodeExercise ex={pyExerciseById[st.exercise]} />
+            {st.cppExercise ? <CppStep p={p} st={st} /> : <CodeExercise ex={pyExerciseById[st.exercise]} />}
           </li>
         ))}
       </ol>
@@ -116,6 +162,15 @@ function Project({ p }) {
           <ul className="lesson-ul">{p.limitations.map((l) => <li key={l}><MathText text={l} /></li>)}</ul>
         </div>
       )}
+
+      {p.extension && (
+        <div className="proj-step">
+          <h3 className="studio-h3">Go further: a situation the steps did not show</h3>
+          <Reflect p={p} st={{ id: 'extension', reflect: p.extension }} />
+        </div>
+      )}
+
+      {p.rubric && <Rubric rubric={p.rubric} />}
     </section>
   );
 }
