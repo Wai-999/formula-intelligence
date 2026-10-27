@@ -1,8 +1,26 @@
 # Upgrade Progress
 
-**Current state (2026-10-24):** V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) implemented on `upgrade/v4-simple-applied`; released when its PR passes CI and is merged (owner: "push and deploy after upgrade"). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
+**Current state (2026-10-27):** V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) merged to `main` (`3557155`) and deployed on 2026-10-25 (Deploy to GitHub Pages run 18, green). After V4, on `claude/practical-gates-59o8iv`: placement coverage and a self-hosted icon font (below). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
 **Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged `3f6ddcb`) → `upgrade/v3.1-phases2-10` (merged `9c21ac2`) → `fix/entry-banner-wording` (merged `a103f32`) → **`upgrade/v4-simple-applied`**, all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign is untouched (decision D1 still open).
 **Merge/deploy policy:** PRs only; CI runs every gate on the PR; `main` deploys only when the same gates pass again.
+
+## After V4 — placement coverage and a self-hosted icon font (2026-10-27)
+
+Taken from the outstanding list below (item 4) and the V4 test report's "Lighthouse NOT MEASURED"; nothing in V4 §10's deferred expansion was started.
+
+| Change | Evidence | Status |
+|---|---|---|
+| **Placement check covers 41 of 47 competencies** (was 32 of 47): 21 items for `arith.exponents`, `arith.coordinates`, `alg.line-fit`, `calc.rules`, `la.projection`, `la.eigen`, `la.svd-pca`, `stats.inference`, `py.data`, plus one easy item each for Calculus and Python. Bank `dx-2026.10-2`, 85 items; every earlier item unchanged. The six left out (Calculus II–III, the ML course) are past what placement decides (`docs/LEARNING_ASSESSMENT_SPEC.md` §2). | `diagnostic.test.js`: coverage, keys recomputed, every prompt typesets | **Done**; items are AI drafts, review BLOCKED like the lessons |
+| **Retakes ask fresh questions; a domain's questions spread over its competencies.** Before, a retake with the same answers asked exactly the same questions. Item choice within the round's difficulty is now: least seen in earlier attempts → least asked competency this attempt → bank order. | `diagnostic.test.js` (spread, disjoint retakes, all 85 items reachable over retakes; the three fail on the old rule); `e2e/v31.spec.js › a retake opens with a question the last attempt did not ask` (fails without the page wiring) | **Done** |
+| **Lighthouse measured** (13.5.0, 5 pages × mobile/desktop × 3 runs, local production build) | `docs/PERFORMANCE_REPORT.md` → Lighthouse; `docs/audits/evidence/lighthouse/` | **Done** (lab only) |
+| **Icon font self-hosted as a 107-icon subset** (13.5 KB instead of 447 KB plus a render-blocking cdnjs stylesheet). Mobile Lighthouse performance 69–74 → **89–98**, FCP 4.2–4.5 → 1.7–2.3 s, LCP 4.4–5.3 → 2.1–3.1 s, first-visit bytes 587–711 → 120–244 KB; desktop 100. No third-party request on page load. Also found `ti-player-play-off`, an icon that does not exist and had rendered nothing. | `src/styles/__tests__/icons.test.js`; `npm run icons`; Lighthouse before/after | **Done** |
+| **Heading order on Code exercises** (h1 → h3) — Lighthouse accessibility 98 → 100 | Lighthouse re-run on Code exercises and Projects | **Done** |
+
+**Gates on this branch (2026-10-27, Linux, Node 22, Chromium 153):** lint · content validation · unit **357/357** · build · budget **71.6 KB** · `verify:python` **78/78** · e2e **214/215** · axe **0 violations**, 60 pages × 2 themes. Not run here: `e2e:python` and `check:citations` (the sandbox cannot reach the Pyodide CDN or most cited hosts; CI runs `e2e:python`).
+
+Still open from this work:
+- The one e2e failure is **pre-existing and timing-dependent**: usability task (c) (`e2e/v4-usability.spec.js`) passes 8/8 alone, but fails in about 1 run in 6 with the CPU busy, on the V4 release code as well (3/16) as on this branch (2/16). The page ends at the top of the step it was leaving. This suggests that "Next" pressed while the previous smooth scroll is still running is dropped (`scrollToSection` in `LessonPage.jsx`); not yet confirmed or fixed.
+- Lesson pages' mobile LCP (3.1 s on Lighthouse's profile) and Code exercises' (2.8 s) are above the 2.5 s target; field Core Web Vitals remain unmeasurable without analytics.
 
 ## V4 — simple, applied learning
 
@@ -17,7 +35,7 @@ Deliverables (V4 §12), all in `docs/v4/`: [AUDIT](v4/AUDIT.md) · [COURSE_RESEA
 | 4 Applied projects | Six projects, 3 real + 3 labelled synthetic datasets, graded steps with no-code paths; learning signals defined and computed per learner | `APPLIED_PROJECTS.md`, `learningSignals.test.js` | **Done** |
 | 5 Polish and expand | — | — | **Not started** by design (V4 §10) |
 
-**Blocked / unverified (stated, not hidden):** independent math review of 23 lessons; user testing of the exemplars and of the five usability tasks with real learners (they pass as scripts); screen-reader testing; Lighthouse and field Core Web Vitals; Pyodide SRI (F-09).
+**Blocked / unverified (stated, not hidden):** independent math review of 23 lessons; user testing of the exemplars and of the five usability tasks with real learners (they pass as scripts); screen-reader testing; field Core Web Vitals (Lighthouse was measured on 2026-10-27, above); Pyodide SRI (F-09).
 
 ## V3.1 (Master Prompt V3.1, released 2026-10-24)
 
@@ -100,9 +118,9 @@ Burmese stripped from all content constructors; the beginner/researcher depth ke
 1. **Independent human math review** of the 20 lessons and the `requires` edges (`CONTENT_QA.md` → sign-off procedure).
 2. **Screen-reader and learner testing** (`ACCESSIBILITY_REPORT.md` → suggested script).
 3. Author Algebra II and Precalculus (outline only), then complete the partial courses — the diagnostic already places learners there.
-4. Diagnostic items for the 14 uncovered competencies; calibration once data exists.
+4. ~~Diagnostic items for the 14 uncovered competencies~~ — done 2026-10-27 for the 9 that bear on placement (41 of 47 covered; the other 6 are Calculus II–III and ML-course skills, past what placement decides). Calibration once data exists.
 5. F-09: self-host Pyodide (+~10–30 MB) or formally accept the CDN risk.
-6. Lighthouse run; PR preview deploys.
+6. ~~Lighthouse run~~ — done 2026-10-27 (lab, local build). PR preview deploys.
 7. Owner decision D1 (the unshipped local redesign).
 
 ## Phase 0 deliverables
