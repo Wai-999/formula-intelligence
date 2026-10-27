@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MathText, { MathBlock } from '../../components/math/MathText.jsx';
 import LabHost from '../labs/LabHost.jsx';
 import ItemCard from './lesson/ItemCard.jsx';
@@ -11,11 +11,13 @@ import { formulaById } from '../../data/curriculum/formulas.js';
 import { nodeById } from '../../data/nodes.js';
 import { mlNodeById } from '../../data/ml/models.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
+import { useStudyResumeStore } from '../../store/useStudyResumeStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import { usePyLabStore } from '../../store/usePyLabStore.js';
 import { useMLUIStore } from '../../store/useMLUIStore.js';
 import { assessCompetency, LEVEL_LABEL } from '../../lib/mastery.js';
 import { hashFor } from '../../app/pages.js';
+import { LESSON_STEPS, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
 // Registers course and lesson titles for the page header and breadcrumbs.
 import '../../data/curriculum/index.js';
 import '../../styles/studio.css';
@@ -28,20 +30,42 @@ const conceptById = Object.fromEntries(CONCEPTS.map((c) => [c.id, c]));
 // of every lesson (V3.1 §6) are all still here, regrouped: notation, the
 // readiness check, worked examples and the result under Understand, with
 // the derivation and the assumptions behind "Go deeper" disclosures.
-const SECTIONS = [
-  { id: 'matters', title: 'Why it matters' },
-  { id: 'understand', title: 'Understand' },
-  { id: 'see', title: 'See it' },
-  { id: 'try', title: 'Try it' },
-  { id: 'use', title: 'Use it' },
-  { id: 'check', title: 'Check understanding' },
-];
+// The section ids are also what a saved place records (src/lib/studyResume.js).
+const SECTIONS = LESSON_STEPS;
+
+// The learner's motion setting, or the system's: jumps are instant then.
+const reduceMotion = () => document.documentElement.getAttribute('data-motion') === 'reduce'
+  || !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 function scrollToSection(lessonId, id) {
   const el = document.getElementById(`lesson-${lessonId}-${id}`);
   if (!el) return;
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
   el.querySelector('h2')?.focus({ preventScroll: true });
+}
+
+// Matches the lesson content's scroll-margin-top (learn.css): the sticky
+// progress bar's height. A section counts as the one being read once its
+// top passes TRACK_LINE below the container's top.
+const STICKY = 64;
+const TRACK_LINE = 120;
+// How long the learner must stay on a step before it is saved automatically:
+// long enough that scrolling past a step does not count as studying it.
+const AUTOSAVE_MS = 1500;
+const DRIFT_CHECKS = [250, 700, 1500];
+// When a jump to a step should be over, even a long smooth scroll.
+const LAND_CHECKS = [900, 1800];
+
+/**
+ * Put the saved place at the top of the lesson, below the sticky bar: the
+ * step's start, moved down by the saved fraction of the step's height but
+ * never so far that the next step becomes the current one. The step, not a
+ * pixel offset, is what is restored, so a different screen size, font or
+ * opened disclosure lands in the same step.
+ */
+function placeTop(root, el, fraction) {
+  const offset = Math.min(fraction * el.offsetHeight, Math.max(0, el.offsetHeight - (TRACK_LINE - STICKY) - 24));
+  return root.scrollTop + (el.getBoundingClientRect().top - root.getBoundingClientRect().top) - STICKY + offset;
 }
 
 // Ids include the lesson id: several lessons can be mounted at once (keep-alive).
@@ -164,6 +188,7 @@ function CheckpointSection({ meta, items }) {
               ? 'That is solid evidence for this lesson’s skills — but one sitting is not mastery. A short review is scheduled so you can show it again on another day.'
               : 'Look at the solutions of the ones you missed, then try the Practice items at the same level. A review is scheduled sooner for skills you missed.'}
           </p>
+          {correct < items.length && <p><a href={hashFor('practice/review')}>Practise these skills again in Practice → Review</a></p>}
           {meta.competencies.map((c) => cards[c] && (
             <p key={c} className="studio-muted">Next review of “{competencyById[c]?.title}”: {new Date(cards[c].due).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}.</p>
           ))}
@@ -178,9 +203,40 @@ export default function LessonPage({ lessonId }) {
   const [body, setBody] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [current, setCurrent] = useState('matters');
+  // Where in the current step, in fifths: enough to resume mid-step, coarse
+  // enough that scrolling does not mean saving.
+  const [depth, setDepth] = useState(0);
   const [showConnections, setShowConnections] = useState(false);
+  const [stepsOpen, setStepsOpen] = useState(false);
+  const [note, setNote] = useState(null); // { ok, text } after an explicit save
+  // The place to offer at the top ("Resume from Step 4"), as it stood when the
+  // learner arrived. Never live: a callout appearing above the text while
+  // they read would move the page under them.
+  const [offer, setOffer] = useState(null);
   const openLesson = useLearningStore((s) => s.openLesson);
+  const markSection = useLearningStore((s) => s.markSection);
+  const visited = useLearningStore((s) => s.lessons[lessonId]?.sections);
+  const autoSave = useStudyResumeStore((s) => s.autoSave);
+  const pinned = useStudyResumeStore((s) => s.pinned);
+  const recent = useStudyResumeStore((s) => s.recent);
+  const saveState = useStudyResumeStore((s) => s.saveState);
+  const pendingResume = useStudyResumeStore((s) => s.pendingResume);
+  // Kept-alive lesson pages stay mounted while hidden; only the one on screen
+  // may save a place or take a resume request.
+  const active = useUIStore((s) => s.page === 'learn/lesson' && s.pageParams.lessonId === lessonId);
   const rootRef = useRef(null);
+  const fractionRef = useRef(0);
+  const sessionStart = useRef(Date.now());
+  const pendingSave = useRef(null);
+  const saveTimer = useRef(0);
+  const appliedToken = useRef(null);
+  const stopResume = useRef(() => {});
+  const stopJump = useRef(() => {});
+  // Landing at the top of a lesson is not studying it: nothing is saved until
+  // the learner scrolls, jumps to a step or resumes. Otherwise opening a
+  // lesson from its course would overwrite a deeper place in it with Step 1
+  // before they could choose to resume.
+  const engaged = useRef(false);
 
   useEffect(() => {
     if (!meta) return undefined;
@@ -192,27 +248,138 @@ export default function LessonPage({ lessonId }) {
 
   // Which section is being read: the last one whose top has scrolled past
   // the sticky progress bar. (An IntersectionObserver band picked the wrong
-  // section whenever two short sections shared it.)
+  // section whenever two short sections shared it.) Also how far into it.
   useEffect(() => {
     const root = rootRef.current;
     if (!body || !root) return undefined;
     let timer = 0;
     const update = () => {
       timer = 0;
-      const line = root.getBoundingClientRect().top + 120;
+      const top = root.getBoundingClientRect().top;
+      const line = top + TRACK_LINE;
       let cur = 'matters';
+      let el = null;
       for (const sec of root.querySelectorAll('.lesson-section')) {
-        if (sec.getBoundingClientRect().top <= line) cur = sec.dataset.section;
+        if (sec.getBoundingClientRect().top <= line) { cur = sec.dataset.section; el = sec; }
       }
+      const fraction = el && el.offsetHeight > 0 ? Math.min(1, Math.max(0, (top + STICKY - el.getBoundingClientRect().top) / el.offsetHeight)) : 0;
+      fractionRef.current = fraction;
       setCurrent(cur);
+      setDepth(Math.round(fraction * 5) / 5);
     };
     // A short timer rather than requestAnimationFrame: rAF is paused in
     // background or unpainted documents, and correctness must not depend on paint.
-    const onScroll = () => { if (!timer) timer = setTimeout(update, 60); };
+    const onScroll = () => {
+      engaged.current = true;
+      if (!timer) timer = setTimeout(update, 60);
+    };
     root.addEventListener('scroll', onScroll, { passive: true });
     update();
     return () => { root.removeEventListener('scroll', onScroll); clearTimeout(timer); };
   }, [body]);
+
+  // Automatic checkpoints: a step the learner stays on for AUTOSAVE_MS is
+  // saved (and marked visited); leaving the lesson or hiding the tab saves
+  // at once. Never on unload alone — phones kill pages without that event.
+  const flush = useCallback(() => {
+    clearTimeout(saveTimer.current);
+    saveTimer.current = 0;
+    const loc = pendingSave.current;
+    pendingSave.current = null;
+    if (!loc) return;
+    autoSave(loc);
+    markSection(loc.lessonId, loc.sectionId);
+  }, [autoSave, markSection]);
+
+  const queueSave = useCallback((sectionId, fraction, now = false) => {
+    if (!meta || !engaged.current) return;
+    pendingSave.current = { courseId: meta.course, lessonId: meta.id, sectionId, fraction };
+    clearTimeout(saveTimer.current);
+    if (now) flush();
+    else saveTimer.current = setTimeout(flush, AUTOSAVE_MS);
+  }, [meta, flush]);
+
+  // Declared before the resume effect, which consumes the request: arriving
+  // through Resume, there is nothing to offer.
+  useEffect(() => {
+    if (!active) return;
+    const { pinned: pin, recent: rec, pendingResume: req } = useStudyResumeStore.getState();
+    if (req?.lessonId === lessonId) { setOffer(null); return; }
+    const place = (pin?.lessonId === lessonId ? pin : null) ?? rec.find((r) => r.lessonId === lessonId) ?? null;
+    setOffer(place?.sectionId && place.sectionId !== 'matters' ? { ...place, pinned: pin?.lessonId === lessonId } : null);
+  }, [active, lessonId]);
+
+  useEffect(() => {
+    if (!body || !active) return undefined;
+    if (engaged.current) {
+      queueSave(current, fractionRef.current);
+      return undefined;
+    }
+    // Not a place yet (see `engaged`), but a step read for a while was visited.
+    const t = setTimeout(() => markSection(lessonId, current), AUTOSAVE_MS);
+    return () => clearTimeout(t);
+  }, [body, active, current, depth, queueSave, markSection, lessonId]);
+
+  useEffect(() => {
+    if (!active) { flush(); return undefined; }
+    const onHide = () => { if (document.visibilityState === 'hidden') flush(); };
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', flush);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', flush);
+    };
+  }, [active, flush]);
+
+  useEffect(() => () => flush(), [flush]);
+  useEffect(() => () => { stopResume.current(); stopJump.current(); }, []);
+
+  // A confirmation is read once and then gets out of the way; a failure stays.
+  useEffect(() => {
+    if (!note?.ok) return undefined;
+    const t = setTimeout(() => setNote(null), 8000);
+    return () => clearTimeout(t);
+  }, [note]);
+
+  // A resume the learner asked for (Home, a course page, My Progress): once
+  // this lesson's content is on screen, go to the saved step, then hand the
+  // request back so later visits start where navigation puts them. Late
+  // layout (a lab loading above the step) is corrected a few times, unless
+  // the learner has started scrolling themselves.
+  useEffect(() => {
+    const req = pendingResume;
+    if (!req || req.lessonId !== lessonId || !active) return undefined;
+    if (appliedToken.current === req.token) return undefined;
+    if (!meta || loadError) { useStudyResumeStore.getState().consumeResume(req.token); return undefined; }
+    const root = rootRef.current;
+    if (!body || !root) return undefined;
+    appliedToken.current = req.token;
+    stopResume.current();
+    engaged.current = true;
+    const el = req.sectionId ? document.getElementById(`lesson-${lessonId}-${req.sectionId}`) : null;
+    const go = () => root.scrollTo({ top: el ? placeTop(root, el, req.fraction) : 0, behavior: 'instant' });
+    go();
+    if (req.sectionId) setCurrent(req.sectionId);
+    // Timers live outside this effect: consuming the request re-runs it, and
+    // that must not cancel the focus and drift corrections it just set up.
+    const timers = [setTimeout(() => (el?.querySelector('h2') ?? null)?.focus({ preventScroll: true }), 60)];
+    let touched = false;
+    const touch = () => { touched = true; };
+    const events = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+    events.forEach((e) => root.addEventListener(e, touch, { passive: true }));
+    for (const ms of DRIFT_CHECKS) {
+      timers.push(setTimeout(() => {
+        if (touched || !el) return;
+        if (Math.abs(placeTop(root, el, req.fraction) - root.scrollTop) > 24) go();
+      }, ms));
+    }
+    stopResume.current = () => {
+      timers.forEach(clearTimeout);
+      events.forEach((e) => root.removeEventListener(e, touch));
+    };
+    useStudyResumeStore.getState().consumeResume(req.token);
+    return undefined;
+  }, [pendingResume, lessonId, active, body, meta, loadError]);
 
   const course = meta ? courseById[meta.course] : null;
   const unit = meta ? unitById[meta.unit] : null;
@@ -223,11 +390,73 @@ export default function LessonPage({ lessonId }) {
   }, [unit, meta]);
 
   if (!meta) return <NotFound lessonId={lessonId} />;
-  if (loadError) return <div className="studio-page"><p className="studio-callout studio-callout-bad">This lesson could not be loaded. Check your connection and reload the page.</p></div>;
+  if (loadError) {
+    return (
+      <div className="studio-page studio-read">
+        <p className="studio-callout studio-callout-bad">This lesson could not be loaded. Check your connection and reload the page. Your saved place is kept.</p>
+        <p className="studio-row">
+          <a className="studio-btn" href={hashFor('learn/course', { courseId: meta.course })}>Open the course outline</a>
+          <a className="studio-btn" href={hashFor('home')}>Home</a>
+        </p>
+      </div>
+    );
+  }
   if (!body) return <div className="page-loading" role="status">Loading the lesson…</div>;
 
   const idx = Math.max(0, SECTIONS.findIndex((s) => s.id === current));
   const nextSection = SECTIONS[idx + 1];
+  const here = { courseId: meta.course, lessonId: meta.id, sectionId: current, fraction: fractionRef.current };
+  const pinHere = pinned?.lessonId === meta.id ? pinned : null;
+  const lastHere = pinHere ?? recent.find((r) => r.lessonId === meta.id) ?? null;
+  const visitedSet = new Set(visited ?? []);
+  const answeredHere = () => useLearningStore.getState().evidence
+    .filter((e) => e.at >= sessionStart.current && e.item.startsWith(`${meta.id}.`)).length;
+
+  // "Next", the step list and the table of contents. A smooth scroll can be
+  // cut short — another scroll starting before it ends, or the page moving
+  // under it — which left learners at the top of the step they were leaving.
+  // So check where it ended, and settle on the step unless the learner has
+  // taken over the scrolling themselves.
+  const jump = (id) => {
+    setStepsOpen(false);
+    engaged.current = true;
+    queueSave(id, 0, true);
+    scrollToSection(meta.id, id);
+    stopJump.current();
+    const root = rootRef.current;
+    const el = document.getElementById(`lesson-${meta.id}-${id}`);
+    if (!root || !el) return;
+    let touched = false;
+    const touch = () => { touched = true; };
+    const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+    events.forEach((e) => root.addEventListener(e, touch, { passive: true }));
+    const timers = LAND_CHECKS.map((ms) => setTimeout(() => {
+      if (touched) return;
+      const off = el.getBoundingClientRect().top - root.getBoundingClientRect().top - STICKY;
+      if (Math.abs(off) > 24) root.scrollTo({ top: root.scrollTop + off, behavior: 'instant' });
+    }, ms));
+    stopJump.current = () => {
+      timers.forEach(clearTimeout);
+      events.forEach((e) => root.removeEventListener(e, touch));
+    };
+  };
+  const savePlace = () => {
+    flush();
+    const ok = useStudyResumeStore.getState().savePlace(here);
+    setNote(ok
+      ? { ok, text: `Saved on this device: ${stepLabel(current)}, ${formatSavedAt(Date.now())}.` }
+      : { ok, text: 'Couldn’t save to this browser. Your place is kept until you close this tab; to keep it, allow site storage or export a backup in My Progress → Settings.' });
+  };
+  const finishSession = () => {
+    flush();
+    useStudyResumeStore.getState().finishSession({ loc: here, startedAt: sessionStart.current, answered: answeredHere() });
+  };
+  const resumeHere = () => {
+    if (lastHere) useStudyResumeStore.getState().requestResume(lastHere);
+  };
+  const stepState = (id) => (id === current ? 'You are here' : visitedSet.has(id) ? 'Visited' : 'Not reached');
+  const passive = saveState && saveState.ok === false ? 'Couldn’t save to this browser'
+    : lastHere ? `${pinHere ? 'Saved place' : 'Saved on this device'}: ${stepLabel(lastHere.sectionId) ?? 'this lesson'}, ${formatSavedAt(lastHere.at)}` : 'Not saved yet in this lesson';
   const tryItems = body.practice.filter((p) => p.level !== 'transfer');
   // Use it: the lesson's real-world task (V4 lessons), then the transfer
   // questions — the idea in settings the lesson did not show.
@@ -236,13 +465,68 @@ export default function LessonPage({ lessonId }) {
 
   return (
     <div className="studio-scroll lesson-scroll" ref={rootRef}>
-      <div className="lesson-progress" aria-label="Lesson progress">
-        <span className="lesson-progress-text">Step {idx + 1} of {SECTIONS.length} · {SECTIONS[idx].title}</span>
-        <span className="lesson-progress-bar" aria-hidden="true"><span style={{ width: `${((idx + 1) / SECTIONS.length) * 100}%` }} /></span>
-        {nextSection && (
-          <button type="button" className="studio-btn studio-btn-small" onClick={() => scrollToSection(meta.id, nextSection.id)}>
-            Next: {nextSection.title}
+      <div
+        className="lesson-progress"
+        role="region"
+        aria-label="Lesson progress"
+        onKeyDown={(e) => {
+          if (e.key !== 'Escape' || !stepsOpen) return;
+          setStepsOpen(false);
+          e.currentTarget.querySelector('.lesson-steps-toggle')?.focus();
+        }}
+      >
+        <div className="lesson-progress-row">
+          <button
+            type="button"
+            className="lesson-steps-toggle"
+            aria-expanded={stepsOpen}
+            aria-controls={`lesson-${meta.id}-steps`}
+            onClick={() => setStepsOpen((v) => !v)}
+          >
+            <span className="lesson-progress-text">Step {idx + 1} of {SECTIONS.length}<span className="lesson-progress-title"> · {SECTIONS[idx].title}</span></span>
+            <i className={`ti ${stepsOpen ? 'ti-chevron-up' : 'ti-chevron-down'}`} aria-hidden="true" />
           </button>
+          <span className="lesson-progress-bar" aria-hidden="true"><span style={{ width: `${((idx + 1) / SECTIONS.length) * 100}%` }} /></span>
+          {nextSection && (
+            <button type="button" className="studio-btn studio-btn-small lesson-next-step" onClick={() => jump(nextSection.id)}>
+              Next: {nextSection.title}
+            </button>
+          )}
+          <button type="button" className="studio-btn studio-btn-small lesson-save" aria-label="Save my place" onClick={savePlace}>
+            <i className="ti ti-device-floppy" aria-hidden="true" /> <span>Save<span className="lesson-save-more"> my place</span></span>
+          </button>
+          <button type="button" className="studio-btn studio-btn-small lesson-finish" onClick={finishSession}>Finish study session</button>
+        </div>
+        {/* Overlays under the bar (learn.css), so feedback never moves the text being read. */}
+        <p className="lesson-save-note" role="status">{note?.ok && !stepsOpen ? note.text : ''}</p>
+        {note && !note.ok && <p className="lesson-save-note lesson-save-error" role="alert">{note.text}</p>}
+        {stepsOpen && (
+          <div id={`lesson-${meta.id}-steps`} className="lesson-steps-panel">
+            <ol className="lesson-trail" aria-label="Steps in this lesson">
+              {SECTIONS.map((s, i) => (
+                <li key={s.id} className={`trail-${s.id === current ? 'here' : visitedSet.has(s.id) ? 'visited' : 'ahead'}`}>
+                  <button type="button" className="trail-btn" aria-current={s.id === current ? 'step' : undefined} onClick={() => jump(s.id)}>
+                    <span className="trail-mark" aria-hidden="true" />
+                    <span>{i + 1}. {s.title}</span>
+                    <span className="trail-state">{stepState(s.id)}{pinHere?.sectionId === s.id ? ' · saved place' : ''}</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <div className="studio-row">
+              <button type="button" className="studio-btn studio-btn-small" onClick={savePlace}>Save my place</button>
+              <button type="button" className="studio-btn studio-btn-small" onClick={finishSession}>Finish study session</button>
+              {lastHere?.sectionId && lastHere.sectionId !== current && (
+                <button type="button" className="studio-btn studio-btn-small" onClick={() => { setStepsOpen(false); resumeHere(); }}>
+                  Back to {pinHere ? 'your saved place' : 'where you were'}: Step {SECTIONS.findIndex((s) => s.id === lastHere.sectionId) + 1}
+                </button>
+              )}
+            </div>
+            {pinned && !pinHere && lessonById[pinned.lessonId] && (
+              <p className="studio-muted">Saving here replaces your saved place in “{lessonById[pinned.lessonId].title}”.</p>
+            )}
+            <p className="studio-muted" role="status">{passive}. Stored in this browser only — <a href={hashFor('progress/settings')}>export a backup</a> to continue on another device.</p>
+          </div>
         )}
       </div>
 
@@ -266,6 +550,14 @@ export default function LessonPage({ lessonId }) {
               </button>
             </div>
             {showConnections && <Connections meta={meta} id={`lesson-${meta.id}-connections`} />}
+            {offer && (
+              <p className="studio-callout lesson-resume-offer">
+                {offer.pinned ? 'Your saved place' : 'Last time you were'} here: {stepLabel(offer.sectionId)}{formatSavedAt(offer.at) ? ` (${formatSavedAt(offer.at)})` : ''}.{' '}
+                <button type="button" className="studio-btn studio-btn-small" onClick={() => useStudyResumeStore.getState().requestResume(offer)}>
+                  Resume from Step {SECTIONS.findIndex((s) => s.id === offer.sectionId) + 1}
+                </button>
+              </p>
+            )}
           </header>
 
           <Section lessonId={meta.id} id="matters" title="Why it matters" n={1}>
@@ -403,6 +695,11 @@ export default function LessonPage({ lessonId }) {
                 Recommended next: <a className="studio-btn studio-btn-primary" href={hashFor('learn/lesson', { lessonId: nextLessonId })}>{lessonById[nextLessonId].title} →</a>
               </p>
             )}
+            <div className="studio-row lesson-end" role="group" aria-label="When you are done here">
+              <button type="button" className="studio-btn" onClick={() => jump('matters')}>Review this lesson from Step 1</button>
+              <button type="button" className="studio-btn" onClick={finishSession}>Save &amp; finish for today</button>
+              {!nextLessonId && <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Back to the course outline</a>}
+            </div>
             <h3 className="studio-h3">Your skills from this lesson</h3>
             <p className="studio-muted">They come back for a short review on an expanding schedule (1, 3, 7, 14, 30, 60 days) under Practice → Review. Missing a day never resets anything.</p>
             <CompetencyStatus ids={meta.competencies} />
@@ -430,8 +727,9 @@ export default function LessonPage({ lessonId }) {
             <ol>
               {SECTIONS.map((s, i) => (
                 <li key={s.id}>
-                  <button type="button" className={`toc-btn${s.id === current ? ' on' : ''}`} aria-current={s.id === current ? 'location' : undefined} onClick={() => scrollToSection(meta.id, s.id)}>
+                  <button type="button" className={`toc-btn${s.id === current ? ' on' : ''}`} aria-current={s.id === current ? 'location' : undefined} onClick={() => jump(s.id)}>
                     {i + 1}. {s.title}
+                    <span className="toc-state">{s.id === current ? ' — you are here' : visitedSet.has(s.id) ? ' — visited' : ''}{pinHere?.sectionId === s.id ? ' · saved place' : ''}</span>
                   </button>
                 </li>
               ))}

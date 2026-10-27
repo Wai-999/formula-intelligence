@@ -65,7 +65,7 @@ Chosen over SM-2 because its behaviour fits in one sentence and has no hidden ea
 - Ten elements per lesson (§6): the question, before you start, see it (lab), why it works, worked examples, predict first, practice, checkpoint, in Python, keep going.
 - Item types: numeric (parsed — integers, decimals, fractions `3/4`, percentages, scientific notation, typographic minus — and compared with the tolerance the item declares, absolute or relative, default 1e-9), single choice with per-option feedback, and multi-blank numeric (e.g. vector components). Never exact string matching for numbers. `src/lib/answers.js`, tests in `learningEngine.test.js`.
 - Each item has hints, a worked solution (after one attempt), and optionally a *remedy* link to a prerequisite lesson.
-- **A lesson is complete when its checkpoint has been answered**, not when it was scrolled through. Section progress is tracked for navigation only.
+- **A lesson is complete when its checkpoint has been answered**, not when it was scrolled through. Section progress (steps visited) and saved study places (`fi_resume_v1`) are tracked for navigation only: saving a place, visiting every step or finishing a study session never completes a lesson and never counts as evidence (`docs/study-continuity/ARCHITECTURE.md`, "What completion means").
 
 ## 6. Mixed practice (interleaving) — `src/lib/interleave.js`, Practice → Review
 

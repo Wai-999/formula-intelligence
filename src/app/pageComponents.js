@@ -11,6 +11,7 @@ export const PAGE_COMPONENTS = {
   'learn/courses': lazy(() => import('../features/learn/CoursesPage.jsx')),
   'learn/course': lazy(() => import('../features/learn/CoursePage.jsx')),
   'learn/lesson': lazy(() => import('../features/learn/LessonPage.jsx')),
+  'learn/session': lazy(() => import('../features/learn/StudySessionPage.jsx')),
   'learn/placement': lazy(() => import('../features/diagnostic/DiagnosticPage.jsx')),
   'learn/ml': lazy(() => import('../features/ml/pipeline/PipelinePage.jsx')),
   'learn/maps': lazy(() => import('../features/maps/MapsHubPage.jsx')),

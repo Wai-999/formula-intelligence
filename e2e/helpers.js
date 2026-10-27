@@ -88,3 +88,19 @@ export async function seedMastery(page, count) {
 export async function expectNoCrash(page) {
   await expect(page.locator('.errb-card')).toHaveCount(0);
 }
+
+/**
+ * Wait until the visible lesson has stopped scrolling — a learner reads
+ * before pressing Next, and a test should too. (The flake this used to hide
+ * had a real cause, fixed in learn.css: the lesson scroller's
+ * scroll-padding-top also applied to its sticky bar, so focusing or
+ * clicking a bar button scrolled the lesson up and changed the step.)
+ */
+export async function lessonSettled(page) {
+  await expect.poll(async () => {
+    const read = () => page.locator(VISIBLE + '.lesson-scroll').evaluate((el) => Math.round(el.scrollTop));
+    const a = await read();
+    await page.waitForTimeout(150);
+    return a === await read();
+  }, { timeout: 8000 }).toBe(true);
+}

@@ -11,11 +11,13 @@ import { useSRStore, getMasteryLevel } from '../../store/useSRStore.js';
 import { assessAll, LEVEL_LABEL } from '../../lib/mastery.js';
 import { practiceSuccess, unassistedTransfer, retention, applicationCompletion, MIN_N, RETENTION_DAYS } from '../../lib/learningSignals.js';
 import { hashFor } from '../../app/pages.js';
+import StudyJourney from './StudyJourney.jsx';
 import '../../styles/studio.css';
 import '../learn/learn.css';
 import './progress.css';
 
-// My Progress → Overview (V4 §3, §7): skills, weak areas, this learner's own
+// My Progress → Overview (V4 §3, §7): the study journey (saved place and
+// recent courses), skills, weak areas, this learner's own
 // learning signals, the placement and the statistics-formula drills; the
 // backup lives in Settings, one tab along. Every number states what it is counted from.
 
@@ -59,6 +61,8 @@ export default function ProgressOverviewPage() {
   return (
     <div className="studio-scroll">
       <div className="studio-page">
+        <StudyJourney />
+
         <section className="studio-section" aria-labelledby="prog-skills">
           <h2 id="prog-skills" className="studio-h2">Your skills</h2>
           <p className="studio-muted studio-read">

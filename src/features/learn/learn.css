@@ -1,30 +1,190 @@
 /* ——— Lesson page ——— */
-.lesson-scroll {
-  scroll-padding-top: 64px;
+/* Room for the sticky progress bar whenever something in the lesson is
+   scrolled into view (a step jump, keyboard focus). It used to be
+   scroll-padding-top on the scroller itself, which also applied to the
+   sticky bar: focusing one of the bar's own buttons (Tab, or a test
+   clicking it) scrolled the lesson up by hundreds of pixels — and a step
+   jump made just before landed one step short. 64px = STICKY in LessonPage. */
+.lesson-main,
+.lesson-main * {
+  scroll-margin-top: 64px;
 }
 
 /* Sticky, minimal progress + continue (§10 mobile). One line, never a
-   modal, never covering the text it describes. */
+   modal, never covering the text it describes. The steps panel opens below
+   it on request and is part of the bar, not an overlay with its own focus trap. */
 .lesson-progress {
   position: sticky;
   top: 0;
   z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 12px;
   padding: 8px 24px;
   background: rgba(var(--panel-rgb), 0.92);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(10px);
 }
 
+.lesson-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lesson-steps-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 28px;
+  padding: 0 4px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.lesson-steps-toggle:hover {
+  color: var(--text-primary);
+}
+
 .lesson-progress-text {
   font-size: 12.5px;
-  color: var(--text-muted);
+  color: inherit;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+}
+
+.lesson-save,
+.lesson-finish,
+.lesson-next-step {
+  flex-shrink: 0;
+}
+
+/* Save feedback and the steps panel hang below the sticky bar instead of
+   growing it: anything that changed the bar's height would move the lesson
+   under the reader (and cut short a scroll already under way). */
+.lesson-save-note {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0 24px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  background: rgba(var(--panel-rgb), 0.97);
+}
+
+.lesson-save-note:not(:empty) {
+  padding: 6px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lesson-save-error {
+  border-left: 3px solid var(--danger);
+  color: var(--text-primary);
+}
+
+.lesson-steps-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 24px;
+  right: 24px;
+  max-width: 600px;
+  margin-left: auto;
+  padding: 12px;
+  max-height: 65vh;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lesson-trail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trail-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trail-btn:hover {
+  background: rgba(var(--overlay-rgb), 0.06);
+}
+
+.trail-mark {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--text-faint);
+}
+
+.trail-visited .trail-mark {
+  border-color: var(--success);
+  background: var(--success);
+}
+
+.trail-here .trail-mark {
+  border-color: var(--primary);
+  background: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--overlay-rgb), 0.12);
+}
+
+.trail-here .trail-btn {
+  font-weight: 600;
+}
+
+.trail-state {
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.toc-state {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.lesson-resume-offer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.lesson-end {
+  margin-top: 4px;
 }
 
 .lesson-progress-bar {
@@ -96,7 +256,39 @@
     padding: 8px 12px;
   }
 
+  .lesson-progress-row {
+    gap: 8px;
+  }
+
+  .lesson-steps-toggle {
+    flex: 1 1 auto;
+  }
+
+  .lesson-save-note,
+  .lesson-save-note:not(:empty) {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .lesson-steps-panel {
+    left: 12px;
+    right: 12px;
+  }
+
   .lesson-progress-bar {
+    display: none;
+  }
+
+  /* Phone: Finish lives in the steps panel; Save keeps its short label. */
+  .lesson-finish,
+  .lesson-save-more {
+    display: none;
+  }
+}
+
+/* The step's name gives way before its number does. */
+@media (max-width: 400px) {
+  .lesson-progress-title {
     display: none;
   }
 }
@@ -627,4 +819,73 @@
   gap: 10px;
   font-size: 14px;
   color: var(--text-muted);
+}
+
+/* ——— Study session summary ——— */
+.session-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.session-facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.session-facts > div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 12px;
+}
+
+.session-facts dt {
+  color: var(--text-muted);
+}
+
+.session-facts dd {
+  margin: 0;
+}
+
+@media (max-width: 520px) {
+  .session-facts > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* ——— Course page: where you are, and three separate signals ——— */
+.course-where {
+  margin: 0;
+}
+
+.course-signals {
+  display: grid;
+  gap: 4px;
+  margin: 4px 0 0;
+}
+
+.course-signals > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.course-signals dt {
+  color: var(--text-muted);
+}
+
+.course-signals dt::after {
+  content: ':';
+}
+
+.course-signals dd {
+  margin: 0;
+}
+
+.course-finish {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

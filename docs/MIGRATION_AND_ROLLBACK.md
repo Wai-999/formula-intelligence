@@ -16,6 +16,7 @@ New records use new keys, each a **versioned envelope** `{ schemaVersion: 1, ...
 | `fi_diagnostic_v1` | first-run choice, every diagnostic attempt, placement |
 | `fi_pyex_v1` | code-exercise drafts and results |
 | `fi_projects_v1` | project step state |
+| `fi_resume_v1` | saved study places: the learner's saved place ("Save my place"), the last automatic place, the last place per course (since 2026-10-27; `docs/study-continuity/`) |
 | `fi_theme_v1`, `fi_motion_v1`, `fi_nav_v1` | preferences (theme, motion, navigation collapse) |
 | `fi_quarantine_v1` | originals of any record that could not be read (see below) |
 
@@ -44,6 +45,13 @@ Tests: `src/lib/__tests__/versioned.test.js` (10: missing; corrupt JSON quaranti
 - **Addresses.** Every V3.1 page id that moved is mapped by `RENAMED` in `src/app/pages.js` (table in `docs/v4/SIMPLIFICATION_PLAN.md`); `#practice/review` now means the new Review page (it was the formula flashcards, which moved to `#practice/formulas/flashcards`).
 - **Learner data.** No key, shape or meaning changes. New evidence records may carry two extra fields, `x` (transfer item) and `h` (hint opened first); older records lack them, and readers treat absence as unknown. A rollback to V3.1 ignores the fields.
 - **Removed features with stored data:** none. The XP/badge panel was removed from Progress, but it computed everything from existing records and stored nothing of its own; the journal's entries are untouched (only its streak message went).
+
+## Study continuity (2026-10-27) — what changed
+
+- **One new key, `fi_resume_v1`** (`{ schemaVersion: 1, pinned, current, recent }`), read through `readVersioned` like every `fi_*` record: unreadable or newer-version data is quarantined, never overwritten in place. It is part of every backup, restore and reset automatically (it is in `STORAGE_KEYS`). A backup made before it existed restores fine: the app then simply has no saved place.
+- **`fi_lessons_v1` is unchanged in shape.** Its `sections` list (steps seen) existed but was never written; lessons now fill it (a step counts once the learner has stayed on it for 1.5 s). Older builds read it as before.
+- **Rollback:** an older build ignores `fi_resume_v1`; rolling forward again finds it intact. Nothing to migrate either way.
+- Details: `docs/study-continuity/DATA_SAFETY.md`.
 
 ## Old links
 
