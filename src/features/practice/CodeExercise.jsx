@@ -98,7 +98,8 @@ function NoCodePath({ ex }) {
   );
 }
 
-export default function CodeExercise({ ex }) {
+/** `headingLevel`: 2 where the exercise is a top-level section of its page, 3 inside a project. */
+export default function CodeExercise({ ex, headingLevel = 3 }) {
   const draft = useWorkStore((s) => s.drafts[ex.id]);
   const result = useWorkStore((s) => s.results[ex.id]);
   const saveDraft = useWorkStore((s) => s.saveDraft);
@@ -149,12 +150,13 @@ export default function CodeExercise({ ex }) {
     requestAnimationFrame(() => { el.selectionStart = el.selectionEnd = a + 4; });
   }
 
+  const Heading = `h${headingLevel}`;
   const passedAll = state && state.tests && !state.error && state.tests.every((t) => t.passed) && state.tests.length === ex.tests.length;
 
   return (
     <article className="code-ex" aria-labelledby={`${id}-t`}>
       <div className="code-ex-head">
-        <h3 id={`${id}-t`} className="studio-h3">{ex.title}</h3>
+        <Heading id={`${id}-t`} className="studio-h3">{ex.title}</Heading>
         <div className="studio-row">
           <span className="studio-chip">{TYPE_LABEL[ex.type]}</span>
           <span className="studio-chip">{competencyById[ex.competency]?.title}</span>

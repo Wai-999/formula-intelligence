@@ -128,6 +128,17 @@ test.describe('diagnostic', () => {
     expect(saved.attempts).toHaveLength(1);
     expect(saved.attempts[0].bankVersion).toMatch(/^dx-/);
   });
+
+  test('a retake opens with a question the last attempt did not ask', async ({ page }) => {
+    await page.goto('./#learn/placement', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Start the placement check' }).click();
+    const first = await page.locator('#dx-q').innerText();
+    await page.getByRole('button', { name: 'Skip this question' }).click();
+    await page.getByRole('button', { name: 'Stop and see results' }).click();
+    await page.getByRole('button', { name: 'Retake the placement check' }).click();
+    await expect(page.locator('#dx-q')).toBeVisible();
+    expect(await page.locator('#dx-q').innerText()).not.toBe(first);
+  });
 });
 
 test.describe('practice', () => {

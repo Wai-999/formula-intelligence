@@ -62,6 +62,6 @@ These prove the paths exist, are short and work by keyboard on both viewports. *
 | Independent math review of the 23 lessons and new derivations (V4 §11 content gate) | **BLOCKED** | Needs a reviewer other than the author; every lesson is labelled a draft |
 | User testing of the three exemplar lessons (V4 §10 Phase 2) | **BLOCKED** | Needs learners; scripted tasks only |
 | Screen-reader testing | **BLOCKED** | Needs a person with NVDA/VoiceOver/TalkBack |
-| Lighthouse score | **NOT MEASURED** | Not installed; `npx lighthouse …` command in `PERFORMANCE_REPORT.md` |
+| Lighthouse score | **NOT MEASURED** (on 2026-10-24) | Not installed then. Measured after release, on 2026-10-27: see `PERFORMANCE_REPORT.md` → Lighthouse |
 | Field Core Web Vitals, interaction latency | **UNVERIFIED** | No analytics by design; lab timings only; INP not measured |
 | Learning-outcome rates for a population | **Not claimed** | Signals are computed per learner on the device; no baselines or effectiveness figures exist |

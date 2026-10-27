@@ -28,7 +28,7 @@ Tests: `src/lib/__tests__/learningEngine.test.js` — one lucky guess is never m
 
 ## 2. Diagnostic procedure — `src/lib/diagnostic.js`, `src/features/diagnostic/`
 
-Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.10-1`: 64 items over 8 domains, ≥ 2 per covered competency (32 of 46 competencies; the uncovered ones lie beyond the placement path — listed in `docs/CURRICULUM_MAP.md`).
+Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.10-2`: 85 items over 8 domains, ≥ 2 per covered competency — **41 of 47 competencies**. The six left out are Calculus II–III and ML-course skills (`calc.series`, `calc.gradient`, `calc.optimization`, `ml.*`): a hard calculus or statistics item stands for "ready to leave Calculus I / Probability & Statistics", so questions from the courses after those would mark a ready learner down. Their lesson checkpoints measure them. Items are only ever added, never removed or re-keyed, because saved attempts refer to them by id (`dx-2026.10-1` had 64 items over 32 competencies; all 64 are unchanged).
 
 Three rounds, so screening is broad before it is deep:
 
@@ -36,7 +36,9 @@ Three rounds, so screening is broad before it is deep:
 2. **Targeting** — per domain, a harder item after a correct answer, an easier one after a miss.
 3. **Tie-break** — only where rounds 1 and 2 disagree, one more middle item.
 
-At most three answered items per domain. Any item can be answered "I haven't studied this"; any domain can be skipped; the whole screen can be stopped and still produce a (wider) result.
+At most three answered items per domain.
+
+**Which item**, once the round has fixed the domain and difficulty (`nextItem`): the one shown least often in the learner's **earlier attempts** first, so a retake asks fresh questions while any are left at that difficulty and measures the skill rather than memory of the answer; then the one whose **competency this attempt has asked least**, so a domain's questions spread over its skills; then bank order. Deterministic: the same history always gives the same question. Until `dx-2026.10-2` the first item of the right difficulty in bank order was always chosen, so a retake with the same answers repeated exactly the same questions. Any item can be answered "I haven't studied this"; any domain can be skipped; the whole screen can be stopped and still produce a (wider) result.
 
 ## 3. Estimation and recommendation
 
@@ -45,7 +47,7 @@ At most three answered items per domain. Any item can be answered "I haven't stu
 - **Recommendation** walks the mathematics path Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I and stops at the first domain that is not *Likely ready*. Each step contributes a sentence of reasoning ("Algebra: 1 of 3 correct (partly there, low confidence) — this is where to start"). *Also consider*: Linear Algebra and Probability & Statistics when algebra looks ready; Python alongside from the start.
 - The result is labelled **provisional** and offers three one-click choices (V4 §6): **Start earlier** (one step back on the path), **Start here**, **Skip ahead** (one step on); off the path, "earlier" is the course's first prerequisite (`placementChoices` in `src/lib/diagnostic.js`). The learner can also choose any course (**manual override**, `source: 'manual'`) or **retake**. Every attempt is kept in `fi_diagnostic_v1`; a retake adds, never overwrites.
 
-Tests: `src/lib/__tests__/diagnostic.test.js` (adaptive selection, caps, skip/stop, posterior widths, recommendation reasons, start earlier/here/ahead, override, retake history) and `e2e/v31.spec.js › diagnostic`.
+Tests: `src/lib/__tests__/diagnostic.test.js` (coverage, adaptive selection, competency spread, fresh retakes, every item reachable over retakes, caps, skip/stop, posterior widths, recommendation reasons, start earlier/here/ahead, override, retake history) and `e2e/v31.spec.js › diagnostic`.
 
 ## 4. Spaced review — `src/lib/reviewSchedule.js`
 

@@ -221,7 +221,11 @@ export default function DiagnosticPage() {
   }
 
   const shown = attempts.find((a) => a.id === viewing) ?? (viewing === null ? last : null);
-  const start = () => { setViewing(null); setRun({ responses: [], skippedDomains: [], startedAt: Date.now() }); };
+  // A retake prefers questions earlier attempts did not ask (nextItem).
+  const start = () => {
+    setViewing(null);
+    setRun({ responses: [], skippedDomains: [], startedAt: Date.now(), seenBefore: attempts.flatMap((a) => a.responses.map((r) => r.item)) });
+  };
 
   return (
     <div className="studio-scroll">

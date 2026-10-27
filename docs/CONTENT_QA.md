@@ -8,7 +8,7 @@ What has been checked about the curriculum content, how, and what has **not** be
 |---|---|---|
 | Authored lessons | 23 (of 162 planned + authored titles), incl. the 3 V4 applied exemplars | **content-complete** for these 23 · **review-complete: 0** |
 | Assessable items in lessons (practice, Use it tasks, checkpoints) | 232, plus 46 readiness checks | machine-checked |
-| Diagnostic (placement) items | 64 (32 of 47 competencies) | machine-checked, **uncalibrated** |
+| Diagnostic (placement) items | 85 (41 of 47 competencies; the 6 left out are past what placement decides) | machine-checked, **uncalibrated**; the 21 added in `dx-2026.10-2` are AI drafts awaiting the same review as the lessons |
 | Curriculum formulas | 42 | LaTeX parses; claim type stated; references checked |
 | Concepts / knowledge graph | 89 concepts; graph 313 nodes, 466 edges | acyclic, no dangling ids; **pedagogy unreviewed** |
 | Code exercises / projects | 29 (26 with a verified no-code path) / 9 (6 V4 applied projects) | reference solutions, starters and no-code outputs verified |

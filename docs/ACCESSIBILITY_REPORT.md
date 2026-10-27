@@ -13,10 +13,13 @@ Target: WCAG 2.2 AA for core flows (§13). This report separates what automated 
 | V3.1 release | 59 pages, dark and light | 0 |
 | **V4 release** | **60 pages, dark** (default font and the CI-like DejaVu Sans) | **0** |
 | **V4 release** | **60 pages, light** (default font and DejaVu Sans) | **0** |
+| Self-hosted icon font (2026-10-27) | 60 pages, dark and light (Linux, no Inter: CI-like fonts) | 0 |
 
 Fixed during Phases 2–10 because the audit found them: radio choices whose only label was rendered math (now named from `toPlainText` of the math); 24 px target size on Python-library and Sources table-of-contents links; an unlabelled phone search button; a scrollable display-math region that was not keyboard-focusable (focusable now, only when it overflows); light-theme contrast of the active depth button; the Model Map mechanism slider had no accessible name (now labelled, output announced politely).
 
 Found only by CI: on the Linux runner, which has no Inter font, the lesson sidebar's "Builds on" links wrapped onto lines 15 px apart (10 target-size failures on 5 lessons) while every laptop run passed. They are now at least 24 px tall, and `A11Y_FONT='DejaVu Sans' npm run a11y` (and `E2E_FONT=… npx playwright test`) reproduce CI's wider text locally; all 59 pages pass in both themes with DejaVu Sans, Arial and the default font.
+
+Found by Lighthouse (2026-10-27), whose accessibility audit also runs axe's best-practice rules: on Code exercises, each exercise title was an `h3` directly under the page's `h1` (*heading-order*), so a screen-reader user listing headings saw a skipped level. `CodeExercise` now takes a heading level: `h2` on that page, `h3` inside a project's "Calculate" step. Lighthouse accessibility is now 100 on all five pages it measured and on Projects. The WCAG-tag axe run above does not include best-practice rules, which is why it passed.
 
 Axe cannot judge meaning, reading order, or whether an explanation makes sense when heard. It is a floor, not a verdict.
 

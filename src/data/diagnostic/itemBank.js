@@ -9,8 +9,16 @@ import { item, num, choice, multi } from '../curriculum/lessonKit.js';
 // rough and reports wide uncertainty — and the UI says so.
 //
 // Blueprint: eight domains; every competency tested has at least two items.
+// Every competency is tested except six that sit past what placement decides
+// (Calculus II–III and the ML course: calc.series, calc.gradient,
+// calc.optimization, ml.*). A hard item in the calculus or statistics domain
+// stands for "ready to leave Calculus I / Probability & Statistics", so
+// questions from the courses after those would mark a ready learner down.
+// Lesson checkpoints and practice measure those six instead.
+//
+// Items are never removed or re-keyed: saved attempts refer to them by id.
 
-export const BANK_VERSION = 'dx-2026.10-1';
+export const BANK_VERSION = 'dx-2026.10-2';
 
 const dx = (domain, fields) => item({ domain, ...fields });
 
@@ -26,6 +34,11 @@ export const DX_ITEMS = [
   dx('arithmetic', { id: 'dx.a8', competency: 'arith.ratios', difficulty: 3, prompt: 'On a 1 : 50,000 map, two points are 3 cm apart. How far apart are they in reality, in km?', answer: num(1.5), compute: () => (3 * 50000) / 100000, solution: '$3 \\times 50{,}000 = 150{,}000$ cm $= 1.5$ km.' }),
   dx('arithmetic', { id: 'dx.a9', competency: 'arith.equations', difficulty: 1, prompt: 'Solve $\\dfrac{x}{4} = 6$.', answer: num(24), compute: () => 24, solution: 'Multiply both sides by 4: $x = 24$.' }),
   dx('arithmetic', { id: 'dx.a10', competency: 'arith.equations', difficulty: 3, prompt: 'Solve $3x - 7 = 11$.', answer: num(6), compute: () => (11 + 7) / 3, solution: '$3x = 18$, $x = 6$.' }),
+  dx('arithmetic', { id: 'dx.a11', competency: 'arith.exponents', difficulty: 1, prompt: 'Compute $3^4$.', answer: num(81), compute: () => 3 ** 4, solution: '$3 \\times 3 \\times 3 \\times 3 = 81$.' }),
+  dx('arithmetic', { id: 'dx.a12', competency: 'arith.exponents', difficulty: 2, prompt: 'Compute $\\sqrt{81} - 2^3$.', answer: num(1), compute: () => Math.sqrt(81) - 2 ** 3, solution: '$9 - 8 = 1$.' }),
+  dx('arithmetic', { id: 'dx.a13', competency: 'arith.exponents', difficulty: 3, prompt: 'Light travels about $3 \\times 10^{8}$ metres per second. In $2 \\times 10^{3}$ seconds it travels $6 \\times 10^{n}$ metres. What is $n$?', answer: num(11), compute: () => Math.log10((3e8 * 2e3) / 6), solution: 'Multiply the numbers and add the powers: $(3 \\times 2) \\times 10^{8 + 3} = 6 \\times 10^{11}$.' }),
+  dx('arithmetic', { id: 'dx.a14', competency: 'arith.coordinates', difficulty: 1, prompt: 'Which quadrant of the coordinate plane contains the point $(-3, 2)$?', answer: choice(['The second (top left)', 'The first (top right)', 'The third (bottom left)', 'The fourth (bottom right)'], 0), solution: 'Negative x is left of the y-axis; positive y is above the x-axis: top left, the second quadrant.' }),
+  dx('arithmetic', { id: 'dx.a15', competency: 'arith.coordinates', difficulty: 2, prompt: 'A point starts at $(1, 4)$ and moves 3 units left, then 2 units down. Where is it now?', answer: multi([-2, 2], ['x-coordinate', 'y-coordinate']), solution: 'Left changes x: $1 - 3 = -2$. Down changes y: $4 - 2 = 2$. So $(-2, 2)$.' }),
 
   // ——— Algebra ———
   dx('algebra', { id: 'dx.b1', competency: 'alg.linear-eq', difficulty: 1, prompt: 'Solve $5x + 2 = 3x + 10$.', answer: num(4), compute: () => 8 / 2, solution: '$2x = 8$, $x = 4$.' }),
@@ -40,6 +53,8 @@ export const DX_ITEMS = [
   dx('algebra', { id: 'dx.b10', competency: 'alg.quadratics', difficulty: 3, prompt: 'Solve $x^2 + 2x - 15 = 0$. Enter the positive root.', answer: num(3), compute: () => (-2 + 8) / 2, solution: '$(x + 5)(x - 3) = 0$: roots $-5$ and 3.' }),
   dx('algebra', { id: 'dx.b11', competency: 'alg.exp-log', difficulty: 3, prompt: 'Solve $2^x = 32$.', answer: num(5), compute: () => Math.log2(32), solution: '$32 = 2^5$.' }),
   dx('algebra', { id: 'dx.b12', competency: 'alg.exp-log', difficulty: 3, prompt: 'What is $\\log_{10} 1000$?', answer: num(3), compute: () => Math.log10(1000), solution: '$10^3 = 1000$.' }),
+  dx('algebra', { id: 'dx.b13', competency: 'alg.line-fit', difficulty: 2, prompt: 'A least-squares line for test scores is $\\hat y = 2.5x + 10$, where $x$ is hours studied. What score does it predict for 4 hours?', answer: num(20), compute: () => 2.5 * 4 + 10, solution: '$2.5 \\times 4 + 10 = 20$.' }),
+  dx('algebra', { id: 'dx.b14', competency: 'alg.line-fit', difficulty: 3, prompt: 'A least-squares line is fitted to the points $(1, 2)$, $(2, 4)$ and $(3, 9)$. What value does the line give at $x = 2$?', answer: num(5), compute: () => (2 + 4 + 9) / 3, solution: 'A least-squares line always passes through the point of means $(\\bar x, \\bar y) = (2, 5)$. (The line is $\\hat y = 3.5x - 2$.)' }),
 
   // ——— Functions ———
   dx('functions', { id: 'dx.f1', competency: 'func.notation', difficulty: 1, prompt: 'If $f(x) = 2x^2 - 1$, what is $f(3)$?', answer: num(17), compute: () => 2 * 9 - 1, solution: '$2 \\cdot 9 - 1 = 17$.' }),
@@ -66,6 +81,12 @@ export const DX_ITEMS = [
   dx('linalg', { id: 'dx.l6', competency: 'la.matrix-mult', difficulty: 3, prompt: 'Compute $\\det\\begin{bmatrix}2 & 1\\\\ 3 & 4\\end{bmatrix}$.', answer: num(5), compute: () => 8 - 3, solution: '$8 - 3 = 5$.' }),
   dx('linalg', { id: 'dx.l7', competency: 'la.elimination', difficulty: 3, prompt: 'How many solutions does $x + y = 2$, $2x + 2y = 5$ have?', answer: choice(['None', 'Exactly one', 'Infinitely many', 'Two'], 0), solution: 'Twice the first equation gives $2x + 2y = 4 \\ne 5$: inconsistent.' }),
   dx('linalg', { id: 'dx.l8', competency: 'la.elimination', difficulty: 3, prompt: 'Solve $x + y + z = 6$, $y + z = 5$, $z = 3$. What is $x$?', answer: num(1), compute: () => 6 - 5, solution: '$y = 2$, then $x = 6 - 2 - 3 = 1$.' }),
+  dx('linalg', { id: 'dx.l9', competency: 'la.projection', difficulty: 2, prompt: 'Project $\\mathbf b = (2, 3)$ onto $\\mathbf a = (1, 1)$. What is the projection vector?', answer: multi([2.5, 2.5], ['first component', 'second component']), solution: '$\\dfrac{\\mathbf b \\cdot \\mathbf a}{\\mathbf a \\cdot \\mathbf a}\\,\\mathbf a = \\tfrac{5}{2}(1, 1) = (2.5, 2.5)$.' }),
+  dx('linalg', { id: 'dx.l10', competency: 'la.projection', difficulty: 3, prompt: 'The projection of $(4, 2)$ onto $(3, 4)$ is $k\\,(3, 4)$. What is $k$?', answer: num(0.8), compute: () => (4 * 3 + 2 * 4) / (3 * 3 + 4 * 4), solution: '$k = \\dfrac{(4, 2)\\cdot(3, 4)}{(3, 4)\\cdot(3, 4)} = \\dfrac{20}{25} = 0.8$.' }),
+  dx('linalg', { id: 'dx.l11', competency: 'la.eigen', difficulty: 2, prompt: 'The matrix $\\begin{bmatrix}3 & 0\\\\ 0 & -1\\end{bmatrix}$ sends $(0, 1)$ to a multiple of itself. Which multiple — its eigenvalue?', answer: num(-1), compute: () => -1, solution: 'The product is $(0, -1) = -1 \\cdot (0, 1)$: eigenvalue $-1$.' }),
+  dx('linalg', { id: 'dx.l12', competency: 'la.eigen', difficulty: 3, prompt: 'Multiply $\\begin{bmatrix}2 & 1\\\\ 1 & 2\\end{bmatrix}$ by $(1, 1)$. What does the result show?', answer: choice(['$(1, 1)$ is an eigenvector, with eigenvalue 3', '$(1, 1)$ is not an eigenvector', '$(1, 1)$ is an eigenvector, with eigenvalue 2', 'The matrix has no eigenvectors'], 0), solution: 'The product is $(3, 3) = 3 \\cdot (1, 1)$: the direction is unchanged and the length is tripled.' }),
+  dx('linalg', { id: 'dx.l13', competency: 'la.svd-pca', difficulty: 3, prompt: 'A covariance matrix has eigenvalues 9 and 1. What fraction of the total variance does the first principal component explain?', answer: num(0.9), compute: () => 9 / (9 + 1), solution: '$9/(9 + 1) = 0.9$, or 90%.' }),
+  dx('linalg', { id: 'dx.l14', competency: 'la.svd-pca', difficulty: 3, prompt: 'A matrix has singular values 10, 1 and 0. What is its rank?', answer: num(2), compute: () => [10, 1, 0].filter((s) => s > 0).length, solution: 'The rank is the number of non-zero singular values: 2.' }),
 
   // ——— Calculus readiness ———
   dx('calculus', { id: 'dx.c1', competency: 'calc.limits', difficulty: 1, prompt: 'What does $\\dfrac{x^2 - 4}{x - 2}$ approach as $x \\to 2$?', answer: num(4), compute: () => 2 + 2, solution: 'It equals $x + 2$ for $x \\ne 2$: the limit is 4.' }),
@@ -74,6 +95,9 @@ export const DX_ITEMS = [
   dx('calculus', { id: 'dx.c4', competency: 'calc.derivative', difficulty: 3, prompt: 'What is the slope of the tangent to $y = x^2$ at $x = 5$?', answer: num(10), compute: () => 2 * 5, solution: 'The derivative $2x$ at 5: 10.' }),
   dx('calculus', { id: 'dx.c5', competency: 'calc.integral', difficulty: 3, prompt: 'What is the area under $y = 2x$ from $x = 0$ to $x = 3$?', answer: num(9), compute: () => 0.5 * 3 * 6, solution: 'A triangle: $\\tfrac12 \\cdot 3 \\cdot 6 = 9$.' }),
   dx('calculus', { id: 'dx.c6', competency: 'calc.integral', difficulty: 3, prompt: 'Compute $\\int_0^2 x^2\\,dx$. (Three decimals.)', answer: num(8 / 3, 0.0006), compute: () => 8 / 3, solution: '$\\tfrac{x^3}{3}\\Big|_0^2 = \\tfrac83$.' }),
+  dx('calculus', { id: 'dx.c7', competency: 'calc.rules', difficulty: 2, prompt: "If $f(x) = x^3 - 4x$, what is $f'(2)$?", answer: num(8), compute: () => 3 * 2 ** 2 - 4, solution: "$f'(x) = 3x^2 - 4$, so $f'(2) = 12 - 4 = 8$." }),
+  dx('calculus', { id: 'dx.c8', competency: 'calc.rules', difficulty: 3, prompt: "If $f(x) = (2x + 1)^3$, what is $f'(1)$?", answer: num(54), compute: () => 3 * (2 * 1 + 1) ** 2 * 2, solution: "Chain rule: $f'(x) = 3(2x + 1)^2 \\cdot 2$, so $f'(1) = 3 \\cdot 9 \\cdot 2 = 54$." }),
+  dx('calculus', { id: 'dx.c9', competency: 'calc.rules', difficulty: 1, prompt: 'By the power rule, the derivative of $x^5$ is $k\\,x^4$. What is $k$?', answer: num(5), compute: () => 5, solution: 'Bring the exponent down and lower it by one: $5x^4$.' }),
 
   // ——— Statistics & probability ———
   dx('statistics', { id: 'dx.s1', competency: 'stats.descriptive', difficulty: 1, prompt: 'What is the mean of 4, 8, 6 and 2?', answer: num(5), compute: () => 20 / 4, solution: '$20/4 = 5$.' }),
@@ -84,6 +108,8 @@ export const DX_ITEMS = [
   dx('statistics', { id: 'dx.s6', competency: 'stats.sampling', difficulty: 3, prompt: 'By what factor must the sample size grow to halve the standard error?', answer: num(4), compute: () => 4, solution: 'SE ∝ $1/\\sqrt n$: four times the data halves it.' }),
   dx('statistics', { id: 'dx.s7', competency: 'stats.bayes', difficulty: 3, prompt: 'A condition affects 1% of people. A test detects 90% of cases and gives false positives for 10% of others. If you test positive, what is the probability you have it? (Three decimals.)', answer: num(0.009 / 0.108, 0.0006), compute: () => 0.009 / (0.009 + 0.1 * 0.99), solution: '$0.009/(0.009 + 0.099) \\approx 0.083$.' }),
   dx('statistics', { id: 'dx.s8', competency: 'stats.bayes', difficulty: 3, prompt: 'Prior 0.5; a test has sensitivity 0.8 and false-positive rate 0.2. After a positive result, what is the probability?', answer: num(0.8), compute: () => 0.4 / (0.4 + 0.1), solution: '$0.4/(0.4 + 0.1) = 0.8$.' }),
+  dx('statistics', { id: 'dx.s9', competency: 'stats.inference', difficulty: 2, prompt: 'A sample of 100 has mean 50, and the population standard deviation is 10. Using $z = 1.96$, what is the margin of error of a 95% confidence interval? (Two decimals.)', answer: num(1.96, 0.006), compute: () => (1.96 * 10) / Math.sqrt(100), solution: '$1.96 \\times 10/\\sqrt{100} = 1.96$, so the interval is $50 \\pm 1.96$.' }),
+  dx('statistics', { id: 'dx.s10', competency: 'stats.inference', difficulty: 3, prompt: 'A trial of a new drug reports $p = 0.03$. Which statement is correct?', answer: choice(['If the drug had no effect, results at least this extreme would happen about 3% of the time', 'There is a 3% chance that the drug has no effect', 'There is a 97% chance that the drug works', 'The drug’s effect is large'], 0), solution: 'A p-value is computed assuming no effect. It is not the probability that there is no effect, and it says nothing about the size of the effect.' }),
 
   // ——— Python ———
   dx('python', { id: 'dx.p1', competency: 'py.basics', difficulty: 1, prompt: 'What does this print? `x = 3; x = x + 2; print(x * 2)`', answer: num(10), compute: () => (3 + 2) * 2, solution: 'x becomes 5; 5 × 2 = 10.' }),
@@ -94,6 +120,9 @@ export const DX_ITEMS = [
   dx('python', { id: 'dx.p6', competency: 'py.debugging', difficulty: 3, prompt: 'A loop `for i in range(len(xs)): total = total + xs[i+1]` crashes. Why?', answer: choice(['On the last pass, i + 1 is past the end of the list (IndexError)', 'range cannot take len(xs)', 'total is a string', 'Lists cannot be indexed'], 0), solution: 'When i is the last index, xs[i + 1] does not exist.' }),
   dx('python', { id: 'dx.p7', competency: 'py.numpy', difficulty: 3, prompt: 'What is `np.array([1, 2, 3]) * np.array([4, 5, 6])`?', answer: choice(['array([ 4, 10, 18])', '32', 'array([5, 7, 9])', 'an error'], 0), solution: 'Arithmetic on arrays is elementwise.' }),
   dx('python', { id: 'dx.p8', competency: 'py.numpy', difficulty: 3, prompt: 'What is `np.zeros((2, 3)).shape`?', answer: choice(['(2, 3)', '(3, 2)', '6', '(6,)'], 0), solution: 'Two rows, three columns.' }),
+  dx('python', { id: 'dx.p9', competency: 'py.data', difficulty: 2, prompt: 'For a pandas DataFrame `df`, what does `len(df[df["age"] > 30])` give?', answer: choice(['The number of rows whose age is over 30', 'The sum of the ages over 30', 'The number of columns', 'Always 30'], 0), solution: '`df["age"] > 30` marks each row True or False; `df[...]` keeps the True rows; `len` counts them.' }),
+  dx('python', { id: 'dx.p10', competency: 'py.data', difficulty: 3, prompt: 'A DataFrame `df` has 5 rows, and its `age` column has 2 missing values (`NaN`). What does `df["age"].count()` return?', answer: num(3), compute: () => 5 - 2, solution: '`count()` counts the values that are not missing: $5 - 2 = 3$. (`len(df)` would still be 5.)' }),
+  dx('python', { id: 'dx.p11', competency: 'py.collections', difficulty: 1, prompt: 'What does `print(len(["red", "green", "blue"]))` print?', answer: num(3), compute: () => ['red', 'green', 'blue'].length, solution: 'The list has three items.' }),
 ];
 
 export const dxItemById = Object.fromEntries(DX_ITEMS.map((i) => [i.id, i]));

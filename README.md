@@ -45,6 +45,8 @@ npm run check:citations               # network: fetch every cited source
 
 Evidence scripts: `npm run evidence:screenshots` (3 breakpoints × 2 themes), `npm run evidence:perf` (lab timings), `npm run docs:curriculum` (regenerates the curriculum map).
 
+Icons are a self-hosted subset of Tabler Icons. After using a new `ti-…` class, run `npm run icons` (needs `pip install fonttools brotli`); a unit test fails until you do.
+
 ## Deployment
 
 Pull requests run every check (`.github/workflows/ci.yml`). Pushes to `main` run the same checks and, only if all pass, deploy to GitHub Pages (`.github/workflows/deploy.yml`). Rollback: [`docs/MIGRATION_AND_ROLLBACK.md`](docs/MIGRATION_AND_ROLLBACK.md).
