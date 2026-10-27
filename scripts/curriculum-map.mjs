@@ -61,7 +61,7 @@ for (const l of LESSONS) {
   out.push(`| ${l.title} (\`${l.id}\`) | ${COURSES.find((c) => c.id === l.course)?.title} | ${l.competencies.join(', ')} | ${l.labs.join(', ') || '—'} | ${l.minutes} | ${l.review.status} |`);
 }
 
-out.push(`\n## Diagnostic coverage\n\n${dx.size} of ${COMPETENCIES.length} competencies have diagnostic items (at least 2 each; ${DX_ITEMS.length} items). Not covered: ${COMPETENCIES.filter((c) => !dx.has(c.id)).map((c) => `\`${c.id}\``).join(', ')} — mostly beyond the placement path, which only needs to choose between Prealgebra and Calculus I.\n`);
+out.push(`\n## Diagnostic coverage\n\n${dx.size} of ${COMPETENCIES.length} competencies have diagnostic items (at least 2 each; ${DX_ITEMS.length} items). Not covered: ${COMPETENCIES.filter((c) => !dx.has(c.id)).map((c) => `\`${c.id}\``).join(', ')} — Calculus II–III and ML-course skills, past what placement decides (a hard calculus or statistics item stands for “ready to leave Calculus I / Probability & Statistics”); their lesson checkpoints measure them.\n`);
 
 writeFileSync('docs/CURRICULUM_MAP.md', `${out.join('\n')}\n`);
 console.log('wrote docs/CURRICULUM_MAP.md');

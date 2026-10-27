@@ -71,14 +71,36 @@ export function assessDomain(domain, responses, skipped) {
 
 /**
  * The next item to show, or null when the diagnostic is complete.
- * state: { responses: [{ item, domain, difficulty, ok (true/false/null = skipped item) }], skippedDomains: [] }
+ * state: { responses: [{ item, domain, difficulty, ok (true/false/null = skipped item) }], skippedDomains: [],
+ *          seenBefore?: [item ids shown in earlier attempts, repeats included] }
+ *
+ * Among the items of the wanted domain and difficulty, the one shown least
+ * often in earlier attempts comes first (a retake asks fresh questions while
+ * any are left, so it measures the skill rather than memory of the answer);
+ * then the one whose competency this attempt has asked least (a domain's
+ * questions spread over its skills); then bank order. No randomness: the
+ * same history always gives the same question.
  */
 export function nextItem(items, state) {
   const shown = new Set(state.responses.map((r) => r.item));
   const domains = DOMAINS.map((d) => d.id).filter((d) => !state.skippedDomains.includes(d));
+  const competencyOf = new Map(items.map((i) => [i.id, i.competency]));
+  const timesSeen = new Map();
+  for (const id of state.seenBefore ?? []) timesSeen.set(id, (timesSeen.get(id) ?? 0) + 1);
+  const askedNow = new Map();
+  for (const r of state.responses) {
+    const c = competencyOf.get(r.item);
+    askedNow.set(c, (askedNow.get(c) ?? 0) + 1);
+  }
   const pick = (domain, difficulty) => {
-    const pool = items.filter((i) => i.domain === domain && !shown.has(i.id));
-    return pool.find((i) => i.difficulty === difficulty) ?? null;
+    let best = null;
+    for (const i of items) {
+      if (i.domain !== domain || i.difficulty !== difficulty || shown.has(i.id)) continue;
+      const seen = timesSeen.get(i.id) ?? 0;
+      const asked = askedNow.get(i.competency) ?? 0;
+      if (!best || seen < best.seen || (seen === best.seen && asked < best.asked)) best = { i, seen, asked };
+    }
+    return best?.i ?? null;
   };
   const fallback = (domain, prefer) => {
     for (const d of prefer) {

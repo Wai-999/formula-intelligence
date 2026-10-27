@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
+import katex from 'katex';
 import { estimateAbility, assessDomain, nextItem, recommend, placementChoices } from '../diagnostic.js';
 import { DX_ITEMS, BANK_VERSION } from '../../data/diagnostic/itemBank.js';
-import { DOMAINS, competencyById } from '../../data/curriculum/competencies.js';
+import { DOMAINS, COMPETENCIES, competencyById } from '../../data/curriculum/competencies.js';
 import { checkAnswer } from '../answers.js';
+import { tokenize } from '../mathFormat.js';
 
 // Acceptance test 5 and §8: the diagnostic screens broadly before targeting,
 // never claims readiness from one lucky answer, shows its uncertainty,
@@ -11,8 +13,8 @@ import { checkAnswer } from '../answers.js';
 const answerAs = (item, ok) => ({ item: item.id, domain: item.domain, difficulty: item.difficulty, ok });
 
 /** Simulate a learner whose answers depend only on the item’s domain and difficulty. */
-function simulate(policy) {
-  const state = { responses: [], skippedDomains: [] };
+function simulate(policy, seenBefore = []) {
+  const state = { responses: [], skippedDomains: [], seenBefore };
   for (let i = 0; i < 100; i++) {
     const it = nextItem(DX_ITEMS, state);
     if (!it) break;
@@ -40,6 +42,26 @@ describe('item bank', () => {
       const key = i.answer.type === 'choice' ? i.answer.correct : i.answer.type === 'numeric' ? String(i.answer.value) : i.answer.values.map(String);
       expect(checkAnswer(i.answer, key).correct, i.id).toBe(true);
     }
+  });
+
+  it('typesets every prompt, choice and solution', () => {
+    const render = (text) => {
+      for (const tok of tokenize(text)) {
+        if (tok.t === 'math' || tok.t === 'display') katex.renderToString(tok.v, { throwOnError: true, strict: 'ignore', displayMode: tok.t === 'display' });
+        if (tok.t === 'bold' || tok.t === 'em') render(tok.v);
+      }
+    };
+    for (const i of DX_ITEMS) {
+      for (const text of [i.prompt, i.solution, ...(i.answer.choices ?? [])]) expect(() => render(text), `${i.id}: ${text}`).not.toThrow();
+    }
+  });
+
+  it('tests every competency except the six past what placement decides', () => {
+    // Calculus II–III and the ML course: a hard calculus or statistics item
+    // stands for "ready to leave Calculus I / Probability & Statistics".
+    const beyond = ['calc.series', 'calc.gradient', 'calc.optimization', 'ml.validation', 'ml.classification-metrics', 'ml.calibration-fairness'];
+    const tested = new Set(DX_ITEMS.map((i) => i.competency));
+    for (const c of COMPETENCIES) expect(tested.has(c.id), c.id).toBe(!beyond.includes(c.id));
   });
 
   it('offers every domain an item at each difficulty the procedure may ask for', () => {
@@ -74,6 +96,35 @@ describe('adaptive procedure', () => {
     const mixed = simulate((it) => it.difficulty <= 2).responses; // right at d1–2, wrong at d3
     for (const d of DOMAINS) expect(mixed.filter((x) => x.domain === d.id).length, d.id).toBeLessThanOrEqual(3);
     expect(mixed.length).toBeLessThanOrEqual(24);
+  });
+
+  it('spreads a domain’s questions over its competencies (difficulty decides first)', () => {
+    const competency = Object.fromEntries(DX_ITEMS.map((i) => [i.id, i.competency]));
+    for (const policy of [() => true, () => false, (it) => it.difficulty <= 2]) {
+      const rs = simulate(policy).responses;
+      for (const d of DOMAINS) {
+        const [a, b] = rs.filter((r) => r.domain === d.id).map((r) => competency[r.item]);
+        expect(b, d.id).toBeDefined();
+        expect(b, d.id).not.toBe(a);
+      }
+    }
+  });
+
+  it('a retake with the same answers asks none of the earlier questions', () => {
+    for (const policy of [() => true, () => false]) {
+      const first = simulate(policy).responses.map((r) => r.item);
+      const second = simulate(policy, first).responses.map((r) => r.item);
+      expect(second.filter((id) => first.includes(id))).toEqual([]);
+      expect(second.length).toBe(first.length);
+    }
+  });
+
+  it('reaches every item in the bank over repeated retakes', () => {
+    const policies = [() => true, () => false, (it) => it.difficulty <= 2, (it) => it.difficulty === 1, (it) => it.difficulty !== 2];
+    const seen = [];
+    for (let k = 0; k < 6; k++) for (const p of policies) seen.push(...simulate(p, seen).responses.map((r) => r.item));
+    const missing = DX_ITEMS.filter((i) => !seen.includes(i.id)).map((i) => i.id);
+    expect(missing).toEqual([]);
   });
 
   it('respects skipped domains and skipped questions', () => {
