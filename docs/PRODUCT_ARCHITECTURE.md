@@ -65,6 +65,7 @@ evidence ─> learningSignals.js ─> My Progress → Your learning signals
 | Store | Key(s) | Holds |
 |---|---|---|
 | `useLearningStore` | `fi_learning_v1`, `fi_lessons_v1`, `fi_notes_v1` | evidence + review cards; lesson visits/sections/completion; notes |
+| `useStudyResumeStore` | `fi_resume_v1` | saved study places: the learner's saved place, the last automatic place, the last place per course; one-time resume requests (`docs/study-continuity/ARCHITECTURE.md`) |
 | `useDiagnosticStore` | `fi_diagnostic_v1` | first-run choice, every attempt, placement |
 | `useWorkStore` | `fi_pyex_v1`, `fi_projects_v1` | code drafts and results; project steps |
 | `useThemeStore` | `fi_theme_v1`, `fi_motion_v1` | system/light/dark; system/reduce motion |

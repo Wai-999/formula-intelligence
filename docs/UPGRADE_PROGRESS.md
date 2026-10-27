@@ -4,7 +4,19 @@
 **Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged `3f6ddcb`) → `upgrade/v3.1-phases2-10` (merged `9c21ac2`) → `fix/entry-banner-wording` (merged `a103f32`) → **`upgrade/v4-simple-applied`**, all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign is untouched (decision D1 still open).
 **Merge/deploy policy:** PRs only; CI runs every gate on the PR; `main` deploys only when the same gates pass again.
 
-## After V4 — placement coverage and a self-hosted icon font (2026-10-27)
+## Study continuity — save my place, resume exactly, an honest course end (2026-10-27)
+
+From the owner's brief `FORMULA_INTELLIGENCE_SAVE_RESUME_LEARNING_MASTER_PROMPT.md`: *"I don't see any endpoint of course studying, the place where I can save my current learning point and I can restart from my saving point."* Everything is in `docs/study-continuity/`: BASELINE, ARCHITECTURE, USER_GUIDE, DATA_SAFETY, TEST_REPORT, RELEASE_REPORT and before/after screenshots.
+
+| Change | Status |
+|---|---|
+| **Save my place** and **Finish study session** in every lesson. **Automatic checkpoints**: a step held for 1.5 s, plus leaving the lesson or hiding the tab. Saving is confirmed only once storage succeeded | **Done** |
+| **Resume where I stopped** on Home reopens the exact lesson and step (with the position within the step) after the lesson loads, and focuses the step's heading. A saved place is never replaced by browsing | **Done** |
+| Course pages resume into **their own** course. They show three separate signals — written lessons checked, how much of the course is written, skills from answers — and **"You finished the available lessons in this course"** with honest wording and a next step | **Done** |
+| My Progress → **Your study journey**: saved place (Resume / Remove saved place) and recent courses. `#learn/session` summary. Steps trail (You are here / Visited / Not reached) | **Done** |
+| New key `fi_resume_v1` in backup/restore/reset; validation, quarantine, failed-write honesty, cross-tab merge | **Done** (`DATA_SAFETY.md`) |
+| **Root cause of the long-standing e2e flake** (usability task c): `scroll-padding-top` on the lesson scroller also applied to its sticky bar, so focusing or clicking a bar button scrolled the lesson up. Keyboard users were affected too. Moved to `scroll-margin-top` on the lesson content; step jumps now also confirm where they landed | **Fixed**: 16/16 under CPU load (was 2–3/16 failing) |
+
 
 Taken from the outstanding list below (item 4) and the V4 test report's "Lighthouse NOT MEASURED"; nothing in V4 §10's deferred expansion was started.
 
@@ -19,7 +31,7 @@ Taken from the outstanding list below (item 4) and the V4 test report's "Lightho
 **Gates on this branch (2026-10-27, Linux, Node 22, Chromium 153):** lint · content validation · unit **357/357** · build · budget **71.6 KB** · `verify:python` **78/78** · e2e **214/215** · axe **0 violations**, 60 pages × 2 themes. Not run here: `e2e:python` and `check:citations` (the sandbox cannot reach the Pyodide CDN or most cited hosts; CI runs `e2e:python`).
 
 Still open from this work:
-- The one e2e failure is **pre-existing and timing-dependent**: usability task (c) (`e2e/v4-usability.spec.js`) passes 8/8 alone, but fails in about 1 run in 6 with the CPU busy, on the V4 release code as well (3/16) as on this branch (2/16). The page ends at the top of the step it was leaving. This suggests that "Next" pressed while the previous smooth scroll is still running is dropped (`scrollToSection` in `LessonPage.jsx`); not yet confirmed or fixed.
+- ~~The one e2e failure (usability task c), pre-existing and timing-dependent~~ — root-caused and fixed on 2026-10-27 with the study-continuity change (above).
 - Lesson pages' mobile LCP (3.1 s on Lighthouse's profile) and Code exercises' (2.8 s) are above the 2.5 s target; field Core Web Vitals remain unmeasurable without analytics.
 
 ## V4 — simple, applied learning

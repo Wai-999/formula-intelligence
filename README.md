@@ -8,7 +8,7 @@ A free, local-first learning platform that takes a learner from uncertain mathem
 
 Five places, one job each (V4: Learn it → Practice it → Apply it → Explain it):
 
-- **Home** — pick up where you left off with one button; first-timers choose a placement check, Prealgebra, or a look around.
+- **Home** — **Resume where I stopped** reopens the exact lesson step you saved (lessons save your place as you go, and **Save my place** / **Finish study session** do it on purpose); first-timers choose a placement check, Prealgebra, or a look around. How it works and what is stored: [`docs/study-continuity/`](docs/study-continuity/).
 - **Learn** — 11 courses in 9 subjects. **23 lessons are written**; the rest of each course is an honest outline. Every lesson is one page in six steps: *why it matters* (a real decision), *understand* (derivations and assumptions behind "Go deeper"), *see it* (an interactive lab with a numbers view), *try it*, *use it* (a real-life task, Python optional), *check understanding*. **See connections** opens the concept map at the right spot. Also: the placement check (start earlier / start here / skip ahead), the ML pipeline lessons, and the maps (concepts, the 94 Bluman formulas, 32 ML models, careers).
 - **Practice** — *Review*: skills due on an expanding schedule, then a mixed set across subjects; *Formula drills*: flashcards, quiz and step-by-step problems for the statistics formulas.
 - **Apply** — six real-world projects (household budget, restaurant waste, local weather anomalies with Met Office data, cleaning the Palmer Penguins dataset, price and demand with a train/test check, classification and the cost of mistakes) plus case studies, graded Python exercises with a **no-code version** of each, and a Python lab.
