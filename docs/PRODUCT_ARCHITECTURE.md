@@ -83,7 +83,7 @@ Worker client with `runPython`, `gradePython`, `stopPython`; timeout or Stop ter
 
 ## Offline — `src/sw/serviceWorker.template.js`
 
-Generated at build (`vite.config.js` → `serviceWorker()` plugin) with this build's exact file list (181 files, 2.64 MB). Navigations network-first with the cached shell as fallback; built assets cache-first; the icon font stale-while-revalidate; Pyodide and external links network-only. Registered only in production builds. No `skipWaiting`: an open tab keeps the build it started with. `public/manifest.webmanifest` makes it installable.
+Generated at build (`vite.config.js` → `serviceWorker()` plugin) with this build's exact file list (189 files, 2.78 MB on 2026-10-27). Navigations network-first with the cached shell as fallback; built assets (including the self-hosted icon font) cache-first; Pyodide and external links network-only. Activation deletes `fi-runtime-v1`, the cache that held the cdnjs icon font before the app shipped its own. Registered only in production builds. No `skipWaiting`: an open tab keeps the build it started with. `public/manifest.webmanifest` makes it installable.
 
 ## Deployment
 
