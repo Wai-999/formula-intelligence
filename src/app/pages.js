@@ -38,6 +38,8 @@ export const PAGES = [
   // Reached from Courses, never listed in the sub-navigation.
   { id: 'learn/course', section: 'learn', title: 'Course', param: 'courseId', hidden: true, parent: 'learn/courses' },
   { id: 'learn/lesson', section: 'learn', title: 'Lesson', param: 'lessonId', hidden: true, parent: 'learn/courses' },
+  // Where "Finish study session" lands: what was saved, and where to go next.
+  { id: 'learn/session', section: 'learn', title: 'Study session', hidden: true, parent: 'learn/courses' },
   // Behind Learn → Maps (and every lesson's "See connections").
   { id: 'learn/concepts', section: 'learn', title: 'Concept map', param: 'conceptId', nav: false, parent: 'learn/maps' },
   { id: 'learn/formulas', section: 'learn', title: 'Formula map', nav: false, parent: 'learn/maps' },

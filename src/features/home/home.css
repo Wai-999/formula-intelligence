@@ -101,3 +101,32 @@
   font-size: 13px;
   color: var(--text-muted);
 }
+
+.home-place {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.home-place > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.home-place dt {
+  color: var(--text-muted);
+}
+
+.home-place dt::after {
+  content: ':';
+}
+
+.home-place dd {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.home-local-note {
+  font-size: 12.5px;
+}
