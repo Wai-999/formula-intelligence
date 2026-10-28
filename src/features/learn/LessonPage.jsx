@@ -3,6 +3,8 @@ import MathText, { MathBlock } from '../../components/math/MathText.jsx';
 import LabHost from '../labs/LabHost.jsx';
 import ItemCard from './lesson/ItemCard.jsx';
 import PredictCard from './lesson/PredictCard.jsx';
+import AppliedProblem from './lesson/AppliedProblem.jsx';
+import ExplainBack from './lesson/ExplainBack.jsx';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
 import { courseById, unitById } from '../../data/curriculum/catalog.js';
 import { CONCEPTS } from '../../data/curriculum/concepts.js';
@@ -20,6 +22,7 @@ import { hashFor } from '../../app/pages.js';
 import { LESSON_STEPS, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
 import { CURRICULUM } from '../../data/curriculum/path.js';
 import { PROJECTS } from '../../data/projects/index.js';
+import { problemsForLesson } from '../../data/curriculum/problems.js';
 import { STATUS, recommend, lessonNeighbours } from '../../lib/learningPath.js';
 import PathNext from './PathNext.jsx';
 import { usePathState, hrefFor } from './usePathState.js';
@@ -113,6 +116,10 @@ function NotesBox({ lessonId }) {
   const [state, setState] = useState('idle');
   const timer = useRef(null);
   useEffect(() => () => clearTimeout(timer.current), []);
+  // The note can also change from elsewhere ("Explain it back" → Add to my
+  // notes); follow it unless the learner is mid-typing, so that the next
+  // keystroke here never writes an older text over it.
+  useEffect(() => { if (state !== 'typing') setText(saved); }, [saved, state]);
   const onChange = (v) => {
     setText(v);
     setState('typing');
@@ -751,6 +758,7 @@ export default function LessonPage({ lessonId }) {
                 <ul className="lesson-ul">{body.apply.limits.map((l) => <li key={l}><MathText text={l} /></li>)}</ul>
               </div>
             )}
+            {problemsForLesson(meta.id).map((p) => <AppliedProblem key={p.id} problem={p} />)}
             <details className="lesson-disclosure" open={Boolean(body.apply)}>
               <summary>Optional: the same idea in Python</summary>
               <MathText as="p" className="lesson-p" text={body.python.intro} />
@@ -775,6 +783,7 @@ export default function LessonPage({ lessonId }) {
           </Section>
 
           <Section lessonId={meta.id} id="check" title="Check understanding" n={6}>
+            <ExplainBack lessonId={meta.id} />
             <CheckpointSection meta={meta} items={body.checkpoint} />
             {lessonRecord?.completed
               ? <LessonComplete meta={meta} rec={pathNext} checkpoint={lessonRecord.checkpoint} />

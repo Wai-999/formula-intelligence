@@ -894,6 +894,18 @@
 }
 
 /* ——— Learning path pages (the recommendation itself: path.css) ——— */
+/* Links in lists and lines, not sentences: at least 24 px tall (WCAG 2.5.8)
+   whatever the width and the font. */
+.course-journey a,
+.pathway-course-head a,
+.pathway-steps li > a,
+.pathway-csu a,
+.courses-path h2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
 /* Previous course ← this course → next course. Wraps on narrow screens;
    never a horizontally scrolling strip. */
 .course-journey {
@@ -1039,4 +1051,90 @@
 
 .journey-path p {
   margin: 0;
+}
+
+/* ——— Real-world problems and "Explain it back" (src/data/curriculum/problems.js) ——— */
+.applied-problem,
+.explain-back {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-lg);
+}
+
+.applied-problem p,
+.explain-back p {
+  margin: 0;
+}
+
+.applied-data {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.applied-data .ti {
+  color: var(--primary-text);
+}
+
+/* A wide table scrolls inside its own box on small screens, never the page. */
+.applied-table {
+  overflow-x: auto;
+}
+
+.applied-vars {
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 100%;
+}
+
+.applied-vars th,
+.applied-vars td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.applied-vars thead th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.applied-vars tbody th {
+  font-weight: 500;
+}
+
+.applied-after {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.applied-review {
+  font-size: 12.5px;
+}
+
+.explain-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.explain-points label {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-height: 24px;
+}
+
+.explain-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

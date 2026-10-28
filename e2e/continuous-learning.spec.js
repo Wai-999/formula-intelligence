@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { readFileSync } from 'node:fs';
 import { hashFor } from '../src/app/pages.js';
 import { CURRICULUM as cur } from '../src/data/curriculum/path.js';
+import { problemsForLesson } from '../src/data/curriculum/problems.js';
 import { VISIBLE, lessonSettled } from './helpers.js';
 
 // Course-to-course continuity (docs/CONTINUOUS_LEARNING_UPGRADE.md): the
@@ -223,6 +224,44 @@ for (const viewport of [{ width: 1280, height: 800 }, { width: 375, height: 760 
     await expect(page.locator(`${VISIBLE}.lesson-progress-text`)).toContainText('See it');
   });
 }
+
+test('L: a real-world problem — hints count as help, the worked solution waits for an attempt; explain it back, then into the notes', async ({ page }) => {
+  const lessonId = cur.courseLessons[written[1]][0];
+  const [problem] = problemsForLesson(lessonId);
+  await seed(page);
+  await page.goto(lesson(lessonId), { waitUntil: 'networkidle' });
+  const card = page.locator(`${VISIBLE}.applied-problem`).first();
+  await card.scrollIntoViewIfNeeded();
+  await expect(card).toContainText(problem.title);
+  await expect(card).toContainText('Invented numbers, not measured data');
+  await expect(card.getByRole('heading', { name: 'Worked solution' })).toHaveCount(0);
+  for (const [i, item] of problem.items.entries()) {
+    const step = card.locator('.item-card').nth(i);
+    if (i === 0) await step.getByRole('button', { name: 'Show a hint' }).click();
+    if (item.answer.type === 'numeric') await step.locator('input').fill(String(item.answer.value));
+    else if (item.answer.type === 'choice') await step.locator('input[type="radio"]').nth(item.answer.correct).check();
+    else for (const [k, v] of item.answer.values.entries()) await step.locator('input').nth(k).fill(String(v));
+    await step.getByRole('button', { name: 'Check' }).click();
+    await expect(step).toContainText('Correct');
+  }
+  await expect(card.getByRole('heading', { name: 'Worked solution' })).toBeVisible();
+  await expect(card).toContainText('What it means.');
+  const evidence = await page.evaluate(() => JSON.parse(localStorage.getItem('fi_learning_v1')).evidence);
+  const hinted = evidence.find((e) => e.item === problem.items[0].id);
+  expect(hinted).toMatchObject({ ok: true, h: true, s: 'applied' });
+  expect(hinted.tr).toBeUndefined(); // help was used: never transfer evidence
+  expect(evidence.filter((e) => e.item.startsWith(`${problem.id}.`))).toHaveLength(problem.items.length);
+
+  const eb = page.locator(`${VISIBLE}.explain-back`);
+  await eb.scrollIntoViewIfNeeded();
+  await expect(eb.getByRole('button', { name: 'Compare with a model answer' })).toBeDisabled();
+  await eb.locator('textarea').fill('Break-even is the number of sales at which income just covers the fixed costs.');
+  await eb.getByRole('button', { name: 'Compare with a model answer' }).click();
+  await expect(eb.getByText('One good answer')).toBeVisible();
+  await expect(eb).toContainText('it is not recorded anywhere');
+  await eb.getByRole('button', { name: 'Add to my notes' }).click();
+  await expect(page.locator(`${VISIBLE}.lesson-notes textarea`)).toHaveValue(/Explain it back: Break-even is the number of sales/);
+});
 
 test.describe('K: layout and accessibility of the new parts', () => {
   for (const width of [320, 1280]) {

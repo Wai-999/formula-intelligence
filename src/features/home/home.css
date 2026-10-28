@@ -137,6 +137,14 @@
   color: var(--accent);
 }
 
+/* Links in a list, not a sentence: at least 24 px tall (WCAG 2.5.8), however the trail wraps. */
+.home-trail li,
+.home-trail a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
 .home-trail ol {
   display: flex;
   flex-wrap: wrap;
