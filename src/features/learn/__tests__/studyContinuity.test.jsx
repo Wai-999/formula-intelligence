@@ -182,7 +182,9 @@ describe('Course page', () => {
     expect(screen.getByText(/not a grade, transcript or credential/)).toBeInTheDocument();
     expect(screen.getAllByText('Not written yet').length).toBeGreaterThan(0);
     expect(screen.queryByText(/100%|Course complete|Mastered/i)).toBeNull();
-    expect(screen.getByRole('link', { name: /^Next: Algebra I — / })).toBeInTheDocument();
+    // One concrete next course, with the reason — never just the whole catalog.
+    expect(screen.getByRole('link', { name: /^Continue to Algebra I: / })).toHaveAttribute('href', '#learn/lesson/a1-break-even');
+    expect(screen.getByText(/Algebra I comes next on/)).toBeInTheDocument();
   });
 });
 

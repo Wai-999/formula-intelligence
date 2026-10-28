@@ -1,8 +1,13 @@
+import { useMemo } from 'react';
 import { SUBJECTS, COURSES, courseStatus } from '../../data/curriculum/catalog.js';
+import { CURRICULUM } from '../../data/curriculum/path.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
 import { useDiagnosticStore } from '../../store/useDiagnosticStore.js';
+import { recommend, pathFor, nextMilestone } from '../../lib/learningPath.js';
 import { hashFor } from '../../app/pages.js';
 import StatusChip from './StatusChip.jsx';
+import PathNext from './PathNext.jsx';
+import { usePathState } from './usePathState.js';
 // Registers course and lesson titles for the page header and breadcrumbs.
 import '../../data/curriculum/index.js';
 import '../../styles/studio.css';
@@ -14,10 +19,21 @@ const authoredCount = (c) => c.units.reduce((n, u) => n + u.lessons.length, 0);
 export default function CoursesPage() {
   const lessons = useLearningStore((s) => s.lessons);
   const placement = useDiagnosticStore((s) => s.placement);
+  const pathState = usePathState();
+  const rec = useMemo(() => recommend(CURRICULUM, pathState), [pathState]);
+  const path = pathFor(CURRICULUM, pathState.pathId);
+  const milestone = nextMilestone(CURRICULUM, pathState, rec);
 
   return (
     <div className="studio-scroll">
       <div className="studio-page">
+        <section className="studio-card courses-path" aria-labelledby="courses-path-h">
+          <h2 id="courses-path-h" className="studio-h3"><a href={hashFor('learn/pathway')}>Your learning path</a></h2>
+          <p className="studio-muted">
+            Following {path.title}{milestone ? ` · ${milestone}` : ''}. The whole path, optional applied tracks and CSU preparation are one click away.
+          </p>
+          <PathNext rec={rec} compact />
+        </section>
         <p className="studio-lede">
           Nine subjects, from prealgebra to machine learning. Courses with written lessons are marked; the others show
           their full outline — objectives, units and prerequisites — so you can see where they lead before they are filled in.

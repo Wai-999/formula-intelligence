@@ -1,8 +1,22 @@
 # Upgrade Progress
 
-**Current state (2026-10-27):** V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) merged to `main` (`3557155`) and deployed on 2026-10-25 (Deploy to GitHub Pages run 18, green). After V4, on `claude/practical-gates-59o8iv`: placement coverage and a self-hosted icon font (below). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
+**Current state (2026-10-28):** **Continuous learning pathways** (one learning-path engine, honest course ends, applied problems; section below) in PR #7. Study continuity (PR #6) merged as `713a587`. V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) merged to `main` (`3557155`) and deployed on 2026-10-25 (Deploy to GitHub Pages run 18, green). After V4, on `claude/practical-gates-59o8iv`: placement coverage and a self-hosted icon font (below). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
 **Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged `3f6ddcb`) → `upgrade/v3.1-phases2-10` (merged `9c21ac2`) → `fix/entry-banner-wording` (merged `a103f32`) → **`upgrade/v4-simple-applied`**, all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign is untouched (decision D1 still open).
 **Merge/deploy policy:** PRs only; CI runs every gate on the PR; `main` deploys only when the same gates pass again.
+
+## Continuous learning pathways — one next step everywhere, applied problems (2026-10-28)
+
+From the owner's brief *Continuous Learning Pathways, Applied Mastery, and Autonomous Deployment*: courses and lessons must connect, with one reasoned next step, an honest end, exact resume (already built in PR #6, integrated) and realistic applied practice. Audit, decisions, coverage, tests and release are in [`CONTINUOUS_LEARNING_UPGRADE.md`](CONTINUOUS_LEARNING_UPGRADE.md); the route is in [`LEARNING_PATH_MAP.md`](LEARNING_PATH_MAP.md) (generated).
+
+| Change | Status |
+|---|---|
+| **One learning-path engine** (`src/lib/learningPath.js`) for Home, course pages, lessons, Courses and My Progress. Before, five rules disagreed: Home sent learners who had finished a course back to Prealgebra, Calculus III and ML ended at the catalog, and course pages and lessons named different next courses | **Done** |
+| **Course to course in one click**, with the reason, the ideas the next course builds on, and outline courses on the way named. "Finished the available lessons" is never called finishing the course or mastery. The path ends honestly | **Done** |
+| **Next across units** (pager), **Finish course & continue**, a **completion summary** after each checkpoint, "What comes after this course?", a course journey line, and outline courses offering something to do | **Done** |
+| **Your learning path** page: route with "you are here", 5 applied tracks (follow/stop, stored in `fi_diagnostic_v1`, backed up), CSU preparation view with a disclaimer | **Done** |
+| **16 real-world problems** (64 graded steps, every answer recomputed) and **Explain it back** in the first and last lesson of all 8 written courses | **Done**; AI drafts, review BLOCKED like the lessons |
+| Two quick presses of **Next** moved one step; teal text on the primary button in lessons; links in wrapped lists under 24 px at 320 px | **Fixed** |
+| Production checked on the live site | **Not possible from the work environment** (network policy refuses `wai-999.github.io`); see the release section of the work log |
 
 ## Study continuity — save my place, resume exactly, an honest course end (2026-10-27)
 

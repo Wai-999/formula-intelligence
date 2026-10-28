@@ -6,7 +6,11 @@ import { useStudyResumeStore } from '../../store/useStudyResumeStore.js';
 import { assessAll } from '../../lib/mastery.js';
 import { resolveLocation, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
 import { courseJourney } from '../../lib/courseJourney.js';
+import { CURRICULUM } from '../../data/curriculum/path.js';
+import { recommend, pathFor, routeProgress, trackProgress, nextMilestone } from '../../lib/learningPath.js';
 import { hashFor } from '../../app/pages.js';
+import PathNext from '../learn/PathNext.jsx';
+import { usePathState } from '../learn/usePathState.js';
 
 // My Progress → "Your study journey" (prompt §4.4): the saved place, the
 // courses studied lately and, for each, three things kept apart — where the
@@ -24,6 +28,11 @@ export default function StudyJourney() {
   const evidence = useLearningStore((s) => s.evidence);
   const status = useMemo(() => assessAll(evidence), [evidence]);
   const [removed, setRemoved] = useState(null);
+  const pathState = usePathState();
+  const next = useMemo(() => recommend(CURRICULUM, pathState), [pathState]);
+  const path = pathFor(CURRICULUM, pathState.pathId);
+  const onPath = path.kind === 'track' ? trackProgress(CURRICULUM, pathState, path.id) : routeProgress(CURRICULUM, pathState, path.id);
+  const milestone = nextMilestone(CURRICULUM, pathState, next);
 
   const pin = resolveLocation(pinned, lessonById);
   const courses = recent.map((loc) => resolveLocation(loc, lessonById)).filter((r) => r?.ok).slice(0, SHOWN);
@@ -36,6 +45,14 @@ export default function StudyJourney() {
   return (
     <section className="studio-section" aria-labelledby="prog-journey">
       <h2 id="prog-journey" className="studio-h2">Your study journey</h2>
+      <div className="journey-path">
+        <h3 className="studio-h3">Your learning path</h3>
+        <p>
+          <a href={hashFor('learn/pathway')}>{path.title}</a> · {onPath.checked} of {onPath.written} written lessons checked
+          {milestone ? <span className="studio-muted"> · Next milestone: {milestone}</span> : null}
+        </p>
+        <PathNext rec={next} primary={false} compact />
+      </div>
 
       <div className="journey-pin">
         <h3 className="studio-h3">Saved place</h3>

@@ -175,7 +175,7 @@ test('D: finishing a session completes nothing; the course end is stated honestl
   expect(await planned.count()).toBeGreaterThan(0);
   await expect(planned.locator('a')).toHaveCount(0);
   await expect(planned.first()).toContainText('Not written yet');
-  const next = page.locator(VISIBLE + '.course-finish').getByRole('link', { name: /^Next: / });
+  const next = page.locator(VISIBLE + '.course-finish').getByRole('link', { name: /^Continue to / });
   await expect(next).toHaveAttribute('href', /^#learn\/lesson\//);
 });
 

@@ -17,6 +17,10 @@ What has been checked about the curriculum content, how, and what has **not** be
 
 **Every lesson is an AI draft** (author: "AI-drafted (Claude) for the project owner", 2026-10-24) with `reviewer: null` and `status: 'awaiting-human-review'`. Each lesson page shows a *Draft: awaiting independent math review* label. A test fails if any lesson claims a reviewer it does not have.
 
+### Real-world problems and explain-back prompts (2026-10-28)
+
+`src/data/curriculum/problems.js`: 16 applied problems (64 graded steps) and 16 "Explain it back" prompts with model answers, for the first and last written lesson of every written course. AI-drafted, `reviewedStatus: 'awaiting-human-review'`, and labelled as drafts on the page. All numbers are invented and labelled so. Machine checks in `src/data/curriculum/__tests__/problems.test.js`: every numeric answer recomputed independently (`compute`) within rounding-only tolerances, every formula parsed, feedback on every wrong choice, references to real lessons, courses and competencies. Coverage and decisions: `docs/CONTINUOUS_LEARNING_UPGRADE.md`.
+
 ## Independent human math review — BLOCKED
 
 §5 (and V4 §11: "math reviewer sign-off required … mark unreviewed content as draft") requires review by someone other than the author. No such reviewer was available in this environment, so **review-complete is 0 of 23** and stays so until one signs off. Machine checks below catch arithmetic, syntax and broken links; they cannot catch a misleading explanation, a wrong emphasis, a missing assumption or a prerequisite edge that is technically valid but pedagogically wrong.

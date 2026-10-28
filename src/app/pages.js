@@ -40,6 +40,8 @@ export const PAGES = [
   { id: 'learn/lesson', section: 'learn', title: 'Lesson', param: 'lessonId', hidden: true, parent: 'learn/courses' },
   // Where "Finish study session" lands: what was saved, and where to go next.
   { id: 'learn/session', section: 'learn', title: 'Study session', hidden: true, parent: 'learn/courses' },
+  // The whole learning path: route, applied tracks, CSU preparation (src/data/curriculum/pathways.js).
+  { id: 'learn/pathway', section: 'learn', title: 'Your learning path', nav: false, parent: 'learn/courses' },
   // Behind Learn → Maps (and every lesson's "See connections").
   { id: 'learn/concepts', section: 'learn', title: 'Concept map', param: 'conceptId', nav: false, parent: 'learn/maps' },
   { id: 'learn/formulas', section: 'learn', title: 'Formula map', nav: false, parent: 'learn/maps' },

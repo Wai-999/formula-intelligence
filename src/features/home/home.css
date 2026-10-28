@@ -130,3 +130,58 @@
 .home-local-note {
   font-size: 12.5px;
 }
+
+/* Your path → course → unit → lesson → step. */
+.home-trail a,
+.home-path a {
+  color: var(--accent);
+}
+
+/* Links in a list, not a sentence: at least 24 px tall (WCAG 2.5.8), however the trail wraps. */
+.home-trail li,
+.home-trail a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.home-trail ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.home-trail li + li::before {
+  content: '→';
+  margin: 0 6px;
+  color: var(--text-faint);
+}
+
+.home-path-facts {
+  display: grid;
+  gap: 4px;
+  margin: 6px 0 0;
+}
+
+.home-path-facts > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.home-path-facts dt {
+  color: var(--text-muted);
+}
+
+.home-path-facts dt::after {
+  content: ':';
+}
+
+.home-path-facts dd {
+  margin: 0;
+}

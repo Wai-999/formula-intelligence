@@ -53,6 +53,15 @@ Tests: `src/lib/__tests__/versioned.test.js` (10: missing; corrupt JSON quaranti
 - **Rollback:** an older build ignores `fi_resume_v1`; rolling forward again finds it intact. Nothing to migrate either way.
 - Details: `docs/study-continuity/DATA_SAFETY.md`.
 
+## Continuous learning pathways (2026-10-28) — what changed
+
+- **No new key.** `fi_diagnostic_v1` gains an optional field, `path: { id, at } | null`: the learning path or applied track the learner follows (`src/data/curriculum/pathways.js`). Records without it load unchanged (the default path). The schema version stays 1, because older builds ignore the field.
+- A malformed `path` is dropped on reading; the record, with its placement attempts, is **not** quarantined for it.
+- Backups already include `fi_diagnostic_v1`, so the choice is exported and restored (`src/store/__tests__/pathChoice.test.js`).
+- **Rollback:** an older build ignores `path` and drops it the next time it writes the diagnostic record. The only loss is that choice: the learner follows the default path until they choose again. Nothing else is affected.
+- Real-world problems record evidence like any lesson item, with `s: 'applied'`; older builds read such entries like any other evidence.
+- Pages added: `#learn/pathway` (Your learning path). No address was removed or renamed.
+
 ## Old links
 
 Every pre-upgrade URL still lands somewhere sensible (`src/lib/hashRoute.js`): `#stats/<tab>` and `#ml/<tab>` map to the current `#section/page` ids through the `LEGACY` table, and V3.1 ids through `RENAMED` (both in `src/app/pages.js`, unit-tested in `src/app/__tests__/pages.test.js`); the six retired ML tabs land on their new home with a one-line notice; unknown ids explain themselves. Tested by `e2e/legacy-routes.spec.js` (every legacy hash, plus Back-button behaviour) and `routes.test.js`.

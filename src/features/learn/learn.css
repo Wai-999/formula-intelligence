@@ -540,9 +540,12 @@
   min-height: 24px;
 }
 
-.lesson-main a,
-.lesson-aside a,
-.course-page a:not(.studio-btn):not(.studio-card-link) {
+.lesson-main a:not(.studio-btn),
+.lesson-aside a:not(.studio-btn),
+.course-page a:not(.studio-btn):not(.studio-card-link),
+.pathway-page a:not(.studio-btn):not(.studio-card-link),
+.courses-path a:not(.studio-btn),
+.journey-path a:not(.studio-btn) {
   color: var(--accent);
 }
 
@@ -885,6 +888,252 @@
 }
 
 .course-finish {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ——— Learning path pages (the recommendation itself: path.css) ——— */
+/* Links in lists and lines, not sentences: at least 24 px tall (WCAG 2.5.8)
+   whatever the width and the font. */
+.course-journey a,
+.pathway-course-head a,
+.pathway-steps li > a,
+.pathway-csu a,
+.courses-path h2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+/* Previous course ← this course → next course. Wraps on narrow screens;
+   never a horizontally scrolling strip. */
+.course-journey {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+.course-journey-here {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.course-journey-note {
+  flex-basis: 100%;
+  font-size: 13px;
+}
+
+.course-outline-note {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.course-after-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.courses-path {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+/* After the checkpoint. */
+.lesson-complete {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.lesson-complete-facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lesson-complete-facts dt {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lesson-complete-facts dd {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* Learn → Courses → Your learning path */
+.pathway-courses {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.pathway-course {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.pathway-course.here {
+  border-left-color: var(--primary);
+}
+
+.pathway-course-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pathway-course p {
+  margin: 0;
+}
+
+.pathway-tracks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 12px;
+}
+
+.pathway-track {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pathway-steps ol {
+  margin: 8px 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.pathway-steps .step-done > a::after {
+  content: ' ✓';
+  color: var(--success);
+}
+
+.pathway-csu {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.journey-path {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.journey-path p {
+  margin: 0;
+}
+
+/* ——— Real-world problems and "Explain it back" (src/data/curriculum/problems.js) ——— */
+.applied-problem,
+.explain-back {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border-solid);
+  border-radius: var(--radius-lg);
+}
+
+.applied-problem p,
+.explain-back p {
+  margin: 0;
+}
+
+.applied-data {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.applied-data .ti {
+  color: var(--primary-text);
+}
+
+/* A wide table scrolls inside its own box on small screens, never the page. */
+.applied-table {
+  overflow-x: auto;
+}
+
+.applied-vars {
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 100%;
+}
+
+.applied-vars th,
+.applied-vars td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.applied-vars thead th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.applied-vars tbody th {
+  font-weight: 500;
+}
+
+.applied-after {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.applied-review {
+  font-size: 12.5px;
+}
+
+.explain-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.explain-points label {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-height: 24px;
+}
+
+.explain-compare {
   display: flex;
   flex-direction: column;
   gap: 8px;

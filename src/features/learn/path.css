@@ -1,0 +1,43 @@
+/* One learning-path recommendation (PathNext.jsx), rendered the same way on
+   Home, course pages, lessons, Courses and My Progress. Imported by the
+   component itself, so it is styled on whichever page loads first. */
+.path-next {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.path-reasons,
+.path-warnings {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.path-reasons {
+  color: var(--text-muted);
+}
+
+.path-warnings {
+  list-style: none;
+  padding-left: 0;
+  color: var(--text-primary);
+}
+
+.path-warnings .ti {
+  color: var(--warning);
+}
+
+.path-why > summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 14px;
+  width: fit-content;
+}
+
+.path-why[open] > summary {
+  margin-bottom: 6px;
+}

@@ -8,9 +8,9 @@ Generated from `src/data/curriculum/catalog.js` by `npm run docs:curriculum` —
 
 **Algebra and Linear Algebra are separate subjects** (§5): Algebra I/II build symbolic fluency with one-variable functions; Linear Algebra starts from vectors and matrices and lists Algebra I as a prerequisite, never the other way round.
 
-## Recommended path
+## Prerequisites and the recommended path
 
-Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. (These are the `prerequisites` in the table below.) The diagnostic places a learner on the first five steps (`MATH_PATH` in `src/lib/diagnostic.js`).
+The order in which the app recommends courses, and what it says at each course change, is the learning path: generated in [`LEARNING_PATH_MAP.md`](LEARNING_PATH_MAP.md) from `src/data/curriculum/pathways.js`. The prerequisite structure it respects: Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. (These are the `prerequisites` in the table below.) The diagnostic places a learner on the first five steps (`MATH_PATH` in `src/lib/diagnostic.js`).
 
 ## Courses
 
