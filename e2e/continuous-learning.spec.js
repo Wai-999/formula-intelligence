@@ -263,8 +263,24 @@ test('L: a real-world problem — hints count as help, the worked solution waits
   await expect(page.locator(`${VISIBLE}.lesson-notes textarea`)).toHaveValue(/Explain it back: Break-even is the number of sales/);
 });
 
+test('M: offline after one visit, the path page and a course-to-course step still work', async ({ page, context }) => {
+  test.setTimeout(90_000);
+  const [first, second] = written;
+  await seed(page, { completed: lessonsOf(first) });
+  await page.goto('./#home', { waitUntil: 'networkidle' });
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload({ waitUntil: 'networkidle' });
+  await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller), { timeout: 30_000 }).toBe(true);
+  await context.setOffline(true);
+  await page.goto('./#learn/pathway', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('h1.page-title')).toHaveText('Your learning path');
+  await page.locator(`${VISIBLE}.path-next`).first().getByRole('link', { name: new RegExp(`^Continue to ${escape(courseTitle(second))}`) }).click();
+  await expect(page.locator('h1.page-title')).toHaveText(title(cur.courseLessons[second][0]));
+  await context.setOffline(false);
+});
+
 test.describe('K: layout and accessibility of the new parts', () => {
-  for (const width of [320, 1280]) {
+  for (const width of [320, 375, 768, 1280]) {
     for (const theme of ['light', 'dark']) {
       test(`${width}px ${theme}: path page, finished course and lesson summary fit and pass axe`, async ({ page }) => {
         test.setTimeout(90_000);

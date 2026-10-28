@@ -30,7 +30,7 @@ const EYEBROW = {
   [STATUS.NEXT_UNIT]: 'Next recommended lesson',
   [STATUS.TRANSITION]: 'Next course on your path',
   [STATUS.BRIDGE]: 'A bridge before the next course',
-  [STATUS.UNAVAILABLE]: 'Next recommended lesson',
+  [STATUS.UNAVAILABLE]: 'Your starting point is not written yet',
   [STATUS.END]: 'Your learning path',
 };
 
