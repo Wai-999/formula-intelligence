@@ -2,7 +2,7 @@
 
 ## Status
 
-**Merged; deploy in progress.** This line is updated once the deploy run below finishes.
+**Released to GitHub Pages on 2026-10-28.** The deploy workflow built `main` at the merge commit, passed every gate, and published it at 00:03 UTC. The live page was not opened from the development environment; see *What was not checked here*.
 
 ## Evidence
 
@@ -13,7 +13,7 @@
 | Reviewed head | `043dc10d31ea0f95118057ab68715b26bd6a564b` |
 | Merge commit on `main` | `713a587fe9c75a1bb42022012f0252d6fbcc00ec` |
 | Pull-request CI | [run 40603263038](https://github.com/Wai-999/formula-intelligence/actions/runs/40603263038), check `checks`: **success** on `043dc10` |
-| Deploy | [Deploy to GitHub Pages, run 20 (40605030392)](https://github.com/Wai-999/formula-intelligence/actions/runs/40605030392) on `713a587`: in progress |
+| Deploy | [Deploy to GitHub Pages, run 20 (40605030392)](https://github.com/Wai-999/formula-intelligence/actions/runs/40605030392) on `713a587`: **success**. The `build` job passed every gate (23:52–00:03 UTC) and the `deploy` job published at 00:03 UTC |
 | Production | <https://wai-999.github.io/formula-intelligence/> |
 
 GitHub reported the pull request as mergeable and clean (checks passing, no conflicts, no open review threads), and it merged without any override.
