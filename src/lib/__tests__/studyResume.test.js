@@ -3,7 +3,7 @@ import {
   LESSON_STEPS, RECENT_LIMIT, emptyRecord, sanitizeLocation, sanitizeRecord, withAuto, withPin, withoutPin, mergeForWrite,
   resolveLocation, primaryTarget, courseTarget, stepLabel, samePlace, formatSavedAt, mergeRecent,
 } from '../studyResume.js';
-import { courseJourney, nextAfterCourse } from '../courseJourney.js';
+import { courseJourney } from '../courseJourney.js';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
 import { COURSES, courseById } from '../../data/curriculum/catalog.js';
 
@@ -211,10 +211,5 @@ describe('what a course’s progress means', () => {
     expect(j.skills).toEqual({ total: skills.length, assessed: 2, demonstrated: 1 });
   });
 
-  it('suggests the next written lesson of a course that builds on this one, skipping outlines', () => {
-    const next = nextAfterCourse(algebra, COURSES, {});
-    expect(next).not.toBeNull();
-    expect(next.course.prerequisites).toContain('algebra-1');
-    expect(lessonById[next.lessonId].course).toBe(next.course.id);
-  });
+  // What comes after a finished course is the learning-path engine's job: src/lib/__tests__/learningPath.test.js.
 });

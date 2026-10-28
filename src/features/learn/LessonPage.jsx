@@ -18,6 +18,11 @@ import { useMLUIStore } from '../../store/useMLUIStore.js';
 import { assessCompetency, LEVEL_LABEL } from '../../lib/mastery.js';
 import { hashFor } from '../../app/pages.js';
 import { LESSON_STEPS, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
+import { CURRICULUM } from '../../data/curriculum/path.js';
+import { PROJECTS } from '../../data/projects/index.js';
+import { STATUS, recommend, lessonNeighbours } from '../../lib/learningPath.js';
+import PathNext from './PathNext.jsx';
+import { usePathState, hrefFor } from './usePathState.js';
 // Registers course and lesson titles for the page header and breadcrumbs.
 import '../../data/curriculum/index.js';
 import '../../styles/studio.css';
@@ -55,6 +60,16 @@ const AUTOSAVE_MS = 1500;
 const DRIFT_CHECKS = [250, 700, 1500];
 // When a jump to a step should be over, even a long smooth scroll.
 const LAND_CHECKS = [900, 1800];
+// Keys that scroll the lesson when focus is on its text rather than in a control.
+const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']);
+/**
+ * The learner, not the app, is moving the lesson: wheel, touch, scroll keys,
+ * the scrollbar. Pressing a button ("Next" again) is not taking over.
+ */
+const takesOver = (e, root) => e.type === 'wheel' || e.type === 'touchmove'
+  || (e.type === 'pointerdown' && e.target === root)
+  || (e.type === 'keydown' && SCROLL_KEYS.has(e.key) && !e.target.closest?.('input, textarea, select, button, summary, [contenteditable]'));
+const TAKEOVER_EVENTS = ['wheel', 'touchmove', 'pointerdown', 'keydown'];
 
 /**
  * Put the saved place at the top of the lesson, below the sticky bar: the
@@ -198,6 +213,46 @@ function CheckpointSection({ meta, items }) {
   );
 }
 
+/**
+ * After the checkpoint: what was practised, what needs review, where the idea
+ * is used, and the one next step from the learning path
+ * (src/lib/learningPath.js) — the next lesson, the next course, or an honest
+ * end. Completing pages is never called mastery here.
+ */
+function LessonComplete({ meta, rec, checkpoint }) {
+  const projects = PROJECTS.filter((p) => p.lessons.includes(meta.id));
+  const missed = checkpoint ? checkpoint.total - checkpoint.correct : 0;
+  return (
+    <section className="lesson-complete" aria-labelledby={`lesson-${meta.id}-complete`}>
+      <h3 id={`lesson-${meta.id}-complete`} className="studio-h3">Lesson complete: what now?</h3>
+      <dl className="lesson-complete-facts">
+        <div>
+          <dt>You practised</dt>
+          <dd>{meta.competencies.map((c) => competencyById[c]?.title ?? c).join('; ')}</dd>
+        </div>
+        <div>
+          <dt>Needs review</dt>
+          <dd>
+            {missed > 0
+              ? <>{missed} of {checkpoint.total} checkpoint answers were not right the first time. <a href={hashFor('practice/review')}>Practice → Review</a> brings those skills back sooner.</>
+              : 'Nothing from the checkpoint. One sitting is not mastery, so a short review is scheduled anyway.'}
+          </dd>
+        </div>
+        <div>
+          <dt>Where it is used</dt>
+          <dd>
+            {projects.length
+              ? <>{projects.map((p, i) => <span key={p.id}>{i > 0 && '; '}<a href={hashFor('apply/projects')}>{p.title}</a></span>)} (Apply → Projects)</>
+              : 'The “Use it” step above is this lesson’s real-world task.'}
+          </dd>
+        </div>
+      </dl>
+      <p className="visually-hidden" role="status">Lesson complete. {rec.label}.</p>
+      <PathNext rec={rec} />
+    </section>
+  );
+}
+
 export default function LessonPage({ lessonId }) {
   const meta = lessonById[lessonId];
   const [body, setBody] = useState(null);
@@ -216,6 +271,10 @@ export default function LessonPage({ lessonId }) {
   const openLesson = useLearningStore((s) => s.openLesson);
   const markSection = useLearningStore((s) => s.markSection);
   const visited = useLearningStore((s) => s.lessons[lessonId]?.sections);
+  const lessonRecord = useLearningStore((s) => s.lessons[lessonId]);
+  // What comes after this lesson, from the one learning-path engine.
+  const pathState = usePathState();
+  const pathNext = useMemo(() => (meta ? recommend(CURRICULUM, pathState, { lessonId: meta.id }) : null), [meta, pathState]);
   const autoSave = useStudyResumeStore((s) => s.autoSave);
   const pinned = useStudyResumeStore((s) => s.pinned);
   const recent = useStudyResumeStore((s) => s.recent);
@@ -232,6 +291,16 @@ export default function LessonPage({ lessonId }) {
   const appliedToken = useRef(null);
   const stopResume = useRef(() => {});
   const stopJump = useRef(() => {});
+  // `current`, for handlers that run before React has re-rendered: two quick
+  // presses of "Next" must move two steps.
+  const step = useRef('matters');
+  // A step asked for with "Next", the steps list or the table of contents:
+  // it is the current step from the moment it is asked for until the scroll
+  // lands (or the learner takes over the scrolling). The reading position
+  // alone reaches a step only near the end of the smooth scroll to it, so a
+  // second "Next" before then used to ask again for the same step.
+  const goal = useRef(null);
+  const track = useRef(() => {});
   // Landing at the top of a lesson is not studying it: nothing is saved until
   // the learner scrolls, jumps to a step or resumes. Otherwise opening a
   // lesson from its course would overwrite a deeper place in it with Step 1
@@ -255,6 +324,7 @@ export default function LessonPage({ lessonId }) {
     let timer = 0;
     const update = () => {
       timer = 0;
+      if (goal.current) return; // a requested step is still on its way
       const top = root.getBoundingClientRect().top;
       const line = top + TRACK_LINE;
       let cur = 'matters';
@@ -264,9 +334,11 @@ export default function LessonPage({ lessonId }) {
       }
       const fraction = el && el.offsetHeight > 0 ? Math.min(1, Math.max(0, (top + STICKY - el.getBoundingClientRect().top) / el.offsetHeight)) : 0;
       fractionRef.current = fraction;
+      step.current = cur;
       setCurrent(cur);
       setDepth(Math.round(fraction * 5) / 5);
     };
+    track.current = update;
     // A short timer rather than requestAnimationFrame: rAF is paused in
     // background or unpainted documents, and correctness must not depend on paint.
     const onScroll = () => {
@@ -359,7 +431,8 @@ export default function LessonPage({ lessonId }) {
     const el = req.sectionId ? document.getElementById(`lesson-${lessonId}-${req.sectionId}`) : null;
     const go = () => root.scrollTo({ top: el ? placeTop(root, el, req.fraction) : 0, behavior: 'instant' });
     go();
-    if (req.sectionId) setCurrent(req.sectionId);
+    stopJump.current(); // a resume replaces any jump still on its way
+    if (req.sectionId) { step.current = req.sectionId; setCurrent(req.sectionId); }
     // Timers live outside this effect: consuming the request re-runs it, and
     // that must not cancel the focus and drift corrections it just set up.
     const timers = [setTimeout(() => (el?.querySelector('h2') ?? null)?.focus({ preventScroll: true }), 60)];
@@ -383,11 +456,8 @@ export default function LessonPage({ lessonId }) {
 
   const course = meta ? courseById[meta.course] : null;
   const unit = meta ? unitById[meta.unit] : null;
-  const neighbours = useMemo(() => {
-    if (!unit) return {};
-    const i = unit.lessons.indexOf(meta.id);
-    return { prev: lessonById[unit.lessons[i - 1]], next: lessonById[unit.lessons[i + 1]] };
-  }, [unit, meta]);
+  // Previous and next written lesson of the course, across units.
+  const neighbours = meta ? lessonNeighbours(CURRICULUM, meta.id) : {};
 
   if (!meta) return <NotFound lessonId={lessonId} />;
   if (loadError) {
@@ -412,34 +482,47 @@ export default function LessonPage({ lessonId }) {
   const answeredHere = () => useLearningStore.getState().evidence
     .filter((e) => e.at >= sessionStart.current && e.item.startsWith(`${meta.id}.`)).length;
 
-  // "Next", the step list and the table of contents. A smooth scroll can be
-  // cut short — another scroll starting before it ends, or the page moving
-  // under it — which left learners at the top of the step they were leaving.
-  // So check where it ended, and settle on the step unless the learner has
-  // taken over the scrolling themselves.
+  // "Next", the step list and the table of contents. The step asked for is
+  // current at once (see `goal`). A smooth scroll can be cut short — another
+  // scroll starting before it ends, or the page moving under it — which left
+  // learners at the top of the step they were leaving. So check where it
+  // ended, and settle on the step unless the learner has taken over the
+  // scrolling themselves; then the reading position takes over again.
   const jump = (id) => {
+    if (!id) return;
     setStepsOpen(false);
     engaged.current = true;
+    stopJump.current();
+    goal.current = id;
+    step.current = id;
+    fractionRef.current = 0;
+    setCurrent(id);
+    setDepth(0);
     queueSave(id, 0, true);
     scrollToSection(meta.id, id);
-    stopJump.current();
     const root = rootRef.current;
     const el = document.getElementById(`lesson-${meta.id}-${id}`);
-    if (!root || !el) return;
-    let touched = false;
-    const touch = () => { touched = true; };
-    const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
-    events.forEach((e) => root.addEventListener(e, touch, { passive: true }));
-    const timers = LAND_CHECKS.map((ms) => setTimeout(() => {
-      if (touched) return;
+    if (!root || !el) { goal.current = null; return; }
+    let timers = [];
+    const stop = () => {
+      timers.forEach(clearTimeout);
+      TAKEOVER_EVENTS.forEach((e) => root.removeEventListener(e, touch));
+      if (goal.current === id) goal.current = null;
+    };
+    const touch = (e) => { if (takesOver(e, root)) stop(); };
+    TAKEOVER_EVENTS.forEach((e) => root.addEventListener(e, touch, { passive: true }));
+    timers = LAND_CHECKS.map((ms, i) => setTimeout(() => {
       const off = el.getBoundingClientRect().top - root.getBoundingClientRect().top - STICKY;
       if (Math.abs(off) > 24) root.scrollTo({ top: root.scrollTop + off, behavior: 'instant' });
+      if (Math.abs(off) > 24 && i < LAND_CHECKS.length - 1) return;
+      stop();
+      // Landed. The last step may sit below the reading line when the page
+      // cannot scroll further; it stays the current step then.
+      if (root.scrollTop < root.scrollHeight - root.clientHeight - 2) track.current();
     }, ms));
-    stopJump.current = () => {
-      timers.forEach(clearTimeout);
-      events.forEach((e) => root.removeEventListener(e, touch));
-    };
+    stopJump.current = stop;
   };
+  const nextStep = () => jump(SECTIONS[SECTIONS.findIndex((s) => s.id === step.current) + 1]?.id);
   const savePlace = () => {
     flush();
     const ok = useStudyResumeStore.getState().savePlace(here);
@@ -461,7 +544,10 @@ export default function LessonPage({ lessonId }) {
   // Use it: the lesson's real-world task (V4 lessons), then the transfer
   // questions — the idea in settings the lesson did not show.
   const useItems = [...(body.apply?.items ?? []), ...body.practice.filter((p) => p.level === 'transfer')];
-  const nextLessonId = meta.next.find((n) => lessonById[n]);
+  // The pager's last button: the next lesson of the course or, at its end, the path's next step.
+  const finishLabel = pathNext.status === STATUS.TRANSITION || pathNext.status === STATUS.BRIDGE
+    ? `Finish course & continue: ${courseById[pathNext.nextCourseId].title}`
+    : pathNext.status === STATUS.END ? 'Finish course: see your learning path' : pathNext.label;
 
   return (
     <div className="studio-scroll lesson-scroll" ref={rootRef}>
@@ -488,7 +574,7 @@ export default function LessonPage({ lessonId }) {
           </button>
           <span className="lesson-progress-bar" aria-hidden="true"><span style={{ width: `${((idx + 1) / SECTIONS.length) * 100}%` }} /></span>
           {nextSection && (
-            <button type="button" className="studio-btn studio-btn-small lesson-next-step" onClick={() => jump(nextSection.id)}>
+            <button type="button" className="studio-btn studio-btn-small lesson-next-step" onClick={nextStep}>
               Next: {nextSection.title}
             </button>
           )}
@@ -690,15 +776,13 @@ export default function LessonPage({ lessonId }) {
 
           <Section lessonId={meta.id} id="check" title="Check understanding" n={6}>
             <CheckpointSection meta={meta} items={body.checkpoint} />
-            {nextLessonId && (
-              <p className="lesson-next">
-                Recommended next: <a className="studio-btn studio-btn-primary" href={hashFor('learn/lesson', { lessonId: nextLessonId })}>{lessonById[nextLessonId].title} →</a>
-              </p>
-            )}
+            {lessonRecord?.completed
+              ? <LessonComplete meta={meta} rec={pathNext} checkpoint={lessonRecord.checkpoint} />
+              : <p className="lesson-next studio-muted">After the checkpoint, your path continues with: <a href={hrefFor(pathNext.target)}>{pathNext.label}</a>.</p>}
             <div className="studio-row lesson-end" role="group" aria-label="When you are done here">
               <button type="button" className="studio-btn" onClick={() => jump('matters')}>Review this lesson from Step 1</button>
               <button type="button" className="studio-btn" onClick={finishSession}>Save &amp; finish for today</button>
-              {!nextLessonId && <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Back to the course outline</a>}
+              <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Course outline</a>
             </div>
             <h3 className="studio-h3">Your skills from this lesson</h3>
             <p className="studio-muted">They come back for a short review on an expanding schedule (1, 3, 7, 14, 30, 60 days) under Practice → Review. Missing a day never resets anything.</p>
@@ -715,9 +799,13 @@ export default function LessonPage({ lessonId }) {
             </details>
           </Section>
 
-          <nav className="lesson-pager" aria-label="Lessons in this unit">
-            {neighbours.prev ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.prev.id })}>← {neighbours.prev.title}</a> : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>← {course.title}</a>}
-            {neighbours.next ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.next.id })}>{neighbours.next.title} →</a> : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Back to the course →</a>}
+          <nav className="lesson-pager" aria-label="Lessons in this course">
+            {neighbours.prev
+              ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.prev })}>← Previous: {lessonById[neighbours.prev].title}</a>
+              : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>← {course.title}: course outline</a>}
+            {neighbours.next
+              ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.next })}>Next lesson: {lessonById[neighbours.next].title} →</a>
+              : <a className="studio-btn studio-btn-primary" href={hrefFor(pathNext.target)}>{finishLabel} →</a>}
           </nav>
         </article>
 

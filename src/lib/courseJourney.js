@@ -42,17 +42,3 @@ export function courseJourney(course, lessons, status = {}) {
     units,
   };
 }
-
-/**
- * Where to go after the last written lesson of `course`: the first unfinished
- * written lesson of a course that lists it as a prerequisite, in catalog
- * order. Outline-only courses are skipped — an outline is not a lesson.
- */
-export function nextAfterCourse(course, courses, lessons) {
-  for (const c of courses) {
-    if (c.id === course.id || !c.prerequisites.includes(course.id)) continue;
-    const id = c.units.flatMap((u) => u.lessons).find((l) => !lessons[l]?.completed);
-    if (id) return { course: c, lessonId: id };
-  }
-  return null;
-}
