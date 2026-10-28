@@ -28,10 +28,11 @@ export default function CoursesPage() {
     <div className="studio-scroll">
       <div className="studio-page">
         <section className="studio-card courses-path" aria-labelledby="courses-path-h">
-          <p className="studio-eyebrow">Your learning path</p>
-          <h2 id="courses-path-h" className="studio-h3"><a href={hashFor('learn/pathway')}>{path.title}</a></h2>
-          {milestone && <p className="studio-muted">{milestone}.</p>}
-          <PathNext rec={rec} compact extra={<a className="studio-btn" href={hashFor('learn/pathway')}>See the whole path and applied tracks</a>} />
+          <h2 id="courses-path-h" className="studio-h3"><a href={hashFor('learn/pathway')}>Your learning path</a></h2>
+          <p className="studio-muted">
+            Following {path.title}{milestone ? ` · ${milestone}` : ''}. The whole path, optional applied tracks and CSU preparation are one click away.
+          </p>
+          <PathNext rec={rec} compact />
         </section>
         <p className="studio-lede">
           Nine subjects, from prealgebra to machine learning. Courses with written lessons are marked; the others show

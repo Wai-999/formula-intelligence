@@ -155,6 +155,20 @@ describe('finishing a course leads to one concrete next course', () => {
     expect(rec.alternatives.find((a) => a.kind === 'earlier').target.params.lessonId).toBe(allLessons[0]);
   });
 
+  it('every page a recommendation or alternative can lead to exists', () => {
+    const pages = new Set(PAGES.map((p) => p.id));
+    const states = [{ lessons: {} }, { lessons: done(allLessons) }, { lessons: done(lessonsOf(writtenCourses[0])), weak: ['arith.ratios'] }];
+    const froms = [{}, ...route.courses.map((courseId) => ({ courseId })), ...allLessons.map((lessonId) => ({ lessonId }))];
+    for (const pathId of [null, ...PATHS.map((p) => p.id)]) {
+      for (const s of states) {
+        for (const from of froms) {
+          const rec = recommend(cur, { ...s, pathId }, from);
+          for (const t of [rec.target, ...rec.alternatives.map((a) => a.target)]) expect(pages.has(t.page), t.page).toBe(true);
+        }
+      }
+    }
+  });
+
   it('no recommendation, for any mix of finished lessons, points to a lesson that is not written', () => {
     let seed = 7;
     const rand = () => { seed = (seed * 48271) % 2147483647; return seed / 2147483647; };

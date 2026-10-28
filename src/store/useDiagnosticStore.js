@@ -15,10 +15,12 @@ import { readVersioned, writeVersioned } from '../lib/versioned.js';
 const SPEC = {
   version: 1,
   empty: () => ({ schemaVersion: 1, firstRun: null, attempts: [], placement: null, path: null }),
-  validate: (r) => Array.isArray(r.attempts)
-    && (r.placement === null || (typeof r.placement === 'object' && !Array.isArray(r.placement)))
-    && (r.path == null || (typeof r.path === 'object' && typeof r.path.id === 'string')),
+  validate: (r) => Array.isArray(r.attempts) && (r.placement === null || (typeof r.placement === 'object' && !Array.isArray(r.placement))),
 };
+
+// A malformed path choice is dropped, never a reason to set the whole record
+// (and its placement attempts) aside.
+const validPath = (p) => (p && typeof p === 'object' && typeof p.id === 'string' ? p : null);
 
 const initial = readVersioned(STORAGE_KEYS.diagnostic, SPEC);
 
@@ -30,7 +32,7 @@ export const useDiagnosticStore = create((set, get) => ({
   firstRun: initial.firstRun,
   attempts: initial.attempts,
   placement: initial.placement,
-  path: initial.path ?? null,
+  path: validPath(initial.path),
 
   /** Home's first-run choice: 'diagnostic' | 'prealgebra' | 'explore'. */
   chooseFirstRun(choice) {
