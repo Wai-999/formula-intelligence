@@ -1,6 +1,6 @@
 # Upgrade Progress
 
-**Current state (2026-10-27):** V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) merged to `main` (`3557155`) and deployed on 2026-10-25 (Deploy to GitHub Pages run 18, green). After V4, on `claude/practical-gates-59o8iv`: placement coverage and a self-hosted icon font (below). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
+**Current state (2026-10-28):** **Continuous learning pathways** (one learning-path engine, honest course ends, applied problems; section below) in PR #7. Study continuity (PR #6) merged as `713a587`. V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) merged to `main` (`3557155`) and deployed on 2026-10-25 (Deploy to GitHub Pages run 18, green). After V4, on `claude/practical-gates-59o8iv`: placement coverage and a self-hosted icon font (below). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
 **Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged `3f6ddcb`) → `upgrade/v3.1-phases2-10` (merged `9c21ac2`) → `fix/entry-banner-wording` (merged `a103f32`) → **`upgrade/v4-simple-applied`**, all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign is untouched (decision D1 still open).
 **Merge/deploy policy:** PRs only; CI runs every gate on the PR; `main` deploys only when the same gates pass again.
 

@@ -150,4 +150,10 @@ Save and resume (save at step N, reload, resume; cross-tab; quota; reset; migrat
 
 ## 7. Release
 
-(Filled in during release.)
+| Step | Record |
+|---|---|
+| Branch | `claude/trusting-keller-8e48nd`, from `main` at `713a587` (PR #6 merged); nothing on `main` since |
+| Commits | `87e4601` engine and UI · `f56cd4d` tests · `61e22af` applied problems and Explain it back · `6ed17cd` docs, offline and four-width checks · this record |
+| Pull request | [#7](https://github.com/Wai-999/formula-intelligence/pull/7), merged with a merge commit like #5 and #6, only after CI (`ci.yml`, every gate in §5 plus `e2e:python`) is green on its last commit. No check skipped, no force-push |
+| Deploy | `deploy.yml` on the push to `main` runs the same gates again, then publishes to GitHub Pages. Its run, and the merge commit it deployed, are linked on PR #7 |
+| Production | `https://wai-999.github.io/formula-intelligence/` could not be opened from the work environment (its network policy refuses the host). The deploy job's `page_url` and the deployed commit are the evidence; the hand check in §6 is the remaining step for a person |
