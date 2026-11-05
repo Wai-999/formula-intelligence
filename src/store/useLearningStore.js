@@ -64,7 +64,7 @@ export const useLearningStore = create((set, get) => ({
   /**
    * Record one answer as evidence.
    * { competency, item, ok, difficulty = 1, transfer = false, source,
-   *   hinted, transferItem }
+   *   hinted, transferItem, lesson }
    *
    * `tr` (counts as transfer evidence for mastery) needs a transfer item
    * answered WITHOUT a hint. Since V4 two more facts are kept, so the
@@ -73,11 +73,14 @@ export const useLearningStore = create((set, get) => ({
    * opened before the first answer. Both are additive: older records lack
    * them and every reader treats absence as unknown.
    */
-  record({ competency, item, ok, difficulty = 1, transfer = false, source = 'practice', hinted = false, transferItem = false }, now = Date.now()) {
+  record({ competency, item, ok, difficulty = 1, transfer = false, source = 'practice', hinted = false, transferItem = false, lesson = null }, now = Date.now()) {
     if (!competency || !item) return;
     const entry = {
       c: competency, item, ok: !!ok, d: difficulty,
       ...(transfer ? { tr: true } : {}), ...(transferItem ? { x: true } : {}), ...(hinted ? { h: true } : {}),
+      // The lesson the answer was given in (since the 80/20 upgrade), so a
+      // lesson that went badly can offer a bridge (src/lib/nextAction.js).
+      ...(lesson ? { l: lesson } : {}),
       s: source, at: now,
     };
     const evidence = compactEvidence([...get().evidence, entry]);

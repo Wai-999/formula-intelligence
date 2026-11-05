@@ -381,6 +381,9 @@ export const LESSONS = [
     competencies: ['calc.rules'],
     concepts: ['c.chain-rule'],
     prerequisites: ['c.derivative', 'c.composition-inverse'],
+    // When this lesson goes badly, the usual cause is reading the composite
+    // (which function is inner, what the inner value is), not the derivative.
+    bridge: { lesson: 'a2-composition', step: 'understand', minutes: 5, concept: 'c.composition-inverse', why: 'Most chain-rule mistakes come from the composite itself — which function is inside, and what value it passes on — so the bridge is the worked examples of composite functions.' },
     formulas: ['f.chain-rule'],
     labs: ['composition-chain'],
     next: ['c2-taylor', 'c3-gradient'],

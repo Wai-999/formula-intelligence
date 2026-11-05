@@ -11,9 +11,10 @@ import { useUIStore } from '../../store/useUIStore.js';
 import { useStudyPlanStore } from '../../store/useStudyPlanStore.js';
 import { dueCards } from '../../lib/reviewSchedule.js';
 import { primaryTarget, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
-import { STATUS, recommend, routeProgress, trackProgress, nextMilestone, pathFor } from '../../lib/learningPath.js';
+import { recommend, routeProgress, trackProgress, nextMilestone, pathFor } from '../../lib/learningPath.js';
 import { hashFor } from '../../app/pages.js';
-import PathNext from '../learn/PathNext.jsx';
+import NextActionCard, { ActionLink } from '../learn/NextActionCard.jsx';
+import { useNextAction } from '../learn/useNextAction.js';
 import { usePathState, weakSkills, hrefFor } from '../learn/usePathState.js';
 import '../../styles/studio.css';
 import './home.css';
@@ -26,13 +27,13 @@ import './home.css';
 
 const LOCAL_NOTE = 'Saved in this browser only. Export a backup to continue on another device.';
 
+// One eyebrow per kind of next action (src/lib/nextAction.js).
 const EYEBROW = {
-  [STATUS.CONTINUE]: 'Next recommended lesson',
-  [STATUS.NEXT_UNIT]: 'Next recommended lesson',
-  [STATUS.TRANSITION]: 'Next course on your path',
-  [STATUS.BRIDGE]: 'A bridge before the next course',
-  [STATUS.UNAVAILABLE]: 'Your starting point is not written yet',
-  [STATUS.END]: 'Your learning path',
+  lesson: 'Next recommended lesson',
+  'course-transition': 'Next course on your path',
+  bridge: 'A short bridge first',
+  'content-gap': 'The next lesson is not written yet',
+  'path-finished': 'Your learning path',
 };
 
 /** Your path → course → unit → lesson → step, for the place the hero is about. */
@@ -59,7 +60,7 @@ function PathTrail({ pathTitle, lessonId, sectionId = null }) {
  * without that, the last lesson opened. Nothing here invents a step that was
  * never saved.
  */
-function ResumeHero({ target, lessons, pathState, pathTitle }) {
+function ResumeHero({ target, lessons, pathState, pathTitle, action }) {
   const requestResume = useStudyResumeStore((s) => s.requestResume);
   const removePin = useStudyResumeStore((s) => s.removePin);
   const lessonId = target.kind === 'missing' ? null : target.lesson.id;
@@ -107,32 +108,44 @@ function ResumeHero({ target, lessons, pathState, pathTitle }) {
         {when && <div><dt>{pinned ? 'Saved' : 'Last studied'}</dt><dd>{when}</dd></div>}
       </dl>
       {done && <p className="studio-muted">You have answered this lesson’s checkpoint. Review it from your saved place, or go on: {after.label}.</p>}
+      {!done && action?.kind === 'resume' && <p className="studio-muted home-why">{action.reason}</p>}
       <div className="studio-row">
         <button type="button" className="studio-btn studio-btn-primary" onClick={() => requestResume(loc)}>
           {pinned ? 'Resume where I stopped' : 'Continue recent lesson'}
         </button>
+        {!done && action?.kind === 'resume' && action.estimatedMinutes && <span className="next-minutes">about {action.estimatedMinutes} min left</span>}
         {done
           ? <a className="studio-btn" href={hrefFor(after.target)}>{after.label}</a>
           : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Open course outline</a>}
       </div>
+      {!done && action?.kind === 'resume' && action.alternatives.length > 0 && (
+        <div className="studio-row" role="group" aria-label="Other choices">
+          {action.alternatives.map((a) => (
+            <ActionLink key={`${a.kind}-${a.label}`} target={a.target} className="studio-btn">{a.label}{a.estimatedMinutes ? ` (${a.estimatedMinutes} min)` : ''}</ActionLink>
+          ))}
+        </div>
+      )}
       <p className="studio-muted home-local-note">{LOCAL_NOTE} <a href={hashFor('progress/settings')}>Backup</a></p>
     </section>
   );
 }
 
-/** No place to resume: the learning path's next step, with its reasons. */
-function NextHero({ rec, pathTitle }) {
-  const lessonId = rec.target?.page === 'learn/lesson' ? rec.target.params.lessonId : null;
+/**
+ * No place to resume: the next action (src/lib/nextAction.js), with its
+ * reasons. A gap, a bridge or the end of the written path is named in the
+ * title, not hidden behind "Why this?".
+ */
+function NextHero({ action, pathTitle }) {
+  const lessonId = action.target?.page === 'learn/lesson' ? action.target.params.lessonId : null;
   const lesson = lessonId ? lessonById[lessonId] : null;
+  const named = action.kind === 'content-gap' || action.kind === 'path-finished';
   return (
     <section className="home-hero" aria-labelledby="home-continue">
-      <p className="studio-eyebrow" id="home-continue">{EYEBROW[rec.status]}</p>
-      {lesson
-        ? <h2 className="home-hero-title">{lesson.title}</h2>
-        : <h2 className="home-hero-title">{rec.status === STATUS.END ? 'Every written lesson on your path is done' : rec.label}</h2>}
-      {lesson && <PathTrail pathTitle={pathTitle} lessonId={lesson.id} />}
-      {lesson && <p className="studio-muted">{courseById[lesson.course].title} · about {lesson.minutes} minutes.</p>}
-      <PathNext rec={rec} compact={rec.status !== STATUS.END} />
+      <p className="studio-eyebrow" id="home-continue">{EYEBROW[action.kind] ?? 'Next step'}</p>
+      <h2 className="home-hero-title">{named || !lesson ? action.headline ?? action.label : lesson.title}</h2>
+      {lesson && <PathTrail pathTitle={pathTitle} lessonId={lesson.id} sectionId={action.target.sectionId} />}
+      {lesson && !named && <p className="studio-muted">{courseById[lesson.course].title} · about {action.estimatedMinutes ?? lesson.minutes} minutes.</p>}
+      <NextActionCard action={action} headline={action.kind === 'bridge'} compact />
     </section>
   );
 }
@@ -234,6 +247,9 @@ export default function HomePage() {
   // is done is not "where you stopped" any more: recommend what comes next.
   const resume = target && (target.kind === 'pinned' || target.kind === 'missing' || !lessons[target.lesson.id]?.completed) ? target : null;
   const rec = useMemo(() => recommend(CURRICULUM, pathState), [pathState]);
+  // What to do next, from the same records the lesson, course and progress pages read.
+  const action = useNextAction();
+  const actionLesson = action.target?.page === 'learn/lesson' ? action.target.params.lessonId : null;
   const path = pathFor(CURRICULUM, pathState.pathId);
   const progress = routeProgress(CURRICULUM, pathState, pathState.pathId);
   // On an applied track, its own lessons; on the route, every written lesson.
@@ -256,9 +272,9 @@ export default function HomePage() {
   return (
     <div className="studio-scroll">
       <div className="studio-page home">
-        {resume
-          ? <ResumeHero target={resume} lessons={lessons} pathState={pathState} pathTitle={path.title} />
-          : <NextHero rec={rec} pathTitle={path.title} />}
+        {resume && (action.kind === 'resume' || resume.kind === 'missing' || resume.kind === 'pinned')
+          ? <ResumeHero target={resume} lessons={lessons} pathState={pathState} pathTitle={path.title} action={action} />
+          : <NextHero action={action} pathTitle={path.title} />}
 
         <section className="home-path" aria-labelledby="home-path-h">
           <h2 id="home-path-h" className="studio-eyebrow">Your path</h2>
@@ -269,7 +285,7 @@ export default function HomePage() {
           </dl>
         </section>
 
-        <SessionPlan due={due} lessonId={resume?.lesson?.id ?? rec.nextLessonId ?? null} project={activeProject} />
+        <SessionPlan due={due} lessonId={actionLesson ?? resume?.lesson?.id ?? rec.nextLessonId ?? null} project={activeProject} />
 
         <section aria-labelledby="home-summary">
           <h2 id="home-summary" className="studio-eyebrow">At a glance</h2>

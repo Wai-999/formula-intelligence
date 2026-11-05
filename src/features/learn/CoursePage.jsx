@@ -14,6 +14,9 @@ import { STATUS, recommend, courseNeighbours, courseSuccessor, listText } from '
 import { hashFor } from '../../app/pages.js';
 import StatusChip from './StatusChip.jsx';
 import PathNext from './PathNext.jsx';
+import NextActionCard from './NextActionCard.jsx';
+import { useNextAction } from './useNextAction.js';
+import { courseCompletion } from '../../lib/nextAction.js';
 import { usePathState } from './usePathState.js';
 // Registers course and lesson titles for the page header and breadcrumbs.
 import '../../data/curriculum/index.js';
@@ -59,6 +62,33 @@ function CourseJourneyLine({ course, pathId }) {
   );
 }
 
+const YES_NO = (v) => (v ? 'Yes' : 'Not yet');
+
+/**
+ * The four ways a course can be "done", never added into one number
+ * (src/lib/nextAction.js, courseCompletion): the written lessons, the whole
+ * planned course, readiness (exit skills shown) and mastery.
+ */
+function CompletionStatus({ completion: c }) {
+  const rows = [
+    ['Written lessons finished', c.availableContentComplete, `${c.checked} of ${c.written} checkpoints answered`],
+    ['Whole course written', c.courseCurriculumComplete, c.planned ? `${c.planned} planned lessons are not written yet` : 'every planned lesson is written'],
+    ['Ready for what comes next', c.courseReady, `${c.shown} of ${c.exitSkills} exit skills shown at proficient or above`],
+    ['Mastery of its exit skills', c.mastered, `${c.masteredSkills} of ${c.exitSkills} at the mastery level (right on different days, without hints)`],
+  ];
+  return (
+    <details className="lesson-disclosure course-completion">
+      <summary>What “done” means for this course</summary>
+      <dl className="course-completion-list" aria-label="What done means for this course">
+        {rows.map(([label, ok, detail]) => (
+          <div key={label}><dt>{label}</dt><dd><strong>{YES_NO(ok)}</strong> — {detail}</dd></div>
+        ))}
+      </dl>
+      <p className="studio-muted">Each is reported separately: finishing the written lessons is not the whole course, and neither is mastery. None of them is college credit.</p>
+    </details>
+  );
+}
+
 export default function CoursePage({ courseId }) {
   const course = courseById[courseId];
   const pathState = usePathState();
@@ -71,6 +101,8 @@ export default function CoursePage({ courseId }) {
   const requestResume = useStudyResumeStore((s) => s.requestResume);
   // The one recommendation for this course (src/lib/learningPath.js).
   const rec = useMemo(() => (course ? recommend(CURRICULUM, pathState, { courseId }) : null), [course, pathState, courseId]);
+  // What to do next from here (src/lib/nextAction.js): the same answer the end of its last lesson gives.
+  const action = useNextAction({ courseId });
 
   if (!course) {
     return (
@@ -86,6 +118,7 @@ export default function CoursePage({ courseId }) {
   // Their place in THIS course: a saved place elsewhere never takes over here.
   const target = courseTarget({ pinned, current, recent }, course.id, lessonById);
   const journey = courseJourney(course, lessons, status);
+  const completion = courseCompletion(CURRICULUM, pathState, course.id);
   const where = target ? unitById[target.lesson.unit] : null;
   const after = courseSuccessor(CURRICULUM, pathState.pathId, course.id);
   const nextCourse = after.courseId ? courseById[after.courseId] : null;
@@ -157,6 +190,7 @@ export default function CoursePage({ courseId }) {
               <dd>{journey.skills.assessed ? `${journey.skills.demonstrated} of ${journey.skills.total} exit skills proficient or mastered` : 'Not assessed yet'}</dd>
             </div>
           </dl>
+          <CompletionStatus completion={completion} />
         </div>
 
         {journey.availableFinished && (
@@ -176,12 +210,12 @@ export default function CoursePage({ courseId }) {
             <p className="studio-muted">
               There is no course-wide challenge yet. Mixed review across your lessons is in Practice. This is a self-study app: progress here is not a grade, transcript or credential.
             </p>
-            <PathNext
-              rec={rec}
+            <NextActionCard
+              action={action}
+              compact={false}
               extra={(
                 <>
                   {project && <a className="studio-btn" href={hashFor('apply/projects')}>Apply what you learned: {project.title}</a>}
-                  {!rec.alternatives.some((a) => a.kind === 'review') && <a className="studio-btn" href={hashFor('practice/review')}>Review in Practice</a>}
                   <a className="studio-btn" href={hashFor('learn/courses')}>Browse all courses</a>
                 </>
               )}
