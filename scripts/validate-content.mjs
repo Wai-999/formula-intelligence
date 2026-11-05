@@ -16,6 +16,9 @@ import {
   STATS_NODE, ML_MODEL, ML_FAMILY, ML_LINK, PY_ENTRY,
   validateCollection, checkUniqueIds, checkReferences,
 } from '../src/data/schema.js';
+import { CURRICULUM } from '../src/data/curriculum/path.js';
+import { validateCurriculum } from '../src/lib/learningPath.js';
+import { PAGES } from '../src/app/pages.js';
 
 const groups = [];
 const add = (label, count, errors) => groups.push({ label, count, errors });
@@ -73,6 +76,9 @@ add('Python Hub entries', PY_ALL_ENTRIES.length, [
   ...PY_ALL_ENTRIES.filter((e) => !statsIds.has(e.id) && !modelIds.has(e.id))
     .map((e) => `PY_ENTRY[${e.id}] — entry for an id that exists in neither nodes.js nor models.js`),
 ]);
+
+// —— Learning paths: next steps, course transitions, tracks ——
+add('Learning paths (pathways.js)', CURRICULUM.paths.length, validateCurriculum(CURRICULUM, { pages: new Set(PAGES.map((p) => p.id)) }));
 
 // —— Report ——
 const RED = '\x1b[31m', GREEN = '\x1b[32m', DIM = '\x1b[2m', BOLD = '\x1b[1m', OFF = '\x1b[0m';

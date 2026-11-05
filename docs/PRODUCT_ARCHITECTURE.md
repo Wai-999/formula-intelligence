@@ -65,6 +65,7 @@ evidence ─> learningSignals.js ─> My Progress → Your learning signals
 | Store | Key(s) | Holds |
 |---|---|---|
 | `useLearningStore` | `fi_learning_v1`, `fi_lessons_v1`, `fi_notes_v1` | evidence + review cards; lesson visits/sections/completion; notes |
+| `useStudyResumeStore` | `fi_resume_v1` | saved study places: the learner's saved place, the last automatic place, the last place per course; one-time resume requests (`docs/study-continuity/ARCHITECTURE.md`) |
 | `useDiagnosticStore` | `fi_diagnostic_v1` | first-run choice, every attempt, placement |
 | `useWorkStore` | `fi_pyex_v1`, `fi_projects_v1` | code drafts and results; project steps |
 | `useThemeStore` | `fi_theme_v1`, `fi_motion_v1` | system/light/dark; system/reduce motion |
@@ -83,7 +84,7 @@ Worker client with `runPython`, `gradePython`, `stopPython`; timeout or Stop ter
 
 ## Offline — `src/sw/serviceWorker.template.js`
 
-Generated at build (`vite.config.js` → `serviceWorker()` plugin) with this build's exact file list (181 files, 2.64 MB). Navigations network-first with the cached shell as fallback; built assets cache-first; the icon font stale-while-revalidate; Pyodide and external links network-only. Registered only in production builds. No `skipWaiting`: an open tab keeps the build it started with. `public/manifest.webmanifest` makes it installable.
+Generated at build (`vite.config.js` → `serviceWorker()` plugin) with this build's exact file list (189 files, 2.78 MB on 2026-10-27). Navigations network-first with the cached shell as fallback; built assets (including the self-hosted icon font) cache-first; Pyodide and external links network-only. Activation deletes `fi-runtime-v1`, the cache that held the cdnjs icon font before the app shipped its own. Registered only in production builds. No `skipWaiting`: an open tab keeps the build it started with. `public/manifest.webmanifest` makes it installable.
 
 ## Ohlone and transfer data — `src/data/college/` (V5)
 

@@ -1,33 +1,140 @@
 import { useMemo } from 'react';
-import { COURSES, courseById } from '../../data/curriculum/catalog.js';
+import { courseById } from '../../data/curriculum/catalog.js';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
+import { CURRICULUM } from '../../data/curriculum/path.js';
 import { PROJECTS } from '../../data/projects/index.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
+import { useStudyResumeStore } from '../../store/useStudyResumeStore.js';
 import { useDiagnosticStore } from '../../store/useDiagnosticStore.js';
 import { useWorkStore } from '../../store/useWorkStore.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import { useStudyPlanStore } from '../../store/useStudyPlanStore.js';
 import { dueCards } from '../../lib/reviewSchedule.js';
-import { assessAll } from '../../lib/mastery.js';
+import { primaryTarget, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
+import { STATUS, recommend, routeProgress, trackProgress, nextMilestone, pathFor } from '../../lib/learningPath.js';
 import { hashFor } from '../../app/pages.js';
+import PathNext from '../learn/PathNext.jsx';
+import { usePathState, weakSkills, hrefFor } from '../learn/usePathState.js';
 import '../../styles/studio.css';
 import './home.css';
 
 // Home (V4 §3): resume learning with ONE clear next action, and a small
 // progress summary — nothing to manage here. Reviews live in Practice, gaps
 // and notes in My Progress. Deliberately absent: streaks, feeds, badges,
-// auto-playing motion.
+// auto-playing motion. What comes next is the learning-path engine's answer
+// (src/lib/learningPath.js), the same one course and lesson pages give.
 
-const lessonsInOrder = COURSES.flatMap((c) => c.units.flatMap((u) => u.lessons));
+const LOCAL_NOTE = 'Saved in this browser only. Export a backup to continue on another device.';
 
-function nextLesson(placementCourse, lessons) {
-  const start = placementCourse ? COURSES.findIndex((c) => c.id === placementCourse) : 0;
-  const ordered = [...COURSES.slice(Math.max(0, start)), ...COURSES.slice(0, Math.max(0, start))];
-  for (const c of ordered) {
-    const id = c.units.flatMap((u) => u.lessons).find((l) => !lessons[l]?.completed);
-    if (id) return { id, course: c.id, fromPlacement: c.id === placementCourse };
+const EYEBROW = {
+  [STATUS.CONTINUE]: 'Next recommended lesson',
+  [STATUS.NEXT_UNIT]: 'Next recommended lesson',
+  [STATUS.TRANSITION]: 'Next course on your path',
+  [STATUS.BRIDGE]: 'A bridge before the next course',
+  [STATUS.UNAVAILABLE]: 'Your starting point is not written yet',
+  [STATUS.END]: 'Your learning path',
+};
+
+/** Your path → course → unit → lesson → step, for the place the hero is about. */
+function PathTrail({ pathTitle, lessonId, sectionId = null }) {
+  const lesson = lessonById[lessonId];
+  const course = lesson ? courseById[lesson.course] : null;
+  const unit = lesson ? CURRICULUM.unitOf[lessonId] : null;
+  return (
+    <nav className="home-trail" aria-label="Where this is on your learning path">
+      <ol>
+        <li><a href={hashFor('learn/pathway')}>{pathTitle}</a></li>
+        {course && <li><a href={hashFor('learn/course', { courseId: course.id })}>{course.title}</a></li>}
+        {unit && <li>{unit.title}</li>}
+        {lesson && <li>{lesson.title}</li>}
+        {sectionId && <li>{stepLabel(sectionId)}</li>}
+      </ol>
+    </nav>
+  );
+}
+
+/**
+ * The returning learner's one action (prompt §4.1). A saved place wins over
+ * anything opened since; without one, the last automatically saved step;
+ * without that, the last lesson opened. Nothing here invents a step that was
+ * never saved.
+ */
+function ResumeHero({ target, lessons, pathState, pathTitle }) {
+  const requestResume = useStudyResumeStore((s) => s.requestResume);
+  const removePin = useStudyResumeStore((s) => s.removePin);
+  const lessonId = target.kind === 'missing' ? null : target.lesson.id;
+  const after = useMemo(() => (lessonId ? recommend(CURRICULUM, pathState, { lessonId }) : null), [lessonId, pathState]);
+
+  if (target.kind === 'missing') {
+    const fallback = target.fallback;
+    const course = courseById[target.loc.courseId];
+    return (
+      <section className="home-hero" aria-labelledby="home-continue">
+        <p className="studio-eyebrow" id="home-continue">Your saved place</p>
+        <p className="studio-lede">
+          Your saved place was in a lesson that is no longer in the course list (“{target.loc.lessonId}”). It may have been renamed.
+          Nothing else was lost: your answers, checkpoints and notes are unchanged.
+        </p>
+        <div className="studio-row">
+          {fallback && (
+            <button type="button" className="studio-btn studio-btn-primary" onClick={() => requestResume(fallback.loc)}>
+              Continue recent lesson: {fallback.lesson.title}
+            </button>
+          )}
+          {course
+            ? <a className={`studio-btn${fallback ? '' : ' studio-btn-primary'}`} href={hashFor('learn/course', { courseId: course.id })}>Open {course.title}</a>
+            : <a className={`studio-btn${fallback ? '' : ' studio-btn-primary'}`} href={hashFor('learn/courses')}>Browse courses</a>}
+          <button type="button" className="studio-btn" onClick={() => removePin()}>Forget that saved place</button>
+        </div>
+      </section>
+    );
   }
-  return null;
+
+  const { lesson, loc, kind } = target;
+  const course = courseById[lesson.course];
+  const step = stepLabel(loc.sectionId);
+  const when = formatSavedAt(loc.at);
+  const done = !!lessons[lesson.id]?.completed;
+  const pinned = kind === 'pinned';
+  return (
+    <section className="home-hero" aria-labelledby="home-continue">
+      <p className="studio-eyebrow" id="home-continue">{pinned ? 'Continue learning' : 'Continue recent lesson'}</p>
+      <h2 className="home-hero-title">{lesson.title}</h2>
+      <PathTrail pathTitle={pathTitle} lessonId={lesson.id} sectionId={loc.sectionId} />
+      {/* The trail above names course, unit and step; these add when, or that no step was saved. */}
+      <dl className="home-place">
+        {!step && <div><dt>{pinned ? 'You left off at' : 'You were at'}</dt><dd>You opened this lesson; no step has been saved yet</dd></div>}
+        {when && <div><dt>{pinned ? 'Saved' : 'Last studied'}</dt><dd>{when}</dd></div>}
+      </dl>
+      {done && <p className="studio-muted">You have answered this lesson’s checkpoint. Review it from your saved place, or go on: {after.label}.</p>}
+      <div className="studio-row">
+        <button type="button" className="studio-btn studio-btn-primary" onClick={() => requestResume(loc)}>
+          {pinned ? 'Resume where I stopped' : 'Continue recent lesson'}
+        </button>
+        {done
+          ? <a className="studio-btn" href={hrefFor(after.target)}>{after.label}</a>
+          : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Open course outline</a>}
+      </div>
+      <p className="studio-muted home-local-note">{LOCAL_NOTE} <a href={hashFor('progress/settings')}>Backup</a></p>
+    </section>
+  );
+}
+
+/** No place to resume: the learning path's next step, with its reasons. */
+function NextHero({ rec, pathTitle }) {
+  const lessonId = rec.target?.page === 'learn/lesson' ? rec.target.params.lessonId : null;
+  const lesson = lessonId ? lessonById[lessonId] : null;
+  return (
+    <section className="home-hero" aria-labelledby="home-continue">
+      <p className="studio-eyebrow" id="home-continue">{EYEBROW[rec.status]}</p>
+      {lesson
+        ? <h2 className="home-hero-title">{lesson.title}</h2>
+        : <h2 className="home-hero-title">{rec.status === STATUS.END ? 'Every written lesson on your path is done' : rec.label}</h2>}
+      {lesson && <PathTrail pathTitle={pathTitle} lessonId={lesson.id} />}
+      {lesson && <p className="studio-muted">{courseById[lesson.course].title} · about {lesson.minutes} minutes.</p>}
+      <PathNext rec={rec} compact={rec.status !== STATUS.END} />
+    </section>
+  );
 }
 
 const BOX_LABEL = { 15: '15 minutes', '30-45': '30–45 minutes', '60-90': '60–90 minutes' };
@@ -109,24 +216,33 @@ function FirstRun() {
 
 export default function HomePage() {
   const firstRun = useDiagnosticStore((s) => s.firstRun);
-  const placement = useDiagnosticStore((s) => s.placement);
-  const lessons = useLearningStore((s) => s.lessons);
   const lastLesson = useLearningStore((s) => s.lastLesson);
   const evidence = useLearningStore((s) => s.evidence);
   const cards = useLearningStore((s) => s.cards);
   const projectState = useWorkStore((s) => s.projects);
+  const pinnedPlace = useStudyResumeStore((s) => s.pinned);
+  const currentPlace = useStudyResumeStore((s) => s.current);
+  const recentPlaces = useStudyResumeStore((s) => s.recent);
+  const pathState = usePathState();
+  const { lessons, status } = pathState;
 
-  const isNew = firstRun === null && Object.keys(lessons).length === 0 && evidence.length === 0;
+  // Anyone with a saved place is not new — including one saved in another tab just now.
+  const isNew = firstRun === null && Object.keys(lessons).length === 0 && evidence.length === 0 && !pinnedPlace && !currentPlace;
   const due = useMemo(() => dueCards(cards), [cards]);
-  const status = useMemo(() => assessAll(evidence), [evidence]);
-  const continueId = lastLesson && !lessons[lastLesson]?.completed && lessonById[lastLesson] ? lastLesson : null;
-  const next = nextLesson(placement?.course, lessons);
-  const primary = continueId ?? next?.id;
-  const completed = lessonsInOrder.filter((id) => lessons[id]?.completed).length;
+  const target = primaryTarget({ pinned: pinnedPlace, current: currentPlace, recent: recentPlaces }, { lessonById, lastLesson });
+  // A saved place is always offered. A merely recent lesson whose checkpoint
+  // is done is not "where you stopped" any more: recommend what comes next.
+  const resume = target && (target.kind === 'pinned' || target.kind === 'missing' || !lessons[target.lesson.id]?.completed) ? target : null;
+  const rec = useMemo(() => recommend(CURRICULUM, pathState), [pathState]);
+  const path = pathFor(CURRICULUM, pathState.pathId);
+  const progress = routeProgress(CURRICULUM, pathState, pathState.pathId);
+  // On an applied track, its own lessons; on the route, every written lesson.
+  const onPath = path.kind === 'track' ? trackProgress(CURRICULUM, pathState, path.id) : progress;
+  const milestone = nextMilestone(CURRICULUM, pathState, rec);
   const levels = Object.values(status);
   const proficient = levels.filter((x) => x.level === 'proficient').length;
   const mastered = levels.filter((x) => x.level === 'mastered').length;
-  const weak = levels.filter((x) => x.distinctItems >= 2 && x.accuracy < 0.5).length;
+  const weak = weakSkills(status).length;
   const activeProject = PROJECTS.find((p) => projectState[p.id]) ?? null;
 
   if (isNew) {
@@ -140,26 +256,20 @@ export default function HomePage() {
   return (
     <div className="studio-scroll">
       <div className="studio-page home">
-        <section className="home-hero" aria-labelledby="home-continue">
-          <p className="studio-eyebrow" id="home-continue">{continueId ? 'Continue where you left off' : 'Next recommended lesson'}</p>
-          {primary ? (
-            <>
-              <h2 className="home-hero-title">{lessonById[primary].title}</h2>
-              <p className="studio-muted">
-                {courseById[lessonById[primary].course].title} · about {lessonById[primary].minutes} minutes.{' '}
-                {continueId ? 'You opened this lesson but have not finished its last step.'
-                  : next?.fromPlacement ? `Next written lesson in your starting point, ${courseById[placement.course].title}.`
-                    : placement ? `Your starting point, ${courseById[placement.course].title}, has no unfinished written lessons; this is the nearest one.`
-                      : 'The first unfinished written lesson. The placement check can suggest a better starting point.'}
-              </p>
-              <div className="studio-row">
-                <a className="studio-btn studio-btn-primary" href={hashFor('learn/lesson', { lessonId: primary })}>{continueId ? 'Continue' : 'Start'} the lesson</a>
-              </div>
-            </>
-          ) : <p className="studio-lede">You have completed every written lesson. New lessons will appear in Learn as they are written.</p>}
+        {resume
+          ? <ResumeHero target={resume} lessons={lessons} pathState={pathState} pathTitle={path.title} />
+          : <NextHero rec={rec} pathTitle={path.title} />}
+
+        <section className="home-path" aria-labelledby="home-path-h">
+          <h2 id="home-path-h" className="studio-eyebrow">Your path</h2>
+          <dl className="home-path-facts">
+            <div><dt>Following</dt><dd><a href={hashFor('learn/pathway')}>{path.title}</a></dd></div>
+            <div><dt>Written lessons checked</dt><dd>{onPath.checked} of {onPath.written} on this path</dd></div>
+            {milestone && <div><dt>Next milestone</dt><dd>{milestone}</dd></div>}
+          </dl>
         </section>
 
-        <SessionPlan due={due} lessonId={primary} project={activeProject} />
+        <SessionPlan due={due} lessonId={resume?.lesson?.id ?? rec.nextLessonId ?? null} project={activeProject} />
 
         <section aria-labelledby="home-summary">
           <h2 id="home-summary" className="studio-eyebrow">At a glance</h2>
@@ -172,7 +282,7 @@ export default function HomePage() {
             </li>
             <li>
               <a href={hashFor('progress/overview')}>
-                <strong>{completed} of {lessonsInOrder.length} lessons</strong>
+                <strong>{progress.checked} of {progress.written} lessons</strong>
                 <span>{mastered} skill{mastered === 1 ? '' : 's'} mastered, {proficient} proficient</span>
               </a>
             </li>

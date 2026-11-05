@@ -43,7 +43,7 @@ export default function CodeExercisesPage() {
         {list.map((ex) => (
           <div key={ex.id} className="studio-section">
             {ex.lesson && <p className="studio-muted">From the lesson <a href={hashFor('learn/lesson', { lessonId: ex.lesson })}>{lessonById[ex.lesson]?.title}</a></p>}
-            <CodeExercise ex={ex} />
+            <CodeExercise ex={ex} headingLevel={2} />
           </div>
         ))}
       </div>

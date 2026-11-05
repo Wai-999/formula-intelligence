@@ -29,7 +29,7 @@ Tests: `src/lib/__tests__/learningEngine.test.js` — one lucky guess is never m
 
 ## 2. Diagnostic procedure — `src/lib/diagnostic.js`, `src/features/diagnostic/`
 
-Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.10-2` (V5): 73 items over 9 domains — V5 added two chain-rule items and a *C++ programming & discrete math* area — ≥ 2 per covered competency (36 of 58 competencies; the uncovered ones lie beyond the placement path — listed in `docs/CURRICULUM_MAP.md`).
+Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.11-1`: 96 items over 9 domains — `dx-2026.10-2` widened the coverage, and V5 added a *C++ programming & discrete math* area — ≥ 2 per covered competency (46 of 58 competencies; the 12 uncovered ones lie beyond what placement decides: Calculus II–III, the ML course, and the C++ and discrete-structures skills past C++ Fundamentals — listed in `docs/CURRICULUM_MAP.md`).
 
 Three rounds, so screening is broad before it is deep:
 
@@ -37,7 +37,9 @@ Three rounds, so screening is broad before it is deep:
 2. **Targeting** — per domain, a harder item after a correct answer, an easier one after a miss.
 3. **Tie-break** — only where rounds 1 and 2 disagree, one more middle item.
 
-At most three answered items per domain. Any item can be answered "I haven't studied this"; any domain can be skipped; the whole screen can be stopped and still produce a (wider) result.
+At most three answered items per domain.
+
+**Which item**, once the round has fixed the domain and difficulty (`nextItem`): the one shown least often in the learner's **earlier attempts** first, so a retake asks fresh questions while any are left at that difficulty and measures the skill rather than memory of the answer; then the one whose **competency this attempt has asked least**, so a domain's questions spread over its skills; then bank order. Deterministic: the same history always gives the same question. Until `dx-2026.10-2` the first item of the right difficulty in bank order was always chosen, so a retake with the same answers repeated exactly the same questions. Any item can be answered "I haven't studied this"; any domain can be skipped; the whole screen can be stopped and still produce a (wider) result.
 
 ## 3. Estimation and recommendation
 
@@ -46,7 +48,7 @@ At most three answered items per domain. Any item can be answered "I haven't stu
 - **Recommendation** walks the mathematics path Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I and stops at the first domain that is not *Likely ready*. Each step contributes a sentence of reasoning ("Algebra: 1 of 3 correct (partly there, low confidence) — this is where to start"). *Also consider*: Linear Algebra and Probability & Statistics when algebra looks ready; Python alongside from the start.
 - The result is labelled **provisional** and offers three one-click choices (V4 §6): **Start earlier** (one step back on the path), **Start here**, **Skip ahead** (one step on); off the path, "earlier" is the course's first prerequisite (`placementChoices` in `src/lib/diagnostic.js`). The learner can also choose any course (**manual override**, `source: 'manual'`) or **retake**. Every attempt is kept in `fi_diagnostic_v1`; a retake adds, never overwrites.
 
-Tests: `src/lib/__tests__/diagnostic.test.js` (adaptive selection, caps, skip/stop, posterior widths, recommendation reasons, start earlier/here/ahead, override, retake history) and `e2e/v31.spec.js › diagnostic`.
+Tests: `src/lib/__tests__/diagnostic.test.js` (coverage, adaptive selection, competency spread, fresh retakes, every item reachable over retakes, caps, skip/stop, posterior widths, recommendation reasons, start earlier/here/ahead, override, retake history) and `e2e/v31.spec.js › diagnostic`.
 
 - **Insufficient evidence (V5, §13.4).** When no question on the mathematics path was answered, or an area that decided the result rests on fewer than **2** answers (`MIN_EVIDENCE`), the result says *Not enough evidence yet — a default, not a finding*, gives the reason, and offers **Answer more questions** first. A course is still named so the learner has somewhere to start. Areas with one answer show “too few answers to judge” instead of a confidence. Tests: `diagnostic.test.js`, `e2e/v5-journeys.spec.js`.
 - **Not an official placement.** The page says so; Ohlone's own placement process decides course eligibility.
@@ -67,7 +69,7 @@ Chosen over SM-2 because its behaviour fits in one sentence and has no hidden ea
 - Ten elements per lesson (§6): the question, before you start, see it (lab), why it works, worked examples, predict first, practice, checkpoint, in Python, keep going.
 - Item types: numeric (parsed — integers, decimals, fractions `3/4`, percentages, scientific notation, typographic minus — and compared with the tolerance the item declares, absolute or relative, default 1e-9), single choice with per-option feedback, and multi-blank numeric (e.g. vector components). Never exact string matching for numbers. `src/lib/answers.js`, tests in `learningEngine.test.js`.
 - Each item has hints, a worked solution (after one attempt), and optionally a *remedy* link to a prerequisite lesson.
-- **A lesson is complete when its checkpoint has been answered**, not when it was scrolled through. Section progress is tracked for navigation only.
+- **A lesson is complete when its checkpoint has been answered**, not when it was scrolled through. Section progress (steps visited) and saved study places (`fi_resume_v1`) are tracked for navigation only: saving a place, visiting every step or finishing a study session never completes a lesson and never counts as evidence (`docs/study-continuity/ARCHITECTURE.md`, "What completion means").
 
 ## 6. Mixed practice (interleaving) — `src/lib/interleave.js`, Practice → Review
 

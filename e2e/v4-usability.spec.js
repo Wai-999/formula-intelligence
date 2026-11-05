@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { hashFor } from '../src/app/pages.js';
-import { VISIBLE } from './helpers.js';
+import { VISIBLE, lessonSettled } from './helpers.js';
 
 // The five usability tasks of the V4 brief (§11), scripted. Each runs on a
 // desktop and a phone viewport. These prove the paths exist and are short;
@@ -36,20 +36,21 @@ for (const vp of VIEWPORTS) {
       await page.goto(`./${hashFor('learn/lesson', { lessonId: 'c1-marginal-cost' })}`, { waitUntil: 'networkidle' });
       await expect(page.locator('h1.page-title')).toHaveText('Marginal cost: what does one more unit cost?');
       await page.goto('./#home', { waitUntil: 'networkidle' });
-      await expect(page.locator('#home-continue')).toHaveText('Continue where you left off');
+      await expect(page.locator('#home-continue')).toHaveText('Continue recent lesson');
       await expect(page.locator(VISIBLE + '.studio-btn-primary')).toHaveCount(1); // one clear next action
-      await page.getByRole('link', { name: 'Continue the lesson' }).click();
+      await page.getByRole('button', { name: 'Continue recent lesson' }).click();
       await expect(page.locator('h1.page-title')).toHaveText('Marginal cost: what does one more unit cost?');
     });
 
     test('(c) completes a lesson and its transfer task by following the lesson itself', async ({ page }) => {
       await page.goto(`./${hashFor('learn/lesson', { lessonId: 'a1-break-even' })}`, { waitUntil: 'networkidle' });
       // The only navigation used: the lesson's own "Next:" step button.
-      const next = page.locator(VISIBLE + '.lesson-progress button');
+      const next = page.locator(VISIBLE + '.lesson-next-step');
       for (const step of ['Understand', 'See it', 'Try it', 'Use it']) {
         await expect(next).toHaveText(`Next: ${step}`);
         await next.click();
         await expect(page.locator(VISIBLE + '.lesson-progress-text')).toContainText(step);
+        await lessonSettled(page);
       }
       // The real-world transfer task, by keyboard.
       const use = page.locator(VISIBLE + '[data-section="use"]');

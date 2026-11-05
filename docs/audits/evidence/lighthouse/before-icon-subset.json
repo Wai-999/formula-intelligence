@@ -1,0 +1,1111 @@
+{
+ "label": "V4 release build (icons from cdnjs)",
+ "measured": "2026-10-27T04:55:28.245Z",
+ "kind": "LAB ONLY — Lighthouse simulated throttling; not field Core Web Vitals",
+ "lighthouse": "13.5.0",
+ "browser": "Chromium (headless)/153.0.0.0",
+ "settings": {
+  "mobile": "Lighthouse default: simulated, 150 ms RTT, 1.6 Mbit/s, 4× CPU slowdown, 412×823",
+  "desktop": "--preset=desktop: simulated, 40 ms RTT, 10 Mbit/s, no CPU slowdown, 1350×940"
+ },
+ "runs": [
+  {
+   "formFactor": "desktop",
+   "page": "code-exercises",
+   "run": 1,
+   "url": "/formula-intelligence/#apply/exercises",
+   "scores": {
+    "performance": 98,
+    "accessibility": 98,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 859,
+    "lcp": 979,
+    "tbt": 0,
+    "si": 859
+   },
+   "cls": 0,
+   "totalKB": 686,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "code-exercises",
+   "run": 2,
+   "url": "/formula-intelligence/#apply/exercises",
+   "scores": {
+    "performance": 98,
+    "accessibility": 98,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 843,
+    "lcp": 924,
+    "tbt": 0,
+    "si": 843
+   },
+   "cls": 0,
+   "totalKB": 686,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "code-exercises",
+   "run": 3,
+   "url": "/formula-intelligence/#apply/exercises",
+   "scores": {
+    "performance": 98,
+    "accessibility": 98,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 868,
+    "lcp": 928,
+    "tbt": 0,
+    "si": 868
+   },
+   "cls": 0,
+   "totalKB": 686,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "courses",
+   "run": 1,
+   "url": "/formula-intelligence/#learn/courses",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 828,
+    "lcp": 848,
+    "tbt": 0,
+    "si": 828
+   },
+   "cls": 0,
+   "totalKB": 587,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "courses",
+   "run": 2,
+   "url": "/formula-intelligence/#learn/courses",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 826,
+    "lcp": 887,
+    "tbt": 0,
+    "si": 826
+   },
+   "cls": 0,
+   "totalKB": 587,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "courses",
+   "run": 3,
+   "url": "/formula-intelligence/#learn/courses",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 846,
+    "lcp": 908,
+    "tbt": 0,
+    "si": 846
+   },
+   "cls": 0,
+   "totalKB": 587,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "formula-map",
+   "run": 1,
+   "url": "/formula-intelligence/#learn/formulas",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 829,
+    "lcp": 889,
+    "tbt": 0,
+    "si": 829
+   },
+   "cls": 0,
+   "totalKB": 613,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "formula-map",
+   "run": 2,
+   "url": "/formula-intelligence/#learn/formulas",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 825,
+    "lcp": 885,
+    "tbt": 0,
+    "si": 825
+   },
+   "cls": 0,
+   "totalKB": 613,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "formula-map",
+   "run": 3,
+   "url": "/formula-intelligence/#learn/formulas",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 841,
+    "lcp": 921,
+    "tbt": 0,
+    "si": 841
+   },
+   "cls": 0,
+   "totalKB": 613,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "home",
+   "run": 1,
+   "url": "/formula-intelligence/#home",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 866,
+    "lcp": 930,
+    "tbt": 0,
+    "si": 866
+   },
+   "cls": 0,
+   "totalKB": 588,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "home",
+   "run": 2,
+   "url": "/formula-intelligence/#home",
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 852,
+    "lcp": 914,
+    "tbt": 0,
+    "si": 852
+   },
+   "cls": 0,
+   "totalKB": 588,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "home",
+   "run": 3,
+   "url": "/formula-intelligence/#home",
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 829,
+    "lcp": 890,
+    "tbt": 0,
+    "si": 829
+   },
+   "cls": 0,
+   "totalKB": 588,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "lesson-slope",
+   "run": 1,
+   "url": "/formula-intelligence/#learn/lesson/a1-slope",
+   "scores": {
+    "performance": 97,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 891,
+    "lcp": 1052,
+    "tbt": 0,
+    "si": 891
+   },
+   "cls": 0,
+   "totalKB": 716,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "lesson-slope",
+   "run": 2,
+   "url": "/formula-intelligence/#learn/lesson/a1-slope",
+   "scores": {
+    "performance": 97,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 898,
+    "lcp": 1018,
+    "tbt": 0,
+    "si": 898
+   },
+   "cls": 0,
+   "totalKB": 716,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "desktop",
+   "page": "lesson-slope",
+   "run": 3,
+   "url": "/formula-intelligence/#learn/lesson/a1-slope",
+   "scores": {
+    "performance": 97,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 885,
+    "lcp": 1045,
+    "tbt": 0,
+    "si": 885
+   },
+   "cls": 0,
+   "totalKB": 716,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "code-exercises",
+   "run": 1,
+   "url": "/formula-intelligence/#apply/exercises",
+   "scores": {
+    "performance": 71,
+    "accessibility": 98,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4398,
+    "lcp": 4999,
+    "tbt": 0,
+    "si": 4398
+   },
+   "cls": 0,
+   "totalKB": 686,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "code-exercises",
+   "run": 2,
+   "url": "/formula-intelligence/#apply/exercises",
+   "scores": {
+    "performance": 70,
+    "accessibility": 98,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4430,
+    "lcp": 5030,
+    "tbt": 0,
+    "si": 4430
+   },
+   "cls": 0,
+   "totalKB": 686,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "code-exercises",
+   "run": 3,
+   "url": "/formula-intelligence/#apply/exercises",
+   "scores": {
+    "performance": 71,
+    "accessibility": 98,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4410,
+    "lcp": 5012,
+    "tbt": 0,
+    "si": 4410
+   },
+   "cls": 0,
+   "totalKB": 686,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "courses",
+   "run": 1,
+   "url": "/formula-intelligence/#learn/courses",
+   "scores": {
+    "performance": 74,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4202,
+    "lcp": 4429,
+    "tbt": 0,
+    "si": 4202
+   },
+   "cls": 0,
+   "totalKB": 587,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "courses",
+   "run": 2,
+   "url": "/formula-intelligence/#learn/courses",
+   "scores": {
+    "performance": 74,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4172,
+    "lcp": 4548,
+    "tbt": 0,
+    "si": 4172
+   },
+   "cls": 0,
+   "totalKB": 587,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "courses",
+   "run": 3,
+   "url": "/formula-intelligence/#learn/courses",
+   "scores": {
+    "performance": 75,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4187,
+    "lcp": 4413,
+    "tbt": 0,
+    "si": 4187
+   },
+   "cls": 0,
+   "totalKB": 587,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "formula-map",
+   "run": 1,
+   "url": "/formula-intelligence/#learn/formulas",
+   "scores": {
+    "performance": 75,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4170,
+    "lcp": 4395,
+    "tbt": 0,
+    "si": 4170
+   },
+   "cls": 0,
+   "totalKB": 613,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "formula-map",
+   "run": 2,
+   "url": "/formula-intelligence/#learn/formulas",
+   "scores": {
+    "performance": 74,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4253,
+    "lcp": 4554,
+    "tbt": 0,
+    "si": 4253
+   },
+   "cls": 0,
+   "totalKB": 613,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "formula-map",
+   "run": 3,
+   "url": "/formula-intelligence/#learn/formulas",
+   "scores": {
+    "performance": 74,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4255,
+    "lcp": 4555,
+    "tbt": 0,
+    "si": 4255
+   },
+   "cls": 0,
+   "totalKB": 613,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "home",
+   "run": 1,
+   "url": "/formula-intelligence/#home",
+   "scores": {
+    "performance": 74,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4177,
+    "lcp": 4552,
+    "tbt": 0,
+    "si": 4177
+   },
+   "cls": 0,
+   "totalKB": 588,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "home",
+   "run": 2,
+   "url": "/formula-intelligence/#home",
+   "scores": {
+    "performance": 73,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4213,
+    "lcp": 4593,
+    "tbt": 0,
+    "si": 4213
+   },
+   "cls": 0,
+   "totalKB": 588,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "home",
+   "run": 3,
+   "url": "/formula-intelligence/#home",
+   "scores": {
+    "performance": 75,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4193,
+    "lcp": 4420,
+    "tbt": 0,
+    "si": 4193
+   },
+   "cls": 0,
+   "totalKB": 588,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "lesson-slope",
+   "run": 1,
+   "url": "/formula-intelligence/#learn/lesson/a1-slope",
+   "scores": {
+    "performance": 69,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4545,
+    "lcp": 5445,
+    "tbt": 0,
+    "si": 4545
+   },
+   "cls": 0,
+   "totalKB": 711,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "lesson-slope",
+   "run": 2,
+   "url": "/formula-intelligence/#learn/lesson/a1-slope",
+   "scores": {
+    "performance": 70,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4485,
+    "lcp": 5160,
+    "tbt": 0,
+    "si": 4485
+   },
+   "cls": 0,
+   "totalKB": 716,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  },
+  {
+   "formFactor": "mobile",
+   "page": "lesson-slope",
+   "run": 3,
+   "url": "/formula-intelligence/#learn/lesson/a1-slope",
+   "scores": {
+    "performance": 69,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100,
+    "agentic-browsing": 100
+   },
+   "ms": {
+    "fcp": 4550,
+    "lcp": 5300,
+    "tbt": 0,
+    "si": 4550
+   },
+   "cls": 0,
+   "totalKB": 711,
+   "largest": [
+    {
+     "url": "/tabler-icons.min.css",
+     "KB": 35
+    },
+    {
+     "url": "/formula-intelligence/assets/index-ZmCU_xOT.js",
+     "KB": 68
+    },
+    {
+     "url": "/formula-intelligence/assets/MathText-Cx8XQ4dJ.js",
+     "KB": 76
+    },
+    {
+     "url": "/fonts/tabler-icons.woff2?v3.44.0",
+     "KB": 447
+    }
+   ]
+  }
+ ]
+}

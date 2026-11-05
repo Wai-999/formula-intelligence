@@ -25,6 +25,8 @@
     "check:citations": "node scripts/check-citations.mjs",
     "docs:curriculum": "node scripts/curriculum-map.mjs",
     "docs:college": "node scripts/college-report.mjs",
+    "docs:path": "node scripts/learning-path-map.mjs",
+    "icons": "node scripts/build-icon-subset.mjs",
     "evidence:screenshots": "node scripts/screenshots.mjs",
     "evidence:perf": "node scripts/perf-lab.mjs"
   },

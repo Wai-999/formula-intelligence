@@ -8,9 +8,9 @@ Generated from `src/data/curriculum/catalog.js` by `npm run docs:curriculum` —
 
 **Algebra and Linear Algebra are separate subjects** (§5): Algebra I/II build symbolic fluency with one-variable functions; Linear Algebra starts from vectors and matrices and lists Algebra I as a prerequisite, never the other way round.
 
-## Recommended path
+## Prerequisites and the recommended path
 
-Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. The C++ track (V5) runs alongside too: C++ Programming Fundamentals → Object-Oriented Programming in C++ → Data Structures and Algorithms, with Discrete Structures after C++ Fundamentals — mirroring Ohlone's CS-102 → CS-116 → CS-124 and CS-102 → CS-113. (These are the `prerequisites` in the table below.) The diagnostic places a learner on the first five steps (`MATH_PATH` in `src/lib/diagnostic.js`).
+The order in which the app recommends courses, and what it says at each course change, is the learning path: generated in [`LEARNING_PATH_MAP.md`](LEARNING_PATH_MAP.md) from `src/data/curriculum/pathways.js`. The prerequisite structure it respects: Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. The C++ track (V5) runs alongside too: C++ Programming Fundamentals → Object-Oriented Programming in C++ → Data Structures and Algorithms, with Discrete Structures after C++ Fundamentals — mirroring Ohlone's CS-102 → CS-116 → CS-124 and CS-102 → CS-113. (These are the `prerequisites` in the table below.) The diagnostic places a learner on the first five steps (`MATH_PATH` in `src/lib/diagnostic.js`).
 
 ## Courses
 
@@ -45,7 +45,7 @@ Integers, fractions, ratios, expressions and the balance idea behind every equat
 | Number systems and integer operations | outline | — | Number systems and the number line; Operations with integers; Estimation and checking | arith.integers |
 | Fractions, decimals and percentages | outline | — | Equivalent fractions; Operations with fractions; Decimals and percentages | arith.fractions |
 | Ratios, rates and proportional reasoning | partial | **Ratios, rates and unit rates** | Units and unit conversion | arith.ratios |
-| Expressions, exponents and radicals | outline | — | Order of operations; Exponents and radicals; Scientific notation | arith.order-ops, arith.exponents (no diagnostic item) |
+| Expressions, exponents and radicals | outline | — | Order of operations; Exponents and radicals; Scientific notation | arith.order-ops, arith.exponents |
 | Equations and inequalities | partial | **Solving equations by keeping balance** | Inequalities on the number line | arith.equations |
 | The coordinate plane and word problems | outline | — | The coordinate plane; From words to equations | arith.equations |
 
@@ -60,7 +60,7 @@ Linear equations and relationships, functions, systems, polynomials and quadrati
 | Unit | Status | Authored lessons | Planned lessons | Exit competencies |
 |---|---|---|---|---|
 | Linear equations and inequalities | partial | **Break-even: when does a business cover its costs?** | Variables on both sides; Linear inequalities | alg.linear-eq |
-| Linear relationships | authored | **Slope as rate of change**<br>**Slope–intercept form**<br>**Fitting a line to data** | — | alg.slope, alg.slope-intercept, alg.line-fit (no diagnostic item) |
+| Linear relationships | authored | **Slope as rate of change**<br>**Slope–intercept form**<br>**Fitting a line to data** | — | alg.slope, alg.slope-intercept, alg.line-fit |
 | Functions and graph interpretation | outline | — | What is a function?; Domain and range; Reading graphs | func.notation |
 | Systems of linear equations | outline | — | Solving by graphing; Substitution and elimination | alg.systems |
 | Polynomials and factoring | outline | — | Polynomial arithmetic; Factoring | alg.quadratics |
@@ -111,15 +111,15 @@ From vectors and the dot product to elimination, eigenvectors, least squares, th
 
 | Unit | Status | Authored lessons | Planned lessons | Exit competencies |
 |---|---|---|---|---|
-| Vectors, the dot product and projections | authored | **Vectors and the dot product**<br>**Projection onto a vector** | — | la.vector-ops, la.dot-product, la.projection (no diagnostic item) |
+| Vectors, the dot product and projections | authored | **Vectors and the dot product**<br>**Projection onto a vector** | — | la.vector-ops, la.dot-product, la.projection |
 | Matrices and linear transformations | partial | **Matrix–vector products: scoring customers**<br>**Matrices as transformations** | Determinants and inverses | la.matrix-mult |
 | Systems and elimination | partial | **Gaussian elimination** | LU factorization | la.elimination |
 | Vector spaces | outline | — | Span and independence; Basis and dimension; The four subspaces and rank–nullity | la.elimination |
-| Eigenvalues and eigenvectors | outline | — | Eigenvalues and eigenvectors; Diagonalization; Symmetric matrices | la.eigen (no diagnostic item) |
-| Orthogonality and least squares | outline | — | Orthogonal bases and Gram–Schmidt; QR factorization; Least squares | la.projection (no diagnostic item) |
-| The SVD, pseudoinverse and PCA | partial | **Principal components and the SVD** | The pseudoinverse; Positive definite matrices | la.svd-pca (no diagnostic item) |
-| Numerical linear algebra | outline | — | Conditioning; Sparse matrices; Tensors and matrix calculus | la.svd-pca (no diagnostic item) |
-| Applications | outline | — | Regression as projection; Embeddings and similarity; Low-rank recommenders | la.svd-pca (no diagnostic item) |
+| Eigenvalues and eigenvectors | outline | — | Eigenvalues and eigenvectors; Diagonalization; Symmetric matrices | la.eigen |
+| Orthogonality and least squares | outline | — | Orthogonal bases and Gram–Schmidt; QR factorization; Least squares | la.projection |
+| The SVD, pseudoinverse and PCA | partial | **Principal components and the SVD** | The pseudoinverse; Positive definite matrices | la.svd-pca |
+| Numerical linear algebra | outline | — | Conditioning; Sparse matrices; Tensors and matrix calculus | la.svd-pca |
+| Applications | outline | — | Regression as projection; Embeddings and similarity; Low-rank recommenders | la.svd-pca |
 
 ## Calculus
 
@@ -172,9 +172,9 @@ Built on the 94 formulas of Bluman’s Elementary Statistics in the Formula map,
 | Conditional probability and Bayes’ theorem | authored | **Bayes’ theorem as updating** | — | stats.bayes |
 | Random variables and distributions | outline | — | Discrete distributions (Formula map chapter 5); The normal distribution (chapter 6) | stats.probability |
 | Sampling, the LLN and the CLT | authored | **Sampling distributions and the central limit theorem** | — | stats.sampling |
-| Estimation and hypothesis testing | outline | — | Confidence intervals (chapter 7); Hypothesis tests (chapters 8–9); Effect sizes | stats.inference (no diagnostic item) |
-| Correlation, regression and ANOVA | outline | — | Correlation and regression (chapter 10); ANOVA (chapter 12) | stats.inference (no diagnostic item) |
-| Resampling, design and causal basics | outline | — | The bootstrap; Designing experiments; Causal inference basics; Bayesian inference; Time-series foundations | stats.inference (no diagnostic item) |
+| Estimation and hypothesis testing | outline | — | Confidence intervals (chapter 7); Hypothesis tests (chapters 8–9); Effect sizes | stats.inference |
+| Correlation, regression and ANOVA | outline | — | Correlation and regression (chapter 10); ANOVA (chapter 12) | stats.inference |
+| Resampling, design and causal basics | outline | — | The bootstrap; Designing experiments; Causal inference basics; Bayesian inference; Time-series foundations | stats.inference |
 
 ## Machine Learning
 
@@ -191,7 +191,7 @@ How to know whether a model works: validation, metrics, calibration and fairness
 | Classification metrics and uncertainty | authored | **Confusion matrix, precision, recall and ROC**<br>**Calibration and fairness checks** | — | ml.classification-metrics (no diagnostic item), ml.calibration-fairness (no diagnostic item) |
 | Bias–variance and regularization | outline | — | Regularization | ml.validation (no diagnostic item) |
 | Regression, classification, trees and ensembles | outline | — | Logistic regression; Decision trees; Ensembles | ml.classification-metrics (no diagnostic item) |
-| Clustering and dimensionality reduction | outline | — | k-means; PCA in practice | la.svd-pca (no diagnostic item) |
+| Clustering and dimensionality reduction | outline | — | k-means; PCA in practice | la.svd-pca |
 | Pipelines, tuning, interpretability and deployment | outline | — | Pipelines and hyperparameter search; Interpretability; Deployment and drift | ml.validation (no diagnostic item) |
 | Neural networks and optimization mathematics | outline | — | A neural network by hand; Optimizers | calc.optimization (no diagnostic item) |
 
@@ -224,11 +224,11 @@ From a first compiled program to functions, vectors and files: read code, predic
 |---|---|---|---|---|
 | Programs, compilers and the toolchain | outline | — | Your first compiled program; Reading compiler messages | cpp.basics |
 | Types, operators, conversions and input/output | outline | — | Types and operators; Integer division and conversions; Console input and output | cpp.basics |
-| Branches and loops | partial | **Loops you can trace** | Boolean logic and branching | cpp.basics, cpp.debugging (no diagnostic item) |
-| Functions, scope, vectors and strings | partial | **Functions and vectors: copies versus references** | Strings and text processing; Testing a function | cpp.functions (no diagnostic item) |
-| Decomposition and file processing | outline | — | Structured decomposition; Reading files robustly | cpp.functions (no diagnostic item), cpp.debugging (no diagnostic item) |
-| References and pointers | outline | — | References and pointers | cpp.functions (no diagnostic item) |
-| A complete small program | outline | — | Capstone: console data summarizer | cpp.functions (no diagnostic item), cpp.debugging (no diagnostic item) |
+| Branches and loops | partial | **Loops you can trace** | Boolean logic and branching | cpp.basics, cpp.debugging |
+| Functions, scope, vectors and strings | partial | **Functions and vectors: copies versus references** | Strings and text processing; Testing a function | cpp.functions |
+| Decomposition and file processing | outline | — | Structured decomposition; Reading files robustly | cpp.functions, cpp.debugging |
+| References and pointers | outline | — | References and pointers | cpp.functions |
+| A complete small program | outline | — | Capstone: console data summarizer | cpp.functions, cpp.debugging |
 
 ### Object-Oriented Programming in C++ — partial
 
@@ -240,7 +240,7 @@ Classes that keep their promises: encapsulation, constructors and destructors, o
 | Constructors, destructors and object lifetime | outline | — | Object lifetime; RAII and ownership | cpp.oop (no diagnostic item) |
 | Operator and function overloading | outline | — | Overloading operators | cpp.oop (no diagnostic item) |
 | Composition, inheritance and polymorphism | outline | — | Composition and inheritance; Virtual functions and polymorphism | cpp.oop (no diagnostic item) |
-| Templates and exceptions | outline | — | Function and class templates; Exceptions | cpp.oop (no diagnostic item), cpp.debugging (no diagnostic item) |
+| Templates and exceptions | outline | — | Function and class templates; Exceptions | cpp.oop (no diagnostic item), cpp.debugging |
 | A tested multi-file object model | outline | — | Capstone: an inventory object model | cpp.oop (no diagnostic item) |
 
 ### Data Structures and Algorithms — partial
@@ -311,5 +311,5 @@ Logic, sets, functions and relations, proof techniques, induction, counting, gra
 
 ## Diagnostic coverage
 
-36 of 58 competencies have diagnostic items (at least 2 each; 73 items). Not covered: `arith.exponents`, `arith.coordinates`, `alg.line-fit`, `la.projection`, `la.eigen`, `la.svd-pca`, `calc.series`, `calc.gradient`, `calc.optimization`, `stats.inference`, `ml.validation`, `ml.classification-metrics`, `ml.calibration-fairness`, `py.data`, `cpp.functions`, `cpp.debugging`, `cpp.oop`, `ds.linear`, `ds.trees-hash`, `dm.proof`, `dm.counting`, `dm.graphs` — mostly beyond the placement path, which only needs to choose between Prealgebra and Calculus I.
+46 of 58 competencies have diagnostic items (at least 2 each; 96 items). Not covered: `calc.series`, `calc.gradient`, `calc.optimization`, `ml.validation`, `ml.classification-metrics`, `ml.calibration-fairness`, `cpp.oop`, `ds.linear`, `ds.trees-hash`, `dm.proof`, `dm.counting`, `dm.graphs` — Calculus II–III and ML-course skills, past what placement decides (a hard calculus or statistics item stands for “ready to leave Calculus I / Probability & Statistics”); their lesson checkpoints measure them.
 

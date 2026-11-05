@@ -24,9 +24,9 @@ Generated from \`src/data/curriculum/catalog.js\` by \`npm run docs:curriculum\`
 
 **Algebra and Linear Algebra are separate subjects** (§5): Algebra I/II build symbolic fluency with one-variable functions; Linear Algebra starts from vectors and matrices and lists Algebra I as a prerequisite, never the other way round.
 
-## Recommended path
+## Prerequisites and the recommended path
 
-Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. The C++ track (V5) runs alongside too: C++ Programming Fundamentals → Object-Oriented Programming in C++ → Data Structures and Algorithms, with Discrete Structures after C++ Fundamentals — mirroring Ohlone's CS-102 → CS-116 → CS-124 and CS-102 → CS-113. (These are the \`prerequisites\` in the table below.) The diagnostic places a learner on the first five steps (\`MATH_PATH\` in \`src/lib/diagnostic.js\`).
+The order in which the app recommends courses, and what it says at each course change, is the learning path: generated in [\`LEARNING_PATH_MAP.md\`](LEARNING_PATH_MAP.md) from \`src/data/curriculum/pathways.js\`. The prerequisite structure it respects: Prealgebra → Algebra I → Algebra II → Precalculus → Calculus I → Calculus II → Calculus III. Linear Algebra and Probability & Statistics branch off after Algebra I; Calculus III also needs Linear Algebra; Machine Learning & Data Science needs Probability & Statistics and Linear Algebra; Python for Data Science has no prerequisite and runs alongside. The C++ track (V5) runs alongside too: C++ Programming Fundamentals → Object-Oriented Programming in C++ → Data Structures and Algorithms, with Discrete Structures after C++ Fundamentals — mirroring Ohlone's CS-102 → CS-116 → CS-124 and CS-102 → CS-113. (These are the \`prerequisites\` in the table below.) The diagnostic places a learner on the first five steps (\`MATH_PATH\` in \`src/lib/diagnostic.js\`).
 
 ## Courses
 `);
@@ -61,7 +61,7 @@ for (const l of LESSONS) {
   out.push(`| ${l.title} (\`${l.id}\`) | ${COURSES.find((c) => c.id === l.course)?.title} | ${l.competencies.join(', ')} | ${l.labs.join(', ') || '—'} | ${l.minutes} | ${l.review.status} |`);
 }
 
-out.push(`\n## Diagnostic coverage\n\n${dx.size} of ${COMPETENCIES.length} competencies have diagnostic items (at least 2 each; ${DX_ITEMS.length} items). Not covered: ${COMPETENCIES.filter((c) => !dx.has(c.id)).map((c) => `\`${c.id}\``).join(', ')} — mostly beyond the placement path, which only needs to choose between Prealgebra and Calculus I.\n`);
+out.push(`\n## Diagnostic coverage\n\n${dx.size} of ${COMPETENCIES.length} competencies have diagnostic items (at least 2 each; ${DX_ITEMS.length} items). Not covered: ${COMPETENCIES.filter((c) => !dx.has(c.id)).map((c) => `\`${c.id}\``).join(', ')} — Calculus II–III and ML-course skills, past what placement decides (a hard calculus or statistics item stands for “ready to leave Calculus I / Probability & Statistics”); their lesson checkpoints measure them.\n`);
 
 writeFileSync('docs/CURRICULUM_MAP.md', `${out.join('\n')}\n`);
 console.log('wrote docs/CURRICULUM_MAP.md');

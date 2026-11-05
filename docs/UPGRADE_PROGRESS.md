@@ -1,8 +1,52 @@
 # Upgrade Progress
 
-**Current state (2026-10-24):** V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) implemented on `upgrade/v4-simple-applied`; released when its PR passes CI and is merged (owner: "push and deploy after upgrade"). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
+**Current state (2026-10-28):** **Continuous learning pathways** (one learning-path engine, honest course ends, applied problems; section below) in PR #7. Study continuity (PR #6) merged as `713a587`. V3.1 released (PR #2, verified live). **V4 — simple, applied learning** (`FORMULA_INTELLIGENCE_SIMPLE_APPLIED_LEARNING_V4.md`) merged to `main` (`3557155`) and deployed on 2026-10-25 (Deploy to GitHub Pages run 18, green). After V4, on `claude/practical-gates-59o8iv`: placement coverage and a self-hosted icon font (below). 23 lessons content-complete, **0 review-complete** (independent human math review BLOCKED).
 **Branches:** `upgrade/v3.1-phase0` → `upgrade/v3.1-phase1` (merged `3f6ddcb`) → `upgrade/v3.1-phases2-10` (merged `9c21ac2`) → `fix/entry-banner-wording` (merged `a103f32`) → **`upgrade/v4-simple-applied`**, all in worktree `../fi-upgrade-v31`. The primary checkout's uncommitted redesign is untouched (decision D1 still open).
 **Merge/deploy policy:** PRs only; CI runs every gate on the PR; `main` deploys only when the same gates pass again.
+
+## Continuous learning pathways — one next step everywhere, applied problems (2026-10-28)
+
+From the owner's brief *Continuous Learning Pathways, Applied Mastery, and Autonomous Deployment*: courses and lessons must connect, with one reasoned next step, an honest end, exact resume (already built in PR #6, integrated) and realistic applied practice. Audit, decisions, coverage, tests and release are in [`CONTINUOUS_LEARNING_UPGRADE.md`](CONTINUOUS_LEARNING_UPGRADE.md); the route is in [`LEARNING_PATH_MAP.md`](LEARNING_PATH_MAP.md) (generated).
+
+| Change | Status |
+|---|---|
+| **One learning-path engine** (`src/lib/learningPath.js`) for Home, course pages, lessons, Courses and My Progress. Before, five rules disagreed: Home sent learners who had finished a course back to Prealgebra, Calculus III and ML ended at the catalog, and course pages and lessons named different next courses | **Done** |
+| **Course to course in one click**, with the reason, the ideas the next course builds on, and outline courses on the way named. "Finished the available lessons" is never called finishing the course or mastery. The path ends honestly | **Done** |
+| **Next across units** (pager), **Finish course & continue**, a **completion summary** after each checkpoint, "What comes after this course?", a course journey line, and outline courses offering something to do | **Done** |
+| **Your learning path** page: route with "you are here", 5 applied tracks (follow/stop, stored in `fi_diagnostic_v1`, backed up), CSU preparation view with a disclaimer | **Done** |
+| **16 real-world problems** (64 graded steps, every answer recomputed) and **Explain it back** in the first and last lesson of all 8 written courses | **Done**; AI drafts, review BLOCKED like the lessons |
+| Two quick presses of **Next** moved one step; teal text on the primary button in lessons; links in wrapped lists under 24 px at 320 px | **Fixed** |
+| Production checked on the live site | **Not possible from the work environment** (network policy refuses `wai-999.github.io`); see the release section of the work log |
+
+## Study continuity — save my place, resume exactly, an honest course end (2026-10-27)
+
+From the owner's brief `FORMULA_INTELLIGENCE_SAVE_RESUME_LEARNING_MASTER_PROMPT.md`: *"I don't see any endpoint of course studying, the place where I can save my current learning point and I can restart from my saving point."* Everything is in `docs/study-continuity/`: BASELINE, ARCHITECTURE, USER_GUIDE, DATA_SAFETY, TEST_REPORT, RELEASE_REPORT and before/after screenshots.
+
+| Change | Status |
+|---|---|
+| **Save my place** and **Finish study session** in every lesson. **Automatic checkpoints**: a step held for 1.5 s, plus leaving the lesson or hiding the tab. Saving is confirmed only once storage succeeded | **Done** |
+| **Resume where I stopped** on Home reopens the exact lesson and step (with the position within the step) after the lesson loads, and focuses the step's heading. A saved place is never replaced by browsing | **Done** |
+| Course pages resume into **their own** course. They show three separate signals — written lessons checked, how much of the course is written, skills from answers — and **"You finished the available lessons in this course"** with honest wording and a next step | **Done** |
+| My Progress → **Your study journey**: saved place (Resume / Remove saved place) and recent courses. `#learn/session` summary. Steps trail (You are here / Visited / Not reached) | **Done** |
+| New key `fi_resume_v1` in backup/restore/reset; validation, quarantine, failed-write honesty, cross-tab merge | **Done** (`DATA_SAFETY.md`) |
+| **Root cause of the long-standing e2e flake** (usability task c): `scroll-padding-top` on the lesson scroller also applied to its sticky bar, so focusing or clicking a bar button scrolled the lesson up. Keyboard users were affected too. Moved to `scroll-margin-top` on the lesson content; step jumps now also confirm where they landed | **Fixed**: 16/16 under CPU load (was 2–3/16 failing) |
+
+
+Taken from the outstanding list below (item 4) and the V4 test report's "Lighthouse NOT MEASURED"; nothing in V4 §10's deferred expansion was started.
+
+| Change | Evidence | Status |
+|---|---|---|
+| **Placement check covers 41 of 47 competencies** (was 32 of 47): 21 items for `arith.exponents`, `arith.coordinates`, `alg.line-fit`, `calc.rules`, `la.projection`, `la.eigen`, `la.svd-pca`, `stats.inference`, `py.data`, plus one easy item each for Calculus and Python. Bank `dx-2026.10-2`, 85 items; every earlier item unchanged. The six left out (Calculus II–III, the ML course) are past what placement decides (`docs/LEARNING_ASSESSMENT_SPEC.md` §2). | `diagnostic.test.js`: coverage, keys recomputed, every prompt typesets | **Done**; items are AI drafts, review BLOCKED like the lessons |
+| **Retakes ask fresh questions; a domain's questions spread over its competencies.** Before, a retake with the same answers asked exactly the same questions. Item choice within the round's difficulty is now: least seen in earlier attempts → least asked competency this attempt → bank order. | `diagnostic.test.js` (spread, disjoint retakes, all 85 items reachable over retakes; the three fail on the old rule); `e2e/v31.spec.js › a retake opens with a question the last attempt did not ask` (fails without the page wiring) | **Done** |
+| **Lighthouse measured** (13.5.0, 5 pages × mobile/desktop × 3 runs, local production build) | `docs/PERFORMANCE_REPORT.md` → Lighthouse; `docs/audits/evidence/lighthouse/` | **Done** (lab only) |
+| **Icon font self-hosted as a 107-icon subset** (13.5 KB instead of 447 KB plus a render-blocking cdnjs stylesheet). Mobile Lighthouse performance 69–74 → **89–98**, FCP 4.2–4.5 → 1.7–2.3 s, LCP 4.4–5.3 → 2.1–3.1 s, first-visit bytes 587–711 → 120–244 KB; desktop 100. No third-party request on page load. Also found `ti-player-play-off`, an icon that does not exist and had rendered nothing. | `src/styles/__tests__/icons.test.js`; `npm run icons`; Lighthouse before/after | **Done** |
+| **Heading order on Code exercises** (h1 → h3) — Lighthouse accessibility 98 → 100 | Lighthouse re-run on Code exercises and Projects | **Done** |
+
+**Gates on this branch (2026-10-27, Linux, Node 22, Chromium 153):** lint · content validation · unit **357/357** · build · budget **71.6 KB** · `verify:python` **78/78** · e2e **214/215** · axe **0 violations**, 60 pages × 2 themes. Not run here: `e2e:python` and `check:citations` (the sandbox cannot reach the Pyodide CDN or most cited hosts; CI runs `e2e:python`).
+
+Still open from this work:
+- ~~The one e2e failure (usability task c), pre-existing and timing-dependent~~ — root-caused and fixed on 2026-10-27 with the study-continuity change (above).
+- Lesson pages' mobile LCP (3.1 s on Lighthouse's profile) and Code exercises' (2.8 s) are above the 2.5 s target; field Core Web Vitals remain unmeasurable without analytics.
 
 ## V4 — simple, applied learning
 
@@ -17,7 +61,7 @@ Deliverables (V4 §12), all in `docs/v4/`: [AUDIT](v4/AUDIT.md) · [COURSE_RESEA
 | 4 Applied projects | Six projects, 3 real + 3 labelled synthetic datasets, graded steps with no-code paths; learning signals defined and computed per learner | `APPLIED_PROJECTS.md`, `learningSignals.test.js` | **Done** |
 | 5 Polish and expand | — | — | **Not started** by design (V4 §10) |
 
-**Blocked / unverified (stated, not hidden):** independent math review of 23 lessons; user testing of the exemplars and of the five usability tasks with real learners (they pass as scripts); screen-reader testing; Lighthouse and field Core Web Vitals; Pyodide SRI (F-09).
+**Blocked / unverified (stated, not hidden):** independent math review of 23 lessons; user testing of the exemplars and of the five usability tasks with real learners (they pass as scripts); screen-reader testing; field Core Web Vitals (Lighthouse was measured on 2026-10-27, above); Pyodide SRI (F-09).
 
 ## V3.1 (Master Prompt V3.1, released 2026-10-24)
 
@@ -100,9 +144,9 @@ Burmese stripped from all content constructors; the beginner/researcher depth ke
 1. **Independent human math review** of the 20 lessons and the `requires` edges (`CONTENT_QA.md` → sign-off procedure).
 2. **Screen-reader and learner testing** (`ACCESSIBILITY_REPORT.md` → suggested script).
 3. Author Algebra II and Precalculus (outline only), then complete the partial courses — the diagnostic already places learners there.
-4. Diagnostic items for the 14 uncovered competencies; calibration once data exists.
+4. ~~Diagnostic items for the 14 uncovered competencies~~ — done 2026-10-27 for the 9 that bear on placement (41 of 47 covered; the other 6 are Calculus II–III and ML-course skills, past what placement decides). Calibration once data exists.
 5. F-09: self-host Pyodide (+~10–30 MB) or formally accept the CDN risk.
-6. Lighthouse run; PR preview deploys.
+6. ~~Lighthouse run~~ — done 2026-10-27 (lab, local build). PR preview deploys.
 7. Owner decision D1 (the unshipped local redesign).
 
 ## Phase 0 deliverables

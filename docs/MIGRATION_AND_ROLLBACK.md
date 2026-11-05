@@ -16,6 +16,7 @@ New records use new keys, each a **versioned envelope** `{ schemaVersion: 1, ...
 | `fi_diagnostic_v1` | first-run choice, every diagnostic attempt, placement |
 | `fi_pyex_v1` | code-exercise drafts and results |
 | `fi_projects_v1` | project step state |
+| `fi_resume_v1` | saved study places: the learner's saved place ("Save my place"), the last automatic place, the last place per course (since 2026-10-27; `docs/study-continuity/`) |
 | `fi_theme_v1`, `fi_motion_v1`, `fi_nav_v1` | preferences (theme, motion, navigation collapse) |
 | `fi_quarantine_v1` | originals of any record that could not be read (see below) |
 
@@ -45,12 +46,28 @@ Tests: `src/lib/__tests__/versioned.test.js` (10: missing; corrupt JSON quaranti
 - **Learner data.** No key, shape or meaning changes. New evidence records may carry two extra fields, `x` (transfer item) and `h` (hint opened first); older records lack them, and readers treat absence as unknown. A rollback to V3.1 ignores the fields.
 - **Removed features with stored data:** none. The XP/badge panel was removed from Progress, but it computed everything from existing records and stored nothing of its own; the journal's entries are untouched (only its streak message went).
 
+## Study continuity (2026-10-27) — what changed
+
+- **One new key, `fi_resume_v1`** (`{ schemaVersion: 1, pinned, current, recent }`), read through `readVersioned` like every `fi_*` record: unreadable or newer-version data is quarantined, never overwritten in place. It is part of every backup, restore and reset automatically (it is in `STORAGE_KEYS`). A backup made before it existed restores fine: the app then simply has no saved place.
+- **`fi_lessons_v1` is unchanged in shape.** Its `sections` list (steps seen) existed but was never written; lessons now fill it (a step counts once the learner has stayed on it for 1.5 s). Older builds read it as before.
+- **Rollback:** an older build ignores `fi_resume_v1`; rolling forward again finds it intact. Nothing to migrate either way.
+- Details: `docs/study-continuity/DATA_SAFETY.md`.
+
+## Continuous learning pathways (2026-10-28) — what changed
+
+- **No new key.** `fi_diagnostic_v1` gains an optional field, `path: { id, at } | null`: the learning path or applied track the learner follows (`src/data/curriculum/pathways.js`). Records without it load unchanged (the default path). The schema version stays 1, because older builds ignore the field.
+- A malformed `path` is dropped on reading; the record, with its placement attempts, is **not** quarantined for it.
+- Backups already include `fi_diagnostic_v1`, so the choice is exported and restored (`src/store/__tests__/pathChoice.test.js`).
+- **Rollback:** an older build ignores `path` and drops it the next time it writes the diagnostic record. The only loss is that choice: the learner follows the default path until they choose again. Nothing else is affected.
+- Real-world problems record evidence like any lesson item, with `s: 'applied'`; older builds read such entries like any other evidence.
+- Pages added: `#learn/pathway` (Your learning path). No address was removed or renamed.
+
 ## V5 (Ohlone preparation) — what changed
 
 - **One new key, additive:** `fi_study_v1` — plain JSON `{ timebox, target }` (session length on Home, transfer target on the Ohlone prep page). A preference: kept on a progress reset (`PREFERENCE_KEYS`), included in backups, sanitised on read (unknown values fall back to defaults; tested in `src/store/__tests__/studyPlan.test.js`). An older build ignores it.
 - **No existing key changes shape.** Evidence records are unchanged.
 - **Rule changes are computed, not stored:** mastery's two-day rule now counts only answers given without a hint (`src/lib/mastery.js`); a learner's displayed level may drop from *Mastered* to *Proficient* if their only second-day answers were hinted — nothing is deleted, and an unassisted answer on another day restores it.
-- **Placement:** the item bank is `dx-2026.10-2`. Each saved attempt keeps the version it was taken with; old attempts lack the new `evidence` field and are shown with their original wording.
+- **Placement:** the item bank is `dx-2026.11-1` (main's `dx-2026.10-2` plus the C++ & discrete-math area; no item was removed or re-keyed). Each saved attempt keeps the version it was taken with; old attempts lack the new `evidence` field and are shown with their original wording.
 - **Rollback to V4:** safe. V4 ignores `fi_study_v1` and the new optional fields; new lessons' evidence records refer to competency ids V4 does not know: V4's skills list skips them, and its weak-areas list could show such a skill without a title. Nothing is lost; re-upgrading shows them again.
 
 ## Old links

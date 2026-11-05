@@ -111,7 +111,7 @@ export default function PyCodeBlock({ code, entryId, entryName }) {
           </button>
         ) : (
           <span className="pycode-cantrun" title={can.why}>
-            <i className="ti ti-player-play-off" aria-hidden="true" /> Not runnable here
+            <i className="ti ti-code-off" aria-hidden="true" /> Not runnable here
           </span>
         )}
         <button type="button" className="pycode-copy" onClick={openInLab} title="Open an editable copy in the Python Lab">

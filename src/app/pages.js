@@ -38,6 +38,10 @@ export const PAGES = [
   // Reached from Courses, never listed in the sub-navigation.
   { id: 'learn/course', section: 'learn', title: 'Course', param: 'courseId', hidden: true, parent: 'learn/courses' },
   { id: 'learn/lesson', section: 'learn', title: 'Lesson', param: 'lessonId', hidden: true, parent: 'learn/courses' },
+  // Where "Finish study session" lands: what was saved, and where to go next.
+  { id: 'learn/session', section: 'learn', title: 'Study session', hidden: true, parent: 'learn/courses' },
+  // The whole learning path: route, applied tracks, CSU preparation (src/data/curriculum/pathways.js).
+  { id: 'learn/pathway', section: 'learn', title: 'Your learning path', nav: false, parent: 'learn/courses' },
   // V5: Ohlone Data Science preparation, part of Courses (sub-navigation stays at four tabs).
   { id: 'learn/prep', section: 'learn', title: 'Ohlone Data Science prep', nav: false, parent: 'learn/courses' },
   // Behind Learn → Maps (and every lesson's "See connections").

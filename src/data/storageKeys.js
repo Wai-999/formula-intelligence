@@ -27,6 +27,8 @@ export const STORAGE_KEYS = {
   diagnostic: 'fi_diagnostic_v1',
   projects: 'fi_projects_v1',
   pyExercises: 'fi_pyex_v1',
+  // Saved study places ("Save my place", automatic checkpoints): src/store/useStudyResumeStore.js.
+  resume: 'fi_resume_v1',
   // V5 study-plan preferences (time box, transfer target): plain JSON.
   studyPlan: 'fi_study_v1',
 };

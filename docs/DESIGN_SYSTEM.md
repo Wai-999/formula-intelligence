@@ -76,4 +76,6 @@ Optional depth is a disclosure, never a separate place: lessons put the readines
 
 ## Icons
 
-Tabler icon font from cdnjs (cached for offline use), always `aria-hidden` beside a text label; icon-only buttons carry `aria-label`.
+Tabler Icons 3.44.0 (MIT), **self-hosted as a subset** of the icons the app uses: `src/styles/tabler-icons.css` and `src/styles/fonts/tabler-icons-subset.woff2` (13.5 KB, 107 icons), bundled with the app's own CSS and precached for offline use. Until 2026-10-27 the full font (447 KB) came from cdnjs behind a render-blocking third-party stylesheet. Always `aria-hidden` beside a text label; icon-only buttons carry `aria-label`.
+
+To use a new icon, write its class (`ti ti-<name>`, from tabler.io/icons) and run `npm run icons` (needs `pip install fonttools brotli`): it scans `src/` and `index.html`, fails on a name Tabler does not have, and rewrites both files. `src/styles/__tests__/icons.test.js` fails while any used icon is missing from the subset, because a missing glyph renders nothing.
