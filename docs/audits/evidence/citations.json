@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-25T00:11:04.255Z",
+  "checkedAt": "2026-10-25T11:47:10.015Z",
   "results": [
     {
       "url": "https://openstax.org/books/prealgebra-2e/pages/5-6-ratios-and-rate",
@@ -111,6 +111,89 @@
       ]
     },
     {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/3-4-composition-of-functions",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/3-4-composition-of-functions",
+      "status": 200,
+      "title": "3.4 Composition of Functions - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a2-composition: 3.4 Composition of Functions",
+        "formula f.composition"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/3-7-inverse-functions",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/3-7-inverse-functions",
+      "status": 200,
+      "title": "3.7 Inverse Functions - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a2-composition: 3.7 Inverse Functions",
+        "formula f.inverse-composite"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/6-3-logarithmic-functions",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/6-3-logarithmic-functions",
+      "status": 200,
+      "title": "6.3 Logarithmic Functions - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a2-exp-log: 6.3 Logarithmic Functions"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/6-6-exponential-and-logarithmic-equations",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/6-6-exponential-and-logarithmic-equations",
+      "status": 200,
+      "title": "6.6 Exponential and Logarithmic Equations - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a2-exp-log: 6.6 Exponential and Logarithmic Equations"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/precalculus-2e/pages/7-1-angles",
+      "finalUrl": "https://openstax.org/books/precalculus-2e/pages/7-1-angles",
+      "status": 404,
+      "title": "OpenStax",
+      "verdict": "BROKEN",
+      "citedBy": [
+        "lesson pc-unit-circle: 7.1 Angles"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/precalculus-2e/pages/7-3-unit-circle",
+      "finalUrl": "https://openstax.org/books/precalculus-2e/pages/7-3-unit-circle",
+      "status": 404,
+      "title": "OpenStax",
+      "verdict": "BROKEN",
+      "citedBy": [
+        "lesson pc-unit-circle: 7.3 Unit Circle"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/calculus-volume-1/pages/2-2-the-limit-of-a-function",
+      "finalUrl": "https://openstax.org/books/calculus-volume-1/pages/2-2-the-limit-of-a-function",
+      "status": 200,
+      "title": "2.2 The Limit of a Function - Calculus Volume 1 | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson pc-limits: 2.2 The Limit of a Function",
+        "formula f.limit-one-sided"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/calculus-volume-1/pages/2-4-continuity",
+      "finalUrl": "https://openstax.org/books/calculus-volume-1/pages/2-4-continuity",
+      "status": 200,
+      "title": "2.4 Continuity - Calculus Volume 1 | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson pc-limits: 2.4 Continuity"
+      ]
+    },
+    {
       "url": "https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product",
       "finalUrl": "https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product",
       "status": 200,
@@ -156,9 +239,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=ko",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=es-419",
       "status": 200,
-      "title": "숫자 데이터: 정규화 &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Datos numéricos: Normalización &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson la-matrix-scores: Numerical data: Normalization"
@@ -276,6 +359,17 @@
       "citedBy": [
         "lesson c1-marginal-cost: 3.4 Derivatives as Rates of Change — “Changes in Cost and Revenue”",
         "formula f.marginal-cost"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/calculus-volume-1/pages/3-6-the-chain-rule",
+      "finalUrl": "https://openstax.org/books/calculus-volume-1/pages/3-6-the-chain-rule",
+      "status": 200,
+      "title": "3.6 The Chain Rule - Calculus Volume 1 | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson c1-chain-rule: 3.6 The Chain Rule",
+        "formula f.chain-rule"
       ]
     },
     {
@@ -439,9 +533,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=pt-br",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
       "status": 200,
-      "title": "Classificação: acurácia, recall, precisão e métricas relacionadas &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Classification: Accuracy, recall, precision, and related metrics &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: Accuracy, recall, precision, and related metrics"
@@ -518,6 +612,117 @@
       "verdict": "OK",
       "citedBy": [
         "lesson ml-calibration-fairness: Fair prediction with disparate impact"
+      ]
+    },
+    {
+      "url": "https://docs.python.org/3/tutorial/introduction.html",
+      "finalUrl": "https://docs.python.org/3/tutorial/introduction.html",
+      "status": 200,
+      "title": "3. An Informal Introduction to Python &#8212; Python 3.15.1 documentation",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson py-first-steps: An Informal Introduction to Python"
+      ]
+    },
+    {
+      "url": "https://docs.python.org/3/tutorial/controlflow.html",
+      "finalUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+      "status": 200,
+      "title": "4. More Control Flow Tools &#8212; Python 3.15.1 documentation",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson py-first-steps: More Control Flow Tools"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/language/for",
+      "finalUrl": "https://en.cppreference.com/cpp/language/for",
+      "status": 200,
+      "title": "for loop - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson cpp-loops-trace: for loop"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/language/range-for",
+      "finalUrl": "https://en.cppreference.com/cpp/language/range-for",
+      "status": 200,
+      "title": "Range-based for loop (since C++11) - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson cpp-loops-trace: Range-based for loop"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/language/function",
+      "finalUrl": "https://en.cppreference.com/cpp/language/function",
+      "status": 200,
+      "title": "Function declaration - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson cpp-functions-vectors: Function declaration"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/language/reference",
+      "finalUrl": "https://en.cppreference.com/cpp/language/reference",
+      "status": 200,
+      "title": "Reference declaration - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson cpp-functions-vectors: Reference declaration"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/language/classes",
+      "finalUrl": "https://en.cppreference.com/cpp/language/classes",
+      "status": 200,
+      "title": "Classes - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson cpp-classes-invariants: Classes"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/language/raii",
+      "finalUrl": "https://en.cppreference.com/cpp/language/raii",
+      "status": 200,
+      "title": "RAII - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson cpp-classes-invariants: RAII"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/container/stack",
+      "finalUrl": "https://en.cppreference.com/cpp/container/stack",
+      "status": 200,
+      "title": "std::stack - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ds-stacks-queues: std::stack"
+      ]
+    },
+    {
+      "url": "https://en.cppreference.com/w/cpp/container/queue",
+      "finalUrl": "https://en.cppreference.com/cpp/container/queue",
+      "status": 200,
+      "title": "std::queue - cppreference.com",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ds-stacks-queues: std::queue"
+      ]
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/",
+      "finalUrl": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/",
+      "status": 200,
+      "title": "Mathematics for Computer Science | Electrical Engineering and Computer Science | MIT OpenCourseWare",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson dm-logic: Mathematics for Computer Science, chapter 3: Logical Formulas",
+        "lesson dm-induction: Mathematics for Computer Science, chapter 5: Induction"
       ]
     },
     {

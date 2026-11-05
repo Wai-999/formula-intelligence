@@ -45,6 +45,14 @@ Tests: `src/lib/__tests__/versioned.test.js` (10: missing; corrupt JSON quaranti
 - **Learner data.** No key, shape or meaning changes. New evidence records may carry two extra fields, `x` (transfer item) and `h` (hint opened first); older records lack them, and readers treat absence as unknown. A rollback to V3.1 ignores the fields.
 - **Removed features with stored data:** none. The XP/badge panel was removed from Progress, but it computed everything from existing records and stored nothing of its own; the journal's entries are untouched (only its streak message went).
 
+## V5 (Ohlone preparation) — what changed
+
+- **One new key, additive:** `fi_study_v1` — plain JSON `{ timebox, target }` (session length on Home, transfer target on the Ohlone prep page). A preference: kept on a progress reset (`PREFERENCE_KEYS`), included in backups, sanitised on read (unknown values fall back to defaults; tested in `src/store/__tests__/studyPlan.test.js`). An older build ignores it.
+- **No existing key changes shape.** Evidence records are unchanged.
+- **Rule changes are computed, not stored:** mastery's two-day rule now counts only answers given without a hint (`src/lib/mastery.js`); a learner's displayed level may drop from *Mastered* to *Proficient* if their only second-day answers were hinted — nothing is deleted, and an unassisted answer on another day restores it.
+- **Placement:** the item bank is `dx-2026.10-2`. Each saved attempt keeps the version it was taken with; old attempts lack the new `evidence` field and are shown with their original wording.
+- **Rollback to V4:** safe. V4 ignores `fi_study_v1` and the new optional fields; new lessons' evidence records refer to competency ids V4 does not know: V4's skills list skips them, and its weak-areas list could show such a skill without a title. Nothing is lost; re-upgrading shows them again.
+
 ## Old links
 
 Every pre-upgrade URL still lands somewhere sensible (`src/lib/hashRoute.js`): `#stats/<tab>` and `#ml/<tab>` map to the current `#section/page` ids through the `LEGACY` table, and V3.1 ids through `RENAMED` (both in `src/app/pages.js`, unit-tested in `src/app/__tests__/pages.test.js`); the six retired ML tabs land on their new home with a one-line notice; unknown ids explain themselves. Tested by `e2e/legacy-routes.spec.js` (every legacy hash, plus Back-button behaviour) and `routes.test.js`.

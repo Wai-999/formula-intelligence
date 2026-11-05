@@ -85,6 +85,25 @@ Worker client with `runPython`, `gradePython`, `stopPython`; timeout or Stop ter
 
 Generated at build (`vite.config.js` → `serviceWorker()` plugin) with this build's exact file list (181 files, 2.64 MB). Navigations network-first with the cached shell as fallback; built assets cache-first; the icon font stale-while-revalidate; Pyodide and external links network-only. Registered only in production builds. No `skipWaiting`: an open tab keeps the build it started with. `public/manifest.webmanifest` makes it installable.
 
+## Ohlone and transfer data — `src/data/college/` (V5)
+
+Kept apart from the curriculum so study and official facts can never be confused:
+
+| Module | Holds | Relation |
+|---|---|---|
+| `sources.js` | every official document read: institution, title, URL, academic year, date read; `STATUSES`; the permanent `DISCLAIMER` | — |
+| `ohloneCourses.js` | 15 Ohlone courses from the 2026–2027 catalog (units, prerequisites, advisories, terms, C-ID, paraphrased topics) | — |
+| `requirements.js` | Ohlone Data Science A.S. requirements; each target's published requirements | `officialRequirement` |
+| `articulation.js` | ASSIST rows (university course ← Ohlone course(s), or none) | `officialArticulatesTo` |
+| `studyAlignment.js` | this site's units mapped onto each Ohlone course's catalog topics; coverage counts | `selfStudySupports` |
+| `validate.js` | the rules (official URLs, current vs earlier years, no credit claims, exact topic lists) | — |
+
+Every record carries `institution, major, requirementType, sendingCourse, receivingCourse, academicYear, status, sourceUrl, sourceTitle, accessedAt, notes`. `npm run validate:college` runs in CI; `npm run docs:college` regenerates the tables in `docs/major-prep/`. The page is `src/features/college/MajorPrepPage.jsx` (`#learn/prep`, a child of Courses); the chosen target lives in `useStudyPlanStore` (`fi_study_v1`).
+
+## C++ (V5) — no compiler in the browser
+
+Lessons may carry a `cpp` block (code, real output, file name), shown by `src/features/learn/CppPanel.jsx` with a client-side `.cpp` download and local compile instructions; nothing is uploaded. Exercises (`src/data/cpp/exercises.js`) are complete files with built-in tests. The trace lab replays programs from `src/data/cpp/traces.js` (C++ or Python). `scripts/verify-cpp.mjs` compiles and runs all of it in CI (C++17, `-Wall -Wextra -pedantic -Werror`, address and UB sanitizers on Linux); `scripts/verify-python.mjs` checks the Python traces. See `docs/major-prep/QUALITY_AND_SECURITY.md` for the decision against an in-browser compiler.
+
 ## Deployment
 
 `.github/workflows/ci.yml` (every PR) and `deploy.yml` (push to `main`) run the same gates — lint, content validation, unit tests, build, bundle budget, Python output verification, axe in both themes, e2e, Python e2e — and only `deploy.yml` publishes `dist/` to GitHub Pages.

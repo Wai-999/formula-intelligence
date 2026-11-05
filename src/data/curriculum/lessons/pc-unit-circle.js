@@ -170,7 +170,7 @@ for h in [0.1, 0.01, 0.001]:
   },
 
   reading: [
-    { title: '7.1 Angles', source: 'OpenStax, Precalculus 2e', url: 'https://openstax.org/books/precalculus-2e/pages/7-1-angles', note: 'Degrees, radians and arc length.' },
-    { title: '7.3 Unit Circle', source: 'OpenStax, Precalculus 2e', url: 'https://openstax.org/books/precalculus-2e/pages/7-3-unit-circle', note: 'Sine and cosine as coordinates on the unit circle.' },
+    { title: '5.1 Angles', source: 'OpenStax, Precalculus 2e', url: 'https://openstax.org/books/precalculus-2e/pages/5-1-angles', note: 'Degrees, radians and arc length.' },
+    { title: '5.2 Unit Circle: Sine and Cosine Functions', source: 'OpenStax, Precalculus 2e', url: 'https://openstax.org/books/precalculus-2e/pages/5-2-unit-circle-sine-and-cosine-functions', note: 'Sine and cosine as coordinates on the unit circle.' },
   ],
 };

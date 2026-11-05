@@ -17,18 +17,19 @@ How Formula Intelligence decides what a learner knows, where they should start, 
 | Not started | No evidence for the competency |
 | Learning | Any evidence that does not meet *Proficient* |
 | Proficient | ≥ 3 **different** items correct · weighted accuracy ≥ 70 % · at least one correct at difficulty ≥ 2 |
-| Mastered | Proficient · a correct **transfer** item · correct answers on **two different days** · the latest answer correct · weighted accuracy ≥ 80 % · newest evidence ≤ 60 days old |
+| Mastered | Proficient · a correct **transfer** item · correct answers **without a hint** on **two different days** (V5) · the latest answer correct · weighted accuracy ≥ 80 % · newest evidence ≤ 60 days old |
 
 - Only the latest attempt per item counts (re-answering replaces).
 - Weights: difficulty 1/2/3 → 1, 1.5, 2; transfer +0.5; times a recency factor `0.5^(age_days / 60)` (60-day half-life). Old evidence fades; it is never deleted.
 - Each status carries `reasons` in plain language ("2 of the 3 different correct answers needed…"), shown on Progress.
+- **V5 (§13.4):** each status also carries one plain-English `nextStep` ("You have solved the standard problems. Try an unfamiliar (transfer) problem without a hint.") and a `breakdown` of its evidence, counted over every recorded first attempt: *attempted*, *right after a hint*, *right without a hint*, *unfamiliar (transfer) problems without a hint*, *right again on a later day* (unassisted, ≥ 24 h after the first right answer), and *repeat exposures* (a question already answered before). Hints are shown, never hidden: they support learning but are not unassisted evidence.
 - Confidence: low (< 3 items), medium (3–5), high (≥ 6).
 
-Tests: `src/lib/__tests__/learningEngine.test.js` — one lucky guess is never mastery; repeats of one item don't count twice; transfer and two days are required; staleness demotes; hints downgrade.
+Tests: `src/lib/__tests__/learningEngine.test.js` — one lucky guess is never mastery; repeats of one item don't count twice; transfer and two days are required; staleness demotes; hints downgrade; hinted answers never satisfy the two-day rule; the breakdown and the next step for every level (V5).
 
 ## 2. Diagnostic procedure — `src/lib/diagnostic.js`, `src/features/diagnostic/`
 
-Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.10-1`: 64 items over 8 domains, ≥ 2 per covered competency (32 of 46 competencies; the uncovered ones lie beyond the placement path — listed in `docs/CURRICULUM_MAP.md`).
+Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.10-2` (V5): 73 items over 9 domains — V5 added two chain-rule items and a *C++ programming & discrete math* area — ≥ 2 per covered competency (36 of 58 competencies; the uncovered ones lie beyond the placement path — listed in `docs/CURRICULUM_MAP.md`).
 
 Three rounds, so screening is broad before it is deep:
 
@@ -46,6 +47,9 @@ At most three answered items per domain. Any item can be answered "I haven't stu
 - The result is labelled **provisional** and offers three one-click choices (V4 §6): **Start earlier** (one step back on the path), **Start here**, **Skip ahead** (one step on); off the path, "earlier" is the course's first prerequisite (`placementChoices` in `src/lib/diagnostic.js`). The learner can also choose any course (**manual override**, `source: 'manual'`) or **retake**. Every attempt is kept in `fi_diagnostic_v1`; a retake adds, never overwrites.
 
 Tests: `src/lib/__tests__/diagnostic.test.js` (adaptive selection, caps, skip/stop, posterior widths, recommendation reasons, start earlier/here/ahead, override, retake history) and `e2e/v31.spec.js › diagnostic`.
+
+- **Insufficient evidence (V5, §13.4).** When no question on the mathematics path was answered, or an area that decided the result rests on fewer than **2** answers (`MIN_EVIDENCE`), the result says *Not enough evidence yet — a default, not a finding*, gives the reason, and offers **Answer more questions** first. A course is still named so the learner has somewhere to start. Areas with one answer show “too few answers to judge” instead of a confidence. Tests: `diagnostic.test.js`, `e2e/v5-journeys.spec.js`.
+- **Not an official placement.** The page says so; Ohlone's own placement process decides course eligibility.
 
 ## 4. Spaced review — `src/lib/reviewSchedule.js`
 
