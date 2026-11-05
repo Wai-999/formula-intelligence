@@ -6,6 +6,7 @@ import { COURSES, courseById } from '../../data/curriculum/catalog.js';
 import { nextItem, assessDomain, recommend, placementChoices, LEVEL_TEXT } from '../../lib/diagnostic.js';
 import { checkAnswer } from '../../lib/answers.js';
 import { toPlainText } from '../../lib/mathFormat.js';
+import { choiceOrder } from '../../lib/choiceOrder.js';
 import { useDiagnosticStore } from '../../store/useDiagnosticStore.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
 import { hashFor } from '../../app/pages.js';
@@ -32,10 +33,11 @@ function Question({ item, onAnswer, onSkip, onSkipDomain, onStop, index }) {
       {item.answer.type === 'choice' && (
         <fieldset className="item-choices">
           <legend className="visually-hidden">Choose one answer</legend>
-          {item.answer.choices.map((c, i) => (
+          {/* A fixed per-question order (src/lib/choiceOrder.js): the bank lists every right answer first. */}
+          {choiceOrder(item.answer.choices.length, item.id).map((i) => (
             <label key={i} className={`item-choice${String(i) === value ? ' on' : ''}`}>
-              <input type="radio" name="dx" aria-label={toPlainText(c)} checked={String(i) === value} onChange={() => setValue(String(i))} />
-              <MathText text={c} />
+              <input type="radio" name="dx" data-choice={i} aria-label={toPlainText(item.answer.choices[i])} checked={String(i) === value} onChange={() => setValue(String(i))} />
+              <MathText text={item.answer.choices[i]} />
             </label>
           ))}
         </fieldset>
@@ -73,12 +75,20 @@ function Results({ attempt, onRetake }) {
   const [manual, setManual] = useState(placement?.course ?? attempt.result.course);
   const rec = attempt.result;
   const choice = placementChoices(rec.course);
+  // Attempts saved before V5 have no `evidence` field; they keep their old wording.
+  const thin = rec.evidence === 'insufficient';
   return (
     <div className="studio-section">
       <div className="studio-callout">
-        <p className="studio-eyebrow">Suggested starting point — provisional</p>
+        <p className="studio-eyebrow">{thin ? 'Not enough evidence yet — a default, not a finding' : 'Suggested starting point — provisional'}</p>
         <h2 className="studio-h2">{courseById[rec.course]?.title}</h2>
         <ul className="lesson-ul">{rec.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
+        {thin && (
+          <p className="dx-thin">
+            <button type="button" className="studio-btn" onClick={onRetake}>Answer more questions</button>
+            <span className="studio-muted">Two or more answers per area are needed before the check suggests anything with confidence.</span>
+          </p>
+        )}
         {/* V4 §6: the suggestion is reversible in one click, in either direction. */}
         <div className="studio-row dx-choices" role="group" aria-label="Where to start" style={{ marginTop: 10 }}>
           {choice.earlier && (
@@ -95,7 +105,7 @@ function Results({ attempt, onRetake }) {
             </a>
           )}
         </div>
-        <p className="studio-muted">Not sure? Start earlier: revisiting familiar ground costs a little time; a gap costs more later. <button type="button" className="link-btn" onClick={onRetake}>Retake the placement check</button></p>
+        <p className="studio-muted">Not sure? Start earlier: revisiting familiar ground costs a little time; a gap costs more later.{!thin && <> <button type="button" className="link-btn" onClick={onRetake}>Retake the placement check</button></>}</p>
       </div>
 
       {rec.alsoConsider.length > 0 && (
@@ -115,7 +125,7 @@ function Results({ attempt, onRetake }) {
             <p className="dx-domain-level">{LEVEL_TEXT[e.level]}</p>
             {e.level !== 'not-assessed' ? (
               <>
-                <p className="studio-muted">{e.correct} of {e.answered} correct · {e.confidence} confidence</p>
+                <p className="studio-muted">{e.correct} of {e.answered} correct · {e.evidence === 'insufficient' ? 'too few answers to judge' : `${e.confidence} confidence`}</p>
                 {/* Ability estimate ± 1 SD on a −3…3 scale: a wide bar means the screen could not tell. */}
                 <div className="dx-range" aria-hidden="true">
                   <span className="dx-range-band" style={{ left: `${Math.max(0, ((e.mean - e.sd + 3) / 6) * 100)}%`, width: `${Math.min(100, ((2 * e.sd) / 6) * 100)}%` }} />
@@ -233,7 +243,7 @@ export default function DiagnosticPage() {
         {!shown && (
           <div className="studio-section studio-read">
             <p className="studio-lede">
-              About 15–20 short questions across eight areas — arithmetic to Python — to suggest where to start. It adapts:
+              About 18–25 short questions across nine areas — arithmetic to Python and C++ — to suggest where to start. It adapts:
               a correct answer leads to a harder question, a miss to an easier one.
             </p>
             <ul className="lesson-ul">

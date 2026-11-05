@@ -45,3 +45,9 @@
 .studio-page a:not(.studio-btn):not(.studio-card-link) {
   color: var(--accent);
 }
+
+/* V5: the editorial project rubric. */
+.proj-rubric td:nth-child(2) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

@@ -24,7 +24,7 @@ function simulate(policy, seenBefore = []) {
 }
 
 describe('item bank', () => {
-  it('is versioned, covers all eight domains, and has at least two items per competency', () => {
+  it('is versioned, covers every domain, and has at least two items per competency', () => {
     expect(BANK_VERSION).toMatch(/^dx-/);
     for (const d of DOMAINS) expect(DX_ITEMS.some((i) => i.domain === d.id), d.id).toBe(true);
     const counts = {};
@@ -56,10 +56,15 @@ describe('item bank', () => {
     }
   });
 
-  it('tests every competency except the six past what placement decides', () => {
+  it('tests every competency except those past what placement decides', () => {
     // Calculus II–III and the ML course: a hard calculus or statistics item
     // stands for "ready to leave Calculus I / Probability & Statistics".
-    const beyond = ['calc.series', 'calc.gradient', 'calc.optimization', 'ml.validation', 'ml.classification-metrics', 'ml.calibration-fairness'];
+    // C++ and discrete structures: the screen only decides whether to suggest
+    // C++ Fundamentals, so the later courses' skills are not asked.
+    const beyond = [
+      'calc.series', 'calc.gradient', 'calc.optimization', 'ml.validation', 'ml.classification-metrics', 'ml.calibration-fairness',
+      'cpp.oop', 'ds.linear', 'ds.trees-hash', 'dm.proof', 'dm.counting', 'dm.graphs',
+    ];
     const tested = new Set(DX_ITEMS.map((i) => i.competency));
     for (const c of COMPETENCIES) expect(tested.has(c.id), c.id).toBe(!beyond.includes(c.id));
   });
@@ -95,7 +100,7 @@ describe('adaptive procedure', () => {
     for (const d of DOMAINS) expect(consistent.filter((x) => x.domain === d.id).length, d.id).toBeLessThanOrEqual(2);
     const mixed = simulate((it) => it.difficulty <= 2).responses; // right at d1–2, wrong at d3
     for (const d of DOMAINS) expect(mixed.filter((x) => x.domain === d.id).length, d.id).toBeLessThanOrEqual(3);
-    expect(mixed.length).toBeLessThanOrEqual(24);
+    expect(mixed.length).toBeLessThanOrEqual(DOMAINS.length * 3);
   });
 
   it('spreads a domain’s questions over its competencies (difficulty decides first)', () => {
@@ -188,6 +193,26 @@ describe('recommendation', () => {
     expect(r.alsoConsider.map((a) => a.course)).toEqual(expect.arrayContaining(['linear-algebra', 'prob-stats', 'python-ds']));
     const weak = recommend(est({}));
     expect(weak.alsoConsider.map((a) => a.course)).not.toContain('linear-algebra');
+  });
+
+  it('says “not enough evidence” when a deciding area rests on one answer, or nothing was answered (V5.1 §13.4)', () => {
+    const r = recommend(est({ arithmetic: 'strong', algebra: 'developing' }).map((e) => (e.domain === 'algebra' ? { ...e, answered: 1, correct: 0 } : e)));
+    expect(r.course).toBe('algebra-1');
+    expect(r.evidence).toBe('insufficient');
+    expect(r.reasons.join(' ')).toMatch(/not enough evidence/);
+    // A thin area beyond the deciding one does not change the verdict.
+    expect(recommend(est({ arithmetic: 'strong', algebra: 'developing' }).map((e) => (e.domain === 'calculus' ? { ...e, answered: 1 } : e))).evidence).toBe('sufficient');
+    const none = recommend(DOMAINS.map((d) => ({ domain: d.id, level: 'not-assessed', correct: 0, answered: 0, confidence: 'none' })));
+    expect(none.course).toBe('prealgebra');
+    expect(none.evidence).toBe('insufficient');
+    expect(none.reasons.join(' ')).toMatch(/default, not a finding/);
+  });
+
+  it('labels a single answered question as insufficient evidence for its area', () => {
+    const one = [{ item: 'dx.a3', domain: 'arithmetic', difficulty: 2, ok: true }];
+    expect(assessDomain('arithmetic', one, false).evidence).toBe('insufficient');
+    const two = [...one, { item: 'dx.a6', domain: 'arithmetic', difficulty: 3, ok: true }];
+    expect(assessDomain('arithmetic', two, false).evidence).toBe('sufficient');
   });
 });
 

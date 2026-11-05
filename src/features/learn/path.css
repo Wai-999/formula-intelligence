@@ -41,3 +41,33 @@
 .path-why[open] > summary {
   margin-bottom: 6px;
 }
+
+/* The next action (NextActionCard.jsx): a gap or a bridge is named before
+   the button, in the text colour, with the warning hue only on its edge. */
+.next-headline {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--warning);
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.next-action[data-kind="bridge"] .next-headline,
+.next-action[data-kind="path-finished"] .next-headline {
+  border-left-color: var(--accent);
+}
+
+.next-reason {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 68ch;
+}
+
+.next-minutes {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  align-self: center;
+}

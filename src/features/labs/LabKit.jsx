@@ -15,11 +15,11 @@ import './labs.css';
  *    the picture — the lab is fully usable with the figure hidden
  *  - constraints/annotations: what the lab limits and what to notice
  */
-export function LabFrame({ title, intro, presets, activePreset, onPreset, onReset, controls, figure, readout, table, constraints, annotations }) {
+export function LabFrame({ title, intro, presets, activePreset, onPreset, onReset, controls, figure, readout, table, constraints, annotations, className = '' }) {
   const [showTable, setShowTable] = useState(false);
   const id = useId();
   return (
-    <section className="lab" aria-labelledby={`${id}-t`}>
+    <section className={`lab ${className}`.trim()} aria-labelledby={`${id}-t`}>
       <div className="lab-head">
         <h3 className="lab-title" id={`${id}-t`}><i className="ti ti-flask" aria-hidden="true" /> {title}</h3>
         <div className="lab-head-actions">
@@ -123,7 +123,7 @@ export function Segmented({ label, options, value, onChange }) {
  * Axes, grid and tick labels for a 2D plot. Children receive the scales.
  * The SVG scales with its container (viewBox), so labs never overflow.
  */
-export function Plot({ x: [x0, x1], y: [y0, y1], width = 420, height = 300, xLabel = 'x', yLabel = 'y', children, square = false, pad = 34 }) {
+export function Plot({ x: [x0, x1], y: [y0, y1], width = 420, height = 300, xLabel = 'x', yLabel = 'y', children, square = false, pad = 34, digits = 2 }) {
   let w = width;
   let h = height;
   if (square) {
@@ -145,8 +145,8 @@ export function Plot({ x: [x0, x1], y: [y0, y1], width = 420, height = 300, xLab
         {x0 <= 0 && x1 >= 0 && <line x1={sx(0)} x2={sx(0)} y1={sy(y0)} y2={sy(y1)} />}
       </g>
       <g className="lab-ticks">
-        {xt.map((t) => <text key={`tx${t}`} x={sx(t)} y={h - pad + 15} textAnchor="middle">{fmt(t, 2)}</text>)}
-        {yt.map((t) => <text key={`ty${t}`} x={pad - 6} y={sy(t) + 4} textAnchor="end">{fmt(t, 2)}</text>)}
+        {xt.map((t) => <text key={`tx${t}`} x={sx(t)} y={h - pad + 15} textAnchor="middle">{fmt(t, digits)}</text>)}
+        {yt.map((t) => <text key={`ty${t}`} x={pad - 6} y={sy(t) + 4} textAnchor="end">{fmt(t, digits)}</text>)}
       </g>
       <text className="lab-axis-label" x={w - pad / 2} y={h - pad - 6} textAnchor="end">{xLabel}</text>
       <text className="lab-axis-label" x={pad + 6} y={pad / 2 + 10}>{yLabel}</text>

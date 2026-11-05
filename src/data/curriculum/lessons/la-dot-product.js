@@ -7,7 +7,17 @@ export default {
       'A **vector** is an ordered list of numbers — here, a point you can also draw as an arrow from the origin. Vectors add component by component and scale by multiplying every component.',
       'The **dot product** multiplies matching components and adds: $(4, 1)\\cdot(3, 2) = 12 + 2 = 14$. With the stranger it is $8 - 3 = 5$; with $(-1, 4)$ it would be $0$. Large and positive means “pointing the same way”, zero means “at right angles”, negative means “opposed”. Recommendation systems and search engines rank by exactly this kind of number.',
     ],
+    simpler: [
+      'Line up the two lists of numbers, multiply each pair, and add up the products. When big numbers meet big numbers of the same sign the total is large: the two lists agree.',
+      'A total of zero means they neither agree nor disagree — drawn as arrows, they are at right angles.',
+    ],
   },
+
+  outcomes: [
+    'Compute a dot product and a vector’s length in two or more dimensions.',
+    'Use the dot product to tell whether two vectors point the same way, at right angles, or opposite ways.',
+    'Compare items by cosine similarity, and explain why the raw dot product can mislead.',
+  ],
 
   glossary: [
     { term: '$\\mathbf u = (u_1, u_2)$', meaning: 'A vector with components $u_1, u_2$. Everything here works the same with $n$ components.' },
@@ -53,6 +63,10 @@ export default {
       steps: ['$\\mathbf u\\cdot\\mathbf v = 4\\cdot 3 + 1\\cdot 2 = 14$.', '$\\lVert\\mathbf u\\rVert = \\sqrt{17}$, $\\lVert\\mathbf v\\rVert = \\sqrt{13}$.', '$\\cos\\theta = 14/\\sqrt{221} \\approx 0.9417$, so $\\theta \\approx 19.65°$.'],
       answer: 'A small angle: very similar tastes. $\\cos\\theta \\approx 0.9417$ is their **cosine similarity**.',
       check: { value: 0.9417, tolerance: 1e-4, compute: () => 14 / Math.sqrt(17 * 13) },
+      tempting: {
+        wrong: 'Tempting: multiply the matching components and stop, $(4 \\cdot 3, 1 \\cdot 2) = (12, 2)$.',
+        why: 'That is a vector, not a measure of agreement. The dot product adds the products into one number, $14$, which can be compared with other pairs.',
+      },
     },
     {
       title: 'A right angle, and three dimensions',
@@ -82,12 +96,29 @@ export default {
     },
   },
 
+  faded: {
+    title: 'Which song to recommend?',
+    problem: 'A listener’s taste is $\\mathbf u = (3, 1, 0)$ for (rock, jazz, classical). Song A is $(2, 0, 1)$ and song B is $(1, 3, 0)$. Which song is more similar to the listener by cosine similarity?',
+    steps: [
+      { say: 'Dot products first: $\\mathbf u \\cdot A = 3 \\cdot 2 + 1 \\cdot 0 + 0 \\cdot 1 = 6$.' },
+      {
+        item: item({ id: 'la-dot.f1', competency: 'la.dot-product', difficulty: 1, level: 'scaffolded', prompt: 'What is $\\mathbf u \\cdot B$?', answer: num(6), compute: () => dot([3, 1, 0], [1, 3, 0]), hints: ['$3 \\cdot 1 + 1 \\cdot 3 + 0 \\cdot 0$'], solution: '$3 + 3 + 0 = 6$: the same as song A, so the dot products alone cannot decide.' }),
+      },
+      { say: 'Lengths: $\\lVert\\mathbf u\\rVert = \\sqrt{10}$ and $\\lVert A\\rVert = \\sqrt 5$, so $\\cos\\theta_A = 6/\\sqrt{50} \\approx 0.849$.' },
+      {
+        item: item({ id: 'la-dot.f2', competency: 'la.dot-product', difficulty: 2, level: 'scaffolded', prompt: '$\\lVert B\\rVert = \\sqrt{10}$. What is the cosine similarity of $\\mathbf u$ and $B$, to three decimal places?', answer: num(0.6, 0.002), compute: () => 6 / Math.sqrt(10 * 10), hints: ['$6 / (\\sqrt{10} \\cdot \\sqrt{10})$'], solution: '$6/10 = 0.600$.' }),
+      },
+    ],
+    answer: 'Song A, with cosine similarity $0.849$ against $0.600$. The dot products tie at 6, but song B is “longer” — more weight across genres — and dividing by the lengths removes that.',
+  },
+
   practice: [
     item({ id: 'la-dot.p1', competency: 'la.dot-product', difficulty: 1, level: 'scaffolded', prompt: 'Compute $(2, 5)\\cdot(3, -1)$: multiply matching components, then add.', answer: num(1), compute: () => 2 * 3 + 5 * -1, hints: ['$2\\cdot 3 = 6$ and $5\\cdot(-1) = -5$.'], solution: '$6 - 5 = 1$.' }),
     item({ id: 'la-dot.p2', competency: 'la.vector-ops', difficulty: 1, level: 'scaffolded', prompt: 'How long is $(5, 12)$?', answer: num(13), compute: () => Math.hypot(5, 12), hints: ['$\\sqrt{25 + 144}$.'], solution: '$\\sqrt{169} = 13$.' }),
     item({ id: 'la-dot.p3', competency: 'la.dot-product', difficulty: 2, level: 'independent', prompt: 'Compute $(1, -2, 4)\\cdot(3, 0, -1)$.', answer: num(-1), compute: () => 3 + 0 - 4, solution: '$3 + 0 - 4 = -1$: slightly more than a right angle apart.' }),
     item({ id: 'la-dot.p4', competency: 'la.dot-product', difficulty: 2, level: 'independent', prompt: 'For which $k$ is $(2, k)$ perpendicular to $(3, 6)$?', answer: num(-1), compute: () => -6 / 6, hints: ['Set the dot product to zero: $6 + 6k = 0$.'], solution: '$6 + 6k = 0 \\Rightarrow k = -1$.' }),
     item({ id: 'la-dot.p5', competency: 'la.vector-ops', difficulty: 2, level: 'independent', prompt: 'For $\\mathbf u = (1, -2)$ and $\\mathbf v = (3, 5)$, compute $2\\mathbf u + \\mathbf v$.', answer: multi([5, 1], ['first component', 'second component']), solution: '$2\\mathbf u = (2, -4)$; adding $(3, 5)$ gives $(5, 1)$.' }),
+    item({ id: 'la-dot.p8', competency: 'la.vector-ops', difficulty: 2, level: 'independent', prompt: 'A delivery drone flies $(3, 4)$ km and then $(-2, 2)$ km. How far is it from where it started, in km? Give two decimal places.', answer: num(6.08, 0.005), compute: () => Math.hypot(3 - 2, 4 + 2), hints: ['Add the two moves component by component first.', 'The total move is $(1, 6)$; its length is $\\sqrt{1^2 + 6^2}$.'], solution: '$(3, 4) + (-2, 2) = (1, 6)$, and $\\lVert(1, 6)\\rVert = \\sqrt{37} \\approx 6.08$ km. Adding the two distances, $5 + 2.83$, would overstate it.' }),
     item({ id: 'la-dot.p6', competency: 'la.dot-product', difficulty: 3, level: 'transfer', prompt: 'Two documents are summarized by word-count vectors $(1, 2, 2)$ and $(2, 1, 2)$. What is their cosine similarity? (Three decimal places.)', answer: num(8 / 9, 0.0006), compute: () => 8 / 9, hints: ['Dot product 8; both lengths are 3.'], solution: '$8/(3 \\cdot 3) = 8/9 \\approx 0.889$.' }),
     item({ id: 'la-dot.p7', competency: 'la.dot-product', difficulty: 3, level: 'transfer', prompt: 'A rope pulls a sled with force $(3, 4)$ newtons while the sled moves $(5, 0)$ metres along flat ground. Work is force · displacement. How many joules of work are done?', answer: num(15), compute: () => dot([3, 4], [5, 0]), hints: ['Only the part of the force along the motion does work.'], solution: '$(3, 4)\\cdot(5, 0) = 15$ J. The upward 4 N does no work on a sled that only moves sideways.' }),
   ],

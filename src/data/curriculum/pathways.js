@@ -29,9 +29,13 @@ export const PATHS = [
       'prealgebra',
       'algebra-1',
       'python-ds',
+      'cpp-fundamentals',
       'algebra-2',
       'prob-stats',
+      'cpp-oop',
+      'discrete-structures',
       'precalculus',
+      'data-structures',
       'linear-algebra',
       'calculus-1',
       'calculus-2',
@@ -40,7 +44,9 @@ export const PATHS = [
     ],
     parallel: {
       'python-ds': 'Can be studied alongside algebra: it has no prerequisite, and no course here requires it yet.',
+      'cpp-fundamentals': 'Can be studied alongside algebra: it has no course prerequisite here. The C++ courses follow their own order (Fundamentals → Classes → Data Structures, and Fundamentals → Discrete Structures).',
       'prob-stats': 'Needs only Algebra I, so it can be studied alongside Linear Algebra.',
+      'discrete-structures': 'Needs only C++ Fundamentals, so it can be studied alongside the C++ classes course and the mathematics.',
       'linear-algebra': 'Needs only Algebra I, so it can be studied alongside Probability & Statistics.',
     },
   },
@@ -146,11 +152,8 @@ export const PATHS = [
  * course not listed here offers the next written course on the path.
  */
 export const OUTLINE_ALTERNATIVES = {
-  'python-ds': {
-    page: 'apply/exercises',
-    label: 'Practise Python in Code exercises',
-    why: 'The Python course is not written yet, but the code exercises under Apply teach and check real Python now.',
-  },
+  // Empty while every course has at least one written lesson. (The Python
+  // course pointed to Code exercises here until its first lesson was written.)
 };
 
 /**
@@ -164,8 +167,8 @@ export const CSU_PREP = {
   areas: [
     { id: 'calculus', title: 'Calculus', courses: ['calculus-1', 'calculus-2', 'calculus-3'] },
     { id: 'linear-algebra', title: 'Linear algebra', courses: ['linear-algebra'] },
-    { id: 'discrete', title: 'Discrete mathematics', courses: [], note: 'Not covered here yet. Apart from “Direct proof and counterexample”, planned in Algebra II, there is no course on logic, sets, combinatorics or graphs.' },
+    { id: 'discrete', title: 'Discrete mathematics', courses: ['discrete-structures'], note: 'Logic and induction are written; proof techniques, sets and relations, counting and graphs are planned.' },
     { id: 'statistics', title: 'Probability and statistics', courses: ['prob-stats'] },
-    { id: 'programming', title: 'Programming', courses: ['python-ds'], note: 'The Python course is an outline. The code exercises and the Python lab under Apply are available now.' },
+    { id: 'programming', title: 'Programming', courses: ['cpp-fundamentals', 'cpp-oop', 'data-structures', 'python-ds'], note: 'Each course has its first lessons written; most topics are still planned. The code exercises and the Python lab under Apply are available too.' },
   ],
 };

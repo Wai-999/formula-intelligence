@@ -99,4 +99,36 @@
 
 .journey-course-title {
   font-weight: 600;
+
+/* V5: the evidence behind a skill. */
+.prog-next {
+  margin: 8px 0 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.prog-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.prog-breakdown > div {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+}
+
+.prog-breakdown dt {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.prog-breakdown dd {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }

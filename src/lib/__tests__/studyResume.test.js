@@ -200,7 +200,8 @@ describe('what a course’s progress means', () => {
   });
 
   it('a course with no written lessons is never finished', () => {
-    const outline = COURSES.find((c) => c.units.every((u) => u.lessons.length === 0));
+    // Every catalog course has a written lesson now, so strip one course's.
+    const outline = { ...COURSES[0], units: COURSES[0].units.map((u) => ({ ...u, lessons: [] })) };
     expect(courseJourney(outline, {}, {}).availableFinished).toBe(false);
   });
 

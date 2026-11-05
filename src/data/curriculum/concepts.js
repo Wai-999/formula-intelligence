@@ -113,6 +113,17 @@ export const CONCEPTS = [
   c('c.py-collections', 'Lists and dictionaries', 'python', 'py-collections', ['c.py-basics'], 'Storing and transforming collections of values.'),
   c('c.py-debugging', 'Debugging Python', 'python', 'py-debugging', ['c.py-basics'], 'Reading tracebacks and testing hypotheses about a bug.'),
   c('c.numpy', 'NumPy arrays and broadcasting', 'python', 'py-numpy', ['c.py-collections', 'c.vectors'], 'Whole-array arithmetic, broadcasting rules and floating-point limits.'),
+
+  // Computer Science (C++) — V5
+  c('c.cpp-basics', 'C++ types, expressions and input/output', 'computer-science', 'cpp-types-io', ['c.expressions'], 'Typed variables, integer and floating-point arithmetic, and console input and output.'),
+  c('c.cpp-loops', 'Loops and tracing in C++', 'computer-science', 'cpp-control', ['c.cpp-basics', 'c.inequalities'], 'Repeating a block while a condition holds, and following every variable step by step.'),
+  c('c.cpp-functions', 'Functions, references and vectors in C++', 'computer-science', 'cpp-functions', ['c.cpp-loops', 'c.functions'], 'Packaging steps under a name; passing by value, by reference and by const reference; storing data in vectors.'),
+  c('c.oop-classes', 'Classes, encapsulation and invariants', 'computer-science', 'oop-classes', ['c.cpp-functions'], 'Data hidden behind member functions that keep a promise about it.'),
+  c('c.object-lifetime', 'Constructors, destructors and object lifetime', 'computer-science', 'oop-lifetime', ['c.oop-classes'], 'When objects are created and destroyed, and how destructors release resources (RAII).'),
+  c('c.big-o', 'Running time and big-O', 'computer-science', 'ds-complexity', ['c.cpp-loops', 'c.exponentials'], 'How the cost of an algorithm grows with the size of its input, ignoring constant factors.'),
+  c('c.logic', 'Propositional logic and truth tables', 'computer-science', 'dm-logic', [], 'Statements joined with and, or, not and implies; equivalence checked on every case.'),
+  c('c.induction', 'Mathematical induction', 'computer-science', 'dm-induction', ['c.proof', 'c.sequences-series'], 'Proving a statement for every whole number from a base case and a step from k to k + 1.'),
+  c('c.stack-queue', 'Stacks and queues', 'computer-science', 'ds-linear', ['c.cpp-functions', 'c.big-o'], 'Last in, first out versus first in, first out — and building each so both operations are constant time.'),
 ];
 
 // Non-prerequisite relationships (§7). Direction reads "source TYPE target".

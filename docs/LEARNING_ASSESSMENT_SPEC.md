@@ -17,18 +17,19 @@ How Formula Intelligence decides what a learner knows, where they should start, 
 | Not started | No evidence for the competency |
 | Learning | Any evidence that does not meet *Proficient* |
 | Proficient | ≥ 3 **different** items correct · weighted accuracy ≥ 70 % · at least one correct at difficulty ≥ 2 |
-| Mastered | Proficient · a correct **transfer** item · correct answers on **two different days** · the latest answer correct · weighted accuracy ≥ 80 % · newest evidence ≤ 60 days old |
+| Mastered | Proficient · a correct **transfer** item · correct answers **without a hint** on **two different days** (V5) · the latest answer correct · weighted accuracy ≥ 80 % · newest evidence ≤ 60 days old |
 
 - Only the latest attempt per item counts (re-answering replaces).
 - Weights: difficulty 1/2/3 → 1, 1.5, 2; transfer +0.5; times a recency factor `0.5^(age_days / 60)` (60-day half-life). Old evidence fades; it is never deleted.
 - Each status carries `reasons` in plain language ("2 of the 3 different correct answers needed…"), shown on Progress.
+- **V5 (§13.4):** each status also carries one plain-English `nextStep` ("You have solved the standard problems. Try an unfamiliar (transfer) problem without a hint.") and a `breakdown` of its evidence, counted over every recorded first attempt: *attempted*, *right after a hint*, *right without a hint*, *unfamiliar (transfer) problems without a hint*, *right again on a later day* (unassisted, ≥ 24 h after the first right answer), and *repeat exposures* (a question already answered before). Hints are shown, never hidden: they support learning but are not unassisted evidence.
 - Confidence: low (< 3 items), medium (3–5), high (≥ 6).
 
-Tests: `src/lib/__tests__/learningEngine.test.js` — one lucky guess is never mastery; repeats of one item don't count twice; transfer and two days are required; staleness demotes; hints downgrade.
+Tests: `src/lib/__tests__/learningEngine.test.js` — one lucky guess is never mastery; repeats of one item don't count twice; transfer and two days are required; staleness demotes; hints downgrade; hinted answers never satisfy the two-day rule; the breakdown and the next step for every level (V5).
 
 ## 2. Diagnostic procedure — `src/lib/diagnostic.js`, `src/features/diagnostic/`
 
-Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.10-2`: 85 items over 8 domains, ≥ 2 per covered competency — **41 of 47 competencies**. The six left out are Calculus II–III and ML-course skills (`calc.series`, `calc.gradient`, `calc.optimization`, `ml.*`): a hard calculus or statistics item stands for "ready to leave Calculus I / Probability & Statistics", so questions from the courses after those would mark a ready learner down. Their lesson checkpoints measure them. Items are only ever added, never removed or re-keyed, because saved attempts refer to them by id (`dx-2026.10-1` had 64 items over 32 competencies; all 64 are unchanged).
+Optional and skippable (Learn → Placement; called the *placement check* in the app); offered on first run next to "Start from Prealgebra" and "Explore first". Item bank `src/data/diagnostic/itemBank.js`, version `dx-2026.11-1`: 96 items over 9 domains — `dx-2026.10-2` widened the coverage, and V5 added a *C++ programming & discrete math* area — ≥ 2 per covered competency (46 of 58 competencies; the 12 uncovered ones lie beyond what placement decides: Calculus II–III, the ML course, and the C++ and discrete-structures skills past C++ Fundamentals — listed in `docs/CURRICULUM_MAP.md`).
 
 Three rounds, so screening is broad before it is deep:
 
@@ -49,6 +50,9 @@ At most three answered items per domain.
 
 Tests: `src/lib/__tests__/diagnostic.test.js` (coverage, adaptive selection, competency spread, fresh retakes, every item reachable over retakes, caps, skip/stop, posterior widths, recommendation reasons, start earlier/here/ahead, override, retake history) and `e2e/v31.spec.js › diagnostic`.
 
+- **Insufficient evidence (V5, §13.4).** When no question on the mathematics path was answered, or an area that decided the result rests on fewer than **2** answers (`MIN_EVIDENCE`), the result says *Not enough evidence yet — a default, not a finding*, gives the reason, and offers **Answer more questions** first. A course is still named so the learner has somewhere to start. Areas with one answer show “too few answers to judge” instead of a confidence. Tests: `diagnostic.test.js`, `e2e/v5-journeys.spec.js`.
+- **Not an official placement.** The page says so; Ohlone's own placement process decides course eligibility.
+
 ## 4. Spaced review — `src/lib/reviewSchedule.js`
 
 A Leitner schedule per competency with boxes of **1, 3, 7, 14, 30, 60 days**.
@@ -65,6 +69,11 @@ Chosen over SM-2 because its behaviour fits in one sentence and has no hidden ea
 - Ten elements per lesson (§6): the question, before you start, see it (lab), why it works, worked examples, predict first, practice, checkpoint, in Python, keep going.
 - Item types: numeric (parsed — integers, decimals, fractions `3/4`, percentages, scientific notation, typographic minus — and compared with the tolerance the item declares, absolute or relative, default 1e-9), single choice with per-option feedback, and multi-blank numeric (e.g. vector components). Never exact string matching for numbers. `src/lib/answers.js`, tests in `learningEngine.test.js`.
 - Each item has hints, a worked solution (after one attempt), and optionally a *remedy* link to a prerequisite lesson.
+- **Feedback after a wrong answer** (80/20 upgrade, `src/lib/feedback.js`): the item's own feedback if authored; otherwise, for numbers, only checks that follow from the numbers (wrong sign, a power of ten, a factor of two, within 5%); the first hint as “Where to look”; the worked solution shown automatically after a second miss; and the remedy, else the lesson's 5-minute bridge (`bridgeFor` in `src/lib/nextAction.js`). The first attempt is still the only one recorded.
+- **Answers record their lesson** (`l` in `fi_learning_v1`, additive; older records lack it and are not counted). Two or more misses among a lesson's latest eight answers that outnumber the hits, or a checkpoint under half right, make the next action a short bridge — once, until the bridge is opened or the learner gets two right in a row.
+- **Choice options** are shown in a fixed shuffle seeded by the item id (`src/lib/choiceOrder.js`), so the right answer is not usually first; checking uses the authored index.
+- **Faded examples** (five priority lessons): blanks are ordinary scaffolded items, recorded as practice evidence.
+- **A course has four separate statuses** (`courseCompletion`): its written lessons finished, the whole course written, ready (every exit skill proficient or mastered), mastered. They are never added into one number.
 - **A lesson is complete when its checkpoint has been answered**, not when it was scrolled through. Section progress (steps visited) and saved study places (`fi_resume_v1`) are tracked for navigation only: saving a place, visiting every step or finishing a study session never completes a lesson and never counts as evidence (`docs/study-continuity/ARCHITECTURE.md`, "What completion means").
 
 ## 6. Mixed practice (interleaving) — `src/lib/interleave.js`, Practice → Review

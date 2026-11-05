@@ -20,12 +20,16 @@
     "e2e": "playwright test --grep-invert @heavy",
     "e2e:python": "playwright test --grep @heavy",
     "verify:python": "node scripts/verify-python.mjs",
+    "verify:cpp": "node scripts/verify-cpp.mjs",
+    "validate:college": "node scripts/validate-college-data.mjs",
     "check:citations": "node scripts/check-citations.mjs",
     "docs:curriculum": "node scripts/curriculum-map.mjs",
+    "docs:college": "node scripts/college-report.mjs",
     "docs:path": "node scripts/learning-path-map.mjs",
     "icons": "node scripts/build-icon-subset.mjs",
     "evidence:screenshots": "node scripts/screenshots.mjs",
-    "evidence:perf": "node scripts/perf-lab.mjs"
+    "evidence:perf": "node scripts/perf-lab.mjs",
+    "docs:gaps": "node scripts/learning-gap-map.mjs"
   },
   "dependencies": {
     "d3": "^7.9.0",

@@ -54,6 +54,24 @@ const WDBC = `import numpy as np
 radius = np.array(${list(WDBC_RADIUS)})
 malignant = np.array(${list(WDBC_MALIGNANT)})`;
 
+// One invented greenhouse sensor, one morning (synthetic, V5): a blank value,
+// an error code, a -999 sentinel, a spike and a duplicated row.
+const SENSOR = `LOG = """time,temp_c
+06:00,18.2
+06:30,18.9
+07:00,
+07:30,19.6
+08:00,ERR
+08:30,21.4
+09:00,-999
+09:30,23.1
+10:00,85.0
+10:30,24.8
+11:00,25.3
+11:00,25.3
+11:30,26.0
+12:00,26.4"""`;
+
 const ask = (prompt, choices, correct, explain) => ({ prompt, choices, correct, explain });
 
 export const PROJECT_EXERCISES = [
@@ -297,6 +315,47 @@ for t in np.arange(10, 20.01, 0.5):
       show: 'print(best_threshold, best_cost)',
       output: '13.0 233',
       question: ask('With misses judged 10 times as costly, the best threshold drops from 15 to 13. Why?', ['A lower threshold flags more samples: fewer costly misses, more cheap false alarms', 'Lower thresholds are always better', 'The data changed', 'Precision rises when the threshold falls'], 0, 'At 13 only 12 malignant samples are missed (cost 120), at the price of 113 false alarms (cost 113). The ratio is a value judgement — change it and the best threshold moves.'),
+    },
+  },
+  {
+    id: 'py.sensor-clean', type: 'analyze', title: 'Sensor log: clean, then average', competency: 'py.debugging', project: 'proj.sensor-log',
+    prompt: '`LOG` is the morning’s CSV (`time,temp_c`). Go through the rows after the header and build `clean`, the list of valid temperatures, and `rejected`, a dict counting rows rejected as `"duplicate"` (a time already seen — keep the first), `"missing"` (empty value), `"unparseable"` (not a number) or `"out_of_range"` (outside −40 to 60 °C). Then set `mean_c`, the mean of `clean`.',
+    setup: SENSOR,
+    starter: 'clean = []\nrejected = {}\nmean_c = None\n',
+    solution: `seen = set()
+clean = []
+rejected = {"duplicate": 0, "missing": 0, "unparseable": 0, "out_of_range": 0}
+for line in LOG.strip().splitlines()[1:]:
+    time, raw = line.split(",")
+    if time in seen:
+        rejected["duplicate"] += 1
+        continue
+    seen.add(time)
+    if raw.strip() == "":
+        rejected["missing"] += 1
+        continue
+    try:
+        value = float(raw)
+    except ValueError:
+        rejected["unparseable"] += 1
+        continue
+    if not -40 <= value <= 60:
+        rejected["out_of_range"] += 1
+        continue
+    clean.append(value)
+mean_c = sum(clean) / len(clean)
+`,
+    tests: [
+      { name: 'nine valid readings', code: 'assert len(clean) == 9, f"expected 9 valid readings, got {len(clean)}: {clean}"' },
+      { name: 'every rejection counted, with its reason', code: 'assert rejected == {"duplicate": 1, "missing": 1, "unparseable": 1, "out_of_range": 2}, f"got {rejected}"' },
+      { name: 'the mean of the valid readings', code: 'import math\nassert mean_c is not None and math.isclose(mean_c, 203.7 / 9), f"got {mean_c}"' },
+    ],
+    hints: ['`LOG.strip().splitlines()[1:]` skips the header; `line.split(",")` gives the time and the value.', '`float("ERR")` raises `ValueError` — catch it.', 'Check the duplicate time first, then empty, then parse, then the range.'],
+    packages: [],
+    noCode: {
+      show: 'print(len(clean), rejected)\nprint(round(mean_c, 2))\nnaive = [float(r) for r in (l.split(",")[1] for l in LOG.strip().splitlines()[1:]) if r.strip() and r.strip() != "ERR"]\nprint(round(sum(naive) / len(naive), 2))',
+      output: "9 {'duplicate': 1, 'missing': 1, 'unparseable': 1, 'out_of_range': 2}\n22.63\n-57.08",
+      question: ask('Averaging every number in the file gives −57.08 °C; the cleaned average is 22.63 °C. What caused the difference, and what should the heater do?', ['The −999 error code (and the 85.0 spike) were averaged as temperatures; on clean data, 22.6 °C is above 20 °C, so the heater stays off', 'The greenhouse froze overnight, so the heater should run', 'Python rounds negative numbers badly', 'The duplicate row doubled the temperature'], 0, 'One sentinel value of −999 drags twelve numbers to −57 °C. Validation turns it back into a reading you can act on — and the five rejected rows should be reported, not hidden.'),
     },
   },
 ];

@@ -184,4 +184,67 @@
 
 .home-path-facts dd {
   margin: 0;
+
+/* V5: today's session, sized by the time available. */
+.home-timebox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-timebox-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home-timebox-choices legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.home-timebox-choices label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-solid-2);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.home-timebox-choices label.on {
+  border-color: var(--primary);
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.home-timebox-choices input {
+  accent-color: var(--primary);
+}
+
+.home-timebox-choices label:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.home-timebox-steps {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.home-timebox-note {
+  max-width: 70ch;
 }

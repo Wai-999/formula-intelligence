@@ -8,17 +8,20 @@ import { item, num, choice, multi } from '../curriculum/lessonKit.js';
 // calibrated against learner data, so the engine treats difficulties as
 // rough and reports wide uncertainty — and the UI says so.
 //
-// Blueprint: eight domains; every competency tested has at least two items.
-// Every competency is tested except six that sit past what placement decides
-// (Calculus II–III and the ML course: calc.series, calc.gradient,
-// calc.optimization, ml.*). A hard item in the calculus or statistics domain
-// stands for "ready to leave Calculus I / Probability & Statistics", so
-// questions from the courses after those would mark a ready learner down.
-// Lesson checkpoints and practice measure those six instead.
+// Blueprint: nine domains (V5 added C++ & discrete math); every competency
+// tested has at least two items. Every competency is tested except a few
+// that sit past what placement decides (Calculus II–III and the ML course:
+// calc.series, calc.gradient, calc.optimization, ml.*) and the V5 C++ and
+// discrete-math competencies taught after the first course (cpp.oop,
+// ds.trees-hash, dm.proof, …). A hard item in the calculus or statistics
+// domain stands for "ready to leave Calculus I / Probability & Statistics",
+// so questions from the courses after those would mark a ready learner
+// down. Lesson checkpoints and practice measure those instead.
 //
 // Items are never removed or re-keyed: saved attempts refer to them by id.
 
-export const BANK_VERSION = 'dx-2026.10-2';
+// dx-2026.10-2: wider coverage (PR #5). dx-2026.11-1 (V5): the C++ & discrete-math area.
+export const BANK_VERSION = 'dx-2026.11-1';
 
 const dx = (domain, fields) => item({ domain, ...fields });
 
@@ -123,6 +126,19 @@ export const DX_ITEMS = [
   dx('python', { id: 'dx.p9', competency: 'py.data', difficulty: 2, prompt: 'For a pandas DataFrame `df`, what does `len(df[df["age"] > 30])` give?', answer: choice(['The number of rows whose age is over 30', 'The sum of the ages over 30', 'The number of columns', 'Always 30'], 0), solution: '`df["age"] > 30` marks each row True or False; `df[...]` keeps the True rows; `len` counts them.' }),
   dx('python', { id: 'dx.p10', competency: 'py.data', difficulty: 3, prompt: 'A DataFrame `df` has 5 rows, and its `age` column has 2 missing values (`NaN`). What does `df["age"].count()` return?', answer: num(3), compute: () => 5 - 2, solution: '`count()` counts the values that are not missing: $5 - 2 = 3$. (`len(df)` would still be 5.)' }),
   dx('python', { id: 'dx.p11', competency: 'py.collections', difficulty: 1, prompt: 'What does `print(len(["red", "green", "blue"]))` print?', answer: num(3), compute: () => ['red', 'green', 'blue'].length, solution: 'The list has three items.' }),
+
+  // ——— C++ programming & discrete math (V5) ———
+  dx('cs', { id: 'dx.k1', competency: 'cpp.basics', difficulty: 1, prompt: 'What does this C++ print? `int x = 7; x = x + 3; std::cout << x * 2;`', answer: num(20), compute: () => (7 + 3) * 2, solution: '$x$ becomes 10, and $10 \\times 2 = 20$.' }),
+  dx('cs', { id: 'dx.k2', competency: 'cpp.basics', difficulty: 2, prompt: 'What does `std::cout << 7 / 2 << " " << 7 % 2;` print?', answer: choice(['3 1', '3.5 1', '3 0', '4 1'], 0), solution: 'Both operands are ints, so `7 / 2` is integer division (3) and `7 % 2` is the remainder (1).' }),
+  dx('cs', { id: 'dx.k3', competency: 'cpp.basics', difficulty: 2, prompt: 'How many times does the body of `for (int i = 0; i < 10; i += 3) { … }` run?', answer: num(4), compute: () => [0, 3, 6, 9].length, solution: '$i$ takes the values 0, 3, 6 and 9; at 12 the condition fails. Four times.' }),
+  dx('cs', { id: 'dx.k4', competency: 'dm.logic', difficulty: 1, prompt: '`p` is true and `q` is false. Is `p && !q` true or false?', answer: choice(['true', 'false'], 0), solution: '`!q` is true, and true AND true is true.' }),
+  dx('cs', { id: 'dx.k5', competency: 'dm.logic', difficulty: 3, prompt: 'Which statement is the negation of “every test passed”?', answer: choice(['Some test failed', 'Every test failed', 'No test passed', 'Some test passed'], 0), solution: 'Not (for all, P) is (there exists, not P): at least one test failed.' }),
+  dx('cs', { id: 'dx.k6', competency: 'ds.complexity', difficulty: 3, prompt: 'An algorithm takes time proportional to $n^2$. Doubling the input size multiplies its running time by about how much?', answer: num(4), compute: () => 2 ** 2, solution: '$(2n)^2 = 4n^2$: about four times as long.' }),
+  dx('cs', { id: 'dx.k7', competency: 'ds.complexity', difficulty: 2, prompt: 'How many times does the body of `for (int i = 1; i < 1024; i *= 2) { … }` run?', answer: num(10), compute: () => Math.log2(1024), solution: '$i$ = 1, 2, 4, …, 512: ten values, because $2^{10} = 1024$ stops the loop.' }),
+  dx('cs', { id: 'dx.k8', competency: 'cpp.functions', difficulty: 2, prompt: 'Given `void addTip(double total) { total = total + 2; }`, what does `double bill = 10; addTip(bill); std::cout << bill;` print?', answer: num(10), compute: () => 10, solution: '`total` is a copy of `bill`, so changing it leaves `bill` at 10. With a reference parameter, `double& total`, it would print 12.' }),
+  dx('cs', { id: 'dx.k9', competency: 'cpp.debugging', difficulty: 3, prompt: '`std::vector<int> v` holds 5 numbers and `int sum = 0;`. What is wrong with `for (int i = 0; i <= 5; ++i) sum += v[i];`?', answer: choice(['It reads `v[5]`, one past the last element', 'It skips the first element, `v[0]`', 'It adds the last element twice', 'Nothing: it adds all five'], 0), solution: 'The valid indices are 0 to 4. With `i <= 5` the loop runs a sixth time and reads `v[5]`, past the end (undefined behaviour). Use `i < v.size()`.' }),
+  dx('cs', { id: 'dx.k10', competency: 'cpp.functions', difficulty: 1, prompt: 'Given `int square(int n) { return n * n; }`, what does `std::cout << square(3) + 1;` print?', answer: num(10), compute: () => 3 * 3 + 1, solution: '`square(3)` returns 9, and $9 + 1 = 10$.' }),
+  dx('cs', { id: 'dx.k11', competency: 'cpp.debugging', difficulty: 2, prompt: 'In `int count = 0; if (count = 5) { … }` the body always runs. Why?', answer: choice(['`=` assigns 5, which counts as true; comparing needs `==`', '`count` was never declared', 'The condition needs a semicolon', 'An int cannot be used in a condition'], 0), solution: '`count = 5` is an assignment whose value is 5, and any non-zero int is true. `-Wall` warns about it. Write `count == 5`.' }),
 ];
 
 export const dxItemById = Object.fromEntries(DX_ITEMS.map((i) => [i.id, i]));

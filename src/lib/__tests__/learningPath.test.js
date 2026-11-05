@@ -15,7 +15,15 @@ import { PAGES } from '../../app/pages.js';
 // so adding a lesson or a course re-tests the path without editing this file.
 const route = cur.pathById[DEFAULT_PATH];
 const writtenCourses = route.courses.filter((c) => cur.courseLessons[c].length);
-const outlineCourses = route.courses.filter((c) => !cur.courseLessons[c].length);
+// Every course in the real catalog has at least one written lesson now, so
+// the outline-only cases run on a copy with the Python course's lessons
+// taken out (as it was before its first lesson was written).
+const OUTLINE = 'python-ds';
+const outlineCur = makeCurriculum({
+  courses: COURSES, lessons: LESSONS.filter((l) => !cur.courseLessons[OUTLINE].includes(l.id)), paths: PATHS,
+  defaultPath: DEFAULT_PATH, projects: PROJECTS, concepts: CONCEPTS, alternatives: OUTLINE_ALTERNATIVES,
+});
+const outlineCourses = route.courses.filter((c) => !outlineCur.courseLessons[c].length);
 const allLessons = route.courses.flatMap((c) => cur.courseLessons[c]);
 const done = (ids, from = 1) => Object.fromEntries(ids.map((id, i) => [id, { opened: from + i, completed: from + i }]));
 const lessonsOf = (...courses) => courses.flatMap((c) => cur.courseLessons[c]);
@@ -26,9 +34,10 @@ describe('the real curriculum is a valid learning path', () => {
     expect(validateCurriculum(cur, { pages: new Set(PAGES.map((p) => p.id)) })).toEqual([]);
   });
 
-  it('has written lessons in several courses and outline-only courses, so the cases below are real', () => {
+  it('has written lessons in several courses, and the outline-only copy has an outline course, so the cases below are real', () => {
     expect(writtenCourses.length).toBeGreaterThan(3);
-    expect(outlineCourses.length).toBeGreaterThan(0);
+    expect(outlineCourses).toEqual([OUTLINE]);
+    expect(validateCurriculum(outlineCur, { pages: new Set(PAGES.map((p) => p.id)) })).toEqual([]);
   });
 
   it('taking “Continue” from the start visits every written lesson exactly once, course by course in route order', () => {
@@ -123,10 +132,10 @@ describe('finishing a course leads to one concrete next course', () => {
   });
 
   it('a planned-only course on the way is named, not skipped silently', () => {
-    const i = route.courses.findIndex((c, k) => cur.courseLessons[c].length && !cur.courseLessons[route.courses[k + 1]]?.length && k + 1 < route.courses.length);
+    const i = route.courses.findIndex((c, k) => outlineCur.courseLessons[c].length && !outlineCur.courseLessons[route.courses[k + 1]]?.length && k + 1 < route.courses.length);
     const c = route.courses[i];
-    const lessons = done(lessonsOf(...route.courses.slice(0, i + 1)));
-    const rec = recommend(cur, { lessons }, { courseId: c });
+    const lessons = done(route.courses.slice(0, i + 1).flatMap((x) => outlineCur.courseLessons[x]));
+    const rec = recommend(outlineCur, { lessons }, { courseId: c });
     expect(rec.skipped).toContain(route.courses[i + 1]);
     expect(rec.warnings.join(' ')).toContain(cur.courseById[route.courses[i + 1]].title);
     expect(rec.warnings.join(' ')).toMatch(/not written yet/);
@@ -203,7 +212,7 @@ describe('Home: where the learner stands', () => {
 
   it('a placement in an outline-only course offers the next written course and says why', () => {
     const outline = outlineCourses.find((c) => route.courses.indexOf(c) > 0 && !OUTLINE_ALTERNATIVES[c]);
-    const rec = recommend(cur, { lessons: {}, placement: { course: outline, source: 'diagnostic', at: 10 } });
+    const rec = recommend(outlineCur, { lessons: {}, placement: { course: outline, source: 'diagnostic', at: 10 } });
     expect(rec.status).toBe(STATUS.UNAVAILABLE);
     expect(rec.target.page).toBe('learn/lesson');
     expect(rec.reasons[0]).toMatch(/has no written lessons yet/);
@@ -341,8 +350,8 @@ describe('the validator catches broken curricula', () => {
 
 describe('overviews', () => {
   it('route progress counts written lessons only, and marks outline courses as planned', () => {
-    const p = routeProgress(cur, { lessons: done(cur.courseLessons[writtenCourses[0]]) }, null);
-    expect(p.written).toBe(allLessons.length);
+    const p = routeProgress(outlineCur, { lessons: done(cur.courseLessons[writtenCourses[0]]) }, null);
+    expect(p.written).toBe(allLessons.length - cur.courseLessons[OUTLINE].length);
     expect(p.checked).toBe(cur.courseLessons[writtenCourses[0]].length);
     expect(p.courses.find((c) => c.courseId === outlineCourses[0]).status).toBe('planned');
     expect(p.courses.find((c) => c.courseId === writtenCourses[0]).status).toBe('finished-available');
@@ -355,10 +364,10 @@ describe('overviews', () => {
   });
 
   it('course neighbours pass over outline courses to the next written one', () => {
-    const i = route.courses.findIndex((c, k) => cur.courseLessons[c].length && !cur.courseLessons[route.courses[k + 1]]?.length && k + 1 < route.courses.length);
-    const n = courseNeighbours(cur, null, route.courses[i]);
+    const i = route.courses.findIndex((c, k) => outlineCur.courseLessons[c].length && !outlineCur.courseLessons[route.courses[k + 1]]?.length && k + 1 < route.courses.length);
+    const n = courseNeighbours(outlineCur, null, route.courses[i]);
     expect(n.skipped[0]).toBe(route.courses[i + 1]);
-    expect(cur.courseLessons[n.next].length).toBeGreaterThan(0);
+    expect(outlineCur.courseLessons[n.next].length).toBeGreaterThan(0);
   });
 
   it('the next milestone names a course and what is left', () => {

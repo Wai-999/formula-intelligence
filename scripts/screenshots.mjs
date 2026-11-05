@@ -2,9 +2,16 @@
 // Screenshots of the built app at three breakpoints, dark and light (§14:
 // "screenshots at multiple breakpoints"). Run after `npm run build`:
 //   npm run evidence:screenshots
-// Writes docs/audits/evidence/screenshots/v31/<page>-<width>-<theme>.jpg and
-// an index.json listing what was captured. Pages are opened as a returning
-// learner (two lessons opened) so Home and Mixed practice show real state.
+// Writes <SHOT_DIR>/<page>-<width>-<theme>.jpg and an index.json listing
+// what was captured. Pages are opened as a returning learner (two lessons
+// opened) so Home and Mixed practice show real state.
+//
+// V5 options (environment):
+//   SHOT_BASE    capture a deployed site instead of the local build, e.g.
+//                https://wai-999.github.io/formula-intelligence/ for the
+//                "before" evidence (read-only page visits)
+//   SHOT_SET     'v5' adds the V5 pages (Ohlone prep, new lessons)
+//   SHOT_WIDTHS  comma-separated widths, e.g. 375,1280 (default 320,768,1280)
 import { chromium } from 'playwright';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -12,7 +19,8 @@ import { hashFor } from '../src/app/pages.js';
 import { startPreview } from './lib/preview.mjs';
 
 const OUT = process.env.SHOT_DIR || 'docs/audits/evidence/screenshots/v4';
-const WIDTHS = [{ w: 320, h: 720 }, { w: 768, h: 1024 }, { w: 1280, h: 800 }];
+const HEIGHT = { 320: 720, 375: 812, 768: 1024, 1280: 800 };
+const WIDTHS = (process.env.SHOT_WIDTHS || '320,768,1280').split(',').map(Number).map((w) => ({ w, h: HEIGHT[w] ?? 900 }));
 const SHOTS = [
   ['home', hashFor('home')],
   ['courses', hashFor('learn/courses')],
@@ -24,9 +32,23 @@ const SHOTS = [
   ['projects', hashFor('apply/projects')],
   ['placement', hashFor('learn/placement')],
   ['progress', hashFor('progress/overview')],
+  ['python-lab', hashFor('apply/lab')],
 ];
+if (process.env.SHOT_SET === 'v5') {
+  SHOTS.push(
+    ['ohlone-prep', hashFor('learn/prep')],
+    ['lesson-a2-composition', hashFor('learn/lesson', { lessonId: 'a2-composition' })],
+    ['lesson-pc-limits', hashFor('learn/lesson', { lessonId: 'pc-limits' })],
+    ['lesson-c1-chain-rule', hashFor('learn/lesson', { lessonId: 'c1-chain-rule' })],
+    ['lesson-pc-unit-circle', hashFor('learn/lesson', { lessonId: 'pc-unit-circle' })],
+    ['lesson-cpp-loops-trace', hashFor('learn/lesson', { lessonId: 'cpp-loops-trace' })],
+    ['lesson-dm-logic', hashFor('learn/lesson', { lessonId: 'dm-logic' })],
+  );
+}
 
-const { base, stop } = await startPreview(process.env.SHOT_PORT || 4325);
+const { base, stop } = process.env.SHOT_BASE
+  ? { base: process.env.SHOT_BASE, stop: () => {} }
+  : await startPreview(process.env.SHOT_PORT || 4325);
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 const index = [];
@@ -60,5 +82,5 @@ try {
   await browser.close();
   stop();
 }
-writeFileSync(join(OUT, 'index.json'), `${JSON.stringify({ captured: new Date().toISOString(), browser: 'Chromium (Playwright)', shots: index }, null, 2)}\n`);
+writeFileSync(join(OUT, 'index.json'), `${JSON.stringify({ captured: new Date().toISOString(), site: base, browser: 'Chromium (Playwright)', shots: index }, null, 2)}\n`);
 console.log(`${index.length} screenshots in ${OUT}`);

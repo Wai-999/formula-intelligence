@@ -12,6 +12,11 @@ import { assessAll, LEVEL_LABEL } from '../../lib/mastery.js';
 import { practiceSuccess, unassistedTransfer, retention, applicationCompletion, MIN_N, RETENTION_DAYS } from '../../lib/learningSignals.js';
 import { hashFor } from '../../app/pages.js';
 import StudyJourney from './StudyJourney.jsx';
+import NextActionCard from '../learn/NextActionCard.jsx';
+import { useNextAction } from '../learn/useNextAction.js';
+import { usePathState } from '../learn/usePathState.js';
+import { CURRICULUM } from '../../data/curriculum/path.js';
+import { courseCompletion } from '../../lib/nextAction.js';
 import '../../styles/studio.css';
 import '../learn/learn.css';
 import './progress.css';
@@ -32,6 +37,70 @@ function Signal({ title, value, detail, help }) {
       <p className="studio-muted">{detail}</p>
       <p className="signal-help">{help}</p>
     </div>
+  );
+}
+
+// V5.1 §13.4: what the evidence behind a skill consists of. Hinted answers are
+// shown, never hidden — hints help learning; they just are not unassisted evidence.
+const BREAKDOWN = [
+  ['attempted', 'Questions attempted'],
+  ['correctWithHints', 'Right after a hint'],
+  ['correctUnassisted', 'Right without a hint'],
+  ['transferUnassisted', 'Unfamiliar problems, no hint'],
+  ['delayedRetrieval', 'Right again on a later day'],
+];
+
+function EvidenceBreakdown({ b }) {
+  return (
+    <>
+      <dl className="prog-breakdown">
+        {BREAKDOWN.map(([k, label]) => (
+          <div key={k}><dt>{label}</dt><dd>{b[k]}</dd></div>
+        ))}
+      </dl>
+      {b.repeatExposures > 0 && (
+        <p className="studio-muted">{b.repeatExposures} of these were questions you had seen before; a repeat counts once, with your latest answer.</p>
+      )}
+    </>
+  );
+}
+
+/**
+ * The same next action Home shows (src/lib/nextAction.js), and what is left
+ * before the course it belongs to counts as ready: its exit skills not yet
+ * shown, each with the plain next step the mastery engine gives.
+ */
+function NextStep({ status }) {
+  const action = useNextAction();
+  const pathState = usePathState();
+  const lessonId = action.target?.page === 'learn/lesson' ? action.target.params.lessonId : null;
+  const courseId = action.evidence.courseId ?? (lessonId ? CURRICULUM.courseOf[lessonId] : action.rec.currentCourseId);
+  const course = courseId ? courseById[courseId] : null;
+  const c = course ? courseCompletion(CURRICULUM, pathState, course.id) : null;
+  return (
+    <section className="studio-section" aria-labelledby="prog-next">
+      <h2 id="prog-next" className="studio-h2">Your next step</h2>
+      <NextActionCard action={action} />
+      {c && c.exitSkills > 0 && (
+        <>
+          <h3 className="studio-h3">Before {course.title} counts as ready</h3>
+          {c.notYetShown.length === 0 ? (
+            <p className="studio-muted">Every exit skill of {course.title} is shown at proficient or above in your answers.</p>
+          ) : (
+            <>
+              <p className="studio-muted studio-read">
+                {c.shown} of {c.exitSkills} exit skills are shown at proficient or above. Still to show — each from answers, never from time spent:
+              </p>
+              <ul className="lesson-ul">
+                {c.notYetShown.map((id) => (
+                  <li key={id}><strong>{competencyById[id]?.title ?? id}:</strong> {status[id]?.nextStep ?? 'Not started: answer its questions in a lesson that teaches it.'}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
+      )}
+    </section>
   );
 }
 
@@ -62,6 +131,7 @@ export default function ProgressOverviewPage() {
     <div className="studio-scroll">
       <div className="studio-page">
         <StudyJourney />
+        <NextStep status={status} />
 
         <section className="studio-section" aria-labelledby="prog-skills">
           <h2 id="prog-skills" className="studio-h2">Your skills</h2>
@@ -88,7 +158,9 @@ export default function ProgressOverviewPage() {
                               {LEVEL_LABEL[a.level]} · {a.correctItems} of {a.distinctItems} different questions right
                             </span>
                           </summary>
-                          <ul className="lesson-ul">{a.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
+                          <p className="prog-next"><strong>Next:</strong> {a.nextStep}</p>
+                          <EvidenceBreakdown b={a.breakdown} />
+                          {a.level !== 'mastered' && <ul className="lesson-ul">{a.reasons.map((r) => <li key={r}>{r}</li>)}</ul>}
                         </details>
                       </li>
                     );

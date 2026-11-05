@@ -136,6 +136,9 @@ export default function PathwayPage() {
         <section className="studio-section" aria-labelledby="pw-csu">
           <h2 id="pw-csu" className="studio-h2">{CSU_PREP.title}</h2>
           <p className="studio-callout studio-callout-warn">{CSU_PREP.disclaimer}</p>
+          <p className="studio-muted">
+            For the Ohlone Data Science A.S. course list and what SJSU, CSU East Bay and UC campuses accept, each with its source and the date it was checked, see <a href={hashFor('learn/prep')}>Ohlone Data Science prep</a>.
+          </p>
           <ul className="pathway-csu">
             {CSU_PREP.areas.map((a) => {
               const written = a.courses.reduce((n, c) => n + CURRICULUM.courseLessons[c].length, 0);

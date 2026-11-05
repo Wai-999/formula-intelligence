@@ -53,7 +53,7 @@ describe('catalog', () => {
   });
 
   it('covers every subject the spec lists for Learn (§3)', () => {
-    expect(SUBJECTS.map((s) => s.title)).toEqual(['Mathematics Foundations', 'Algebra', 'Precalculus', 'Linear Algebra', 'Calculus', 'Probability & Statistics', 'Machine Learning', 'Python for Data Science', 'Applied Projects']);
+    expect(SUBJECTS.map((s) => s.title)).toEqual(['Mathematics Foundations', 'Algebra', 'Precalculus', 'Linear Algebra', 'Calculus', 'Probability & Statistics', 'Machine Learning', 'Python for Data Science', 'Computer Science (C++)', 'Applied Projects']);
   });
 
   it('keeps Algebra and Linear Algebra separate (§5 “do not conflate”)', () => {
@@ -152,9 +152,13 @@ describe('lesson bodies: the ten elements of §6', () => {
       expect(b.checkpoint.some((c) => c.difficulty >= 2), where).toBe(true);
       expect(b.checkpoint.some((c) => c.transfer), where).toBe(true);
       for (const c of b.checkpoint) expect(c.feedbackIncorrect, `${where} ${c.id}`).toBeTruthy();
-      // 9. Python with a deterministic expected output
-      expect(b.python.code.length, where).toBeGreaterThan(40);
-      expect(b.python.output.length, where).toBeGreaterThan(0);
+      // 9. Python or (V5, C++ track) C++, with a deterministic expected output
+      //    — checked by scripts/verify-python.mjs and scripts/verify-cpp.mjs
+      const code = b.python ?? b.cpp;
+      expect(code, `${where}: python or cpp block`).toBeTruthy();
+      expect(code.code.length, where).toBeGreaterThan(40);
+      expect(code.output.length, where).toBeGreaterThan(0);
+      if (b.cpp) expect(b.cpp.file, where).toMatch(/^[a-z0-9_]+\.cpp$/);
       // 10. further reading with real links
       expect(b.reading.length, where).toBeGreaterThan(0);
       for (const r of b.reading) expect(r.url, where).toMatch(/^https:\/\//);

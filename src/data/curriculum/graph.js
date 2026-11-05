@@ -38,6 +38,10 @@ const FORMULA_DERIVATIONS = [
   ['f.break-even', 'f.linear-solution'],
   ['f.marginal-cost', 'f.derivative-def'],
   ['f.matrix-vector', 'f.dot'],
+  ['f.inverse-composite', 'f.composition'],
+  ['f.derivative-def', 'f.limit-one-sided'],
+  ['f.chain-rule', 'f.composition'],
+  ['f.chain-rule', 'f.derivative-def'],
 ];
 
 export function buildKnowledgeGraph({ exercises = [] } = {}) {

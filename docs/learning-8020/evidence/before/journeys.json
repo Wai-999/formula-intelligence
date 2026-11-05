@@ -1,0 +1,119 @@
+{
+  "base": "https://wai-999.github.io/formula-intelligence/",
+  "ranAt": "2026-11-05T06:42:33.858Z",
+  "personas": [
+    {
+      "id": "P1 absolute beginner",
+      "steps": [
+        "Home (first run)",
+        "Start from Prealgebra",
+        "#learn/course/prealgebra",
+        "Start: Ratios, rates and unit rates",
+        "#learn/lesson/pa-ratios-rates"
+      ],
+      "measures": {
+        "decisionsToFirstLesson": 2,
+        "lesson": "#learn/lesson/pa-ratios-rates",
+        "firstQuestion": {
+          "wordsBefore": 704,
+          "pxFromTop": 3273,
+          "screensAt900": 3.6
+        },
+        "homeOffersStartingPoint": true
+      }
+    },
+    {
+      "id": "P2 algebra-ready calculus learner",
+      "steps": [
+        "Home (first run)",
+        "Explore first",
+        "Calculus I",
+        "Start: The derivative from first principles",
+        "#learn/lesson/c1-derivative"
+      ],
+      "measures": {
+        "decisionsToFirstLesson": 3,
+        "lesson": "#learn/lesson/c1-derivative",
+        "coursePageWarnsAboutPrerequisites": true,
+        "coursesPageWordCount": 585
+      }
+    },
+    {
+      "id": "P3 novice C++ programmer",
+      "steps": [
+        "Home (first run)",
+        "Explore first",
+        "no C++ course in the catalog"
+      ],
+      "measures": {
+        "cppCourseExists": false,
+        "decisionsToFirstLesson": null,
+        "lesson": null,
+        "searchResultsForCpp": 40
+      }
+    },
+    {
+      "id": "P4 returning learner with a saved step",
+      "steps": [
+        "Home",
+        "Resume where I stopped",
+        "#learn/lesson/a1-slope"
+      ],
+      "measures": {
+        "decisionsToResume": 1,
+        "lesson": "#learn/lesson/a1-slope",
+        "progressText": "Step 4 of 6 · Try it",
+        "savedStepInView": true,
+        "heroNamesStep": true
+      }
+    },
+    {
+      "id": "P5 learner who failed two questions",
+      "steps": [
+        "Calculus I first lesson",
+        "two wrong answers in Try it",
+        "Home"
+      ],
+      "measures": {
+        "lesson": "#learn/lesson/c1-derivative",
+        "feedback": [
+          {
+            "wrong": true,
+            "feedbackWords": 2,
+            "explainsBeyondVerdict": false,
+            "solutionOffered": true,
+            "linksFromFeedback": [],
+            "feedbackText": "Not yet."
+          },
+          {
+            "wrong": true,
+            "feedbackWords": 2,
+            "explainsBeyondVerdict": false,
+            "solutionOffered": true,
+            "linksFromFeedback": [],
+            "feedbackText": "Not yet."
+          }
+        ],
+        "homeAfterErrors": "CONTINUE RECENT LESSON The derivative from first principles Data Science Foundations → Advanced Applications Calculus I — Limits and Derivatives The derivative The derivative from first principles Step 4 of 6 — Try it Last studied today, 10:42 PM Continue recent lesson Open course outline Saved in t",
+        "homeOffersBridgeOrReview": false
+      }
+    },
+    {
+      "id": "P6 finished the written lessons of a partly written course",
+      "steps": [
+        "Calculus I: every written lesson done",
+        "Course page",
+        "Home"
+      ],
+      "measures": {
+        "writtenLessonsInCourse": 3,
+        "courseSaysNotComplete": true,
+        "courseClaimsCompleted": false,
+        "homePrimary": "Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums",
+        "homeJumpsToNextCourse": true,
+        "homeNamesGap": false,
+        "homeExcerpt": "NEXT COURSE ON YOUR PATH Area as a limit of Riemann sums Data Science Foundations → Advanced Applications Calculus II — Integrals and Series Definite integrals Area as a limit of Riemann sums Calculus II — Integrals and Series · about 45 minutes. Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums Why this?"
+      }
+    }
+  ]
+}

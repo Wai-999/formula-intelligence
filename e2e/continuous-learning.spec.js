@@ -4,12 +4,18 @@ import { readFileSync } from 'node:fs';
 import { hashFor } from '../src/app/pages.js';
 import { CURRICULUM as cur } from '../src/data/curriculum/path.js';
 import { problemsForLesson } from '../src/data/curriculum/problems.js';
+import { getNextLearningAction } from '../src/lib/nextAction.js';
 import { VISIBLE, lessonSettled } from './helpers.js';
 
 // Course-to-course continuity (docs/CONTINUOUS_LEARNING_UPGRADE.md): the
 // navigation matrix in a real browser, against the production build. Course
 // and lesson ids come from the real catalog and route, so a new lesson or
-// course is covered without editing this file.
+// course is covered without editing this file. Since the 80/20 upgrade a
+// course whose next lesson is only planned ends in an honest gap
+// (docs/learning-8020/LEARNING_FLOW_SPEC.md): the next lesson is named as not
+// written, practice comes first while its skills are not yet shown, and the
+// next written course is one click away. Expected actions are computed by
+// the same engine the app uses (src/lib/nextAction.js).
 
 const route = cur.pathById[cur.defaultPath];
 const written = route.courses.filter((c) => cur.courseLessons[c].length);
@@ -44,7 +50,7 @@ async function answerCheckpoint(page, lessonId) {
     if (item.answer.type === 'numeric') {
       await card.locator('input').fill(String(item.answer.value));
     } else if (item.answer.type === 'choice') {
-      await card.locator('input[type="radio"]').nth(item.answer.correct).check();
+      await card.locator(`input[data-choice="${item.answer.correct}"]`).check();
     } else {
       for (const [k, v] of item.answer.values.entries()) await card.locator('input').nth(k).fill(String(v));
     }
@@ -69,10 +75,12 @@ test.describe('A: Next, lesson by lesson, through a course', () => {
       await link.click();
       await expect(page.locator('h1.page-title')).toHaveText(title(next));
     }
-    const nextCourse = written[written.indexOf(c) + 1];
-    const finish = page.locator(`${VISIBLE}.lesson-pager a`, { hasText: /^Finish course & continue/ });
-    await expect(finish).toContainText(courseTitle(nextCourse));
-    await expect(finish).toHaveAttribute('href', `#learn/lesson/${cur.courseLessons[nextCourse][0]}`);
+    const done = Object.fromEntries([...lessonsOf(...before), ...order.slice(0, -1)].map((id, i) => [id, { completed: i + 1 }]));
+    const expected = getNextLearningAction(cur, { state: { lessons: done, status: {} }, from: { lessonId: order.at(-1) } });
+    expect(expected.kind).toBe('content-gap');
+    const finish = page.locator(`${VISIBLE}.lesson-pager a`, { hasText: /^Next lesson not written yet/ });
+    await expect(finish).toContainText(expected.label);
+    await expect(finish).toHaveAttribute('href', `#learn/lesson/${expected.target.params.lessonId}`);
   });
 
   test('at a unit end, the pager goes on to the next unit, not back to the course outline', async ({ page }) => {
@@ -90,7 +98,7 @@ test.describe('A: Next, lesson by lesson, through a course', () => {
   });
 });
 
-test('B: answering the last checkpoint of a course leads, in one click, to the next course — with the reason', async ({ page }) => {
+test('B: answering the last checkpoint of a course names the unwritten next lesson, and the next course is one click away', async ({ page }) => {
   const [first, second] = written;
   const order = cur.courseLessons[first];
   await seed(page, { completed: order.slice(0, -1) });
@@ -98,8 +106,9 @@ test('B: answering the last checkpoint of a course leads, in one click, to the n
   await answerCheckpoint(page, order.at(-1));
   const done = page.locator(`${VISIBLE}.lesson-complete`);
   await expect(done).toBeVisible();
-  await expect(done).toContainText(`every written lesson in ${courseTitle(first)}`);
-  await expect(done).toContainText('the full course is not complete'); // planned lessons remain
+  await expect(done).toContainText('Next lesson not written yet');
+  await expect(done).toContainText(`written lessons of ${courseTitle(first)}`);
+  await expect(done).toContainText('so the course is not complete'); // planned lessons remain
   await expect(done).not.toContainText(/mastered|course complete/i);
   const go = done.getByRole('link', { name: new RegExp(`^Continue to ${escape(courseTitle(second))}: `) });
   await go.click();
@@ -108,6 +117,10 @@ test('B: answering the last checkpoint of a course leads, in one click, to the n
 
 test('C: when the next course on the path is not written, it is named and the next written course is offered', async ({ page }) => {
   const i = route.courses.findIndex((c, k) => cur.courseLessons[c].length && route.courses[k + 1] && !cur.courseLessons[route.courses[k + 1]].length);
+  // Since V5 every course on the path has a written lesson, so the live app
+  // has no outline-only course to show. The logic is still tested, on a copy
+  // of the catalog with one course's lessons removed (learningPath.test.js).
+  test.skip(i === -1, 'no outline-only course on the path');
   const c = route.courses[i];
   const skipped = route.courses[i + 1];
   const nextWritten = route.courses.slice(i + 1).find((x) => cur.courseLessons[x].length);
@@ -130,21 +143,30 @@ test('D: the last written course ends the path honestly, with useful next choice
   const done = page.locator(`${VISIBLE}.lesson-complete`);
   await expect(done).toContainText('every written lesson on');
   await expect(done).toContainText('planned lessons on this path are not written yet');
-  await expect(done.getByRole('link', { name: 'Review your skills in Practice' })).toBeVisible();
+  await expect(done).toContainText('Next lesson not written yet');
   await done.getByRole('link', { name: 'See your whole path' }).click();
   await expect(page.locator('h1.page-title')).toHaveText('Your learning path');
 });
 
-test('E: Home after finishing any course continues to the next course on the path — never back to the start', async ({ browser }) => {
+test('E: Home after finishing any course names what is not written and offers the next course — never back to the start', async ({ browser }) => {
   for (const [i, c] of written.slice(0, -1).entries()) {
     const context = await browser.newContext();
     const page = await context.newPage();
     await seed(page, { completed: lessonsOf(c) });
     await page.goto('./#home', { waitUntil: 'networkidle' });
-    const expected = cur.courseLessons[written[i + 1]][0];
-    await expect(heroTitle(page), `after ${c}`).toHaveText(title(expected));
-    await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('Next course on your path');
+    const action = getNextLearningAction(cur, { state: { lessons: Object.fromEntries(lessonsOf(c).map((id, k) => [id, { completed: k + 1 }])), status: {} } });
+    const next = cur.courseLessons[written[i + 1]][0];
+    if (action.kind === 'content-gap') {
+      await expect(heroTitle(page), `after ${c}`).toHaveText(action.headline);
+      await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('You finished the written lessons');
+      await expect(page.locator(`${VISIBLE}.home-hero a[href="#learn/lesson/${next}"]`), `after ${c}: next course offered`).toHaveCount(1);
+    } else {
+      await expect(heroTitle(page), `after ${c}`).toHaveText(title(next));
+      await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('Next course on your path');
+    }
     await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).toHaveCount(1);
+    // Practising the course just finished is not "back to the start"; a jump to the route's first lesson from a later course would be.
+    if (c !== route.courses[0]) await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).not.toHaveAttribute('href', `#learn/lesson/${cur.courseLessons[route.courses[0]][0]}`);
     await context.close();
   }
 });
@@ -239,7 +261,7 @@ test('L: a real-world problem — hints count as help, the worked solution waits
     const step = card.locator('.item-card').nth(i);
     if (i === 0) await step.getByRole('button', { name: 'Show a hint' }).click();
     if (item.answer.type === 'numeric') await step.locator('input').fill(String(item.answer.value));
-    else if (item.answer.type === 'choice') await step.locator('input[type="radio"]').nth(item.answer.correct).check();
+    else if (item.answer.type === 'choice') await step.locator(`input[data-choice="${item.answer.correct}"]`).check();
     else for (const [k, v] of item.answer.values.entries()) await step.locator('input').nth(k).fill(String(v));
     await step.getByRole('button', { name: 'Check' }).click();
     await expect(step).toContainText('Correct');

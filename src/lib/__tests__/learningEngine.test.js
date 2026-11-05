@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseNumber, checkAnswer, numericMatches } from '../answers.js';
-import { assessCompetency, recencyWeight, HALF_LIFE_DAYS } from '../mastery.js';
+import { assessCompetency, evidenceBreakdown, recencyWeight, HALF_LIFE_DAYS } from '../mastery.js';
 import { review, newCard, dueCards, BOX_DAYS } from '../reviewSchedule.js';
 
 const DAY = 86_400_000;
@@ -106,6 +106,44 @@ describe('mastery from evidence', () => {
     const r = assessCompetency([ev('a', true), ev('b', false), ev('c', false), ev('d', true, { d: 2 }), ev('e', false), ev('f', true)], NOW);
     expect(r.level).toBe('learning');
     expect(r.confidence).toBe('high');
+  });
+
+  // V5.1 §13.4: attempted / correct with hints / correct unassisted /
+  // unfamiliar transfer / delayed retrieval, repeat exposure, and a next step.
+  const hinted = (item, daysAgo = 0) => ({ ...ev(item, true, { daysAgo }), h: true });
+
+  it('answers given after opening a hint never satisfy the two-day rule', () => {
+    // Day 3: two hinted answers. Today: unassisted, including a transfer item.
+    const log = [hinted('q1', 3), hinted('q2', 3), ev('q3', true, { d: 2 }), ev('q4', true, { d: 3, tr: true })];
+    const r = assessCompetency(log, NOW);
+    expect(r.level).toBe('proficient');
+    expect(r.reasons.join(' ')).toMatch(/without a hint on two different days/);
+    // The same pattern unassisted on day 3 is mastery.
+    const plain = [ev('q1', true, { daysAgo: 3 }), ev('q2', true, { daysAgo: 3 }), ev('q3', true, { d: 2 }), ev('q4', true, { d: 3, tr: true })];
+    expect(assessCompetency(plain, NOW).level).toBe('mastered');
+  });
+
+  it('breaks the evidence down by kind, and flags repeat exposure', () => {
+    const log = [
+      ev('q1', false, { daysAgo: 5 }),
+      hinted('q2', 5),
+      ev('q1', true, { daysAgo: 4 }), // the same question again: repeat exposure
+      { ...ev('q3', true, { d: 3, daysAgo: 1 }), x: true },
+      { ...ev('q4', false), x: true },
+    ];
+    expect(evidenceBreakdown(log)).toEqual({ attempted: 5, correctWithHints: 1, correctUnassisted: 2, transferUnassisted: 1, delayedRetrieval: 2, repeatExposures: 1 });
+    expect(evidenceBreakdown([])).toEqual({ attempted: 0, correctWithHints: 0, correctUnassisted: 0, transferUnassisted: 0, delayedRetrieval: 0, repeatExposures: 0 });
+  });
+
+  it('names one next step for every level, in the order a learner meets the requirements', () => {
+    expect(assessCompetency([], NOW).nextStep).toMatch(/first practice question/);
+    expect(assessCompetency([ev('q1', true)], NOW).nextStep).toMatch(/few more different questions/);
+    expect(assessCompetency([ev('q1', true), ev('q2', true), ev('q3', true)], NOW).nextStep).toMatch(/harder \(level 2\)/);
+    const proficient = [ev('q1', true, { daysAgo: 3 }), ev('q2', true, { d: 2, daysAgo: 3 }), ev('q3', true, { d: 2 })];
+    expect(assessCompetency(proficient, NOW).nextStep).toMatch(/unfamiliar \(transfer\) problem without a hint/);
+    const oneDay = [ev('q1', true), ev('q2', true, { d: 2 }), ev('q3', true, { d: 2 }), ev('q4', true, { d: 3, tr: true })];
+    expect(assessCompetency(oneDay, NOW).nextStep).toMatch(/another day/);
+    expect(assessCompetency([...proficient, ev('q4', true, { d: 3, tr: true })], NOW).nextStep).toMatch(/^Mastered/);
   });
 });
 

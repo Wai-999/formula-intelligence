@@ -117,6 +117,29 @@ export const FORMULAS = [
     concept: 'c.line-fit', lesson: 'a1-line-fit', claim: 'theorem',
   }),
 
+  // ——— Algebra II ———
+  F('f.composition', 'Composite function', '(f \\circ g)(x) = f\\big(g(x)\\big)', {
+    variables: [v('g', 'inner function, applied first'), v('f', 'outer function, applied to the output of g')],
+    assumptions: ['Every output of g used is an allowed input of f.'],
+    domain: ['The $x$ in the domain of $g$ for which $g(x)$ is in the domain of $f$.'],
+    interpretation: 'Do g, then f: a two-step process written as one function.',
+    pitfalls: ['Assuming $f(g(x)) = g(f(x))$: order usually matters.', 'Confusing composition with multiplication $f(x)\\,g(x)$.'],
+    application: 'Checkout steps (coupon, sale, tax), chains of unit conversions, data pipelines.',
+    python: 'lambda x: f(g(x))',
+    concept: 'c.composition-inverse', lesson: 'a2-composition', claim: 'definition',
+    references: ['https://openstax.org/books/college-algebra-2e/pages/3-4-composition-of-functions'],
+  }),
+  F('f.inverse-composite', 'Inverse of a composite', '(f \\circ g)^{-1} = g^{-1} \\circ f^{-1}', {
+    variables: [v('f^{-1}, g^{-1}', 'inverses of f and g')],
+    assumptions: ['f and g are one-to-one on the values used, so their inverses exist there.'],
+    interpretation: 'Undo the last step first: the inverses run in reverse order.',
+    pitfalls: ['Undoing the steps in the original order.', 'Reading $f^{-1}(x)$ as $1/f(x)$.'],
+    application: 'Working back from a receipt, a converted reading or a final grade to the original input.',
+    python: 'lambda y: g_inv(f_inv(y))',
+    concept: 'c.composition-inverse', lesson: 'a2-composition', claim: 'theorem',
+    references: ['https://openstax.org/books/college-algebra-2e/pages/3-7-inverse-functions'],
+  }),
+
   // ——— Linear algebra ———
   F('f.matrix-vector', 'Matrix–vector product', '(X\\mathbf w)_i = \\sum_{j=1}^{d} x_{ij} w_j', {
     variables: [v('X', 'data matrix, n rows by d columns'), v('\\mathbf w', 'weight vector with d entries'), v('(X\\mathbf w)_i', 'score of row i')],
@@ -245,6 +268,28 @@ export const FORMULAS = [
     python: '(f(a + h) - f(a)) / h  # an approximation only',
     concept: 'c.derivative', lesson: 'c1-derivative', claim: 'definition',
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-1-defining-the-derivative'],
+  }),
+  F('f.limit-one-sided', 'Limit from one-sided limits', '\\lim_{x \\to a} f(x) = L \\iff \\lim_{x \\to a^-} f(x) = L = \\lim_{x \\to a^+} f(x)', {
+    variables: [v('a', 'the point being approached'), v('L', 'the limit, a finite number'), v('x \\to a^-,\\ x \\to a^+', 'approach from the left, from the right')],
+    assumptions: ['f is defined near a on both sides; f(a) itself is never used and may not exist.'],
+    domain: ['If either side grows without bound, there is no finite limit.'],
+    interpretation: 'A two-sided limit exists exactly when the readings from both sides settle on the same number.',
+    pitfalls: ['Substituting $x = a$ and calling that the limit (true only for continuous functions).', 'Reading $0/0$ as “no limit” instead of a signal to simplify.', 'Trusting a table of values as proof.'],
+    application: 'Price steps and thresholds, removable gaps in formulas, and the definition of the derivative.',
+    python: '[f(a - h) for h in (0.1, 0.01, 0.001)], [f(a + h) for h in (0.1, 0.01, 0.001)]',
+    concept: 'c.limits', lesson: 'pc-limits', claim: 'theorem',
+    references: ['https://openstax.org/books/calculus-volume-1/pages/2-2-the-limit-of-a-function'],
+  }),
+  F('f.chain-rule', 'Chain rule', "\\frac{d}{dx} f\\big(g(x)\\big) = f'\\big(g(x)\\big)\\, g'(x)", {
+    variables: [v("g'(x)", 'inner rate: change in u = g(x) per unit of x'), v("f'(g(x))", 'outer rate, read at the inner value u = g(x)')],
+    assumptions: ['g is differentiable at x and f is differentiable at g(x).'],
+    domain: ['Wherever both derivatives exist.'],
+    interpretation: 'Rates along a chain multiply, and their units cancel like fractions: (y per u) × (u per x) = y per x.',
+    pitfalls: ["Reading the outer rate at $x$: $f'(x)\\,g'(x)$ is wrong unless $f'$ is constant.", 'Forgetting the inner rate (often a constant such as 3 or −1).'],
+    application: 'Rates through unit conversions, temperature along a climb, related rates, and backpropagation in neural networks.',
+    python: 'df(g(x)) * dg(x)',
+    concept: 'c.chain-rule', lesson: 'c1-chain-rule', claim: 'theorem',
+    references: ['https://openstax.org/books/calculus-volume-1/pages/3-6-the-chain-rule'],
   }),
   F('f.riemann', 'Riemann sum', 'S_n = \\sum_{i=1}^{n} f(x_i^*)\\,\\Delta x, \\quad \\Delta x = \\frac{b - a}{n}', {
     variables: [v('x_i^*', 'sample point in strip i'), v('\\Delta x', 'strip width')],

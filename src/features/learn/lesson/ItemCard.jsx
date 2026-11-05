@@ -1,10 +1,15 @@
-import { useId, useRef, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import MathText from '../../../components/math/MathText.jsx';
 import { checkAnswer } from '../../../lib/answers.js';
 import { toPlainText } from '../../../lib/mathFormat.js';
 import { useLearningStore } from '../../../store/useLearningStore.js';
 import { lessonById } from '../../../data/curriculum/lessons/index.js';
+import { CURRICULUM } from '../../../data/curriculum/path.js';
+import { explainWrong } from '../../../lib/feedback.js';
+import { choiceOrder } from '../../../lib/choiceOrder.js';
+import { bridgeFor } from '../../../lib/nextAction.js';
 import { hashFor } from '../../../app/pages.js';
+import StepLink from './StepLink.jsx';
 
 const LEVEL_LABEL = { scaffolded: 'Scaffolded', independent: 'Independent', transfer: 'Transfer' };
 
@@ -17,7 +22,7 @@ const LEVEL_LABEL = { scaffolded: 'Scaffolded', independent: 'Independent', tran
  * seeing feedback is not a second demonstration of anything. Using a hint
  * before that first attempt records it as an easier item, never transfer.
  */
-export default function ItemCard({ item, source, index, onFirstAttempt }) {
+export default function ItemCard({ item, source, index, onFirstAttempt, lessonId = null }) {
   const record = useLearningStore((s) => s.record);
   const [value, setValue] = useState(item.answer.type === 'multi' ? item.answer.values.map(() => '') : '');
   const [result, setResult] = useState(null); // { correct, reason, choice }
@@ -26,6 +31,8 @@ export default function ItemCard({ item, source, index, onFirstAttempt }) {
   const [showSolution, setShowSolution] = useState(false);
   const recorded = useRef(false);
   const id = useId();
+  // Shown in a fixed per-question order, so the right option is not always first.
+  const order = useMemo(() => choiceOrder(item.answer.choices?.length ?? 0, item.id), [item]);
 
   function submit(e) {
     e.preventDefault();
@@ -50,15 +57,20 @@ export default function ItemCard({ item, source, index, onFirstAttempt }) {
         transferItem: !!item.transfer,
         hinted,
         source,
+        lesson: lessonId,
       });
       onFirstAttempt?.(item.id, r.correct);
     }
   }
 
-  const choiceFeedback = result && !result.correct && result.choice != null ? item.feedback?.[result.choice] : null;
+  const wrong = result && !result.reason && !result.correct ? explainWrong(item, result, { attempts, hintsShown }) : null;
+  // The next useful practice after a miss: the item's own refresher, else the
+  // short bridge its lesson offers (src/lib/nextAction.js), never the lesson itself.
   const remedy = item.remedy && lessonById[item.remedy];
+  const bridge = !remedy && lessonId ? bridgeFor(CURRICULUM, lessonId) : null;
   const solved = result?.correct;
   const canSeeSolution = attempts > 0;
+  const solutionShown = showSolution || !!wrong?.showSolution;
 
   return (
     <article className={`item-card${solved ? ' solved' : ''}`} aria-labelledby={`${id}-p`}>
@@ -74,10 +86,10 @@ export default function ItemCard({ item, source, index, onFirstAttempt }) {
         {item.answer.type === 'choice' && (
           <fieldset className="item-choices">
             <legend className="visually-hidden">Choose one answer</legend>
-            {item.answer.choices.map((c, i) => (
+            {order.map((i) => (
               <label key={i} className={`item-choice${String(i) === String(value) ? ' on' : ''}`}>
-                <input type="radio" name={`${id}-c`} value={i} aria-label={toPlainText(c)} checked={String(i) === String(value)} onChange={() => setValue(String(i))} />
-                <MathText text={c} />
+                <input type="radio" name={`${id}-c`} value={i} data-choice={i} aria-label={toPlainText(item.answer.choices[i])} checked={String(i) === String(value)} onChange={() => setValue(String(i))} />
+                <MathText text={item.answer.choices[i]} />
               </label>
             ))}
           </fieldset>
@@ -105,7 +117,7 @@ export default function ItemCard({ item, source, index, onFirstAttempt }) {
               {hintsShown === 0 ? 'Show a hint' : 'Another hint'}
             </button>
           )}
-          {canSeeSolution && !showSolution && item.solution && (
+          {canSeeSolution && !solutionShown && item.solution && (
             <button type="button" className="studio-btn studio-btn-small" onClick={() => setShowSolution(true)}>Show solution</button>
           )}
         </div>
@@ -126,15 +138,23 @@ export default function ItemCard({ item, source, index, onFirstAttempt }) {
               {result.correct ? ' Correct.' : ' Not yet.'}
             </p>
             {result.correct && item.feedbackCorrect && <MathText as="p" text={item.feedbackCorrect} />}
-            {!result.correct && (choiceFeedback || item.feedbackIncorrect) && <MathText as="p" text={choiceFeedback || item.feedbackIncorrect} />}
-            {!result.correct && remedy && (
+            {wrong && <MathText as="p" className="item-what" text={wrong.what} />}
+            {wrong?.look && <p className="item-look"><strong>Where to look:</strong> <MathText text={wrong.look} /></p>}
+            {wrong && !wrong.showSolution && item.solution && <p className="studio-muted">Try again, or open the solution to see the reasoning step by step.</p>}
+            {wrong && remedy && (
               <p>Worth a refresher: <a href={hashFor('learn/lesson', { lessonId: remedy.id })}>{remedy.title}</a>.</p>
+            )}
+            {wrong && bridge && (
+              <p className="item-bridge">
+                Still unsure? A {bridge.minutes}-minute bridge:{' '}
+                <StepLink lessonId={bridge.lessonId} sectionId={bridge.sectionId}>{lessonById[bridge.lessonId].title} — the worked examples</StepLink>.
+              </p>
             )}
           </div>
         )}
       </div>
 
-      {showSolution && item.solution && (
+      {solutionShown && item.solution && (
         <div className="item-solution">
           <p className="studio-eyebrow">Solution</p>
           <MathText as="p" text={item.solution} />

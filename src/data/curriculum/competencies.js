@@ -16,6 +16,8 @@ export const DOMAINS = [
   { id: 'calculus', title: 'Calculus readiness' },
   { id: 'statistics', title: 'Statistics & probability' },
   { id: 'python', title: 'Python fundamentals' },
+  // V5: Ohlone CS-102, CS-113, CS-116, CS-124 preparation.
+  { id: 'cs', title: 'C++ programming & discrete math' },
 ];
 
 export const COMPETENCIES = [
@@ -81,6 +83,19 @@ export const COMPETENCIES = [
   { id: 'py.numpy', domain: 'python', title: 'Compute with NumPy arrays and broadcasting' },
   { id: 'py.debugging', domain: 'python', title: 'Find and fix a bug from an error message' },
   { id: 'py.data', domain: 'python', title: 'Clean, summarize and chart a real dataset with pandas' },
+
+  // C++ programming, data structures and discrete mathematics (V5)
+  { id: 'cpp.basics', domain: 'cs', title: 'Read, predict and trace basic C++ (types, branches, loops)' },
+  { id: 'cpp.functions', domain: 'cs', title: 'Write and test C++ functions with vectors and strings' },
+  { id: 'cpp.debugging', domain: 'cs', title: 'Find and fix a bug in a C++ program from its behaviour' },
+  { id: 'cpp.oop', domain: 'cs', title: 'Design C++ classes with invariants, constructors and destructors' },
+  { id: 'ds.linear', domain: 'cs', title: 'Use and implement stacks, queues and linked lists' },
+  { id: 'ds.complexity', domain: 'cs', title: 'Analyse running time with big-O and recursion' },
+  { id: 'ds.trees-hash', domain: 'cs', title: 'Use trees, heaps and hash tables, and choose between them' },
+  { id: 'dm.logic', domain: 'cs', title: 'Evaluate and transform propositional and predicate logic' },
+  { id: 'dm.proof', domain: 'cs', title: 'Write direct, contrapositive, contradiction and induction proofs' },
+  { id: 'dm.counting', domain: 'cs', title: 'Count with sets, permutations, combinations and discrete probability' },
+  { id: 'dm.graphs', domain: 'cs', title: 'Reason about relations, graphs and trees' },
 ];
 
 export const competencyById = Object.fromEntries(COMPETENCIES.map((c) => [c.id, c]));

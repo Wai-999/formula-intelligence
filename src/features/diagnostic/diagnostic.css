@@ -84,3 +84,12 @@
   font-weight: 600;
   min-height: 32px;
 }
+
+/* V5: the "not enough evidence" state of the result. */
+.dx-thin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 8px;
+}

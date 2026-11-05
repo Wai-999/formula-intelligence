@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import MathText, { MathBlock } from '../../components/math/MathText.jsx';
 import LabHost from '../labs/LabHost.jsx';
 import ItemCard from './lesson/ItemCard.jsx';
 import PredictCard from './lesson/PredictCard.jsx';
+import CppPanel from './CppPanel.jsx';
 import AppliedProblem from './lesson/AppliedProblem.jsx';
 import ExplainBack from './lesson/ExplainBack.jsx';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
@@ -23,9 +24,9 @@ import { LESSON_STEPS, stepLabel, formatSavedAt } from '../../lib/studyResume.js
 import { CURRICULUM } from '../../data/curriculum/path.js';
 import { PROJECTS } from '../../data/projects/index.js';
 import { problemsForLesson } from '../../data/curriculum/problems.js';
-import { STATUS, recommend, lessonNeighbours } from '../../lib/learningPath.js';
-import PathNext from './PathNext.jsx';
-import { usePathState, hrefFor } from './usePathState.js';
+import { lessonNeighbours } from '../../lib/learningPath.js';
+import NextActionCard, { ActionLink } from './NextActionCard.jsx';
+import { useNextAction } from './useNextAction.js';
 // Registers course and lesson titles for the page header and breadcrumbs.
 import '../../data/curriculum/index.js';
 import '../../styles/studio.css';
@@ -166,6 +167,45 @@ function Connections({ meta, id }) {
   );
 }
 
+/**
+ * A faded worked example (the professor contract's step 6): the same kind of
+ * problem as the worked examples, with some steps left for the learner. Each
+ * blank is an ordinary question with hints, so it records as scaffolded
+ * practice; the finished example appears once every blank has been tried.
+ */
+function FadedExample({ lessonId, faded }) {
+  const [tried, setTried] = useState(() => new Set());
+  const blanks = faded.steps.filter((st) => st.item);
+  const allTried = blanks.every((st) => tried.has(st.item.id));
+  let n = 0;
+  return (
+    <article className="lesson-faded" aria-labelledby={`faded-${lessonId}-h`}>
+      <p className="studio-eyebrow">Your turn, with support</p>
+      <h3 id={`faded-${lessonId}-h`} className="studio-h3">Faded example: {faded.title}</h3>
+      <MathText as="p" text={faded.problem} />
+      <ol className="lesson-steps">
+        {faded.steps.map((st, i) => (
+          <li key={i}>
+            {st.say && <MathText as="p" text={st.say} />}
+            {st.item && (
+              <ItemCard
+                item={st.item}
+                index={n++}
+                source="practice"
+                lessonId={lessonId}
+                onFirstAttempt={(id) => setTried((t) => new Set(t).add(id))}
+              />
+            )}
+          </li>
+        ))}
+      </ol>
+      {allTried
+        ? <p className="lesson-answer"><MathText text={faded.answer} /></p>
+        : <p className="studio-muted">Fill in the missing steps; the finished example appears when you have tried each one.</p>}
+    </article>
+  );
+}
+
 function CompetencyStatus({ ids }) {
   const evidence = useLearningStore((s) => s.evidence);
   return (
@@ -200,7 +240,7 @@ function CheckpointSection({ meta, items }) {
     <>
       <p className="studio-muted">These count as evidence for {meta.competencies.map((c) => competencyById[c]?.title).join('; ')}. Your first answer to each is the one recorded; you can keep trying afterwards.</p>
       {items.map((it, i) => (
-        <ItemCard key={it.id} item={it} index={i} source="checkpoint" onFirstAttempt={(id, ok) => setResults((r) => ({ ...r, [id]: ok }))} />
+        <ItemCard key={it.id} item={it} index={i} source="checkpoint" lessonId={meta.id} onFirstAttempt={(id, ok) => setResults((r) => ({ ...r, [id]: ok }))} />
       ))}
       {done && (
         <div className={`studio-callout ${correct === items.length ? 'studio-callout-ok' : 'studio-callout-warn'}`} role="status">
@@ -221,14 +261,22 @@ function CheckpointSection({ meta, items }) {
 }
 
 /**
- * After the checkpoint: what was practised, what needs review, where the idea
- * is used, and the one next step from the learning path
- * (src/lib/learningPath.js) — the next lesson, the next course, or an honest
- * end. Completing pages is never called mastery here.
+ * After the checkpoint: what was practised and shown, what is still wrong,
+ * when it comes back for review, where the idea is used, and the one next
+ * action (src/lib/nextAction.js) — the next lesson, a bridge, an honest gap,
+ * the next course, or the end. Completing pages is never called mastery here.
  */
-function LessonComplete({ meta, rec, checkpoint }) {
+function LessonComplete({ meta, action, checkpoint }) {
   const projects = PROJECTS.filter((p) => p.lessons.includes(meta.id));
   const missed = checkpoint ? checkpoint.total - checkpoint.correct : 0;
+  const evidence = useLearningStore((s) => s.evidence);
+  const cards = useLearningStore((s) => s.cards);
+  // Questions of this lesson whose latest answer is still wrong.
+  const latest = new Map();
+  for (const e of evidence) if (e.l === meta.id) latest.set(e.item, e.ok);
+  const stillWrong = [...latest.values()].filter((ok) => !ok).length;
+  const levels = meta.competencies.map((c) => ({ c, level: assessCompetency(evidence.filter((e) => e.c === c)).level }));
+  const nextReview = meta.competencies.map((c) => cards[c]?.due).filter(Boolean).sort((a, b) => a - b)[0];
   return (
     <section className="lesson-complete" aria-labelledby={`lesson-${meta.id}-complete`}>
       <h3 id={`lesson-${meta.id}-complete`} className="studio-h3">Lesson complete: what now?</h3>
@@ -238,13 +286,24 @@ function LessonComplete({ meta, rec, checkpoint }) {
           <dd>{meta.competencies.map((c) => competencyById[c]?.title ?? c).join('; ')}</dd>
         </div>
         <div>
+          <dt>Shown so far</dt>
+          <dd>{levels.map(({ c, level }) => `${competencyById[c]?.title ?? c}: ${LEVEL_LABEL[level].toLowerCase()}`).join('; ')}</dd>
+        </div>
+        <div>
           <dt>Needs review</dt>
           <dd>
             {missed > 0
               ? <>{missed} of {checkpoint.total} checkpoint answers were not right the first time. <a href={hashFor('practice/review')}>Practice → Review</a> brings those skills back sooner.</>
               : 'Nothing from the checkpoint. One sitting is not mastery, so a short review is scheduled anyway.'}
+            {stillWrong > 0 && <> {stillWrong} question{stillWrong === 1 ? ' in this lesson is' : 's in this lesson are'} still not right on your latest try.</>}
           </dd>
         </div>
+        {nextReview && (
+          <div>
+            <dt>Next review</dt>
+            <dd>{new Date(nextReview).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}, in Practice → Review</dd>
+          </div>
+        )}
         <div>
           <dt>Where it is used</dt>
           <dd>
@@ -254,8 +313,8 @@ function LessonComplete({ meta, rec, checkpoint }) {
           </dd>
         </div>
       </dl>
-      <p className="visually-hidden" role="status">Lesson complete. {rec.label}.</p>
-      <PathNext rec={rec} />
+      <p className="visually-hidden" role="status">Lesson complete. {action.headline ? `${action.headline}. ` : ''}{action.label}.</p>
+      <NextActionCard action={action} compact={false} />
     </section>
   );
 }
@@ -280,8 +339,7 @@ export default function LessonPage({ lessonId }) {
   const visited = useLearningStore((s) => s.lessons[lessonId]?.sections);
   const lessonRecord = useLearningStore((s) => s.lessons[lessonId]);
   // What comes after this lesson, from the one learning-path engine.
-  const pathState = usePathState();
-  const pathNext = useMemo(() => (meta ? recommend(CURRICULUM, pathState, { lessonId: meta.id }) : null), [meta, pathState]);
+  const action = useNextAction({ lessonId: meta?.id ?? null });
   const autoSave = useStudyResumeStore((s) => s.autoSave);
   const pinned = useStudyResumeStore((s) => s.pinned);
   const recent = useStudyResumeStore((s) => s.recent);
@@ -552,9 +610,10 @@ export default function LessonPage({ lessonId }) {
   // questions — the idea in settings the lesson did not show.
   const useItems = [...(body.apply?.items ?? []), ...body.practice.filter((p) => p.level === 'transfer')];
   // The pager's last button: the next lesson of the course or, at its end, the path's next step.
-  const finishLabel = pathNext.status === STATUS.TRANSITION || pathNext.status === STATUS.BRIDGE
-    ? `Finish course & continue: ${courseById[pathNext.nextCourseId].title}`
-    : pathNext.status === STATUS.END ? 'Finish course: see your learning path' : pathNext.label;
+  const finishLabel = action.kind === 'course-transition'
+    ? `Finish course & continue: ${courseById[action.rec.nextCourseId].title}`
+    : action.kind === 'content-gap' ? `Next lesson not written yet — ${action.label}`
+      : action.kind === 'path-finished' ? `${action.headline}: ${action.label}` : action.label;
 
   return (
     <div className="studio-scroll lesson-scroll" ref={rootRef}>
@@ -632,6 +691,10 @@ export default function LessonPage({ lessonId }) {
               <span className="studio-chip"><i className="ti ti-clock" aria-hidden="true" /> about {meta.minutes} min</span>
               <span className="studio-chip"><i className="ti ti-stairs" aria-hidden="true" /> {meta.difficulty}</span>
               <span className="studio-chip studio-chip-warn" title="See Sources and docs/CONTENT_QA.md"><i className="ti ti-alert-triangle" aria-hidden="true" /> Draft: awaiting independent math review</span>
+              {/* Practice first is a choice: the questions explain themselves, and the explanation stays above. */}
+              <button type="button" className="studio-btn studio-btn-small lesson-try-now" onClick={() => jump('try')}>
+                <i className="ti ti-target-arrow" aria-hidden="true" /> Try a question now
+              </button>
               <button
                 type="button"
                 className="studio-btn studio-btn-small"
@@ -655,7 +718,19 @@ export default function LessonPage({ lessonId }) {
 
           <Section lessonId={meta.id} id="matters" title="Why it matters" n={1}>
             <div className="studio-callout lesson-question"><MathText as="p" text={body.intuition.question} /></div>
+            {body.outcomes?.length > 0 && (
+              <div className="lesson-outcomes">
+                <p className="studio-eyebrow">After this lesson you can</p>
+                <ul className="lesson-ul">{body.outcomes.map((o) => <li key={o}><MathText text={o} /></li>)}</ul>
+              </div>
+            )}
             {body.intuition.body.map((p, i) => <MathText key={i} as="p" className="lesson-p" text={p} />)}
+            {body.intuition.simpler && (
+              <details className="lesson-disclosure">
+                <summary>Explain it more simply</summary>
+                {body.intuition.simpler.map((p, i) => <MathText key={i} as="p" className="lesson-p" text={p} />)}
+              </details>
+            )}
           </Section>
 
           <Section lessonId={meta.id} id="understand" title="Understand" n={2}>
@@ -675,7 +750,7 @@ export default function LessonPage({ lessonId }) {
                   <span key={p}>{i > 0 && ', '}<a href={hashFor('learn/concepts', { conceptId: p })}>{conceptById[p]?.title ?? p}</a></span>
                 ))}. If these feel shaky, the linked concepts show where they are taught.
               </p>
-              {body.priorCheck.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="prior" />)}
+              {body.priorCheck.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="prior" lessonId={meta.id} />)}
             </details>
             {body.examples.map((ex) => (
               <article key={ex.title} className="lesson-example">
@@ -683,6 +758,13 @@ export default function LessonPage({ lessonId }) {
                 <MathText as="p" text={ex.problem} />
                 <ol className="lesson-steps compact">{ex.steps.map((st, i) => <li key={i}><MathText text={st} /></li>)}</ol>
                 <p className="lesson-answer"><MathText text={ex.answer} /></p>
+                {ex.tempting && (
+                  <div className="lesson-tempting">
+                    <p className="studio-eyebrow">The tempting shortcut, and why it fails</p>
+                    <MathText as="p" text={ex.tempting.wrong} />
+                    <MathText as="p" className="studio-muted" text={ex.tempting.why} />
+                  </div>
+                )}
               </article>
             ))}
             {meta.formulas.map((fid) => formulaById[fid] && (
@@ -740,8 +822,9 @@ export default function LessonPage({ lessonId }) {
 
           <Section lessonId={meta.id} id="try" title="Try it" n={4}>
             <PredictCard predict={body.predict} />
+            {body.faded && <FadedExample lessonId={meta.id} faded={body.faded} />}
             <p className="studio-muted">From guided to independent. Hints never cost anything, except that the question then counts as an easier one; every attempt gets an explanation.</p>
-            {tryItems.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" />)}
+            {tryItems.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" lessonId={meta.id} />)}
           </Section>
 
           <Section lessonId={meta.id} id="use" title="Use it" n={5}>
@@ -751,43 +834,48 @@ export default function LessonPage({ lessonId }) {
                 {body.apply.steps?.length > 0 && <ol className="lesson-steps compact">{body.apply.steps.map((st, i) => <li key={i}><MathText text={st} /></li>)}</ol>}
               </>
             ) : <p className="studio-muted">The idea in settings the lesson did not show — the real test of understanding it.</p>}
-            {useItems.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" />)}
+            {useItems.map((it, i) => <ItemCard key={it.id} item={it} index={i} source="practice" lessonId={meta.id} />)}
             {body.apply?.limits?.length > 0 && (
               <div className="studio-callout studio-callout-warn">
                 <p className="studio-eyebrow">Where this model breaks</p>
                 <ul className="lesson-ul">{body.apply.limits.map((l) => <li key={l}><MathText text={l} /></li>)}</ul>
               </div>
             )}
-            {problemsForLesson(meta.id).map((p) => <AppliedProblem key={p.id} problem={p} />)}
-            <details className="lesson-disclosure" open={Boolean(body.apply)}>
-              <summary>Optional: the same idea in Python</summary>
-              <MathText as="p" className="lesson-p" text={body.python.intro} />
-              <pre className="lesson-code" tabIndex={0} aria-label="Python code"><code>{body.python.code}</code></pre>
-              <p className="studio-eyebrow">Expected output</p>
-              <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Expected output"><code>{body.python.output}</code></pre>
-              <MathText as="p" className="studio-muted" text={body.python.explain} />
-              <div className="studio-row">
-                <button
-                  type="button"
-                  className="studio-btn studio-btn-small"
-                  onClick={() => {
-                    usePyLabStore.getState().create(`${meta.title} (lesson)`, body.python.code);
-                    useUIStore.getState().goTo('apply/lab');
-                  }}
-                >
-                  <i className="ti ti-player-play" aria-hidden="true" /> Run it in the Python lab
-                </button>
-                <span className="studio-muted">Runs in your browser; the first run downloads Python (about 10 MB). Not coding yet? The questions above are the whole lesson.</span>
-              </div>
-            </details>
+            {problemsForLesson(meta.id).map((p) => <AppliedProblem key={p.id} problem={p} lessonId={meta.id} />)}
+            {body.cpp && <CppPanel lessonId={meta.id} cpp={body.cpp} open={Boolean(body.apply) && !body.python} />}
+            {body.python && (
+              <details className="lesson-disclosure" open={Boolean(body.apply)}>
+                <summary>Optional: the same idea in Python</summary>
+                <MathText as="p" className="lesson-p" text={body.python.intro} />
+                <pre className="lesson-code" tabIndex={0} aria-label="Python code"><code>{body.python.code}</code></pre>
+                <p className="studio-eyebrow">Expected output</p>
+                <pre className="lesson-code lesson-output" tabIndex={0} aria-label="Expected output"><code>{body.python.output}</code></pre>
+                <MathText as="p" className="studio-muted" text={body.python.explain} />
+                <div className="studio-row">
+                  <button
+                    type="button"
+                    className="studio-btn studio-btn-small"
+                    onClick={() => {
+                      usePyLabStore.getState().create(`${meta.title} (lesson)`, body.python.code);
+                      useUIStore.getState().goTo('apply/lab');
+                    }}
+                  >
+                    <i className="ti ti-player-play" aria-hidden="true" /> Run it in the Python lab
+                  </button>
+                  <span className="studio-muted">Runs in your browser; the first run downloads Python (about 10 MB). Not coding yet? The questions above are the whole lesson.</span>
+                </div>
+              </details>
+            )}
           </Section>
 
           <Section lessonId={meta.id} id="check" title="Check understanding" n={6}>
             <ExplainBack lessonId={meta.id} />
             <CheckpointSection meta={meta} items={body.checkpoint} />
             {lessonRecord?.completed
-              ? <LessonComplete meta={meta} rec={pathNext} checkpoint={lessonRecord.checkpoint} />
-              : <p className="lesson-next studio-muted">After the checkpoint, your path continues with: <a href={hrefFor(pathNext.target)}>{pathNext.label}</a>.</p>}
+              ? <LessonComplete meta={meta} action={action} checkpoint={lessonRecord.checkpoint} />
+              : action.kind === 'content-gap'
+                ? <p className="lesson-next studio-muted">After the checkpoint: {action.headline.charAt(0).toLowerCase()}{action.headline.slice(1)}, so you will be offered practice on this course’s skills or the next written course — your choice.</p>
+                : <p className="lesson-next studio-muted">After the checkpoint, your path continues with: <ActionLink target={action.target}>{action.label}</ActionLink>.</p>}
             <div className="studio-row lesson-end" role="group" aria-label="When you are done here">
               <button type="button" className="studio-btn" onClick={() => jump('matters')}>Review this lesson from Step 1</button>
               <button type="button" className="studio-btn" onClick={finishSession}>Save &amp; finish for today</button>
@@ -814,7 +902,7 @@ export default function LessonPage({ lessonId }) {
               : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>← {course.title}: course outline</a>}
             {neighbours.next
               ? <a className="studio-btn" href={hashFor('learn/lesson', { lessonId: neighbours.next })}>Next lesson: {lessonById[neighbours.next].title} →</a>
-              : <a className="studio-btn studio-btn-primary" href={hrefFor(pathNext.target)}>{finishLabel} →</a>}
+              : <ActionLink target={action.target} className="studio-btn studio-btn-primary">{finishLabel} →</ActionLink>}
           </nav>
         </article>
 

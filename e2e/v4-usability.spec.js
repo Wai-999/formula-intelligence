@@ -66,7 +66,7 @@ for (const vp of VIEWPORTS) {
       await cards.nth(0).locator('input').press('Enter');
       await cards.nth(1).locator('input').fill('21');
       await cards.nth(1).locator('input').press('Enter');
-      await cards.nth(2).locator('input[type="radio"]').first().check();
+      await cards.nth(2).locator('input[data-choice="0"]').check();
       await cards.nth(2).getByRole('button', { name: 'Check' }).click();
       await expect(check.getByText('3 of 3 correct on the first try.')).toBeVisible();
       // The lesson says where to go next.

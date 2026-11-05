@@ -1,0 +1,622 @@
+{
+  "root": "/Users/waiyan/Downloads/My Porfolio/Formula Intelligence/fi-upgrade-v31",
+  "courses": [
+    {
+      "id": "prealgebra",
+      "title": "Prealgebra",
+      "units": 6,
+      "written": 2,
+      "planned": 13,
+      "unitsWithNoLesson": 4,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Prealgebra skills: “Ratios, rates and unit rates” — Use it",
+        "headline": "Next lesson not written yet: Inequalities on the number line",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "algebra-1",
+      "title": "Algebra I",
+      "units": 7,
+      "written": 4,
+      "planned": 13,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Algebra I skills: “Break-even: when does a business cover its costs?” — Use it",
+        "headline": "Next lesson not written yet: What is a function?",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "algebra-2",
+      "title": "Algebra II",
+      "units": 8,
+      "written": 2,
+      "planned": 11,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Algebra II skills: “Exponentials and logarithms: growth and how to undo it” — Use it",
+        "headline": "Next lesson not written yet: Graphs of inverses and restricted domains",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "precalculus",
+      "title": "Geometry, Trigonometry & Precalculus",
+      "units": 8,
+      "written": 2,
+      "planned": 9,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Geometry, Trigonometry & Precalculus skills: “Radians and the unit circle” — Use it",
+        "headline": "Next lesson not written yet: Similarity and the Pythagorean theorem",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "linear-algebra",
+      "title": "Linear Algebra",
+      "units": 9,
+      "written": 6,
+      "planned": 19,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Linear Algebra skills: “Vectors and the dot product” — Use it",
+        "headline": "Next lesson not written yet: The pseudoinverse",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "calculus-1",
+      "title": "Calculus I — Limits and Derivatives",
+      "units": 4,
+      "written": 3,
+      "planned": 7,
+      "unitsWithNoLesson": 2,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Calculus I — Limits and Derivatives skills: “The derivative from first principles” — Use it",
+        "headline": "Next lesson not written yet: Power, product and quotient rules",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "calculus-2",
+      "title": "Calculus II — Integrals and Series",
+      "units": 3,
+      "written": 2,
+      "planned": 8,
+      "unitsWithNoLesson": 1,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Calculus II — Integrals and Series skills: “Area as a limit of Riemann sums” — Use it",
+        "headline": "Next lesson not written yet: Convergence tests",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "calculus-3",
+      "title": "Calculus III — Multivariable Calculus and Optimization",
+      "units": 4,
+      "written": 2,
+      "planned": 9,
+      "unitsWithNoLesson": 2,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Calculus III — Multivariable Calculus and Optimization skills: “Partial derivatives and the gradient” — Use it",
+        "headline": "Next lesson not written yet: Lagrange multipliers",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "prob-stats",
+      "title": "Probability & Statistics",
+      "units": 8,
+      "written": 2,
+      "planned": 14,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Probability & Statistics skills: “Bayes’ theorem as updating” — Use it",
+        "headline": "Next lesson not written yet: Confidence intervals (chapter 7)",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "ml-foundations",
+      "title": "Machine Learning & Data Science",
+      "units": 8,
+      "written": 3,
+      "planned": 14,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Machine Learning & Data Science skills: “Validation, cross-validation and leakage” — Use it",
+        "headline": "Next lesson not written yet: Regularization",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "python-ds",
+      "title": "Python for Data Science",
+      "units": 6,
+      "written": 1,
+      "planned": 14,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Python for Data Science skills: “Python first steps: lists, loops and an honest average” — Use it",
+        "headline": "Next lesson not written yet: Functions",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "cpp-fundamentals",
+      "title": "C++ Programming Fundamentals",
+      "units": 7,
+      "written": 2,
+      "planned": 12,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise C++ Programming Fundamentals skills: “Loops you can trace” — Use it",
+        "headline": "Next lesson not written yet: Strings and text processing",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "cpp-oop",
+      "title": "Object-Oriented Programming in C++",
+      "units": 6,
+      "written": 1,
+      "planned": 9,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Object-Oriented Programming in C++ skills: “Classes that keep their promises” — Use it",
+        "headline": "Next lesson not written yet: const correctness",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "data-structures",
+      "title": "Data Structures and Algorithms",
+      "units": 6,
+      "written": 1,
+      "planned": 10,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Data Structures and Algorithms skills: “Stacks and queues: who gets served next?” — Use it",
+        "headline": "Next lesson not written yet: Linked lists",
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "discrete-structures",
+      "title": "Discrete Structures",
+      "units": 6,
+      "written": 2,
+      "planned": 10,
+      "unitsWithNoLesson": 4,
+      "afterWrittenLessons": {
+        "status": "content-gap",
+        "label": "Practise Discrete Structures skills: “Logic you can compute: truth tables and De Morgan” — Use it",
+        "headline": "Next lesson not written yet: Recursive definitions and strong induction",
+        "saysNotComplete": true
+      }
+    }
+  ],
+  "totals": {
+    "courses": 15,
+    "coursesWithWrittenLessons": 15,
+    "writtenLessons": 35,
+    "plannedLessons": 172,
+    "lessonItems": 385,
+    "independentOrHarderShare": 72.7,
+    "transferShare": 30.6,
+    "itemsWithWrongAnswerExplanation": 156,
+    "numericItemsWithoutWrongAnswerExplanation": 215,
+    "itemsWithAHint": 164,
+    "appliedProblems": 38,
+    "appliedProblemSteps": 154,
+    "appliedProblemsLinkedToProjects": 13,
+    "projectsLinkedFromProblems": 4,
+    "lessonsWithAppliedProblem": 28,
+    "lessonsWithFadedExample": 5,
+    "projects": 10,
+    "coursesThatMoveOnWithoutNamingTheGap": 0
+  },
+  "perLesson": [
+    {
+      "id": "pa-ratios-rates",
+      "course": "prealgebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "pa-equation-balance",
+      "course": "prealgebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "a1-break-even",
+      "course": "algebra-1",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 5,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "a1-slope",
+      "course": "algebra-1",
+      "items": 9,
+      "independentOrHarder": 6,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "a1-slope-intercept",
+      "course": "algebra-1",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "a1-line-fit",
+      "course": "algebra-1",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "a2-composition",
+      "course": "algebra-2",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 5,
+      "appliedProblems": 3,
+      "fadedExample": true,
+      "simpler": true,
+      "explainBack": true
+    },
+    {
+      "id": "a2-exp-log",
+      "course": "algebra-2",
+      "items": 12,
+      "independentOrHarder": 9,
+      "transfer": 4,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "pc-unit-circle",
+      "course": "precalculus",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 4,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "pc-limits",
+      "course": "precalculus",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "la-dot-product",
+      "course": "linear-algebra",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 3,
+      "appliedProblems": 3,
+      "fadedExample": true,
+      "simpler": true,
+      "explainBack": true
+    },
+    {
+      "id": "la-projection",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-matrix-scores",
+      "course": "linear-algebra",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 5,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-matrix-transform",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-elimination",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-svd-pca",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c1-derivative",
+      "course": "calculus-1",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c1-marginal-cost",
+      "course": "calculus-1",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 5,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c1-chain-rule",
+      "course": "calculus-1",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 4,
+      "appliedProblems": 3,
+      "fadedExample": true,
+      "simpler": true,
+      "explainBack": true
+    },
+    {
+      "id": "c2-riemann",
+      "course": "calculus-2",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c2-taylor",
+      "course": "calculus-2",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c3-gradient",
+      "course": "calculus-3",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c3-gradient-descent",
+      "course": "calculus-3",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "st-sampling-clt",
+      "course": "prob-stats",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 3,
+      "fadedExample": true,
+      "simpler": true,
+      "explainBack": true
+    },
+    {
+      "id": "st-bayes",
+      "course": "prob-stats",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "ml-validation",
+      "course": "ml-foundations",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "ml-classification-metrics",
+      "course": "ml-foundations",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "ml-calibration-fairness",
+      "course": "ml-foundations",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "py-first-steps",
+      "course": "python-ds",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 4,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "cpp-loops-trace",
+      "course": "cpp-fundamentals",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 3,
+      "appliedProblems": 3,
+      "fadedExample": true,
+      "simpler": true,
+      "explainBack": true
+    },
+    {
+      "id": "cpp-functions-vectors",
+      "course": "cpp-fundamentals",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "cpp-classes-invariants",
+      "course": "cpp-oop",
+      "items": 12,
+      "independentOrHarder": 9,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "ds-stacks-queues",
+      "course": "data-structures",
+      "items": 12,
+      "independentOrHarder": 9,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "dm-logic",
+      "course": "discrete-structures",
+      "items": 12,
+      "independentOrHarder": 9,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "dm-induction",
+      "course": "discrete-structures",
+      "items": 13,
+      "independentOrHarder": 10,
+      "transfer": 4,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    }
+  ]
+}

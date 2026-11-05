@@ -435,6 +435,42 @@
   font-weight: 600;
 }
 
+/* The professor contract (docs/learning-8020/TEACHING_RUBRIC.md): outcomes
+   up front, the tempting mistake inside a worked example, and a faded
+   example whose blanks are ordinary questions. */
+.lesson-outcomes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lesson-tempting {
+  border-left: 3px solid var(--warning);
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lesson-tempting p {
+  margin: 0;
+}
+
+.lesson-faded {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lesson-faded .lesson-steps > li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .lesson-alt {
   border-left: 2px solid var(--border-strong);
   padding-left: 10px;
@@ -863,27 +899,32 @@
   margin: 0;
 }
 
-.course-signals {
+.course-signals,
+.course-completion-list {
   display: grid;
   gap: 4px;
   margin: 4px 0 0;
 }
 
-.course-signals > div {
+.course-signals > div,
+.course-completion-list > div {
   display: flex;
   flex-wrap: wrap;
   gap: 0 8px;
 }
 
-.course-signals dt {
+.course-signals dt,
+.course-completion-list dt {
   color: var(--text-muted);
 }
 
-.course-signals dt::after {
+.course-signals dt::after,
+.course-completion-list dt::after {
   content: ':';
 }
 
-.course-signals dd {
+.course-signals dd,
+.course-completion-list dd {
   margin: 0;
 }
 

@@ -27,4 +27,14 @@ export const LABS = {
   'break-even': { title: 'Break-even: revenue against total cost', required: null, load: () => import('./BreakEvenLab.jsx') },
   'marginal-cost': { title: 'Marginal cost: derivative versus difference quotient', required: null, load: () => import('./MarginalCostLab.jsx') },
   'matrix-scores': { title: 'Scores as a matrix–vector product', required: null, load: () => import('./MatrixScoresLab.jsx') },
+  // V5 vertical slice: Algebra II → Precalculus → Calculus I.
+  'composition-chain': { title: 'Composition and the chain rule', required: null, load: () => import('./ChainLab.jsx') },
+  limits: { title: 'Limits: approaching from both sides', required: null, load: () => import('./LimitLab.jsx') },
+  'log-scale': { title: 'Exponential growth on two scales', required: null, load: () => import('./LogScaleLab.jsx') },
+  'unit-circle': { title: 'The unit circle', required: null, load: () => import('./UnitCircleLab.jsx') },
+  // V5 Computer Science (C++) track.
+  'code-trace': { title: 'Code tracing', required: null, load: () => import('./TraceLab.jsx') },
+  'stack-queue': { title: 'Stack and queue, side by side', required: null, load: () => import('./StackQueueLab.jsx') },
+  'truth-table': { title: 'Truth tables', required: null, load: () => import('./TruthTableLab.jsx') },
+  induction: { title: 'Induction: one more layer', required: null, load: () => import('./InductionLab.jsx') },
 };

@@ -54,10 +54,17 @@ evidence ─> mastery.js (computed) ─> Home, Progress
 evidence ─> reviewSchedule.js (cards) ─> Practice → Review
 diagnostic itemBank ─> diagnostic.js ─> useDiagnosticStore ─> placement ─> Home "next lesson"
 evidence ─> learningSignals.js ─> My Progress → Your learning signals
+catalog + path + lessons ─> learningPath.js (recommend) ─┐
+saved place + evidence + reviews due ────────────────────┴─> nextAction.js (getNextLearningAction)
+    ─> useNextAction() ─> NextActionCard ─> Home, course page, lesson end, My Progress, session summary
+wrong answer ─> feedback.js (explainWrong) + nextAction.bridgeFor ─> ItemCard feedback
 ```
 
+- **One next action (80/20 upgrade).** `src/lib/nextAction.js` wraps the learning-path engine with the saved place, recent wrong answers (`l`, the lesson of each answer, is stored since this release), reviews due and planned-but-unwritten lessons, and returns one primary action, at most two others, the rule that chose it and a reason. Pages never decide what comes next. Rules and the brief's hard cases: `docs/learning-8020/LEARNING_FLOW_SPEC.md`.
+- Choice options are shown in a fixed per-question shuffle (`src/lib/choiceOrder.js`); data and feedback keep the authored index.
+
 - Lesson bodies are separate chunks (`load: () => import(...)`), so the course list never loads lesson text.
-- The page-meta resolvers (lesson and course titles for the header) register lazily, keeping the curriculum out of the initial bundle (initial JS 71.9 KB gzip; budget 90 KB).
+- The page-meta resolvers (lesson and course titles for the header) register lazily, keeping the curriculum out of the initial bundle (initial JS about 72 KB gzip; budget 90 KB — see docs/learning-8020/TEST_RESULTS.md for the current figure).
 - Global search (`src/lib/searchIndex.js`) is built on first open: pages, formulas, models, ML lessons, curriculum lessons/courses/concepts, code exercises and projects.
 
 ## Stores — `src/store/`
@@ -85,6 +92,25 @@ Worker client with `runPython`, `gradePython`, `stopPython`; timeout or Stop ter
 ## Offline — `src/sw/serviceWorker.template.js`
 
 Generated at build (`vite.config.js` → `serviceWorker()` plugin) with this build's exact file list (189 files, 2.78 MB on 2026-10-27). Navigations network-first with the cached shell as fallback; built assets (including the self-hosted icon font) cache-first; Pyodide and external links network-only. Activation deletes `fi-runtime-v1`, the cache that held the cdnjs icon font before the app shipped its own. Registered only in production builds. No `skipWaiting`: an open tab keeps the build it started with. `public/manifest.webmanifest` makes it installable.
+
+## Ohlone and transfer data — `src/data/college/` (V5)
+
+Kept apart from the curriculum so study and official facts can never be confused:
+
+| Module | Holds | Relation |
+|---|---|---|
+| `sources.js` | every official document read: institution, title, URL, academic year, date read; `STATUSES`; the permanent `DISCLAIMER` | — |
+| `ohloneCourses.js` | 15 Ohlone courses from the 2026–2027 catalog (units, prerequisites, advisories, terms, C-ID, paraphrased topics) | — |
+| `requirements.js` | Ohlone Data Science A.S. requirements; each target's published requirements | `officialRequirement` |
+| `articulation.js` | ASSIST rows (university course ← Ohlone course(s), or none) | `officialArticulatesTo` |
+| `studyAlignment.js` | this site's units mapped onto each Ohlone course's catalog topics; coverage counts | `selfStudySupports` |
+| `validate.js` | the rules (official URLs, current vs earlier years, no credit claims, exact topic lists) | — |
+
+Every record carries `institution, major, requirementType, sendingCourse, receivingCourse, academicYear, status, sourceUrl, sourceTitle, accessedAt, notes`. `npm run validate:college` runs in CI; `npm run docs:college` regenerates the tables in `docs/major-prep/`. The page is `src/features/college/MajorPrepPage.jsx` (`#learn/prep`, a child of Courses); the chosen target lives in `useStudyPlanStore` (`fi_study_v1`).
+
+## C++ (V5) — no compiler in the browser
+
+Lessons may carry a `cpp` block (code, real output, file name), shown by `src/features/learn/CppPanel.jsx` with a client-side `.cpp` download and local compile instructions; nothing is uploaded. Exercises (`src/data/cpp/exercises.js`) are complete files with built-in tests. The trace lab replays programs from `src/data/cpp/traces.js` (C++ or Python). `scripts/verify-cpp.mjs` compiles and runs all of it in CI (C++17, `-Wall -Wextra -pedantic -Werror`, address and UB sanitizers on Linux); `scripts/verify-python.mjs` checks the Python traces. See `docs/major-prep/QUALITY_AND_SECURITY.md` for the decision against an in-browser compiler.
 
 ## Deployment
 

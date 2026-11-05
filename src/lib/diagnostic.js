@@ -22,6 +22,8 @@ const domainName = (id) => DOMAINS.find((d) => d.id === id)?.title ?? id;
 const courseName = (id) => courseById[id]?.title ?? id;
 
 export const ROUNDS = 3;
+/** Answers a domain needs before its estimate may decide a recommendation. */
+export const MIN_EVIDENCE = 2;
 const B = { 1: -1, 2: 0, 3: 1 };
 const GRID = Array.from({ length: 161 }, (_, i) => -4 + i * 0.05);
 
@@ -62,6 +64,8 @@ export function assessDomain(domain, responses, skipped) {
     domain,
     level,
     confidence: sd < 0.8 ? 'moderate' : 'low',
+    // V5.1 §13.4: a consequential decision needs at least two answers.
+    evidence: answered.length >= MIN_EVIDENCE ? 'sufficient' : 'insufficient',
     correct: answered.filter((r) => r.ok).length,
     answered: answered.length,
     mean,
@@ -157,14 +161,22 @@ export function placementChoices(course) {
 
 /**
  * A transparent recommendation from domain estimates:
- * { course, reasons: [..], strengths: [..], gaps: [..], alsoConsider: [{ course, why }] }
+ * { course, evidence, reasons: [..], strengths: [..], gaps: [..], alsoConsider: [{ course, why }] }
+ *
+ * `evidence` is 'insufficient' when nothing on the mathematics path was
+ * answered, or when a domain that decided the result rests on a single
+ * answer (V5.1 §13.4: an explicit "insufficient evidence" outcome). The
+ * course is still named — the learner needs somewhere to start — but the
+ * page presents it as a guess and asks for more answers or a choice.
  */
 export function recommend(estimates) {
   const by = Object.fromEntries(estimates.map((e) => [e.domain, e]));
   const reasons = [];
+  const thin = [];
   let course = null;
   for (const step of MATH_PATH) {
     const e = by[step.domain];
+    if (e && e.answered > 0 && e.answered < MIN_EVIDENCE) thin.push(step.domain);
     if (e?.level === 'strong') {
       reasons.push(`${domainName(step.domain)}: ${e.correct} of ${e.answered} correct, including harder items — likely ready to move past ${courseName(step.course)}.`);
       continue;
@@ -179,12 +191,18 @@ export function recommend(estimates) {
   if (strong('algebra') && !strong('linalg')) alsoConsider.push({ course: 'linear-algebra', why: 'Your algebra looks ready for vectors and matrices.' });
   if (strong('algebra') && !strong('statistics')) alsoConsider.push({ course: 'prob-stats', why: 'Your algebra looks ready for probability and statistics.' });
   if (!strong('python')) alsoConsider.push({ course: 'python-ds', why: 'Python can be learned alongside the mathematics from the start.' });
+  if (!strong('cs')) alsoConsider.push({ course: 'cpp-fundamentals', why: 'C++ programming (for Ohlone CS-102) can be learned alongside the mathematics; it needs only algebra.' });
   if (!course) {
     course = strong('statistics') && strong('linalg') && strong('python') ? 'ml-foundations' : 'calculus-2';
     reasons.push('Every step of the mathematics path looked strong in this short screen.');
   }
+  const answeredOnPath = MATH_PATH.some((s) => (by[s.domain]?.answered ?? 0) > 0);
+  const evidence = !answeredOnPath || thin.length > 0 ? 'insufficient' : 'sufficient';
+  if (!answeredOnPath) reasons.push('No mathematics questions were answered, so there is no evidence to judge from: this starting point is a default, not a finding.');
+  else if (thin.length > 0) reasons.push(`Fewer than ${MIN_EVIDENCE} questions were answered in ${thin.map((d) => domainName(d).toLowerCase()).join(' and ')} — not enough evidence to judge. Answer a few more questions, or choose where to start yourself.`);
   return {
     course,
+    evidence,
     reasons,
     strengths: estimates.filter((e) => e.level === 'strong').map((e) => e.domain),
     gaps: estimates.filter((e) => e.level === 'gap').map((e) => e.domain),

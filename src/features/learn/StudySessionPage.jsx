@@ -2,6 +2,9 @@ import { courseById } from '../../data/curriculum/catalog.js';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
 import { useStudyResumeStore } from '../../store/useStudyResumeStore.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
+import { competencyById } from '../../data/curriculum/competencies.js';
+import NextActionCard from './NextActionCard.jsx';
+import { useNextAction } from './useNextAction.js';
 import { resolveLocation, stepLabel, formatSavedAt } from '../../lib/studyResume.js';
 import { hashFor } from '../../app/pages.js';
 import '../../styles/studio.css';
@@ -17,6 +20,8 @@ export default function StudySessionPage() {
   const pinned = useStudyResumeStore((s) => s.pinned);
   const requestResume = useStudyResumeStore((s) => s.requestResume);
   const lessons = useLearningStore((s) => s.lessons);
+  const evidence = useLearningStore((s) => s.evidence);
+  const action = useNextAction();
   // After a reload the summary is gone (it was never stored); the saved place is not.
   const loc = lastSession?.loc ?? pinned;
   const place = resolveLocation(loc, lessonById);
@@ -40,6 +45,10 @@ export default function StudySessionPage() {
   const failed = lastSession && !lastSession.ok;
   const checkpoint = lessons[lesson.id]?.checkpoint;
   const minutes = lastSession?.startedAt ? Math.max(1, Math.round((lastSession.finishedAt - lastSession.startedAt) / 60_000)) : null;
+  // This session's answers in this lesson: what was practised, and what to look at again.
+  const mine = lastSession?.startedAt ? evidence.filter((e) => e.l === lesson.id && e.at >= lastSession.startedAt) : [];
+  const firstTry = mine.filter((e) => e.ok).length;
+  const toReview = [...new Set(mine.filter((e) => !e.ok).map((e) => e.c))];
 
   return (
     <div className="studio-scroll">
@@ -66,14 +75,28 @@ export default function StudySessionPage() {
           {lastSession?.answered != null && (
             <div><dt>This session</dt><dd>{lastSession.answered} question{lastSession.answered === 1 ? '' : 's'} answered in this lesson{minutes ? `, about ${minutes} minute${minutes === 1 ? '' : 's'} in it` : ''}</dd></div>
           )}
+          {mine.length > 0 && (
+            <div><dt>Practised</dt><dd>{firstTry} of {mine.length} right on the first try</dd></div>
+          )}
+          {mine.length > 0 && (
+            <div>
+              <dt>Needs review</dt>
+              <dd>{toReview.length ? `${toReview.map((c) => competencyById[c]?.title ?? c).join('; ')} — these come back sooner in Practice → Review` : 'Nothing from this session'}</dd>
+            </div>
+          )}
           <div>
             <dt>Checkpoint</dt>
             <dd>{checkpoint ? `Answered: ${checkpoint.correct} of ${checkpoint.total} correct on the first try` : 'Not answered yet — finishing a session does not complete a lesson'}</dd>
           </div>
         </dl>
 
+        <section aria-labelledby="session-next">
+          <h2 id="session-next" className="studio-h3">Next useful step</h2>
+          <NextActionCard action={action} />
+        </section>
+
         <div className="studio-row" role="group" aria-label="What next">
-          <a className="studio-btn studio-btn-primary" href={hashFor('home')}>Return Home</a>
+          <a className="studio-btn" href={hashFor('home')}>Return Home</a>
           <button type="button" className="studio-btn" onClick={() => requestResume(place.loc)}>Continue now</button>
           <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Open course outline</a>
         </div>
