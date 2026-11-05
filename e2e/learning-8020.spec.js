@@ -101,7 +101,7 @@ test('finishing the written lessons of Calculus I: Home names the unwritten less
   await seed(page, { completed: calc1, placement: { course: 'calculus-1', source: 'manual', at: T - 10 } });
   await page.goto('./#home', { waitUntil: 'networkidle' });
   const gap = firstGap(cur.courseById['calculus-1']).title;
-  await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('The next lesson is not written yet');
+  await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('You finished the written lessons');
   await expect(page.locator(`${VISIBLE}.home-hero-title`)).toHaveText(`Next lesson not written yet: ${gap}`);
   await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).toContainText('Practise Calculus I');
   await expect(page.locator(`${VISIBLE}.home-hero a`, { hasText: /^Continue to Calculus II/ })).toBeVisible();

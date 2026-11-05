@@ -32,7 +32,7 @@ const EYEBROW = {
   lesson: 'Next recommended lesson',
   'course-transition': 'Next course on your path',
   bridge: 'A short bridge first',
-  'content-gap': 'The next lesson is not written yet',
+  'content-gap': 'You finished the written lessons',
   'path-finished': 'Your learning path',
 };
 
@@ -141,7 +141,7 @@ function NextHero({ action, pathTitle }) {
   const named = action.kind === 'content-gap' || action.kind === 'path-finished';
   return (
     <section className="home-hero" aria-labelledby="home-continue">
-      <p className="studio-eyebrow" id="home-continue">{EYEBROW[action.kind] ?? 'Next step'}</p>
+      <p className="studio-eyebrow" id="home-continue">{action.evidence.ruleId === 'outline-course' ? 'Your starting point is not written yet' : EYEBROW[action.kind] ?? 'Next step'}</p>
       <h2 className="home-hero-title">{named || !lesson ? action.headline ?? action.label : lesson.title}</h2>
       {lesson && <PathTrail pathTitle={pathTitle} lessonId={lesson.id} sectionId={action.target.sectionId} />}
       {lesson && !named && <p className="studio-muted">{courseById[lesson.course].title} · about {action.estimatedMinutes ?? lesson.minutes} minutes.</p>}

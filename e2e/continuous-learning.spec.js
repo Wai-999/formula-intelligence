@@ -50,7 +50,7 @@ async function answerCheckpoint(page, lessonId) {
     if (item.answer.type === 'numeric') {
       await card.locator('input').fill(String(item.answer.value));
     } else if (item.answer.type === 'choice') {
-      await card.locator('input[type="radio"]').nth(item.answer.correct).check();
+      await card.locator(`input[data-choice="${item.answer.correct}"]`).check();
     } else {
       for (const [k, v] of item.answer.values.entries()) await card.locator('input').nth(k).fill(String(v));
     }
@@ -158,7 +158,7 @@ test('E: Home after finishing any course names what is not written and offers th
     const next = cur.courseLessons[written[i + 1]][0];
     if (action.kind === 'content-gap') {
       await expect(heroTitle(page), `after ${c}`).toHaveText(action.headline);
-      await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('The next lesson is not written yet');
+      await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('You finished the written lessons');
       await expect(page.locator(`${VISIBLE}.home-hero a[href="#learn/lesson/${next}"]`), `after ${c}: next course offered`).toHaveCount(1);
     } else {
       await expect(heroTitle(page), `after ${c}`).toHaveText(title(next));
@@ -261,7 +261,7 @@ test('L: a real-world problem — hints count as help, the worked solution waits
     const step = card.locator('.item-card').nth(i);
     if (i === 0) await step.getByRole('button', { name: 'Show a hint' }).click();
     if (item.answer.type === 'numeric') await step.locator('input').fill(String(item.answer.value));
-    else if (item.answer.type === 'choice') await step.locator('input[type="radio"]').nth(item.answer.correct).check();
+    else if (item.answer.type === 'choice') await step.locator(`input[data-choice="${item.answer.correct}"]`).check();
     else for (const [k, v] of item.answer.values.entries()) await step.locator('input').nth(k).fill(String(v));
     await step.getByRole('button', { name: 'Check' }).click();
     await expect(step).toContainText('Correct');

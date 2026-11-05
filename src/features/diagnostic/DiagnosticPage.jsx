@@ -6,6 +6,7 @@ import { COURSES, courseById } from '../../data/curriculum/catalog.js';
 import { nextItem, assessDomain, recommend, placementChoices, LEVEL_TEXT } from '../../lib/diagnostic.js';
 import { checkAnswer } from '../../lib/answers.js';
 import { toPlainText } from '../../lib/mathFormat.js';
+import { choiceOrder } from '../../lib/choiceOrder.js';
 import { useDiagnosticStore } from '../../store/useDiagnosticStore.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
 import { hashFor } from '../../app/pages.js';
@@ -32,10 +33,11 @@ function Question({ item, onAnswer, onSkip, onSkipDomain, onStop, index }) {
       {item.answer.type === 'choice' && (
         <fieldset className="item-choices">
           <legend className="visually-hidden">Choose one answer</legend>
-          {item.answer.choices.map((c, i) => (
+          {/* A fixed per-question order (src/lib/choiceOrder.js): the bank lists every right answer first. */}
+          {choiceOrder(item.answer.choices.length, item.id).map((i) => (
             <label key={i} className={`item-choice${String(i) === value ? ' on' : ''}`}>
-              <input type="radio" name="dx" aria-label={toPlainText(c)} checked={String(i) === value} onChange={() => setValue(String(i))} />
-              <MathText text={c} />
+              <input type="radio" name="dx" data-choice={i} aria-label={toPlainText(item.answer.choices[i])} checked={String(i) === value} onChange={() => setValue(String(i))} />
+              <MathText text={item.answer.choices[i]} />
             </label>
           ))}
         </fieldset>

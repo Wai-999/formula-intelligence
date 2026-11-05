@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import MathText from '../../../components/math/MathText.jsx';
 import { checkAnswer } from '../../../lib/answers.js';
 import { toPlainText } from '../../../lib/mathFormat.js';
@@ -6,6 +6,7 @@ import { useLearningStore } from '../../../store/useLearningStore.js';
 import { lessonById } from '../../../data/curriculum/lessons/index.js';
 import { CURRICULUM } from '../../../data/curriculum/path.js';
 import { explainWrong } from '../../../lib/feedback.js';
+import { choiceOrder } from '../../../lib/choiceOrder.js';
 import { bridgeFor } from '../../../lib/nextAction.js';
 import { hashFor } from '../../../app/pages.js';
 import StepLink from './StepLink.jsx';
@@ -30,6 +31,8 @@ export default function ItemCard({ item, source, index, onFirstAttempt, lessonId
   const [showSolution, setShowSolution] = useState(false);
   const recorded = useRef(false);
   const id = useId();
+  // Shown in a fixed per-question order, so the right option is not always first.
+  const order = useMemo(() => choiceOrder(item.answer.choices?.length ?? 0, item.id), [item]);
 
   function submit(e) {
     e.preventDefault();
@@ -83,10 +86,10 @@ export default function ItemCard({ item, source, index, onFirstAttempt, lessonId
         {item.answer.type === 'choice' && (
           <fieldset className="item-choices">
             <legend className="visually-hidden">Choose one answer</legend>
-            {item.answer.choices.map((c, i) => (
+            {order.map((i) => (
               <label key={i} className={`item-choice${String(i) === String(value) ? ' on' : ''}`}>
-                <input type="radio" name={`${id}-c`} value={i} aria-label={toPlainText(c)} checked={String(i) === String(value)} onChange={() => setValue(String(i))} />
-                <MathText text={c} />
+                <input type="radio" name={`${id}-c`} value={i} data-choice={i} aria-label={toPlainText(item.answer.choices[i])} checked={String(i) === String(value)} onChange={() => setValue(String(i))} />
+                <MathText text={item.answer.choices[i]} />
               </label>
             ))}
           </fieldset>
