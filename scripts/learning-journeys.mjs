@@ -77,10 +77,24 @@ try {
     await page.waitForTimeout(800);
     const fq = await firstQuestion(page);
     await shot(page, 'p1-first-lesson');
+    // A shortcut to the first question, if the build has one.
+    const tryNow = page.locator(`${VISIBLE}button.lesson-try-now`);
+    let questionAfterOneClick = null;
+    if (await tryNow.count()) {
+      await tryNow.click();
+      await page.waitForTimeout(900);
+      questionAfterOneClick = await page.evaluate(() => {
+        const root = [...document.querySelectorAll('.app-tab-keepalive')].find((el) => el.getClientRects().length) ?? document;
+        const card = root.querySelector('[data-section="try"] .item-card');
+        if (!card) return false;
+        const r = card.getBoundingClientRect();
+        return r.top < window.innerHeight && r.bottom > 0;
+      });
+    }
     record({
       id: 'P1 absolute beginner',
       steps: ['Home (first run)', 'Start from Prealgebra', courseHash, startLabel, hashOf(page)],
-      measures: { decisionsToFirstLesson: clicks, lesson: hashOf(page), firstQuestion: fq, homeOffersStartingPoint: /Where would you like to start/.test(firstRunText) },
+      measures: { decisionsToFirstLesson: clicks, lesson: hashOf(page), firstQuestion: fq, oneClickToFirstQuestion: questionAfterOneClick, homeOffersStartingPoint: /Where would you like to start/.test(firstRunText) },
     });
     await context.close();
   }

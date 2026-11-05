@@ -691,6 +691,10 @@ export default function LessonPage({ lessonId }) {
               <span className="studio-chip"><i className="ti ti-clock" aria-hidden="true" /> about {meta.minutes} min</span>
               <span className="studio-chip"><i className="ti ti-stairs" aria-hidden="true" /> {meta.difficulty}</span>
               <span className="studio-chip studio-chip-warn" title="See Sources and docs/CONTENT_QA.md"><i className="ti ti-alert-triangle" aria-hidden="true" /> Draft: awaiting independent math review</span>
+              {/* Practice first is a choice: the questions explain themselves, and the explanation stays above. */}
+              <button type="button" className="studio-btn studio-btn-small lesson-try-now" onClick={() => jump('try')}>
+                <i className="ti ti-target-arrow" aria-hidden="true" /> Try a question now
+              </button>
               <button
                 type="button"
                 className="studio-btn studio-btn-small"

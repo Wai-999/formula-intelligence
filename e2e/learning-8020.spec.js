@@ -168,3 +168,13 @@ test('at phone width the lesson with a faded example does not scroll sideways', 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test('“Try a question now” reaches the first question in one click, without skipping the explanation', async ({ page }) => {
+  await seed(page);
+  await page.goto('./#learn/lesson/pa-ratios-rates', { waitUntil: 'networkidle' });
+  await page.locator(`${VISIBLE}button.lesson-try-now`).click();
+  await expect(progress(page)).toContainText('Try it');
+  await expect(tryCards(page).first()).toBeInViewport();
+  // The explanation is still there above it.
+  await expect(page.locator(`${VISIBLE}[data-section="understand"]`)).toHaveCount(1);
+});
