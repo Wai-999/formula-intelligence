@@ -54,10 +54,17 @@ evidence ─> mastery.js (computed) ─> Home, Progress
 evidence ─> reviewSchedule.js (cards) ─> Practice → Review
 diagnostic itemBank ─> diagnostic.js ─> useDiagnosticStore ─> placement ─> Home "next lesson"
 evidence ─> learningSignals.js ─> My Progress → Your learning signals
+catalog + path + lessons ─> learningPath.js (recommend) ─┐
+saved place + evidence + reviews due ────────────────────┴─> nextAction.js (getNextLearningAction)
+    ─> useNextAction() ─> NextActionCard ─> Home, course page, lesson end, My Progress, session summary
+wrong answer ─> feedback.js (explainWrong) + nextAction.bridgeFor ─> ItemCard feedback
 ```
 
+- **One next action (80/20 upgrade).** `src/lib/nextAction.js` wraps the learning-path engine with the saved place, recent wrong answers (`l`, the lesson of each answer, is stored since this release), reviews due and planned-but-unwritten lessons, and returns one primary action, at most two others, the rule that chose it and a reason. Pages never decide what comes next. Rules and the brief's hard cases: `docs/learning-8020/LEARNING_FLOW_SPEC.md`.
+- Choice options are shown in a fixed per-question shuffle (`src/lib/choiceOrder.js`); data and feedback keep the authored index.
+
 - Lesson bodies are separate chunks (`load: () => import(...)`), so the course list never loads lesson text.
-- The page-meta resolvers (lesson and course titles for the header) register lazily, keeping the curriculum out of the initial bundle (initial JS 71.9 KB gzip; budget 90 KB).
+- The page-meta resolvers (lesson and course titles for the header) register lazily, keeping the curriculum out of the initial bundle (initial JS about 72 KB gzip; budget 90 KB — see docs/learning-8020/TEST_RESULTS.md for the current figure).
 - Global search (`src/lib/searchIndex.js`) is built on first open: pages, formulas, models, ML lessons, curriculum lessons/courses/concepts, code exercises and projects.
 
 ## Stores — `src/store/`

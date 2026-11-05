@@ -120,7 +120,7 @@ Integrated exams or projects that are review-ready: **none** are claimed. Three 
 | a2-exp-log | Algebra II | alg.exp-log | 14 | 4 | 4 | log-scale | Python |  | awaiting-human-review |
 | pc-unit-circle | Geometry, Trigonometry & Precalculus | trig.unit-circle | 15 | 4 | 4 | unit-circle | Python |  | awaiting-human-review |
 | pc-limits | Geometry, Trigonometry & Precalculus | calc.limits | 15 | 4 | 3 | limits | Python |  | awaiting-human-review |
-| la-dot-product | Linear Algebra | la.vector-ops, la.dot-product | 12 | 5 | 3 | vectors-dot | Python |  | awaiting-human-review |
+| la-dot-product | Linear Algebra | la.vector-ops, la.dot-product | 13 | 6 | 3 | vectors-dot | Python |  | awaiting-human-review |
 | la-projection | Linear Algebra | la.projection | 12 | 5 | 3 | vectors-dot | Python |  | awaiting-human-review |
 | la-matrix-scores | Linear Algebra | la.matrix-mult | 13 | 3 | 5 | matrix-scores | Python |  | awaiting-human-review |
 | la-matrix-transform | Linear Algebra | la.matrix-mult | 12 | 5 | 3 | matrix-transform, eigenvectors | Python |  | awaiting-human-review |

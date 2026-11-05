@@ -7,7 +7,7 @@ What has been checked about the curriculum content, how, and what has **not** be
 | | Count | Status |
 |---|---|---|
 | Authored lessons | **35** (of 207 planned + authored titles): the 23 of V3.1/V4 and 12 added in V5 (Algebra II ×2, Precalculus ×2, Calculus I ×1, C++ ×3, Data Structures ×1, Discrete Structures ×2, Python ×1) | **content-complete** for these 35 · **review-complete: 0** |
-| Assessable items in lessons (practice, Use it tasks, checkpoints) | 384, plus 70 readiness checks | machine-checked |
+| Assessable items in lessons (practice, Use it tasks, checkpoints) | 385, plus 70 readiness checks and 12 faded-example blanks | machine-checked; choice options shown in a fixed per-question shuffle (`src/lib/choiceOrder.js`) |
 | Diagnostic (placement) items | 96, bank `dx-2026.11-1` (46 of 58 competencies, nine areas; the 12 left out are past what placement decides) | machine-checked, **uncalibrated**; the items added in `dx-2026.10-2` and `dx-2026.11-1` are AI drafts awaiting the same review as the lessons |
 | Curriculum formulas | 46 | LaTeX parses; claim type stated; references checked |
 | Concepts / knowledge graph | 98 concepts; graph 340 nodes, 528 edges | acyclic, no dangling ids; **pedagogy unreviewed** |
@@ -21,7 +21,7 @@ What has been checked about the curriculum content, how, and what has **not** be
 
 ### Real-world problems and explain-back prompts (2026-10-28)
 
-`src/data/curriculum/problems.js`: 28 applied problems (113 graded steps) and 28 "Explain it back" prompts with model answers, for the first and last written lesson of every written course (16 problems from 2026-10-28; 12 added with the V5 lessons on 2026-11-04). AI-drafted, `reviewedStatus: 'awaiting-human-review'`, and labelled as drafts on the page. All numbers are invented and labelled so. Machine checks in `src/data/curriculum/__tests__/problems.test.js`: every numeric answer recomputed independently (`compute`) within rounding-only tolerances, every formula parsed, feedback on every wrong choice, references to real lessons, courses and competencies. Coverage and decisions: `docs/CONTINUOUS_LEARNING_UPGRADE.md`.
+`src/data/curriculum/problems.js`: 38 applied problems (154 graded steps) and 28 "Explain it back" prompts with model answers, for the first and last written lesson of every written course (16 problems from 2026-10-28; 12 added with the V5 lessons and 10 more on the five priority lessons on 2026-11-04, 13 of them linked to a project's running case). The five priority lessons also meet the professor teaching contract (`src/data/curriculum/__tests__/professorContract.test.js`; docs/learning-8020/TEACHING_RUBRIC.md). AI-drafted, `reviewedStatus: 'awaiting-human-review'`, and labelled as drafts on the page. All numbers are invented and labelled so. Machine checks in `src/data/curriculum/__tests__/problems.test.js`: every numeric answer recomputed independently (`compute`) within rounding-only tolerances, every formula parsed, feedback on every wrong choice, references to real lessons, courses and competencies. Coverage and decisions: `docs/CONTINUOUS_LEARNING_UPGRADE.md`.
 
 ## Independent human math review — BLOCKED
 

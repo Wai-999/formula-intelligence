@@ -1,0 +1,419 @@
+{
+  "root": "/private/tmp/claude-501/-Users-waiyan-Downloads-My-Porfolio-Formula-Intelligence/f5235a34-98fa-4775-ab5d-d178af259f9a/scratchpad/main-baseline",
+  "courses": [
+    {
+      "id": "prealgebra",
+      "title": "Prealgebra",
+      "units": 6,
+      "written": 2,
+      "planned": 13,
+      "unitsWithNoLesson": 4,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Algebra I: Break-even: when does a business cover its costs?",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "algebra-1",
+      "title": "Algebra I",
+      "units": 7,
+      "written": 4,
+      "planned": 13,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Probability & Statistics: Bayes’ theorem as updating",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "algebra-2",
+      "title": "Algebra II",
+      "units": 8,
+      "written": 0,
+      "planned": 14,
+      "unitsWithNoLesson": 8,
+      "afterWrittenLessons": null
+    },
+    {
+      "id": "precalculus",
+      "title": "Geometry, Trigonometry & Precalculus",
+      "units": 8,
+      "written": 0,
+      "planned": 12,
+      "unitsWithNoLesson": 8,
+      "afterWrittenLessons": null
+    },
+    {
+      "id": "linear-algebra",
+      "title": "Linear Algebra",
+      "units": 9,
+      "written": 6,
+      "planned": 19,
+      "unitsWithNoLesson": 5,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Calculus I — Limits and Derivatives: The derivative from first principles",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "calculus-1",
+      "title": "Calculus I — Limits and Derivatives",
+      "units": 4,
+      "written": 2,
+      "planned": 8,
+      "unitsWithNoLesson": 3,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "calculus-2",
+      "title": "Calculus II — Integrals and Series",
+      "units": 3,
+      "written": 2,
+      "planned": 8,
+      "unitsWithNoLesson": 1,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Machine Learning & Data Science: Validation, cross-validation and leakage",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "calculus-3",
+      "title": "Calculus III — Multivariable Calculus and Optimization",
+      "units": 4,
+      "written": 2,
+      "planned": 9,
+      "unitsWithNoLesson": 2,
+      "afterWrittenLessons": {
+        "status": "pathway-end",
+        "label": "See your whole path",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "prob-stats",
+      "title": "Probability & Statistics",
+      "units": 8,
+      "written": 2,
+      "planned": 14,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Linear Algebra: Vectors and the dot product",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "ml-foundations",
+      "title": "Machine Learning & Data Science",
+      "units": 8,
+      "written": 3,
+      "planned": 14,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": {
+        "status": "transition-course",
+        "label": "Continue to Calculus III — Multivariable Calculus and Optimization: Partial derivatives and the gradient",
+        "headline": null,
+        "saysNotComplete": true
+      }
+    },
+    {
+      "id": "python-ds",
+      "title": "Python for Data Science",
+      "units": 6,
+      "written": 0,
+      "planned": 15,
+      "unitsWithNoLesson": 6,
+      "afterWrittenLessons": null
+    }
+  ],
+  "totals": {
+    "courses": 11,
+    "coursesWithWrittenLessons": 8,
+    "writtenLessons": 23,
+    "plannedLessons": 139,
+    "lessonItems": 232,
+    "independentOrHarderShare": 70.3,
+    "transferShare": 32.3,
+    "itemsWithWrongAnswerExplanation": 89,
+    "numericItemsWithoutWrongAnswerExplanation": 129,
+    "itemsWithAHint": 72,
+    "appliedProblems": 16,
+    "appliedProblemSteps": 64,
+    "appliedProblemsLinkedToProjects": 0,
+    "projectsLinkedFromProblems": 0,
+    "lessonsWithAppliedProblem": 16,
+    "lessonsWithFadedExample": 0,
+    "projects": 9,
+    "coursesThatMoveOnWithoutNamingTheGap": 8
+  },
+  "perLesson": [
+    {
+      "id": "pa-ratios-rates",
+      "course": "prealgebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "pa-equation-balance",
+      "course": "prealgebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "a1-break-even",
+      "course": "algebra-1",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 5,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "a1-slope",
+      "course": "algebra-1",
+      "items": 9,
+      "independentOrHarder": 6,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "a1-slope-intercept",
+      "course": "algebra-1",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "a1-line-fit",
+      "course": "algebra-1",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "la-dot-product",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "la-projection",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-matrix-scores",
+      "course": "linear-algebra",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 5,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-matrix-transform",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-elimination",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "la-svd-pca",
+      "course": "linear-algebra",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c1-derivative",
+      "course": "calculus-1",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c1-marginal-cost",
+      "course": "calculus-1",
+      "items": 11,
+      "independentOrHarder": 8,
+      "transfer": 5,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c2-riemann",
+      "course": "calculus-2",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c2-taylor",
+      "course": "calculus-2",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c3-gradient",
+      "course": "calculus-3",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "c3-gradient-descent",
+      "course": "calculus-3",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "st-sampling-clt",
+      "course": "prob-stats",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "st-bayes",
+      "course": "prob-stats",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "ml-validation",
+      "course": "ml-foundations",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    },
+    {
+      "id": "ml-classification-metrics",
+      "course": "ml-foundations",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 0,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": false
+    },
+    {
+      "id": "ml-calibration-fairness",
+      "course": "ml-foundations",
+      "items": 10,
+      "independentOrHarder": 7,
+      "transfer": 3,
+      "appliedProblems": 1,
+      "fadedExample": false,
+      "simpler": false,
+      "explainBack": true
+    }
+  ]
+}

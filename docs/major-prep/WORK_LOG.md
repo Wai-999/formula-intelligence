@@ -50,3 +50,8 @@ Factual record of what was done, in order. Newer entries go at the bottom; earli
 - Three expert walkthroughs at 375 px (simulated — author, not learners); fixes: university named in the equivalence chip, stepping controls above the code on phones, duplicate retake link removed. Commit `9fa0b4f`.
 - Screenshots: `evidence/before/` (live V4) and `evidence/after-local/` (this branch).
 - Generated reports: `npm run docs:college`, `npm run docs:curriculum`. Commit `7874261`.
+
+## 2026-11-04 — Merge with main, then the 80/20 upgrade
+
+- Merged `origin/main` (PRs #5–#7: learning path, study continuity, applied problems, icon subset). Integration: the four C++/discrete courses on the data-science route; Python's outline alternative removed; outline-only path cases moved to a catalog copy in tests; 12 applied problems and explain-back prompts for the V5 lessons; four C++ Fundamentals placement items (`dx-2026.11-1`). Commit `c17f789`.
+- Continued as the 80/20 learning upgrade on `feat/learning-8020-professor-experience`: docs/learning-8020/.

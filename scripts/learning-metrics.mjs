@@ -20,6 +20,8 @@ const { lessonItems } = await load('src/data/curriculum/lessonItems.js');
 const { CURRICULUM: cur } = await load('src/data/curriculum/path.js');
 const { recommend } = await load('src/lib/learningPath.js');
 const problems = await load('src/data/curriculum/problems.js').catch(() => ({ PROBLEMS: [] }));
+// The next-action layer exists from the 80/20 upgrade on; earlier revisions use the path engine alone.
+const nextAction = await load('src/lib/nextAction.js').catch(() => null);
 const { PROJECTS } = await load('src/data/projects/index.js');
 
 const bodies = {};
@@ -31,6 +33,7 @@ const courses = COURSES.map((c) => {
   // Every written lesson done: where does the course page's primary action go?
   const lessons = Object.fromEntries(written.map((id, i) => [id, { opened: i + 1, completed: i + 1 }]));
   const rec = written.length ? recommend(cur, { lessons }, { courseId: c.id }) : null;
+  const action = written.length && nextAction ? nextAction.getNextLearningAction(cur, { state: { lessons, status: {} }, from: { courseId: c.id } }) : null;
   return {
     id: c.id,
     title: c.title,
@@ -38,7 +41,12 @@ const courses = COURSES.map((c) => {
     written: written.length,
     planned,
     unitsWithNoLesson: c.units.filter((u) => !u.lessons.some((id) => bodies[id])).length,
-    afterWrittenLessons: rec ? { status: rec.status, label: rec.label, saysNotComplete: rec.warnings.some((w) => /not complete|not written yet/.test(w)) } : null,
+    afterWrittenLessons: rec ? {
+      status: action ? action.kind : rec.status,
+      label: action ? action.label : rec.label,
+      headline: action?.headline ?? null,
+      saysNotComplete: [...rec.warnings, ...(action?.reasons ?? [])].some((w) => /not complete|not written yet/.test(w)),
+    } : null,
   };
 });
 
@@ -47,6 +55,7 @@ let independent = 0;
 let transfer = 0;
 let withFeedback = 0;
 let numericWithoutExplanation = 0;
+let withHints = 0;
 const perLesson = [];
 for (const l of LESSONS) {
   const its = lessonItems(bodies[l.id]);
@@ -57,6 +66,7 @@ for (const l of LESSONS) {
   transfer += tr;
   withFeedback += its.filter((i) => i.feedbackIncorrect || Object.keys(i.feedback ?? {}).length).length;
   numericWithoutExplanation += its.filter((i) => i.answer.type !== 'choice' && !i.feedbackIncorrect).length;
+  withHints += its.filter((i) => i.hints?.length).length;
   const probs = (problems.PROBLEMS ?? []).filter((p) => p.lessonIds.includes(l.id));
   perLesson.push({
     id: l.id,
@@ -85,6 +95,7 @@ const metrics = {
     transferShare: Math.round((transfer / items) * 1000) / 10,
     itemsWithWrongAnswerExplanation: withFeedback,
     numericItemsWithoutWrongAnswerExplanation: numericWithoutExplanation,
+    itemsWithAHint: withHints,
     appliedProblems: PROBLEMS.length,
     appliedProblemSteps: PROBLEMS.reduce((n, p) => n + p.items.length, 0),
     appliedProblemsLinkedToProjects: PROBLEMS.filter((p) => p.projectId).length,
@@ -92,7 +103,8 @@ const metrics = {
     lessonsWithAppliedProblem: perLesson.filter((l) => l.appliedProblems).length,
     lessonsWithFadedExample: perLesson.filter((l) => l.fadedExample).length,
     projects: PROJECTS.length,
-    coursesWhoseNextStepLeavesUnwrittenLessons: courses.filter((c) => c.afterWrittenLessons && c.planned > 0 && c.afterWrittenLessons.status !== 'content-gap').length,
+    // Courses with planned lessons whose primary action, once the written ones are done, moves on without naming the gap.
+    coursesThatMoveOnWithoutNamingTheGap: courses.filter((c) => c.afterWrittenLessons && c.planned > 0 && !['content-gap', 'path-finished'].includes(c.afterWrittenLessons.status)).length,
   },
   perLesson,
 };

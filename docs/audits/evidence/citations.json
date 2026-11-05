@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-25T11:47:10.015Z",
+  "checkedAt": "2026-11-05T07:42:29.589Z",
   "results": [
     {
       "url": "https://openstax.org/books/prealgebra-2e/pages/5-6-ratios-and-rate",
@@ -153,23 +153,23 @@
       ]
     },
     {
-      "url": "https://openstax.org/books/precalculus-2e/pages/7-1-angles",
-      "finalUrl": "https://openstax.org/books/precalculus-2e/pages/7-1-angles",
-      "status": 404,
-      "title": "OpenStax",
-      "verdict": "BROKEN",
+      "url": "https://openstax.org/books/precalculus-2e/pages/5-1-angles",
+      "finalUrl": "https://openstax.org/books/precalculus-2e/pages/5-1-angles",
+      "status": 200,
+      "title": "5.1 Angles - Precalculus 2e | OpenStax",
+      "verdict": "OK",
       "citedBy": [
-        "lesson pc-unit-circle: 7.1 Angles"
+        "lesson pc-unit-circle: 5.1 Angles"
       ]
     },
     {
-      "url": "https://openstax.org/books/precalculus-2e/pages/7-3-unit-circle",
-      "finalUrl": "https://openstax.org/books/precalculus-2e/pages/7-3-unit-circle",
-      "status": 404,
-      "title": "OpenStax",
-      "verdict": "BROKEN",
+      "url": "https://openstax.org/books/precalculus-2e/pages/5-2-unit-circle-sine-and-cosine-functions",
+      "finalUrl": "https://openstax.org/books/precalculus-2e/pages/5-2-unit-circle-sine-and-cosine-functions",
+      "status": 200,
+      "title": "5.2 Unit Circle: Sine and Cosine Functions - Precalculus 2e | OpenStax",
+      "verdict": "OK",
       "citedBy": [
-        "lesson pc-unit-circle: 7.3 Unit Circle"
+        "lesson pc-unit-circle: 5.2 Unit Circle: Sine and Cosine Functions"
       ]
     },
     {
@@ -239,9 +239,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=es-419",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=id",
       "status": 200,
-      "title": "Datos numéricos: Normalización &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Data numerik: Normalisasi &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson la-matrix-scores: Numerical data: Normalization"
@@ -344,7 +344,7 @@
       "url": "https://docs.python.org/3/tutorial/floatingpoint.html",
       "finalUrl": "https://docs.python.org/3/tutorial/floatingpoint.html",
       "status": 200,
-      "title": "15. Floating-Point Arithmetic: Issues and Limitations &#8212; Python 3.15.1 documentation",
+      "title": "15. Floating-Point Arithmetic: Issues and Limitations &#8212; Python 3.15.2 documentation",
       "verdict": "OK",
       "citedBy": [
         "lesson c1-derivative: Floating-Point Arithmetic: Issues and Limitations"
@@ -533,9 +533,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=es-419",
       "status": 200,
-      "title": "Classification: Accuracy, recall, precision, and related metrics &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Clasificación: Exactitud, recuperación, precisión y métricas relacionadas &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: Accuracy, recall, precision, and related metrics"
@@ -618,7 +618,7 @@
       "url": "https://docs.python.org/3/tutorial/introduction.html",
       "finalUrl": "https://docs.python.org/3/tutorial/introduction.html",
       "status": 200,
-      "title": "3. An Informal Introduction to Python &#8212; Python 3.15.1 documentation",
+      "title": "3. An Informal Introduction to Python &#8212; Python 3.15.2 documentation",
       "verdict": "OK",
       "citedBy": [
         "lesson py-first-steps: An Informal Introduction to Python"
@@ -628,7 +628,7 @@
       "url": "https://docs.python.org/3/tutorial/controlflow.html",
       "finalUrl": "https://docs.python.org/3/tutorial/controlflow.html",
       "status": 200,
-      "title": "4. More Control Flow Tools &#8212; Python 3.15.1 documentation",
+      "title": "4. More Control Flow Tools &#8212; Python 3.15.2 documentation",
       "verdict": "OK",
       "citedBy": [
         "lesson py-first-steps: More Control Flow Tools"
