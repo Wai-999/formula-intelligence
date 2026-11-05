@@ -14,7 +14,17 @@ export default {
       'So order matters: $s(c(p)) = 0.8(p - 10) = 0.8p - 8$, while $c(s(p)) = 0.8p - 10$. When the sale comes second it also takes 20% off the coupon, which is then worth only \\$8.',
       'Working backwards undoes each step in reverse order. A \\$70 receipt from the sale-first checkout came from $(70 + 10)/0.8 = 100$. In calculus, the chain rule finds the rate of change of a composite one link at a time — this lesson is its foundation.',
     ],
+    simpler: [
+      'Think of each function as a machine on a conveyor belt. $f(g(x))$ means: put $x$ into machine $g$, then put whatever comes out into machine $f$. The machine written next to $x$ works first.',
+      'An inverse is the machine that undoes one: if $f$ doubles, $f^{-1}$ halves. To undo two machines, undo the last one first — shoes come off before socks.',
+    ],
   },
+
+  outcomes: [
+    'Evaluate a composite $f(g(x))$ from the inside out, and explain why $f(g(x))$ and $g(f(x))$ usually differ.',
+    'Write the formula of a composite and say which inputs it accepts.',
+    'Undo a chain of steps in reverse order to find an inverse, and check it by composing.',
+  ],
 
   glossary: [
     { term: '$(f \\circ g)(x)$', meaning: 'The **composite** “$f$ after $g$”: apply $g$ to $x$ first, then apply $f$ to the result, $f(g(x))$.' },
@@ -67,6 +77,10 @@ export default {
       steps: ['$g(2) = 7$, so $f(g(2)) = 7^2 = 49$.', '$f(2) = 4$, so $g(f(2)) = 3 \\cdot 4 + 1 = 13$ — a different number: order matters.', '$f(g(x)) = (3x + 1)^2 = 9x^2 + 6x + 1$.'],
       answer: '$f(g(2)) = 49$ and $g(f(2)) = 13$',
       check: { value: 49, compute: () => (3 * 2 + 1) ** 2 },
+      tempting: {
+        wrong: 'Tempting: $f(g(x)) = x^2 \\cdot (3x + 1)$, or $x^2 + 3x + 1$ — combining the two formulas instead of feeding one into the other.',
+        why: 'A composite substitutes: every $x$ in $f$ is replaced by the whole of $g(x)$. Check with a number: at $x = 2$, $x^2(3x + 1) = 28$, but $f(g(2)) = 49$.',
+      },
     },
     {
       title: 'Inverting a conversion',
@@ -94,6 +108,24 @@ export default {
       belief: 'Order cannot matter: the same two discounts are applied either way.',
       correction: 'Composites usually depend on order: $f(g(x))$ and $g(f(x))$ are different functions. A percentage step scales everything that came before it, including a coupon.',
     },
+  },
+
+  faded: {
+    title: 'A phone bill with a reseller’s markup',
+    problem: 'A phone plan charges $c(m) = 0.05m + 10$ dollars for $m$ minutes, and a reseller adds 20%: $r(d) = 1.2d$. Find the bill $r(c(m))$ for 300 minutes, then how many minutes give a \\$40 bill.',
+    steps: [
+      { say: 'Inner function first: $c(300) = 0.05 \\cdot 300 + 10 = 25$ dollars.' },
+      {
+        say: 'Then the outer function:',
+        item: item({ id: 'a2-comp.f1', competency: 'func.compose-inverse', difficulty: 1, level: 'scaffolded', prompt: 'What is $r(c(300))$, the bill in dollars?', answer: num(30), compute: () => 1.2 * (0.05 * 300 + 10), hints: ['Apply $r$ to the 25 dollars from the first step.'], solution: '$r(25) = 1.2 \\cdot 25 = 30$ dollars.' }),
+      },
+      { say: 'Now undo the chain for a \\$40 bill, last step first: undo $r$ by dividing by 1.2, which gives $40/1.2 \\approx 33.33$ dollars before the markup.' },
+      {
+        say: 'Then undo $c$:',
+        item: item({ id: 'a2-comp.f2', competency: 'func.compose-inverse', difficulty: 2, level: 'scaffolded', prompt: 'How many minutes give a \\$40 bill? Undo $c$: subtract 10, then divide by 0.05. Give the nearest whole minute.', answer: num(467, 0.5), compute: () => Math.round((40 / 1.2 - 10) / 0.05), hints: ['$33.33 - 10 = 23.33$.', 'Then $23.33 \\div 0.05$.'], solution: '$(33.33 - 10)/0.05 \\approx 466.7$, so about 467 minutes.' }),
+      },
+    ],
+    answer: 'The bill for 300 minutes is \\$30, and a \\$40 bill comes from about 467 minutes. Check by composing: $r(c(467)) = 1.2(0.05 \\cdot 467 + 10) \\approx 40.02$.',
   },
 
   practice: [

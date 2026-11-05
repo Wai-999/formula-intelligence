@@ -2,6 +2,8 @@ import { useState } from 'react';
 import MathText from '../../../components/math/MathText.jsx';
 import ItemCard from './ItemCard.jsx';
 import { PROBLEM_DOMAINS } from '../../../data/curriculum/problems.js';
+import { PROJECTS } from '../../../data/projects/index.js';
+import { hashFor } from '../../../app/pages.js';
 
 /**
  * One real-world problem from the bank (src/data/curriculum/problems.js): the
@@ -11,8 +13,9 @@ import { PROBLEM_DOMAINS } from '../../../data/curriculum/problems.js';
  * assisted. The worked solution, common mistakes and interpretation appear
  * only once every step has been tried: reading an answer is not solving it.
  */
-export default function AppliedProblem({ problem }) {
+export default function AppliedProblem({ problem, lessonId = null }) {
   const [tried, setTried] = useState(() => new Set());
+  const project = problem.projectId ? PROJECTS.find((p) => p.id === problem.projectId) : null;
   const allTried = tried.size === problem.items.length;
   const base = `problem-${problem.id.replace(/[^a-z0-9]+/gi, '-')}`;
   return (
@@ -49,7 +52,7 @@ export default function AppliedProblem({ problem }) {
         <ul className="lesson-ul">{problem.assumptions.map((a) => <li key={a}><MathText text={a} /></li>)}</ul>
       </details>
       {problem.items.map((it, i) => (
-        <ItemCard key={it.id} item={it} index={i} source="applied" onFirstAttempt={(id) => setTried((s) => new Set(s).add(id))} />
+        <ItemCard key={it.id} item={it} index={i} source="applied" lessonId={lessonId} onFirstAttempt={(id) => setTried((s) => new Set(s).add(id))} />
       ))}
       {allTried ? (
         <div className="applied-after">
@@ -60,9 +63,18 @@ export default function AppliedProblem({ problem }) {
           <ul className="lesson-ul">{problem.commonMistakes.map((m) => <li key={m}><MathText text={m} /></li>)}</ul>
           <p><strong>What it means.</strong> <MathText text={problem.interpretation} /></p>
           <p><strong>Take it further.</strong> <MathText text={problem.extension} /></p>
+          {problem.verification && <p><strong>Check it another way.</strong> <MathText text={problem.verification} /></p>}
+          {problem.alternative && <p><strong>Another route.</strong> <MathText text={problem.alternative} /></p>}
+          {problem.artifact && <p><strong>What you produce.</strong> <MathText text={problem.artifact} /></p>}
         </div>
       ) : (
         <p className="studio-muted">Try every step first. The worked solution, the common mistakes and what the answer means for the decision appear once you have.</p>
+      )}
+      {project && (
+        <p className="applied-project">
+          <i className="ti ti-flask-2" aria-hidden="true" /> The same case continues in a project:{' '}
+          <a href={hashFor('apply/projects')}>{project.title}</a> (Apply → Projects).
+        </p>
       )}
       <p className="studio-muted applied-review">Draft problem, awaiting independent math review like the lessons.</p>
     </article>

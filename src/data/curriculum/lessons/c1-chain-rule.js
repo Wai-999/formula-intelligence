@@ -16,7 +16,17 @@ export default {
       'The rates multiply, and the units show why: $\\left(-0.0065\\ \\tfrac{^\\circ\\mathrm{C}}{\\mathrm{m}}\\right) \\times \\left(5\\ \\tfrac{\\mathrm{m}}{\\mathrm{s}}\\right) = -0.0325\\ \\tfrac{^\\circ\\mathrm{C}}{\\mathrm{s}}$. The metres cancel; the air around the balloon cools about 2 °C per minute.',
       "That is the **chain rule**: the derivative of $f(g(x))$ is the outer rate, read at the inner value, times the inner rate: $f'(g(x))\\,g'(x)$. When a rate is not constant, “read at the inner value” is the part people get wrong.",
     ],
+    simpler: [
+      'If one gear turns 3 times for each turn of a second gear, and the second turns 2 times for each turn of a third, the first turns $3 \\times 2 = 6$ times for each turn of the third. Rates along a chain multiply.',
+      'The one catch: when a rate changes from place to place, read each rate where it actually is. The outer function works on $u = g(x)$, so its rate is read at $u$, not at $x$.',
+    ],
   },
+
+  outcomes: [
+    'Differentiate a composite $f(g(x))$: the outer rate, read at the inner value, times the inner rate.',
+    'Check a chain-rule answer with units, by expanding, or with a difference quotient.',
+    'Turn one rate into another in a real setting — per metre into per second.',
+  ],
 
   glossary: [
     { term: '$\\dfrac{d}{dx} f(g(x))$', meaning: 'The rate of change of the composite with respect to $x$.' },
@@ -68,6 +78,10 @@ export default {
       steps: ["Inner: $u = 3x + 1$, so $du/dx = 3$. Outer: $y = u^2$, so $dy/du = 2u$.", "Chain rule: $y' = 2(3x + 1) \\cdot 3 = 6(3x + 1)$.", "At $x = 2$: $u = 7$, so $y' = 2 \\cdot 7 \\cdot 3 = 42$. Check by expanding: $y = 9x^2 + 6x + 1$ gives $y' = 18x + 6 = 42$ at $x = 2$."],
       answer: "$y'(2) = 42$",
       check: { value: 42, compute: () => { const F = (x) => (3 * x + 1) ** 2; return (F(2 + 1e-6) - F(2 - 1e-6)) / 2e-6; }, tolerance: 1e-5 },
+      tempting: {
+        wrong: "Tempting: differentiate only the outside, $y' = 2(3x + 1)$, which gives 14 at $x = 2$.",
+        why: 'That leaves out the inner rate. $u = 3x + 1$ changes 3 times as fast as $x$, so every change in $y$ is 3 times bigger: 42, as expanding confirms.',
+      },
     },
     {
       title: 'The balloon, accelerating',
@@ -95,6 +109,27 @@ export default {
       belief: 'Evaluate every derivative at the same input $x$.',
       correction: 'The outer function never sees $x$; it sees $u = g(x)$. Its rate must be read at that inner value.',
     },
+  },
+
+  faded: {
+    title: 'A cubed linear function',
+    problem: 'Find the derivative of $y = (4x - 3)^3$ at $x = 1$.',
+    steps: [
+      { say: 'Name the parts: inner $u = 4x - 3$, outer $y = u^3$.' },
+      {
+        say: 'Inner rate:',
+        item: item({ id: 'c1-chain.f1', competency: 'calc.rules', difficulty: 1, level: 'scaffolded', prompt: 'What is $du/dx$ for $u = 4x - 3$?', answer: num(4), compute: () => ((4 * 2 - 3) - (4 * 1 - 3)) / (2 - 1), hints: ['It is the slope of the line $4x - 3$.'], solution: '$du/dx = 4$.' }),
+      },
+      {
+        say: 'Outer rate, read at the inner value. At $x = 1$, $u = 4 - 3 = 1$.',
+        item: item({ id: 'c1-chain.f2', competency: 'calc.rules', difficulty: 1, level: 'scaffolded', prompt: 'What is $dy/du = 3u^2$ at that inner value?', answer: num(3), compute: () => 3 * (4 * 1 - 3) ** 2, hints: ['Use $u = 1$, not $x = 1$ — here they happen to be equal, but the rule is to use $u$.'], solution: '$3 \\cdot 1^2 = 3$.' }),
+      },
+      {
+        say: 'Multiply the two rates:',
+        item: item({ id: 'c1-chain.f3', competency: 'calc.rules', difficulty: 2, level: 'scaffolded', prompt: 'So what is $dy/dx$ at $x = 1$?', answer: num(12), compute: () => 3 * (4 * 1 - 3) ** 2 * 4, hints: ['Outer rate times inner rate.'], solution: '$3 \\times 4 = 12$.' }),
+      },
+    ],
+    answer: "$\\dfrac{dy}{dx} = 3(4x - 3)^2 \\cdot 4$, which is $12$ at $x = 1$. A difference quotient agrees: $\\dfrac{(4.004 - 3)^3 - (3.996 - 3)^3}{0.002} \\approx 12.0$.",
   },
 
   practice: [

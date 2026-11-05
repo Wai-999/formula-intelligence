@@ -7,7 +7,17 @@ export default {
       'An average of many independent values varies much less than the values themselves, because highs and lows partly cancel. Its spread is the **standard error** $\\sigma/\\sqrt n$: here $12/\\sqrt{36} = 2$ minutes.',
       'And the shape changes: even from a skewed population, averages of a reasonably large sample are close to normally distributed. That is the **central limit theorem**, and it is why confidence intervals and tests can use the normal curve.',
     ],
+    simpler: [
+      'One patient’s wait can be anything from a minute to an hour. The average of 36 patients cannot swing that far: the long waits are diluted by the short ones, and the bigger the sample, the more they are diluted.',
+      'Quadrupling the sample only halves the spread of the average, because the spread shrinks with $\\sqrt n$, not with $n$.',
+    ],
   },
+
+  outcomes: [
+    'Compute the standard error $\\sigma/\\sqrt n$ and say what it measures.',
+    'Use the central limit theorem to judge how unusual a sample average is.',
+    'Say when the normal approximation for averages cannot be trusted.',
+  ],
 
   glossary: [
     { term: '$\\mu$, $\\sigma$', meaning: 'Population mean and standard deviation (parameters — usually unknown).' },
@@ -46,6 +56,10 @@ export default {
       steps: ['$\\sigma/\\sqrt n = 12/6 = 2$ minutes.', 'So most daily averages fall within about 2 × 2 = 4 minutes of 12.'],
       answer: 'Standard error 2 minutes: daily averages mostly between about 8 and 16 minutes.',
       check: { value: 2, compute: () => 12 / Math.sqrt(36) },
+      tempting: {
+        wrong: 'Tempting: say the daily average varies as much as single waits, with standard deviation 12 minutes — or divide by $n$ and get $12/36 \\approx 0.33$ minutes.',
+        why: 'Averaging cancels part of the variation, but only part: the spread of an average shrinks with $\\sqrt n$. Dividing by 36 instead of $\\sqrt{36} = 6$ claims far more precision than 36 patients can give.',
+      },
     },
     {
       title: 'How unusual is a slow day?',
@@ -73,6 +87,22 @@ export default {
       belief: 'With a large sample, the data themselves become normally distributed.',
       correction: 'The data keep the population’s shape (the clinic waits stay skewed). It is the distribution of the sample **mean** that becomes approximately normal.',
     },
+  },
+
+  faded: {
+    title: 'Delivery times',
+    problem: 'A courier’s delivery times have mean 40 minutes and standard deviation 15 minutes. A manager averages 25 deliveries each day. How often will the daily average be over 46 minutes?',
+    steps: [
+      { say: 'The daily averages have the same mean as single deliveries: 40 minutes.' },
+      {
+        item: item({ id: 'st-clt.f1', competency: 'stats.sampling', difficulty: 1, level: 'scaffolded', prompt: 'What is the standard error of the daily average, in minutes?', answer: num(3), compute: () => 15 / Math.sqrt(25), hints: ['$\\sigma/\\sqrt n$ with $n = 25$.'], solution: '$15/\\sqrt{25} = 15/5 = 3$ minutes.' }),
+      },
+      {
+        item: item({ id: 'st-clt.f2', competency: 'stats.sampling', difficulty: 2, level: 'scaffolded', prompt: 'What is the z-score of a daily average of 46 minutes?', answer: num(2), compute: () => (46 - 40) / (15 / Math.sqrt(25)), hints: ['$z = (\\bar x - \\mu)/\\text{SE}$.'], solution: '$(46 - 40)/3 = 2$.' }),
+      },
+      { say: 'By the central limit theorem the daily average is close to normal, so $P(Z > 2) \\approx 0.023$.' },
+    ],
+    answer: 'About 2% of days, roughly one working day in 40. A day over 46 minutes is unusual enough to look into — provided the 25 deliveries are independent, which deliveries on one route in one traffic jam are not.',
   },
 
   practice: [

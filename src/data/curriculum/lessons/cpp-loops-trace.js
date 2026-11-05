@@ -14,7 +14,17 @@ export default {
       'In `for (int h = 0; h < n; ++h)`, `h` starts at 0, the body runs, `h` goes up by 1, and the condition is checked again. With `n = 4` the body runs for `h` = 0, 1, 2 and 3 — four times, never with `h = 4`.',
       'The most common loop bug is being **off by one**: `h < n - 1` skips the last hour; `h <= n` reads past the end. A trace finds it in a minute. Staring at the code often does not.',
     ],
+    simpler: [
+      'A loop repeats some instructions while a condition is true. To know what it does, pretend to be the computer: draw a table with one row per pass and a column for each variable, and fill it in.',
+      'Most loop bugs are at the edges, the first pass and the last. Check those two rows first: where does the counter start, and on which value does the condition fail?',
+    ],
   },
+
+  outcomes: [
+    'Predict what a `for` or `while` loop prints by tracing every variable, pass by pass.',
+    'Spot an off-by-one error from a loop’s first value and its stopping condition.',
+    'Write a loop over a `std::vector` that reads each element exactly once.',
+  ],
 
   glossary: [
     { term: '`for (init; condition; update)`', meaning: 'Run `init` once; then, while `condition` is true, run the body and then `update`.' },
@@ -68,6 +78,10 @@ export default {
       steps: ['`i` takes the values 1, 2, 3, 4 (at 5 the condition `i <= 4` fails).', 'The body adds 10, 20, 30 and 40.', '`t` ends at 100, so it prints 100.'],
       answer: '100',
       check: { value: 100, compute: () => [1, 2, 3, 4].reduce((s, i) => s + i * 10, 0) },
+      tempting: {
+        wrong: 'Tempting: “it runs 4 times and adds 10 each time, so it prints 40.”',
+        why: 'The body adds `i * 10`, and `i` changes on every pass: 10, 20, 30, 40. A trace table, row by row, catches this; reading the code at a glance does not.',
+      },
     },
     {
       title: 'Finding an off-by-one bug',
@@ -95,6 +109,25 @@ export default {
       belief: 'The number of passes is the starting value divided by the step: 10 ÷ 3, about 3.',
       correction: 'Count the values the variable actually takes, including the last one that still passes the test. Division gives a rough guess, not the count.',
     },
+  },
+
+  faded: {
+    title: 'Counting busy hours',
+    problem: 'A café logs cups sold per hour in `std::vector<int> cups = {12, 30, 41, 8, 27};`. This loop counts the busy hours, with more than 25 cups: `int busy = 0; for (std::size_t h = 0; h < cups.size(); ++h) if (cups[h] > 25) ++busy;`',
+    steps: [
+      { say: 'Pass 1: `h = 0` and `cups[0] = 12`, not more than 25, so `busy` stays 0.' },
+      { say: 'Pass 2: `h = 1` and `cups[1] = 30`, more than 25, so `busy` becomes 1.' },
+      {
+        item: item({ id: 'cpp-loop.f1', competency: 'cpp.basics', difficulty: 1, level: 'scaffolded', prompt: 'Continue the trace through passes 3 and 4 (`h = 2` and `h = 3`). What is `busy` after pass 4?', answer: num(2), compute: () => [12, 30, 41, 8].filter((c) => c > 25).length, hints: ['`cups[2] = 41` and `cups[3] = 8`.'], solution: '41 is more than 25, so `busy` becomes 2; 8 is not, so it stays 2.' }),
+      },
+      {
+        item: item({ id: 'cpp-loop.f2', competency: 'cpp.debugging', difficulty: 1, level: 'scaffolded', prompt: 'How many passes does the loop make in all?', answer: num(5), compute: () => [12, 30, 41, 8, 27].length, hints: ['`h` counts up from 0 while `h < cups.size()`, and the size is 5.'], solution: '`h` takes 0, 1, 2, 3 and 4: five passes. At 5 the condition fails.' }),
+      },
+      {
+        item: item({ id: 'cpp-loop.f3', competency: 'cpp.basics', difficulty: 2, level: 'scaffolded', prompt: 'What is `busy` when the loop ends?', answer: num(3), compute: () => [12, 30, 41, 8, 27].filter((c) => c > 25).length, hints: ['Pass 5 reads `cups[4] = 27`.'], solution: '27 is more than 25, so `busy` ends at 3: hours 2, 3 and 5.' }),
+      },
+    ],
+    answer: '`busy` is 3. The trace has five rows, one per pass, and the last is `h = 4`. There is no row for `h = 5`: that is where `h < cups.size()` fails, so `cups[5]` is never read.',
   },
 
   practice: [
