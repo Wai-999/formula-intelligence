@@ -19,6 +19,9 @@ const AI_DRAFT = {
   checks: ['numeric answers recomputed (vitest)', 'LaTeX parsed (vitest)', 'Python output verified (scripts/verify-python.mjs)', 'source URLs checked (scripts/check-citations.mjs)'],
 };
 
+// Lessons added in phase 5 of the 80/20 upgrade carry their own date.
+const PHASE5_DRAFT = { ...AI_DRAFT, authored: '2026-11-05' };
+
 export const LESSONS = [
   {
     id: 'pa-ratios-rates',
@@ -110,7 +113,7 @@ export const LESSONS = [
     prerequisites: ['c.slope', 'c.equations'],
     formulas: ['f.slope-intercept', 'f.intercept-from-point'],
     labs: ['function-transformations'],
-    next: ['a1-line-fit'],
+    next: ['a1-line-fit', 'a1-functions'],
     formulaMap: ['reg'],
     models: ['linreg'],
     review: AI_DRAFT,
@@ -134,6 +137,26 @@ export const LESSONS = [
     models: ['linreg'],
     review: AI_DRAFT,
     load: () => import('./a1-line-fit.js'),
+  },
+  {
+    id: 'a1-functions',
+    title: 'What is a function?',
+    course: 'algebra-1',
+    unit: 'a1-functions',
+    minutes: 40,
+    difficulty: 'introductory',
+    summary: 'One output for each input: read and evaluate function notation, test tables and graphs, and state the domain a formula — and a real situation — allows.',
+    competencies: ['func.notation'],
+    concepts: ['c.functions'],
+    prerequisites: ['c.slope-intercept'],
+    formulas: [],
+    labs: ['function-transformations'],
+    next: ['a2-composition', 'pc-limits'],
+    formulaMap: [],
+    models: [],
+    review: PHASE5_DRAFT,
+    applied: true,
+    load: () => import('./a1-functions.js'),
   },
   // V5 vertical slice: Algebra II → Precalculus → Calculus I.
   {
@@ -344,7 +367,7 @@ export const LESSONS = [
     prerequisites: ['c.slope', 'c.limits'],
     formulas: ['f.derivative-def'],
     labs: ['slope'],
-    next: ['c3-gradient', 'c2-taylor'],
+    next: ['c1-power-rules', 'c3-gradient'],
     formulaMap: [],
     models: [],
     review: AI_DRAFT,
@@ -363,12 +386,32 @@ export const LESSONS = [
     prerequisites: ['c.derivative'],
     formulas: ['f.marginal-cost'],
     labs: ['marginal-cost'],
-    next: ['c3-gradient','c2-taylor'],
+    next: ['c1-power-rules', 'c3-gradient'],
     formulaMap: [],
     models: [],
     review: AI_DRAFT,
     applied: true,
     load: () => import('./c1-marginal-cost.js'),
+  },
+  {
+    id: 'c1-power-rules',
+    title: 'Power, product and quotient rules',
+    course: 'calculus-1',
+    unit: 'c1-rules',
+    minutes: 45,
+    difficulty: 'intermediate',
+    summary: 'Differentiate polynomials, products and quotients without a limit each time — why the rules hold, the tempting wrong product rule, and when a factory’s average cost stops falling.',
+    competencies: ['calc.rules'],
+    concepts: ['c.derivative-rules'],
+    prerequisites: ['c.derivative'],
+    formulas: ['f.power-rule', 'f.product-rule', 'f.quotient-rule'],
+    labs: ['slope'],
+    next: ['c1-chain-rule', 'c2-taylor'],
+    formulaMap: [],
+    models: [],
+    review: PHASE5_DRAFT,
+    applied: true,
+    load: () => import('./c1-power-rules.js'),
   },
   {
     id: 'c1-chain-rule',
@@ -380,7 +423,7 @@ export const LESSONS = [
     summary: 'Differentiate a composite by multiplying the outer rate, read at the inner value, by the inner rate — with units, the common mistake, and a growing storage bill.',
     competencies: ['calc.rules'],
     concepts: ['c.chain-rule'],
-    prerequisites: ['c.derivative', 'c.composition-inverse'],
+    prerequisites: ['c.derivative-rules', 'c.composition-inverse'],
     // When this lesson goes badly, the usual cause is reading the composite
     // (which function is inner, what the inner value is), not the derivative.
     bridge: { lesson: 'a2-composition', step: 'understand', minutes: 5, concept: 'c.composition-inverse', why: 'Most chain-rule mistakes come from the composite itself — which function is inside, and what value it passes on — so the bridge is the worked examples of composite functions.' },
@@ -617,6 +660,10 @@ export const LESSONS = [
     competencies: ['cpp.functions', 'cpp.debugging'],
     concepts: ['c.cpp-functions'],
     prerequisites: ['c.cpp-loops', 'c.functions'],
+    // Mistakes here come from tracing what happens to a value (copied or
+    // shared), the skill the loops lesson trains — not from the algebra of
+    // functions, which the default bridge (the last idea built on) would pick.
+    bridge: { lesson: 'cpp-loops-trace', step: 'understand', minutes: 5, concept: 'c.cpp-loops', why: 'Most mistakes here come from tracing a value through the code — whether a function gets a copy or the original — which is what the loops lesson practises step by step.' },
     formulas: [],
     labs: ['code-trace'],
     next: ['cpp-classes-invariants'],

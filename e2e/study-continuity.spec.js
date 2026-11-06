@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { readFileSync } from 'node:fs';
 import { hashFor } from '../src/app/pages.js';
+import { CURRICULUM as cur } from '../src/data/curriculum/path.js';
 import { VISIBLE, lessonSettled } from './helpers.js';
 
 // Save my place, automatic checkpoints and Resume (docs/study-continuity/):
@@ -134,13 +135,16 @@ test('C: each course page resumes into its own course', async ({ page }) => {
 
 test('D: finishing a session completes nothing; the course end is stated honestly', async ({ page }) => {
   test.setTimeout(90_000);
-  // The other three Algebra I lessons are already done; break-even is not.
-  await page.addInitScript(() => {
+  // Every other written Algebra I lesson is already done; break-even is not.
+  // Counted from the catalog, so a newly written lesson does not break the test.
+  const algebra1 = cur.courseLessons['algebra-1'];
+  const others = algebra1.filter((id) => id !== 'a1-break-even');
+  await page.addInitScript((ids) => {
     if (sessionStorage.getItem('seeded')) return;
     sessionStorage.setItem('seeded', '1');
     const done = { opened: 1793000000000, completed: 1793000000000, checkpoint: { correct: 3, total: 3, at: 1793000000000 }, sections: [] };
-    localStorage.setItem('fi_lessons_v1', JSON.stringify({ schemaVersion: 1, last: null, lessons: { 'a1-slope': done, 'a1-slope-intercept': done, 'a1-line-fit': done } }));
-  });
+    localStorage.setItem('fi_lessons_v1', JSON.stringify({ schemaVersion: 1, last: null, lessons: Object.fromEntries(ids.map((id) => [id, done])) }));
+  }, others);
   await openLesson(page, 'a1-break-even');
   await goToStep(page, 'Use it');
   await page.locator(VISIBLE + 'button.lesson-finish').click();
@@ -150,7 +154,7 @@ test('D: finishing a session completes nothing; the course end is stated honestl
   await expect(page.locator(VISIBLE + '.session-facts')).toContainText('Not answered yet — finishing a session does not complete a lesson');
 
   await page.goto(`./${hashFor('learn/course', { courseId: 'algebra-1' })}`, { waitUntil: 'networkidle' });
-  await expect(page.locator(VISIBLE + '.course-signals')).toContainText('3 of 4 checked');
+  await expect(page.locator(VISIBLE + '.course-signals')).toContainText(`${others.length} of ${algebra1.length} checked`);
   await expect(page.locator(VISIBLE + '#course-finish-h')).toHaveCount(0);
 
   // Now the checkpoint, answered for real.
@@ -166,7 +170,7 @@ test('D: finishing a session completes nothing; the course end is stated honestl
   await expect(page.locator(VISIBLE + '[data-section="check"]').getByText('3 of 3 correct on the first try.')).toBeVisible();
 
   await page.goto(`./${hashFor('learn/course', { courseId: 'algebra-1' })}`, { waitUntil: 'networkidle' });
-  await expect(page.locator(VISIBLE + '.course-signals')).toContainText('4 of 4 checked');
+  await expect(page.locator(VISIBLE + '.course-signals')).toContainText(`${algebra1.length} of ${algebra1.length} checked`);
   await expect(page.locator(VISIBLE + '#course-finish-h')).toHaveText('You finished the available lessons in this course');
   await expect(page.locator(VISIBLE + '.course-finish')).toContainText('the full course is not yet complete');
   await expect(page.locator(VISIBLE + '.course-finish')).toContainText('not a grade, transcript or credential');

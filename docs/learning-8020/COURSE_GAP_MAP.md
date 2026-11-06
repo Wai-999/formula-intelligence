@@ -9,7 +9,7 @@ Route: **Data Science Foundations → Advanced Applications** (15 courses). “W
 | # | Course | Builds on | Written | Planned | Units with no lesson | When the written lessons are done |
 |---|---|---|---|---|---|---|
 | 1 | Prealgebra | — | 2 | 13 | 4 of 6 | Moves on: “Continue to Algebra I: Break-even: when does a business cover its costs?”; gap named: “Inequalities on the number line”; practice offered |
-| 2 | Algebra I | Prealgebra | 4 | 13 | 5 of 7 | Moves on: “Continue to Python for Data Science: Python first steps: lists, loops and an honest average”; gap named: “What is a function?”; practice offered |
+| 2 | Algebra I | Prealgebra | 5 | 12 | 4 of 7 | Moves on: “Continue to Python for Data Science: Python first steps: lists, loops and an honest average”; gap named: “Domain and range”; practice offered |
 | 3 | Python for Data Science | — | 1 | 14 | 5 of 6 | Moves on: “Continue to C++ Programming Fundamentals: Loops you can trace”; gap named: “Functions”; practice offered |
 | 4 | C++ Programming Fundamentals | — | 2 | 12 | 5 of 7 | Moves on: “Continue to Algebra II: Exponentials and logarithms: growth and how to undo it”; gap named: “Strings and text processing”; practice offered |
 | 5 | Algebra II | Algebra I | 2 | 11 | 6 of 8 | Moves on: “Continue to Probability & Statistics: Bayes’ theorem as updating”; gap named: “Graphs of inverses and restricted domains”; practice offered |
@@ -19,12 +19,12 @@ Route: **Data Science Foundations → Advanced Applications** (15 courses). “W
 | 9 | Geometry, Trigonometry & Precalculus | Algebra II | 2 | 9 | 6 of 8 | Moves on: “Continue to Data Structures and Algorithms: Stacks and queues: who gets served next?”; gap named: “Similarity and the Pythagorean theorem”; practice offered |
 | 10 | Data Structures and Algorithms | Object-Oriented Programming in C++ | 1 | 10 | 5 of 6 | Moves on: “Continue to Linear Algebra: Vectors and the dot product”; gap named: “Linked lists”; practice offered |
 | 11 | Linear Algebra | Algebra I | 6 | 19 | 5 of 9 | Moves on: “Continue to Calculus I — Limits and Derivatives: The derivative from first principles”; gap named: “The pseudoinverse”; practice offered |
-| 12 | Calculus I — Limits and Derivatives | Geometry, Trigonometry & Precalculus | 3 | 7 | 2 of 4 | Moves on: “Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums”; gap named: “Power, product and quotient rules”; practice offered |
+| 12 | Calculus I — Limits and Derivatives | Geometry, Trigonometry & Precalculus | 4 | 6 | 2 of 4 | Moves on: “Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums”; gap named: “Implicit differentiation and related rates”; practice offered |
 | 13 | Calculus II — Integrals and Series | Calculus I — Limits and Derivatives | 2 | 8 | 1 of 3 | Moves on: “Continue to Machine Learning & Data Science: Validation, cross-validation and leakage”; gap named: “Convergence tests”; practice offered |
 | 14 | Machine Learning & Data Science | Probability & Statistics, Linear Algebra | 3 | 14 | 6 of 8 | Moves on: “Continue to Calculus III — Multivariable Calculus and Optimization: Partial derivatives and the gradient”; gap named: “Regularization”; practice offered |
 | 15 | Calculus III — Multivariable Calculus and Optimization | Calculus II — Integrals and Series, Linear Algebra | 2 | 9 | 2 of 4 | End of the written path (named as such) |
 
-**Totals:** 35 written lessons, 172 planned. Every course on the route has at least one written lesson; none has every planned lesson written.
+**Totals:** 37 written lessons, 170 planned. Every course on the route has at least one written lesson; none has every planned lesson written.
 
 ## Written lessons: applied problems and bridges
 
@@ -38,18 +38,19 @@ A bridge is offered after two misses that outnumber the hits in a lesson, or a c
 | Algebra I | Slope as rate of change | 0 | — | Ratios, rates and unit rates (5 min) |
 | Algebra I | Slope–intercept form | 0 | — | Solving equations by keeping balance (5 min) |
 | Algebra I | Fitting a line to data | 1 | — | Slope–intercept form (5 min) |
+| Algebra I | What is a function? | 3 | — | Slope–intercept form (5 min) |
 | Python for Data Science | Python first steps: lists, loops and an honest average | 1 | — | none: nothing written teaches what it builds on |
 | C++ Programming Fundamentals | ★ Loops you can trace | 3 | yes | none: nothing written teaches what it builds on |
 | C++ Programming Fundamentals | Functions and vectors: copies versus references | 1 | — | Loops you can trace (5 min) |
 | Algebra II | Exponentials and logarithms: growth and how to undo it | 1 | — | Composite and inverse functions (5 min) |
-| Algebra II | ★ Composite and inverse functions | 3 | yes | none: nothing written teaches what it builds on |
+| Algebra II | ★ Composite and inverse functions | 3 | yes | What is a function? (5 min) |
 | Probability & Statistics | Bayes’ theorem as updating | 1 | — | none: nothing written teaches what it builds on |
 | Probability & Statistics | ★ Sampling distributions and the central limit theorem | 3 | yes | none: nothing written teaches what it builds on |
 | Object-Oriented Programming in C++ | Classes that keep their promises | 1 | — | Functions and vectors: copies versus references (5 min) |
 | Discrete Structures | Logic you can compute: truth tables and De Morgan | 1 | — | none: nothing written teaches what it builds on |
 | Discrete Structures | Proof by induction | 1 | — | none: nothing written teaches what it builds on |
 | Geometry, Trigonometry & Precalculus | Radians and the unit circle | 1 | — | none: nothing written teaches what it builds on |
-| Geometry, Trigonometry & Precalculus | Limits: what a function approaches | 1 | — | none: nothing written teaches what it builds on |
+| Geometry, Trigonometry & Precalculus | Limits: what a function approaches | 1 | — | What is a function? (5 min) |
 | Data Structures and Algorithms | Stacks and queues: who gets served next? | 1 | — | Functions and vectors: copies versus references (5 min) |
 | Linear Algebra | ★ Vectors and the dot product | 3 | yes | none: nothing written teaches what it builds on |
 | Linear Algebra | Projection onto a vector | 0 | — | Vectors and the dot product (5 min) |
@@ -59,9 +60,10 @@ A bridge is offered after two misses that outnumber the hits in a lesson, or a c
 | Linear Algebra | Principal components and the SVD | 1 | — | Projection onto a vector (5 min) |
 | Calculus I — Limits and Derivatives | The derivative from first principles | 1 | — | Limits: what a function approaches (5 min) |
 | Calculus I — Limits and Derivatives | Marginal cost: what does one more unit cost? | 1 | — | The derivative from first principles (5 min) |
+| Calculus I — Limits and Derivatives | Power, product and quotient rules | 3 | — | The derivative from first principles (5 min) |
 | Calculus I — Limits and Derivatives | ★ The chain rule: rates that multiply | 3 | yes | Composite and inverse functions (5 min) |
 | Calculus II — Integrals and Series | Area as a limit of Riemann sums | 1 | — | Limits: what a function approaches (5 min) |
-| Calculus II — Integrals and Series | Taylor polynomials | 1 | — | none: nothing written teaches what it builds on |
+| Calculus II — Integrals and Series | Taylor polynomials | 1 | — | Power, product and quotient rules (5 min) |
 | Machine Learning & Data Science | Validation, cross-validation and leakage | 1 | — | Fitting a line to data (5 min) |
 | Machine Learning & Data Science | Confusion matrix, precision, recall and ROC | 0 | — | Validation, cross-validation and leakage (5 min) |
 | Machine Learning & Data Science | Calibration and fairness checks | 1 | — | Confusion matrix, precision, recall and ROC (5 min) |

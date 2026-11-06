@@ -30,7 +30,7 @@ Measured on all 15 written courses of the route: with one course's written lesso
 ## What did not change
 
 - No course, lesson or step was ever locked, and none is now.
-- Planned lessons are still titles, not lessons: 172 are planned and 35 are written (the two lessons in PR #10 would make it 37). Free choice cannot make an unwritten lesson learnable. The honest notices say so, and writing lessons remains the work that fixes it (REMAINING_BACKLOG.md).
+- Planned lessons are still titles, not lessons: 170 are planned and 37 are written, including the two from PR #10. Free choice cannot make an unwritten lesson learnable. The honest notices say so, and writing lessons remains the work that fixes it (REMAINING_BACKLOG.md).
 - Mastery, reviews and the four course statuses are computed exactly as before.
 
 ## Tests

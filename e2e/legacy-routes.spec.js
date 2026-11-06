@@ -66,7 +66,9 @@ for (const [opened, expected, notice] of CASES) {
     await expectNoCrash(page);
     const pane = page.locator('.app-tab-keepalive:visible');
     await expect(pane).toHaveCount(1);
-    expect((await pane.innerText()).trim().length).toBeGreaterThan(100);
+    // The page's content is a lazy chunk: wait for it rather than reading once
+    // (a single read failed twice, on #maps/models and #ml/macro, at 8 characters).
+    await expect.poll(async () => (await pane.innerText()).trim().length).toBeGreaterThan(100);
     if (notice) await expect(page.getByText(notice)).toBeVisible();
   });
 }

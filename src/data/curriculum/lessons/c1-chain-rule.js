@@ -3,7 +3,7 @@ import { item, num, choice } from '../lessonKit.js';
 // V5 vertical slice, step 3 of 3 (Algebra II → Precalculus → Calculus I).
 // The chain rule as "rates multiply", built on composition (a2-composition)
 // and the limit definition (pc-limits, c1-derivative). The power rule
-// d/du uⁿ = n·uⁿ⁻¹ is stated, not derived, here. All models are illustrative.
+// d/du uⁿ = n·uⁿ⁻¹ is taught in c1-power-rules. All models are illustrative.
 
 const users = (t) => 2000 + 150 * t;
 const storagePerUser = (n) => 0.5 + 0.0002 * n; // s'(n) for s(n) = 0.5n + 0.0001n²
@@ -44,7 +44,7 @@ export default {
     item({
       id: 'c1-chain.pre2', competency: 'calc.derivative', difficulty: 1,
       prompt: "The power rule says $\\dfrac{d}{du} u^n = n u^{n-1}$. If $f(u) = u^3$, what is $f'(2)$?",
-      answer: num(12), compute: () => 3 * 2 ** 2, solution: "$f'(u) = 3u^2$, so $f'(2) = 12$.", remedy: 'c1-derivative',
+      answer: num(12), compute: () => 3 * 2 ** 2, solution: "$f'(u) = 3u^2$, so $f'(2) = 12$.", remedy: 'c1-power-rules',
     }),
   ],
 

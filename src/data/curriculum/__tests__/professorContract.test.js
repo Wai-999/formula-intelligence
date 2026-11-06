@@ -4,7 +4,7 @@ import { LESSONS, lessonById } from '../lessons/index.js';
 import { lessonItems } from '../lessonItems.js';
 import { PROBLEMS, EXPLAIN_BACK, problemsForLesson } from '../problems.js';
 import { PROJECTS } from '../../projects/index.js';
-import { PRIORITY_LESSONS } from '../priority.js';
+import { PRIORITY_LESSONS, CONTRACT_LESSONS } from '../priority.js';
 import { CURRICULUM as cur } from '../path.js';
 import { checkAnswer } from '../../../lib/answers.js';
 import { tokenize } from '../../../lib/mathFormat.js';
@@ -12,7 +12,8 @@ import { getNextLearningAction } from '../../../lib/nextAction.js';
 
 // The professor teaching contract (docs/learning-8020/TEACHING_RUBRIC.md)
 // and "one real application per priority skill" (the brief's Intervention
-// C), as machine checks on the five priority lessons. They check that each
+// C), as machine checks on the five priority lessons and the lessons written
+// to the same contract since (phase 5). They check that each
 // element exists and that every number in it is right — not that the
 // teaching is good, which only a human review can say.
 
@@ -21,6 +22,7 @@ beforeAll(async () => {
   for (const l of LESSONS) bodies[l.id] = (await l.load()).default;
 });
 const ids = PRIORITY_LESSONS.map((p) => p.id);
+const contractIds = CONTRACT_LESSONS.map((p) => p.id);
 const fadedItems = (b) => b.faded.steps.filter((s) => s.item).map((s) => s.item);
 
 function renders(text, where) {
@@ -39,7 +41,7 @@ describe('the five priority lessons', () => {
   });
 });
 
-describe.each(ids)('%s meets the teaching contract', (id) => {
+describe.each(contractIds)('%s meets the teaching contract', (id) => {
   const b = () => bodies[id];
 
   it('1–2. starts from a concrete problem, says what the learner will be able to do, defines its symbols, and has a simpler explanation', () => {
@@ -114,7 +116,7 @@ describe.each(ids)('%s meets the teaching contract', (id) => {
 });
 
 describe('one real application per priority skill (Intervention C)', () => {
-  it.each(ids)('%s: every skill has a worked example, two independent questions, a misconception check, applied problems, a review item and a project', (id) => {
+  it.each(contractIds)('%s: every skill has a worked example, two independent questions, a misconception check, applied problems, a review item and a project', (id) => {
     const b = bodies[id];
     const meta = lessonById[id];
     const items = lessonItems(b);
@@ -148,7 +150,7 @@ describe('one real application per priority skill (Intervention C)', () => {
   });
 
   it('the cases say how to check them, another route, and what the learner produces', () => {
-    for (const p of PROBLEMS.filter((x) => x.lessonIds.some((l) => ids.includes(l)) && x.projectId && x.artifact)) {
+    for (const p of PROBLEMS.filter((x) => x.lessonIds.some((l) => contractIds.includes(l)) && x.projectId && x.artifact)) {
       expect(p.verification.length, p.id).toBeGreaterThan(20);
       expect(p.alternative.length, p.id).toBeGreaterThan(20);
       renders(p.verification, p.id);
