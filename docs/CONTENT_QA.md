@@ -9,7 +9,8 @@ What has been checked about the curriculum content, how, and what has **not** be
 | Authored lessons | **37** (of 207 planned + authored titles): the 23 of V3.1/V4, 12 added in V5 (Algebra II ×2, Precalculus ×2, Calculus I ×1, C++ ×3, Data Structures ×1, Discrete Structures ×2, Python ×1) and 2 prerequisite lessons in phase 5 of the 80/20 upgrade (Algebra I, Calculus I; docs/learning-8020/PHASE5_PREREQUISITES.md) | **content-complete** for these 37 · **review-complete: 0** |
 | Assessable items in lessons (practice, Use it tasks, checkpoints) | 413, plus 74 readiness checks and 18 faded-example blanks | machine-checked; choice options shown in a fixed per-question shuffle (`src/lib/choiceOrder.js`) |
 | Diagnostic (placement) items | 96, bank `dx-2026.11-1` (46 of 58 competencies, nine areas; the 12 left out are past what placement decides) | machine-checked, **uncalibrated**; the items added in `dx-2026.10-2` and `dx-2026.11-1` are AI drafts awaiting the same review as the lessons |
-| Curriculum formulas | 49 | LaTeX parses; claim type stated; references checked |
+| Curriculum formulas | 49 | LaTeX parses; claim type stated; references checked; every formula and symbol has a reading |
+| Notation readings (how to say a symbol) | 124 glossary terms, 49 formulas with 88 symbols, 197 Formula map symbols | present and plain text (`spoken.test.js`); AI drafts, **unreviewed** (docs/learning-8020/NOTATION_READINGS.md) |
 | Concepts / knowledge graph | 98 concepts; graph 345 nodes, 538 edges | acyclic, no dangling ids; **pedagogy unreviewed** |
 | Code exercises / projects | 30 Python (27 with a verified no-code path) and 5 C++ / 10 projects (7 featured) | Python and C++ reference solutions pass, starters fail; no-code outputs verified |
 | C++ programs | 9 lesson and trace programs, 5 exercises | compiled and run in CI (`npm run verify:cpp`, C++17, warnings as errors, sanitizers on Linux) |

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import HomePage from '../../home/HomePage.jsx';
 import LessonPage from '../LessonPage.jsx';
 import CoursePage from '../CoursePage.jsx';
@@ -149,8 +149,10 @@ describe('Lesson', () => {
     useStudyResumeStore.getState().requestResume(place('a1-slope', 'algebra-1', 'try'));
     render(<LessonPage lessonId="a1-slope" />);
     await screen.findByRole('heading', { name: /Why it matters/ });
-    expect(Element.prototype.scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'instant' }));
-    expect(screen.getByRole('button', { name: /Step 4 of 6/ })).toBeInTheDocument();
+    // The restore runs in an effect just after the body renders, so the
+    // heading can appear a moment before it (it did on a slower CI runner).
+    await waitFor(() => expect(Element.prototype.scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'instant' })));
+    expect(await screen.findByRole('button', { name: /Step 4 of 6/ })).toBeInTheDocument();
     expect(useStudyResumeStore.getState().pendingResume).toBeNull();
   });
 });

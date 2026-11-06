@@ -1,4 +1,6 @@
 import PyCodeBlock from './PyCodeBlock.jsx';
+import SayIt from '../../../components/math/SayIt.jsx';
+import { spokenFor } from '../../../data/notation/spoken.js';
 
 function Pill({ icon, tone, children }) {
   return (
@@ -48,7 +50,7 @@ export default function PyEntry({ entry, open, onToggle, innerRef }) {
                 <tbody>
                   {entry.variables.map(([sym, meaning]) => (
                     <tr key={sym}>
-                      <td className="pyentry-var-sym">{sym}</td>
+                      <td className="pyentry-var-sym">{sym}<SayIt text={spokenFor(sym)} compact label={false} /></td>
                       <td className="pyentry-var-meaning">{meaning}</td>
                     </tr>
                   ))}

@@ -5,6 +5,7 @@ import { INVENTORS } from '../../data/inventors.js';
 import { useUIStore } from '../../store/useUIStore.js';
 import { useMasteryStore } from '../../store/useMasteryStore.js';
 import { useMLUIStore } from '../../store/useMLUIStore.js';
+import SayIt from '../math/SayIt.jsx';
 import './DetailPanel.css';
 
 const STATE_LABEL = {
@@ -32,8 +33,9 @@ export default function DetailPanel() {
   useEffect(() => {
     if (level !== 'researcher' || deepCorpus) return;
     let cancelled = false;
-    import('../../data/python/index.js').then((m) => {
-      if (!cancelled) setDeepCorpus(m.PY_ENTRY_BY_ID);
+    // How to say each symbol travels with the corpus that lists them.
+    Promise.all([import('../../data/python/index.js'), import('../../data/notation/spoken.js')]).then(([m, n]) => {
+      if (!cancelled) setDeepCorpus({ byId: m.PY_ENTRY_BY_ID, spokenFor: n.spokenFor });
     });
     return () => { cancelled = true; };
   }, [level, deepCorpus]);
@@ -44,7 +46,7 @@ export default function DetailPanel() {
   // Python Hub corpus (assumptions, when NOT to use it, variable glossary,
   // failure modes). Same ids by design, so the join is free and the two
   // surfaces can never drift out of sync the way parallel copies would.
-  const deep = level === 'researcher' && node && deepCorpus ? deepCorpus[node.id] : null;
+  const deep = level === 'researcher' && node && deepCorpus ? deepCorpus.byId[node.id] : null;
 
   const { prereqs, dependents } = useMemo(() => {
     if (!node) return { prereqs: [], dependents: [] };
@@ -95,7 +97,7 @@ export default function DetailPanel() {
                     <tbody>
                       {deep.variables.map(([sym, meaning]) => (
                         <tr key={sym}>
-                          <td className="detail-var-sym">{sym}</td>
+                          <td className="detail-var-sym">{sym}<SayIt text={deepCorpus.spokenFor(sym)} compact label={false} /></td>
                           <td className="detail-var-meaning">{meaning}</td>
                         </tr>
                       ))}

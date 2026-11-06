@@ -29,10 +29,10 @@ export default {
   ],
 
   glossary: [
-    { term: '$\\dfrac{d}{dx} x^n = n x^{n-1}$', meaning: '**Power rule**: bring the exponent down as a factor, then lower the exponent by one. It holds for every real $n$ (for $x > 0$ when $n$ is not a whole number).' },
-    { term: "$(cf)' = c\\,f'$ and $(f + g)' = f' + g'$", meaning: 'Constant multiples and sums: differentiate term by term. A constant on its own has derivative 0.' },
-    { term: "$(fg)' = f'g + fg'$", meaning: '**Product rule**: each factor’s rate times the other factor.' },
-    { term: "$\\left(\\dfrac{f}{g}\\right)' = \\dfrac{f'g - fg'}{g^2}$", meaning: '**Quotient rule**, wherever $g \\ne 0$. The order in the numerator matters: the top’s rate comes first.' },
+    { term: '$\\dfrac{d}{dx} x^n = n x^{n-1}$', say: 'd by d x of x to the n equals n x to the n minus one', meaning: '**Power rule**: bring the exponent down as a factor, then lower the exponent by one. It holds for every real $n$ (for $x > 0$ when $n$ is not a whole number).' },
+    { term: "$(cf)' = c\\,f'$ and $(f + g)' = f' + g'$", say: 'c f, prime, equals c f prime; f plus g, prime, equals f prime plus g prime', meaning: 'Constant multiples and sums: differentiate term by term. A constant on its own has derivative 0.' },
+    { term: "$(fg)' = f'g + fg'$", say: 'f g, prime, equals f prime g plus f g prime', meaning: '**Product rule**: each factor’s rate times the other factor.' },
+    { term: "$\\left(\\dfrac{f}{g}\\right)' = \\dfrac{f'g - fg'}{g^2}$", say: 'f over g, prime, equals f prime g minus f g prime, all over g squared', meaning: '**Quotient rule**, wherever $g \\ne 0$. The order in the numerator matters: the top’s rate comes first.' },
   ],
 
   priorCheck: [

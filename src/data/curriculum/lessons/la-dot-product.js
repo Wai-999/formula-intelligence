@@ -20,11 +20,11 @@ export default {
   ],
 
   glossary: [
-    { term: '$\\mathbf u = (u_1, u_2)$', meaning: 'A vector with components $u_1, u_2$. Everything here works the same with $n$ components.' },
-    { term: '$\\mathbf u + \\mathbf v$, $c\\,\\mathbf u$', meaning: 'Add componentwise; multiply every component by the number $c$.' },
-    { term: '$\\lVert \\mathbf u \\rVert = \\sqrt{u_1^2 + u_2^2}$', meaning: 'The length (norm) of $\\mathbf u$ — Pythagoras.' },
-    { term: '$\\mathbf u \\cdot \\mathbf v = u_1 v_1 + u_2 v_2$', meaning: 'The dot product: a single number, not a vector.' },
-    { term: '$\\theta$', meaning: 'The angle between the two arrows, from $0°$ to $180°$.' },
+    { term: '$\\mathbf u = (u_1, u_2)$', say: 'vector u equals u sub one, u sub two', meaning: 'A vector with components $u_1, u_2$. Everything here works the same with $n$ components.' },
+    { term: '$\\mathbf u + \\mathbf v$, $c\\,\\mathbf u$', say: 'u plus v; c times u', meaning: 'Add componentwise; multiply every component by the number $c$.' },
+    { term: '$\\lVert \\mathbf u \\rVert = \\sqrt{u_1^2 + u_2^2}$', say: 'the norm of u equals the square root of u sub one squared plus u sub two squared', meaning: 'The length (norm) of $\\mathbf u$ — Pythagoras.' },
+    { term: '$\\mathbf u \\cdot \\mathbf v = u_1 v_1 + u_2 v_2$', say: 'u dot v equals u sub one v sub one plus u sub two v sub two', meaning: 'The dot product: a single number, not a vector.' },
+    { term: '$\\theta$', say: 'theta', meaning: 'The angle between the two arrows, from $0°$ to $180°$.' },
   ],
 
   priorCheck: [

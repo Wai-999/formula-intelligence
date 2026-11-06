@@ -12,7 +12,7 @@ export default {
   glossary: [
     { term: 'calibration', meaning: 'Among cases scored $p$, the observed frequency of the outcome is about $p$.' },
     { term: 'reliability diagram', meaning: 'Observed frequency plotted against mean predicted probability, bin by bin; calibrated means on the diagonal.' },
-    { term: 'Brier score $\\frac1n\\sum(\\hat p_i - y_i)^2$', meaning: 'Mean squared error of probabilities; lower is better.' },
+    { term: 'Brier score $\\frac1n\\sum(\\hat p_i - y_i)^2$', say: 'Brier score: one over n times the sum of p hat sub i minus y sub i, squared', meaning: 'Mean squared error of probabilities; lower is better.' },
     { term: 'base rate', meaning: 'The share of actual positives in a group.' },
     { term: 'equalized odds', meaning: 'Equal true-positive and false-positive rates across groups.' },
     { term: 'demographic parity', meaning: 'Equal rates of being flagged across groups.' },

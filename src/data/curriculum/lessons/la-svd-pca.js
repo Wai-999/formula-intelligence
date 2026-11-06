@@ -10,11 +10,11 @@ export default {
   },
 
   glossary: [
-    { term: '$X$', meaning: 'The centred data: one row per person, one column per variable, column means subtracted.' },
-    { term: '$C = \\dfrac{X^\\top X}{n - 1}$', meaning: 'The covariance matrix (2×2 here): variances on the diagonal, covariance off it.' },
-    { term: '$\\mathbf w^\\top C\\, \\mathbf w$', meaning: 'The variance of the data projected onto the unit direction $\\mathbf w$.' },
-    { term: '$\\lambda_1 \\ge \\lambda_2$, $\\mathbf q_1, \\mathbf q_2$', meaning: 'Eigenvalues and unit eigenvectors of $C$; $\\mathbf q_1$ is the first principal component.' },
-    { term: '$X = U\\Sigma V^\\top$', meaning: 'The SVD: $V$’s columns are the principal directions; $\\lambda_i = \\sigma_i^2/(n-1)$.' },
+    { term: '$X$', say: 'capital X', meaning: 'The centred data: one row per person, one column per variable, column means subtracted.' },
+    { term: '$C = \\dfrac{X^\\top X}{n - 1}$', say: 'C equals X transpose X, over n minus one', meaning: 'The covariance matrix (2×2 here): variances on the diagonal, covariance off it.' },
+    { term: '$\\mathbf w^\\top C\\, \\mathbf w$', say: 'w transpose C w', meaning: 'The variance of the data projected onto the unit direction $\\mathbf w$.' },
+    { term: '$\\lambda_1 \\ge \\lambda_2$, $\\mathbf q_1, \\mathbf q_2$', say: 'lambda sub one is at least lambda sub two; q sub one, q sub two', meaning: 'Eigenvalues and unit eigenvectors of $C$; $\\mathbf q_1$ is the first principal component.' },
+    { term: '$X = U\\Sigma V^\\top$', say: 'X equals U sigma V transpose', meaning: 'The SVD: $V$’s columns are the principal directions; $\\lambda_i = \\sigma_i^2/(n-1)$.' },
   ],
 
   priorCheck: [

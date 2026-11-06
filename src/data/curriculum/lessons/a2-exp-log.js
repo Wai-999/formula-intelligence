@@ -19,9 +19,9 @@ export default {
   },
 
   glossary: [
-    { term: '$b^{t}$', meaning: 'An **exponential**: the factor $b$ multiplied $t$ times. Growth when $b > 1$, decay when $0 < b < 1$.' },
-    { term: '$\\log_b y$', meaning: 'The **logarithm** base $b$ of $y$: the exponent $x$ with $b^x = y$. So $\\log_2 8 = 3$.' },
-    { term: '$\\ln y$', meaning: 'The **natural logarithm**, base $e \\approx 2.718$. Calculators and code (`math.log`) use it by default.' },
+    { term: '$b^{t}$', say: 'b to the power t', meaning: 'An **exponential**: the factor $b$ multiplied $t$ times. Growth when $b > 1$, decay when $0 < b < 1$.' },
+    { term: '$\\log_b y$', say: 'log base b of y', meaning: 'The **logarithm** base $b$ of $y$: the exponent $x$ with $b^x = y$. So $\\log_2 8 = 3$.' },
+    { term: '$\\ln y$', say: 'natural log of y', meaning: 'The **natural logarithm**, base $e \\approx 2.718$. Calculators and code (`math.log`) use it by default.' },
     { term: '**doubling time**', meaning: 'How many periods it takes to double: $\\ln 2 / \\ln(1 + r)$ at a growth rate $r$ per period.' },
   ],
 

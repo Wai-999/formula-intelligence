@@ -14,12 +14,12 @@ export default {
   },
 
   glossary: [
-    { term: '$q$', meaning: 'Number of orders (units sold) in a day.' },
-    { term: '$p$', meaning: 'Price of one order, in dollars.' },
-    { term: '$v$', meaning: '**Variable cost**: what one more order costs to make — ingredients, packaging, card fees (dollars per order).' },
-    { term: '$F$', meaning: '**Fixed costs**: paid per day whatever is sold — rent, salaries, power.' },
-    { term: '$p - v$', meaning: '**Contribution margin**: what each order contributes toward the fixed costs.' },
-    { term: '$q^*$', meaning: '**Break-even quantity**: the $q$ at which profit is zero.' },
+    { term: '$q$', say: 'q', meaning: 'Number of orders (units sold) in a day.' },
+    { term: '$p$', say: 'p', meaning: 'Price of one order, in dollars.' },
+    { term: '$v$', say: 'v', meaning: '**Variable cost**: what one more order costs to make — ingredients, packaging, card fees (dollars per order).' },
+    { term: '$F$', say: 'capital F', meaning: '**Fixed costs**: paid per day whatever is sold — rent, salaries, power.' },
+    { term: '$p - v$', say: 'p minus v', meaning: '**Contribution margin**: what each order contributes toward the fixed costs.' },
+    { term: '$q^*$', say: 'q star', meaning: '**Break-even quantity**: the $q$ at which profit is zero.' },
   ],
 
   priorCheck: [

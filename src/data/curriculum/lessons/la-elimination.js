@@ -10,8 +10,8 @@ export default {
   },
 
   glossary: [
-    { term: 'augmented matrix $[A \\mid \\mathbf b]$', meaning: 'The coefficients and right-hand sides, one row per equation.' },
-    { term: '$R_i \\leftarrow R_i - k R_j$', meaning: 'Replace row $i$ by itself minus $k$ times row $j$.' },
+    { term: 'augmented matrix $[A \\mid \\mathbf b]$', say: 'the augmented matrix, A bar b', meaning: 'The coefficients and right-hand sides, one row per equation.' },
+    { term: '$R_i \\leftarrow R_i - k R_j$', say: 'replace row i with row i minus k times row j', meaning: 'Replace row $i$ by itself minus $k$ times row $j$.' },
     { term: 'pivot', meaning: 'The first non-zero entry of a row once the matrix is in echelon form; used to clear the entries below it.' },
     { term: 'echelon form', meaning: 'Each row’s pivot is to the right of the pivot above it; zero rows at the bottom.' },
     { term: 'free variable', meaning: 'An unknown with no pivot in its column: it can take any value.' },

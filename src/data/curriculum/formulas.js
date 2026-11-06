@@ -10,8 +10,11 @@
 // statement it is (§12): definition, identity, theorem, approximation,
 // heuristic or empirical — so an approximation is never read as an identity.
 // Variable `symbol`s are LaTeX; assumptions/domain/pitfalls are MathText.
+// `say` is how to read the formula aloud, and each variable's `say` how to
+// read its symbol (“q star”, “x bar”), shown with a speaker button
+// (src/components/math/FormulaBreakdown.jsx).
 
-const v = (symbol, meaning, units = '') => ({ symbol, meaning, units });
+const v = (symbol, meaning, units = '', say = '') => ({ symbol, meaning, units, say });
 
 const F = (id, title, latex, fields) => ({
   id, title, latex,
@@ -22,7 +25,8 @@ const F = (id, title, latex, fields) => ({
 export const FORMULAS = [
   // ——— Prealgebra ———
   F('f.unit-rate', 'Unit rate', '\\text{unit rate} = \\frac{\\text{total}}{\\text{quantity}}', {
-    variables: [v('\\text{total}', 'amount for the whole quantity', 'e.g. dollars'), v('\\text{quantity}', 'how many units', 'e.g. kg')],
+    say: 'unit rate equals total over quantity',
+    variables: [v('\\text{total}', 'amount for the whole quantity', 'e.g. dollars', 'total'), v('\\text{quantity}', 'how many units', 'e.g. kg', 'quantity')],
     assumptions: ['The rate is constant across units (no bulk discount or fixed fee).'],
     domain: ['quantity ≠ 0.'],
     interpretation: 'The amount for exactly one unit; deals of different sizes are compared by it.',
@@ -33,7 +37,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/prealgebra-2e/pages/5-6-ratios-and-rate'],
   }),
   F('f.proportion', 'Cross-multiplication of a proportion', '\\frac{a}{b} = \\frac{c}{d} \\iff ad = bc', {
-    variables: [v('a, b, c, d', 'the four terms of the proportion')],
+    say: 'a over b equals c over d if and only if a d equals b c',
+    variables: [v('a, b, c, d', 'the four terms of the proportion', '', 'a, b, c, d')],
     assumptions: ['$b \\ne 0$ and $d \\ne 0$.'],
     interpretation: 'Two ratios are equal exactly when their cross products are equal.',
     pitfalls: ['Cross-multiplying a sum such as $\\frac{a}{b} + 1 = \\frac{c}{d}$ without first combining terms.'],
@@ -43,7 +48,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications'],
   }),
   F('f.linear-solution', 'Solution of a one-variable linear equation', 'ax + b = c \\;\\Rightarrow\\; x = \\frac{c - b}{a}', {
-    variables: [v('a', 'coefficient of x'), v('b, c', 'constants')],
+    say: 'a x plus b equals c, so x equals c minus b, over a',
+    variables: [v('a', 'coefficient of x', '', 'a'), v('b, c', 'constants', '', 'b, c')],
     assumptions: ['Moves are applied to both sides; division is by a non-zero number.'],
     domain: ['$a \\ne 0$. If $a = 0$: every $x$ works when $b = c$, none when $b \\ne c$.'],
     interpretation: 'Undo the addition, then undo the multiplication.',
@@ -56,7 +62,8 @@ export const FORMULAS = [
 
   // ——— Algebra I ———
   F('f.break-even', 'Break-even quantity', 'q^* = \\frac{F}{p - v}', {
-    variables: [v('F', 'fixed costs per period', 'dollars'), v('p', 'price per unit', 'dollars'), v('v', 'variable cost per unit', 'dollars'), v('q^*', 'units needed for zero profit', 'units')],
+    say: 'q star equals F over p minus v',
+    variables: [v('F', 'fixed costs per period', 'dollars', 'capital F'), v('p', 'price per unit', 'dollars', 'p'), v('v', 'variable cost per unit', 'dollars', 'v'), v('q^*', 'units needed for zero profit', 'units', 'q star')],
     assumptions: ['Constant price and constant variable cost per unit.', 'Fixed costs do not change with volume in the range considered.'],
     domain: ['$p > v$ (otherwise no quantity breaks even when $F > 0$).'],
     interpretation: 'Fixed costs divided by what each unit contributes toward them.',
@@ -67,7 +74,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/college-algebra-2e/pages/7-1-systems-of-linear-equations-two-variables'],
   }),
   F('f.slope', 'Slope of a line through two points', 'm = \\frac{y_2 - y_1}{x_2 - x_1}', {
-    variables: [v('m', 'slope (rate of change)', 'units of y per unit of x'), v('(x_1, y_1),\\ (x_2, y_2)', 'two distinct points on the line', 'as measured')],
+    say: 'm equals y sub two minus y sub one, over x sub two minus x sub one',
+    variables: [v('m', 'slope (rate of change)', 'units of y per unit of x', 'm'), v('(x_1, y_1),\\ (x_2, y_2)', 'two distinct points on the line', 'as measured', 'x sub one, y sub one; x sub two, y sub two')],
     assumptions: ['Both points lie on the same non-vertical line.'],
     domain: ['$x_1 \\ne x_2$: a vertical line has undefined slope.'],
     interpretation: 'How much y changes for each one-unit increase in x.',
@@ -78,7 +86,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/elementary-algebra-2e/pages/4-4-understand-slope-of-a-line'],
   }),
   F('f.slope-intercept', 'Slope–intercept form of a line', 'y = mx + b', {
-    variables: [v('m', 'slope', 'units of y per unit of x'), v('b', 'y-intercept: value of y at x = 0', 'units of y')],
+    say: 'y equals m x plus b',
+    variables: [v('m', 'slope', 'units of y per unit of x', 'm'), v('b', 'y-intercept: value of y at x = 0', 'units of y', 'b')],
     assumptions: ['The line is not vertical.'],
     interpretation: 'A starting value b plus a constant rate m times the input.',
     pitfalls: ['Reading b as a starting value when x = 0 is outside the context.', 'Assuming changing b moves only the intercept (the whole line shifts).'],
@@ -88,7 +97,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/elementary-algebra-2e/pages/4-5-use-the-slope-intercept-form-of-an-equation-of-a-line'],
   }),
   F('f.intercept-from-point', 'Intercept from a slope and a point', 'b = y_1 - m x_1', {
-    variables: [v('(x_1, y_1)', 'a point on the line'), v('m', 'the slope')],
+    say: 'b equals y sub one minus m x sub one',
+    variables: [v('(x_1, y_1)', 'a point on the line', '', 'x sub one, y sub one'), v('m', 'the slope', '', 'm')],
     assumptions: ['The line is not vertical.'],
     interpretation: 'Walk back from the known point to x = 0 at the line’s rate.',
     pitfalls: ['Sign errors when $m$ or $x_1$ is negative.'],
@@ -97,7 +107,8 @@ export const FORMULAS = [
     concept: 'c.slope-intercept', lesson: 'a1-slope-intercept', claim: 'identity',
   }),
   F('f.ls-slope', 'Least-squares slope', 'm = \\frac{\\sum (x_i - \\bar x)(y_i - \\bar y)}{\\sum (x_i - \\bar x)^2} = \\frac{S_{xy}}{S_{xx}}', {
-    variables: [v('x_i, y_i', 'the data'), v('\\bar x, \\bar y', 'their means'), v('m', 'fitted slope', 'units of y per unit of x')],
+    say: 'm equals the sum of x sub i minus x bar times y sub i minus y bar, over the sum of x sub i minus x bar, squared: S sub x y over S sub x x',
+    variables: [v('x_i, y_i', 'the data', '', 'x sub i, y sub i'), v('\\bar x, \\bar y', 'their means', '', 'x bar, y bar'), v('m', 'fitted slope', 'units of y per unit of x', 'm')],
     assumptions: ['Residuals are measured vertically (y is predicted from x).', 'A straight line is a sensible summary.'],
     domain: ['$S_{xx} > 0$: at least two different x-values.'],
     interpretation: 'The average change in y per unit of x, in the observed data.',
@@ -108,7 +119,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/introductory-statistics-2e/pages/12-3-the-regression-equation', 'https://numpy.org/doc/stable/reference/generated/numpy.polyfit.html'],
   }),
   F('f.ls-intercept', 'Least-squares intercept', 'b = \\bar y - m \\bar x', {
-    variables: [v('\\bar x, \\bar y', 'means of the data'), v('m', 'least-squares slope')],
+    say: 'b equals y bar minus m x bar',
+    variables: [v('\\bar x, \\bar y', 'means of the data', '', 'x bar, y bar'), v('m', 'least-squares slope', '', 'm')],
     assumptions: ['As for the least-squares slope.'],
     interpretation: 'The least-squares line passes through the point of means $(\\bar x, \\bar y)$.',
     pitfalls: ['Using it with a slope that was not fitted by least squares.'],
@@ -119,7 +131,8 @@ export const FORMULAS = [
 
   // ——— Algebra II ———
   F('f.composition', 'Composite function', '(f \\circ g)(x) = f\\big(g(x)\\big)', {
-    variables: [v('g', 'inner function, applied first'), v('f', 'outer function, applied to the output of g')],
+    say: 'f composed with g, of x, equals f of g of x',
+    variables: [v('g', 'inner function, applied first', '', 'g'), v('f', 'outer function, applied to the output of g', '', 'f')],
     assumptions: ['Every output of g used is an allowed input of f.'],
     domain: ['The $x$ in the domain of $g$ for which $g(x)$ is in the domain of $f$.'],
     interpretation: 'Do g, then f: a two-step process written as one function.',
@@ -130,7 +143,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/college-algebra-2e/pages/3-4-composition-of-functions'],
   }),
   F('f.inverse-composite', 'Inverse of a composite', '(f \\circ g)^{-1} = g^{-1} \\circ f^{-1}', {
-    variables: [v('f^{-1}, g^{-1}', 'inverses of f and g')],
+    say: 'the inverse of f composed with g equals g inverse composed with f inverse',
+    variables: [v('f^{-1}, g^{-1}', 'inverses of f and g', '', 'f inverse, g inverse')],
     assumptions: ['f and g are one-to-one on the values used, so their inverses exist there.'],
     interpretation: 'Undo the last step first: the inverses run in reverse order.',
     pitfalls: ['Undoing the steps in the original order.', 'Reading $f^{-1}(x)$ as $1/f(x)$.'],
@@ -142,7 +156,8 @@ export const FORMULAS = [
 
   // ——— Linear algebra ———
   F('f.matrix-vector', 'Matrix–vector product', '(X\\mathbf w)_i = \\sum_{j=1}^{d} x_{ij} w_j', {
-    variables: [v('X', 'data matrix, n rows by d columns'), v('\\mathbf w', 'weight vector with d entries'), v('(X\\mathbf w)_i', 'score of row i')],
+    say: 'entry i of X w equals the sum from j equals one to d of x sub i j times w sub j',
+    variables: [v('X', 'data matrix, n rows by d columns', '', 'capital X'), v('\\mathbf w', 'weight vector with d entries', '', 'w'), v('(X\\mathbf w)_i', 'score of row i', '', 'entry i of X w')],
     assumptions: ['$X$ has as many columns as $\\mathbf w$ has entries.'],
     domain: ['$X$ is $n \\times d$, $\\mathbf w$ is $d \\times 1$; the product is $n \\times 1$.'],
     interpretation: 'Each entry is the dot product of one row with the weights.',
@@ -153,7 +168,8 @@ export const FORMULAS = [
     references: ['https://numpy.org/doc/stable/reference/generated/numpy.matmul.html'],
   }),
   F('f.dot', 'Dot product', '\\mathbf u \\cdot \\mathbf v = \\sum_{i=1}^{n} u_i v_i', {
-    variables: [v('\\mathbf u, \\mathbf v', 'vectors with n components')],
+    say: 'u dot v equals the sum from i equals one to n of u sub i times v sub i',
+    variables: [v('\\mathbf u, \\mathbf v', 'vectors with n components', '', 'u, v')],
     assumptions: ['Both vectors have the same number of components.'],
     interpretation: 'Positive when aligned, zero when perpendicular, negative when opposed.',
     pitfalls: ['Confusing it with the componentwise product (a vector).', 'Treating a larger dot product as “more similar” without normalizing.'],
@@ -163,7 +179,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product'],
   }),
   F('f.norm', 'Length (Euclidean norm)', '\\lVert \\mathbf u \\rVert = \\sqrt{\\mathbf u \\cdot \\mathbf u} = \\sqrt{\\textstyle\\sum u_i^2}', {
-    variables: [v('\\mathbf u', 'a vector')],
+    say: 'the norm of u equals the square root of u dot u, the square root of the sum of u sub i squared',
+    variables: [v('\\mathbf u', 'a vector', '', 'u')],
     interpretation: 'Pythagoras in n dimensions.',
     pitfalls: ['Forgetting the square root (that is the squared length).'],
     application: 'Distances between data points (k-nearest neighbours, k-means).',
@@ -171,7 +188,8 @@ export const FORMULAS = [
     concept: 'c.norms', lesson: 'la-dot-product', claim: 'definition',
   }),
   F('f.cos-angle', 'Angle between two vectors', '\\cos\\theta = \\frac{\\mathbf u \\cdot \\mathbf v}{\\lVert \\mathbf u \\rVert\\,\\lVert \\mathbf v \\rVert}', {
-    variables: [v('\\theta', 'angle between the vectors', 'radians or degrees, from 0 to π')],
+    say: 'cosine theta equals u dot v over the norm of u times the norm of v',
+    variables: [v('\\theta', 'angle between the vectors', 'radians or degrees, from 0 to π', 'theta')],
     assumptions: ['Derived from the law of cosines.'],
     domain: ['Both vectors non-zero.'],
     interpretation: 'Cosine similarity: 1 same direction, 0 perpendicular, −1 opposite.',
@@ -181,7 +199,8 @@ export const FORMULAS = [
     concept: 'c.dot-product', lesson: 'la-dot-product', claim: 'theorem',
   }),
   F('f.projection', 'Projection onto a vector', '\\operatorname{proj}_{\\mathbf v}\\mathbf u = \\frac{\\mathbf u \\cdot \\mathbf v}{\\mathbf v \\cdot \\mathbf v}\\,\\mathbf v', {
-    variables: [v('\\mathbf u', 'vector being projected'), v('\\mathbf v', 'direction of the line')],
+    say: 'the projection of u onto v equals u dot v over v dot v, times v',
+    variables: [v('\\mathbf u', 'vector being projected', '', 'u'), v('\\mathbf v', 'direction of the line', '', 'v')],
     assumptions: ['The line passes through the origin.'],
     domain: ['$\\mathbf v \\ne \\mathbf 0$.'],
     interpretation: 'The closest point to $\\mathbf u$ on the line through $\\mathbf v$; the remainder is perpendicular.',
@@ -192,7 +211,8 @@ export const FORMULAS = [
     references: ['https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-15-projections-onto-subspaces/'],
   }),
   F('f.matvec', 'Matrix times vector', 'A\\mathbf x = x_1\\,\\mathbf a_1 + x_2\\,\\mathbf a_2 + \\cdots + x_n\\,\\mathbf a_n', {
-    variables: [v('\\mathbf a_j', 'column j of A'), v('x_j', 'component j of x')],
+    say: 'A x equals x sub one times a sub one, plus x sub two times a sub two, and so on, plus x sub n times a sub n',
+    variables: [v('\\mathbf a_j', 'column j of A', '', 'a sub j'), v('x_j', 'component j of x', '', 'x sub j')],
     assumptions: ['A has as many columns as x has components.'],
     interpretation: 'A combination of the columns of A; equivalently, each entry is a row of A dotted with x.',
     pitfalls: ['Multiplying in the wrong order (xA is a different thing).'],
@@ -201,7 +221,8 @@ export const FORMULAS = [
     concept: 'c.matrices', lesson: 'la-matrix-transform', claim: 'identity',
   }),
   F('f.det2', 'Determinant of a 2×2 matrix', '\\det\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix} = ad - bc', {
-    variables: [v('a, b, c, d', 'matrix entries')],
+    say: 'the determinant of the matrix with rows a, b and c, d equals a d minus b c',
+    variables: [v('a, b, c, d', 'matrix entries', '', 'a, b, c, d')],
     interpretation: 'The factor by which the map scales areas; negative if it flips orientation; zero if it flattens the plane.',
     pitfalls: ['Judging the area change from the size of the entries.'],
     application: 'Testing invertibility; change of variables in integrals.',
@@ -209,7 +230,8 @@ export const FORMULAS = [
     concept: 'c.determinant-inverse', lesson: 'la-matrix-transform', claim: 'definition',
   }),
   F('f.row-replace', 'Row replacement in elimination', 'R_i \\leftarrow R_i - \\frac{a_{ik}}{a_{jk}}\\,R_j', {
-    variables: [v('a_{jk}', 'the pivot'), v('a_{ik}', 'the entry to be cleared')],
+    say: 'replace row i with row i minus a sub i k over a sub j k, times row j',
+    variables: [v('a_{jk}', 'the pivot', '', 'a sub j k'), v('a_{ik}', 'the entry to be cleared', '', 'a sub i k')],
     assumptions: ['The pivot is non-zero; numerically, choose the largest available pivot.'],
     interpretation: 'Clears the entry below a pivot without changing the solution set.',
     pitfalls: ['Forgetting to apply the operation to the right-hand side.', 'Dividing by a tiny pivot (rounding error).'],
@@ -219,7 +241,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/college-algebra-2e/pages/7-6-solving-systems-with-gaussian-elimination'],
   }),
   F('f.directional-variance', 'Variance along a direction', '\\operatorname{Var}(X\\mathbf w) = \\mathbf w^\\top C\\,\\mathbf w, \\quad C = \\frac{X^\\top X}{n - 1}', {
-    variables: [v('X', 'centred data matrix (n × p)'), v('\\mathbf w', 'unit direction'), v('C', 'covariance matrix')],
+    say: 'the variance of X w equals w transpose C w, where C equals X transpose X over n minus one',
+    variables: [v('X', 'centred data matrix (n × p)', '', 'capital X'), v('\\mathbf w', 'unit direction', '', 'w'), v('C', 'covariance matrix', '', 'capital C')],
     assumptions: ['X is centred; $\\lVert \\mathbf w \\rVert = 1$.'],
     interpretation: 'How spread out the data are when projected onto $\\mathbf w$.',
     pitfalls: ['Forgetting to centre the data.'],
@@ -228,7 +251,8 @@ export const FORMULAS = [
     concept: 'c.pca', lesson: 'la-svd-pca', claim: 'identity',
   }),
   F('f.explained-variance', 'Explained variance ratio', '\\frac{\\lambda_1}{\\lambda_1 + \\lambda_2 + \\cdots + \\lambda_p}', {
-    variables: [v('\\lambda_i', 'eigenvalues of the covariance matrix, largest first')],
+    say: 'lambda sub one over lambda sub one plus lambda sub two, and so on, plus lambda sub p',
+    variables: [v('\\lambda_i', 'eigenvalues of the covariance matrix, largest first', '', 'lambda sub i')],
     interpretation: 'The share of total variance kept by the first principal component.',
     pitfalls: ['Comparing ratios across datasets with different units without standardizing.'],
     application: 'Choosing how many components to keep.',
@@ -236,7 +260,8 @@ export const FORMULAS = [
     concept: 'c.pca', lesson: 'la-svd-pca', claim: 'definition',
   }),
   F('f.svd-eigen', 'SVD and covariance eigenvalues', 'X = U\\Sigma V^\\top \\;\\Rightarrow\\; \\lambda_i = \\frac{\\sigma_i^2}{n - 1}', {
-    variables: [v('\\sigma_i', 'singular values of the centred data'), v('\\lambda_i', 'eigenvalues of the covariance matrix')],
+    say: 'X equals U sigma V transpose, so lambda sub i equals sigma sub i squared over n minus one',
+    variables: [v('\\sigma_i', 'singular values of the centred data', '', 'sigma sub i'), v('\\lambda_i', 'eigenvalues of the covariance matrix', '', 'lambda sub i')],
     assumptions: ['X is centred.'],
     interpretation: 'The right singular vectors are the principal directions.',
     pitfalls: ['Forming $X^\\top X$ explicitly loses precision; the SVD avoids it.'],
@@ -248,7 +273,8 @@ export const FORMULAS = [
 
   // ——— Calculus ———
   F('f.marginal-cost', 'Marginal cost of a quadratic cost', "C(q) = F + aq + bq^2 \\;\\Rightarrow\\; C'(q) = a + 2bq", {
-    variables: [v('C(q)', 'total cost of q units', 'dollars'), v("C'(q)", 'marginal cost', 'dollars per unit'), v('F, a, b', 'fixed cost and cost coefficients')],
+    say: 'C of q equals F plus a q plus b q squared, so C prime of q equals a plus two b q',
+    variables: [v('C(q)', 'total cost of q units', 'dollars', 'C of q'), v("C'(q)", 'marginal cost', 'dollars per unit', 'C prime of q'), v('F, a, b', 'fixed cost and cost coefficients', '', 'capital F, a, b')],
     assumptions: ['Cost is a smooth function of output over the range considered.'],
     domain: ['$q \\ge 0$, within the range of output the cost model was fitted to.'],
     interpretation: "The rate at which cost rises per extra unit; the next unit costs exactly $C'(q) + b$.",
@@ -259,7 +285,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-4-derivatives-as-rates-of-change'],
   }),
   F('f.derivative-def', 'Derivative (limit definition)', "f'(a) = \\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h}", {
-    variables: [v("f'(a)", 'instantaneous rate of change at a', 'units of f per unit of x'), v('h', 'step size, never 0 inside the limit')],
+    say: 'f prime of a equals the limit as h approaches zero of f of a plus h minus f of a, over h',
+    variables: [v("f'(a)", 'instantaneous rate of change at a', 'units of f per unit of x', 'f prime of a'), v('h', 'step size, never 0 inside the limit', '', 'h')],
     assumptions: ['f is defined around a.'],
     domain: ['Exists only when both one-sided limits exist and agree.'],
     interpretation: 'The slope of the tangent line; the limit of secant slopes.',
@@ -270,7 +297,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-1-defining-the-derivative'],
   }),
   F('f.limit-one-sided', 'Limit from one-sided limits', '\\lim_{x \\to a} f(x) = L \\iff \\lim_{x \\to a^-} f(x) = L = \\lim_{x \\to a^+} f(x)', {
-    variables: [v('a', 'the point being approached'), v('L', 'the limit, a finite number'), v('x \\to a^-,\\ x \\to a^+', 'approach from the left, from the right')],
+    say: 'the limit of f of x as x approaches a equals L if and only if the limit from the left and the limit from the right both equal L',
+    variables: [v('a', 'the point being approached', '', 'a'), v('L', 'the limit, a finite number', '', 'capital L'), v('x \\to a^-,\\ x \\to a^+', 'approach from the left, from the right', '', 'x approaches a from the left; x approaches a from the right')],
     assumptions: ['f is defined near a on both sides; f(a) itself is never used and may not exist.'],
     domain: ['If either side grows without bound, there is no finite limit.'],
     interpretation: 'A two-sided limit exists exactly when the readings from both sides settle on the same number.',
@@ -281,7 +309,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/2-2-the-limit-of-a-function'],
   }),
   F('f.power-rule', 'Power rule', '\\frac{d}{dx} x^n = n x^{n-1}', {
-    variables: [v('n', 'the exponent: any real number')],
+    say: 'd by d x of x to the n equals n x to the n minus one',
+    variables: [v('n', 'the exponent: any real number', '', 'n')],
     assumptions: ['For a whole-number $n$, every $x$; otherwise $x > 0$ (or wherever $x^n$ is defined and smooth).'],
     domain: ['$\\sqrt{x} = x^{1/2}$ has derivative $\\tfrac12 x^{-1/2}$ only for $x > 0$.'],
     interpretation: 'Bring the exponent down, then lower it by one. With the sum and constant-multiple rules it differentiates any polynomial term by term.',
@@ -292,7 +321,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-3-differentiation-rules'],
   }),
   F('f.product-rule', 'Product rule', "(fg)' = f'g + fg'", {
-    variables: [v("f', g'", 'the rates of change of the two factors')],
+    say: 'f g, prime, equals f prime g plus f g prime',
+    variables: [v("f', g'", 'the rates of change of the two factors', '', 'f prime, g prime')],
     assumptions: ['$f$ and $g$ are differentiable at $x$.'],
     domain: ['Wherever both derivatives exist.'],
     interpretation: 'Each factor’s rate times the other factor’s current value, added: the two strips of a growing rectangle.',
@@ -303,7 +333,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-3-differentiation-rules'],
   }),
   F('f.quotient-rule', 'Quotient rule', "\\left(\\frac{f}{g}\\right)' = \\frac{f'g - fg'}{g^2}", {
-    variables: [v('f', 'numerator'), v('g', 'denominator, not zero')],
+    say: 'f over g, prime, equals f prime g minus f g prime, all over g squared',
+    variables: [v('f', 'numerator', '', 'f'), v('g', 'denominator, not zero', '', 'g')],
     assumptions: ['$f$ and $g$ are differentiable at $x$, and $g(x) \\ne 0$.'],
     domain: ['Not where $g(x) = 0$: the quotient is undefined there.'],
     interpretation: 'The rate of a ratio: the top’s rate times the bottom, minus the top times the bottom’s rate, over the bottom squared.',
@@ -314,7 +345,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-3-differentiation-rules'],
   }),
   F('f.chain-rule', 'Chain rule', "\\frac{d}{dx} f\\big(g(x)\\big) = f'\\big(g(x)\\big)\\, g'(x)", {
-    variables: [v("g'(x)", 'inner rate: change in u = g(x) per unit of x'), v("f'(g(x))", 'outer rate, read at the inner value u = g(x)')],
+    say: 'd by d x of f of g of x equals f prime of g of x, times g prime of x',
+    variables: [v("g'(x)", 'inner rate: change in u = g(x) per unit of x', '', 'g prime of x'), v("f'(g(x))", 'outer rate, read at the inner value u = g(x)', '', 'f prime of g of x')],
     assumptions: ['g is differentiable at x and f is differentiable at g(x).'],
     domain: ['Wherever both derivatives exist.'],
     interpretation: 'Rates along a chain multiply, and their units cancel like fractions: (y per u) × (u per x) = y per x.',
@@ -325,7 +357,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/3-6-the-chain-rule'],
   }),
   F('f.riemann', 'Riemann sum', 'S_n = \\sum_{i=1}^{n} f(x_i^*)\\,\\Delta x, \\quad \\Delta x = \\frac{b - a}{n}', {
-    variables: [v('x_i^*', 'sample point in strip i'), v('\\Delta x', 'strip width')],
+    say: 'S sub n equals the sum from i equals one to n of f of x sub i star, times delta x, where delta x equals b minus a, over n',
+    variables: [v('x_i^*', 'sample point in strip i', '', 'x sub i star'), v('\\Delta x', 'strip width', '', 'delta x')],
     interpretation: 'An approximation of the signed area under f by n rectangles.',
     pitfalls: ['Reading a finite sum as the exact area.'],
     application: 'Estimating totals from sampled rates (distance from speed readings).',
@@ -334,7 +367,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-1/pages/5-1-approximating-areas'],
   }),
   F('f.integral-def', 'Definite integral', '\\int_a^b f(x)\\,dx = \\lim_{n \\to \\infty} \\sum_{i=1}^{n} f(x_i^*)\\,\\Delta x', {
-    variables: [v('a, b', 'limits of integration')],
+    say: 'the integral from a to b of f of x, d x, equals the limit as n approaches infinity of the sum from i equals one to n of f of x sub i star, times delta x',
+    variables: [v('a, b', 'limits of integration', '', 'a, b')],
     assumptions: ['f is continuous (or at least integrable) on [a, b].'],
     interpretation: 'Signed area; net change of a quantity from its rate.',
     pitfalls: ['Forgetting that area below the axis subtracts.'],
@@ -343,7 +377,8 @@ export const FORMULAS = [
     concept: 'c.integral', lesson: 'c2-riemann', claim: 'definition',
   }),
   F('f.taylor', 'Taylor polynomial', 'P_n(x) = \\sum_{k=0}^{n} \\frac{f^{(k)}(a)}{k!}\\,(x - a)^k', {
-    variables: [v('a', 'centre'), v('n', 'degree'), v('f^{(k)}(a)', 'k-th derivative at a')],
+    say: 'P sub n of x equals the sum from k equals zero to n of the k-th derivative of f at a, over k factorial, times x minus a to the k',
+    variables: [v('a', 'centre', '', 'a'), v('n', 'degree', '', 'n'), v('f^{(k)}(a)', 'k-th derivative at a', '', 'the k-th derivative of f at a')],
     assumptions: ['f has n derivatives at a.'],
     interpretation: 'The polynomial matching f’s value and first n derivatives at a.',
     pitfalls: ['Using it far from the centre, or outside the interval of convergence.'],
@@ -353,7 +388,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-2/pages/6-3-taylor-and-maclaurin-series'],
   }),
   F('f.lagrange-remainder', 'Lagrange error bound', '|R_n(x)| \\le \\frac{M\\,|x - a|^{n+1}}{(n + 1)!}', {
-    variables: [v('M', 'an upper bound for $|f^{(n+1)}|$ between a and x')],
+    say: 'the absolute value of R sub n of x is at most M times the absolute value of x minus a to the n plus one, over n plus one factorial',
+    variables: [v('M', 'an upper bound for $|f^{(n+1)}|$ between a and x', '', 'capital M')],
     assumptions: ['f has n + 1 continuous derivatives between a and x.'],
     interpretation: 'A guaranteed upper limit on the approximation error.',
     pitfalls: ['Choosing M too small (the bound must hold on the whole interval).'],
@@ -362,7 +398,8 @@ export const FORMULAS = [
     concept: 'c.taylor', lesson: 'c2-taylor', claim: 'theorem',
   }),
   F('f.partial-def', 'Partial derivative', '\\frac{\\partial f}{\\partial x}(a, b) = \\lim_{h \\to 0} \\frac{f(a + h, b) - f(a, b)}{h}', {
-    variables: [v('\\partial', 'curly d: other inputs are held fixed')],
+    say: 'partial f partial x at a, b equals the limit as h approaches zero of f of a plus h, b, minus f of a, b, over h',
+    variables: [v('\\partial', 'curly d: other inputs are held fixed', '', 'partial, a curly d')],
     interpretation: 'The rate of change along one axis.',
     pitfalls: ['Mixing $d$ and $\\partial$ notation.', 'Assuming partials existing implies differentiability.'],
     application: 'Sensitivity of a model’s loss to one weight.',
@@ -371,7 +408,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-3/pages/4-3-partial-derivatives'],
   }),
   F('f.gradient', 'Gradient', '\\nabla f = \\left(\\frac{\\partial f}{\\partial x_1}, \\ldots, \\frac{\\partial f}{\\partial x_n}\\right)', {
-    variables: [v('\\nabla f', 'vector of partial derivatives')],
+    say: 'grad f equals the list of partial f partial x sub one, through partial f partial x sub n',
+    variables: [v('\\nabla f', 'vector of partial derivatives', '', 'grad f, also said del f')],
     assumptions: ['f is differentiable.'],
     interpretation: 'Points in the direction of steepest increase; its length is that steepest rate.',
     pitfalls: ['Expecting it to point toward the global maximum (it is local).'],
@@ -381,7 +419,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-3/pages/4-6-directional-derivatives-and-the-gradient'],
   }),
   F('f.directional-derivative', 'Directional derivative', 'D_{\\mathbf u} f = \\nabla f \\cdot \\mathbf u', {
-    variables: [v('\\mathbf u', 'unit direction')],
+    say: 'D sub u of f equals grad f dot u',
+    variables: [v('\\mathbf u', 'unit direction', '', 'u')],
     assumptions: ['f is differentiable; $\\lVert \\mathbf u \\rVert = 1$.'],
     interpretation: 'The rate of change moving in direction u; zero along a contour.',
     pitfalls: ['Using a non-unit direction vector.'],
@@ -390,7 +429,8 @@ export const FORMULAS = [
     concept: 'c.gradient', lesson: 'c3-gradient', claim: 'theorem',
   }),
   F('f.hessian-test', 'Second-derivative test (two variables)', 'D = f_{xx} f_{yy} - f_{xy}^2:\\; D > 0,\\ f_{xx} > 0 \\Rightarrow \\min;\\; D > 0,\\ f_{xx} < 0 \\Rightarrow \\max;\\; D < 0 \\Rightarrow \\text{saddle}', {
-    variables: [v('D', 'determinant of the Hessian at a critical point')],
+    say: 'D equals f sub x x times f sub y y, minus f sub x y squared. D positive and f sub x x positive: a minimum. D positive and f sub x x negative: a maximum. D negative: a saddle',
+    variables: [v('D', 'determinant of the Hessian at a critical point', '', 'capital D')],
     assumptions: ['$\\nabla f = \\mathbf 0$ at the point; second partials continuous.'],
     domain: ['Inconclusive when D = 0.'],
     interpretation: 'Curvature decides what kind of flat point it is.',
@@ -401,7 +441,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/calculus-volume-3/pages/4-7-maxima-minima-problems'],
   }),
   F('f.gd-update', 'Gradient-descent update', '\\mathbf w_{k+1} = \\mathbf w_k - \\eta\\,\\nabla L(\\mathbf w_k)', {
-    variables: [v('\\eta', 'learning rate (> 0)'), v('L', 'loss function')],
+    say: 'w sub k plus one equals w sub k minus eta times grad L of w sub k',
+    variables: [v('\\eta', 'learning rate (> 0)', '', 'eta'), v('L', 'loss function', '', 'capital L')],
     assumptions: ['L is differentiable.'],
     interpretation: 'A step downhill, sized by η.',
     pitfalls: ['A learning rate too large (divergence) or too small (crawling).'],
@@ -411,7 +452,8 @@ export const FORMULAS = [
     references: ['https://www.deeplearningbook.org/contents/numerical.html'],
   }),
   F('f.gd-limit', 'Convergence condition on a quadratic', '0 < \\eta < \\frac{2}{\\lambda_{\\max}}', {
-    variables: [v('\\lambda_{\\max}', 'largest eigenvalue of the Hessian (largest curvature)')],
+    say: 'eta is between zero and two over lambda max',
+    variables: [v('\\lambda_{\\max}', 'largest eigenvalue of the Hessian (largest curvature)', '', 'lambda max')],
     assumptions: ['A quadratic loss with positive-definite Hessian.'],
     interpretation: 'The step size must suit the steepest direction; the flattest then converges slowly.',
     pitfalls: ['Applying it as exact to non-quadratic losses (there it is a guide).'],
@@ -422,7 +464,8 @@ export const FORMULAS = [
 
   // ——— Probability & statistics ———
   F('f.standard-error', 'Standard error of the mean', '\\sigma_{\\bar X} = \\frac{\\sigma}{\\sqrt n}', {
-    variables: [v('\\sigma', 'population standard deviation'), v('n', 'sample size')],
+    say: 'sigma sub X bar equals sigma over the square root of n',
+    variables: [v('\\sigma', 'population standard deviation', '', 'sigma'), v('n', 'sample size', '', 'n')],
     assumptions: ['Independent observations from one distribution.'],
     interpretation: 'How much sample means vary from sample to sample.',
     pitfalls: ['Confusing it with the standard deviation of the data.'],
@@ -432,7 +475,8 @@ export const FORMULAS = [
     references: ['https://openstax.org/books/introductory-statistics-2e/pages/7-1-the-central-limit-theorem-for-sample-means-averages'],
   }),
   F('f.clt-z', 'Standardized sample mean (CLT)', 'z = \\frac{\\bar X - \\mu}{\\sigma/\\sqrt n} \\;\\approx\\; N(0, 1)', {
-    variables: [v('\\bar X', 'sample mean'), v('\\mu', 'population mean')],
+    say: 'z equals X bar minus mu, over sigma over the square root of n, which is approximately standard normal, N of zero, one',
+    variables: [v('\\bar X', 'sample mean', '', 'X bar'), v('\\mu', 'population mean', '', 'mu')],
     assumptions: ['Independent, identically distributed observations with finite variance; n large enough.'],
     domain: ['Fails for distributions without finite variance (e.g. Cauchy).'],
     interpretation: 'Sample means are approximately normal however the data are distributed.',
@@ -442,7 +486,8 @@ export const FORMULAS = [
     concept: 'c.clt', lesson: 'st-sampling-clt', claim: 'approximation',
   }),
   F('f.bayes', 'Bayes’ theorem', 'P(D \\mid +) = \\frac{P(+ \\mid D)\\,P(D)}{P(+ \\mid D)\\,P(D) + P(+ \\mid \\bar D)\\,P(\\bar D)}', {
-    variables: [v('P(D)', 'prior'), v('P(+ \\mid D)', 'sensitivity'), v('P(+ \\mid \\bar D)', 'false-positive rate')],
+    say: 'P of D given positive equals P of positive given D times P of D, over P of positive given D times P of D plus P of positive given not D times P of not D',
+    variables: [v('P(D)', 'prior', '', 'P of D'), v('P(+ \\mid D)', 'sensitivity', '', 'P of positive given D'), v('P(+ \\mid \\bar D)', 'false-positive rate', '', 'P of positive given not D')],
     domain: ['$P(+) > 0$.'],
     interpretation: 'How likely the hypothesis is after the evidence.',
     pitfalls: ['Swapping $P(+ \\mid D)$ and $P(D \\mid +)$.', 'Ignoring the base rate.'],
@@ -452,7 +497,8 @@ export const FORMULAS = [
     references: ['https://seeing-theory.brown.edu/bayesian-inference/index.html'],
   }),
   F('f.bayes-odds', 'Bayes’ theorem in odds form', '\\text{posterior odds} = \\text{prior odds} \\times \\frac{P(+ \\mid D)}{P(+ \\mid \\bar D)}', {
-    variables: [v('\\text{odds}', 'p / (1 − p)')],
+    say: 'posterior odds equal prior odds times P of positive given D over P of positive given not D',
+    variables: [v('\\text{odds}', 'p / (1 − p)', '', 'odds')],
     interpretation: 'Each independent piece of evidence multiplies the odds by its likelihood ratio.',
     pitfalls: ['Multiplying likelihood ratios of evidence that is not conditionally independent.'],
     application: 'Sequential updating with several tests.',
@@ -462,7 +508,8 @@ export const FORMULAS = [
 
   // ——— Machine learning ———
   F('f.optimism', 'Optimism of training error (least squares)', 'E[\\text{new MSE}] - E[\\text{training MSE}] = \\frac{2p\\,\\sigma^2}{n}', {
-    variables: [v('p', 'number of fitted coefficients'), v('\\sigma^2', 'noise variance'), v('n', 'number of training points')],
+    say: 'the expected new M S E minus the expected training M S E equals two p sigma squared over n',
+    variables: [v('p', 'number of fitted coefficients', '', 'p'), v('\\sigma^2', 'noise variance', '', 'sigma squared'), v('n', 'number of training points', '', 'n')],
     assumptions: ['Correctly specified linear model, fixed inputs, independent constant-variance noise; “new MSE” is at the same inputs.'],
     interpretation: 'How much training error flatters a model; grows with model size, shrinks with data.',
     pitfalls: ['Applying it to flexible non-linear models (use validation instead).'],
@@ -472,7 +519,8 @@ export const FORMULAS = [
     references: ['https://www.statlearning.com/'],
   }),
   F('f.precision', 'Precision', '\\text{precision} = \\frac{TP}{TP + FP}', {
-    variables: [v('TP, FP', 'true and false positives')],
+    say: 'precision equals T P over T P plus F P',
+    variables: [v('TP, FP', 'true and false positives', '', 'T P, F P')],
     domain: ['Undefined when nothing is flagged.'],
     interpretation: 'Of the cases flagged, the share that are real.',
     pitfalls: ['Comparing precision across populations with different prevalence.'],
@@ -482,7 +530,8 @@ export const FORMULAS = [
     references: ['https://scikit-learn.org/stable/modules/model_evaluation.html'],
   }),
   F('f.recall', 'Recall (sensitivity, TPR)', '\\text{recall} = \\frac{TP}{TP + FN}', {
-    variables: [v('TP, FN', 'true positives and missed positives')],
+    say: 'recall equals T P over T P plus F N',
+    variables: [v('TP, FN', 'true positives and missed positives', '', 'T P, F N')],
     interpretation: 'Of the real cases, the share that were flagged.',
     pitfalls: ['Reporting recall without precision (flag everyone: recall 1).'],
     application: 'Screening, where misses are costly.',
@@ -490,7 +539,8 @@ export const FORMULAS = [
     concept: 'c.confusion-matrix', lesson: 'ml-classification-metrics', claim: 'definition',
   }),
   F('f.f1', 'F1 score', 'F_1 = \\frac{2PR}{P + R} = \\frac{2\\,TP}{2\\,TP + FP + FN}', {
-    variables: [v('P, R', 'precision and recall')],
+    say: 'F one equals two P R over P plus R, which equals two T P over two T P plus F P plus F N',
+    variables: [v('P, R', 'precision and recall', '', 'P, R')],
     interpretation: 'A single summary that is low if either precision or recall is low.',
     pitfalls: ['Treating F1 as cost-aware (it weights the two errors by convention, not by cost).'],
     application: 'Comparing classifiers on imbalanced data.',
@@ -498,7 +548,8 @@ export const FORMULAS = [
     concept: 'c.confusion-matrix', lesson: 'ml-classification-metrics', claim: 'definition',
   }),
   F('f.ppv', 'Precision from base rate and error rates', '\\text{PPV} = \\frac{\\pi\\,\\text{TPR}}{\\pi\\,\\text{TPR} + (1 - \\pi)\\,\\text{FPR}}', {
-    variables: [v('\\pi', 'base rate (prevalence)'), v('\\text{TPR}, \\text{FPR}', 'true- and false-positive rates')],
+    say: 'P P V equals pi times T P R, over pi times T P R plus one minus pi times F P R',
+    variables: [v('\\pi', 'base rate (prevalence)', '', 'pi'), v('\\text{TPR}, \\text{FPR}', 'true- and false-positive rates', '', 'T P R, F P R')],
     interpretation: 'Precision falls as positives get rarer, at fixed error rates.',
     pitfalls: ['Expecting equal error rates to give equal precision across groups.'],
     application: 'Fairness analysis; transferring a screening test to a new population.',
@@ -507,7 +558,8 @@ export const FORMULAS = [
     references: ['https://arxiv.org/abs/1609.05807'],
   }),
   F('f.brier', 'Brier score', '\\text{BS} = \\frac1n \\sum_{i=1}^{n} (\\hat p_i - y_i)^2', {
-    variables: [v('\\hat p_i', 'predicted probability'), v('y_i', 'outcome (0 or 1)')],
+    say: 'B S equals one over n times the sum from i equals one to n of p hat sub i minus y sub i, squared',
+    variables: [v('\\hat p_i', 'predicted probability', '', 'p hat sub i'), v('y_i', 'outcome (0 or 1)', '', 'y sub i')],
     interpretation: 'Mean squared error of probabilities; 0 is perfect.',
     pitfalls: ['Comparing Brier scores across datasets with different base rates.'],
     application: 'Checking probability forecasts (weather, credit risk).',

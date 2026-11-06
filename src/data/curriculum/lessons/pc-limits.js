@@ -16,9 +16,9 @@ export default {
   },
 
   glossary: [
-    { term: '$\\lim_{x \\to a} f(x) = L$', meaning: 'As $x$ gets close to $a$ from both sides ($x \\ne a$), $f(x)$ gets as close to $L$ as you like.' },
-    { term: '$x \\to a^-$, $x \\to a^+$', meaning: 'Approaching $a$ from the left (smaller values) or from the right (larger values): **one-sided limits**.' },
-    { term: '**continuous** at $a$', meaning: '$f(a)$ is defined and equals $\\lim_{x \\to a} f(x)$: no hole, jump or blow-up there.' },
+    { term: '$\\lim_{x \\to a} f(x) = L$', say: 'the limit of f of x as x approaches a equals L', meaning: 'As $x$ gets close to $a$ from both sides ($x \\ne a$), $f(x)$ gets as close to $L$ as you like.' },
+    { term: '$x \\to a^-$, $x \\to a^+$', say: 'x approaches a from the left; x approaches a from the right', meaning: 'Approaching $a$ from the left (smaller values) or from the right (larger values): **one-sided limits**.' },
+    { term: '**continuous** at $a$', say: 'continuous at a', meaning: '$f(a)$ is defined and equals $\\lim_{x \\to a} f(x)$: no hole, jump or blow-up there.' },
     { term: '**removable discontinuity**', meaning: 'A hole: the limit exists, but $f(a)$ is missing or different from it.' },
   ],
 

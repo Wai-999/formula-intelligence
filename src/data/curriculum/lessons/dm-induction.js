@@ -16,7 +16,7 @@ export default {
   },
 
   glossary: [
-    { term: '$P(n)$', meaning: 'The statement being proved, for the number $n$ — for example “$1 + 3 + \\cdots + (2n-1) = n^2$”.' },
+    { term: '$P(n)$', say: 'P of n', meaning: 'The statement being proved, for the number $n$ — for example “$1 + 3 + \\cdots + (2n-1) = n^2$”.' },
     { term: '**base case**', meaning: 'A direct check that $P$ holds at the starting value, usually $P(1)$ or $P(0)$.' },
     { term: '**inductive hypothesis**', meaning: 'The assumption, inside the step, that $P(k)$ is true for one arbitrary $k$ at or past the base case.' },
     { term: '**inductive step**', meaning: 'A proof that $P(k)$ implies $P(k+1)$, for every such $k$.' },

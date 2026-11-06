@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$\\dfrac{f(a + h) - f(a)}{h}$', meaning: 'The difference quotient: the slope of the secant from $a$ to $a + h$ ($h \\ne 0$).' },
-    { term: '$f\'(a)$, $\\dfrac{df}{dx}\\Big|_{x=a}$', meaning: 'The derivative at $a$. The straight $d$ is for functions of **one** variable.' },
-    { term: '$\\lim_{h \\to 0}$', meaning: 'The value approached as $h$ gets arbitrarily close to 0, from both sides, without being 0.' },
-    { term: '$\\dfrac{\\partial f}{\\partial x}$', meaning: 'A **partial** derivative (curly $\\partial$): used when $f$ has several inputs and the others are held fixed. You will meet it in the gradient lesson; do not mix the two notations.' },
+    { term: '$\\dfrac{f(a + h) - f(a)}{h}$', say: 'f of a plus h, minus f of a, all over h', meaning: 'The difference quotient: the slope of the secant from $a$ to $a + h$ ($h \\ne 0$).' },
+    { term: '$f\'(a)$, $\\dfrac{df}{dx}\\Big|_{x=a}$', say: 'f prime of a; d f d x at x equals a', meaning: 'The derivative at $a$. The straight $d$ is for functions of **one** variable.' },
+    { term: '$\\lim_{h \\to 0}$', say: 'the limit as h approaches zero', meaning: 'The value approached as $h$ gets arbitrarily close to 0, from both sides, without being 0.' },
+    { term: '$\\dfrac{\\partial f}{\\partial x}$', say: 'partial f, partial x', meaning: 'A **partial** derivative (curly $\\partial$): used when $f$ has several inputs and the others are held fixed. You will meet it in the gradient lesson; do not mix the two notations.' },
   ],
 
   priorCheck: [

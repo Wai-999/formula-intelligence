@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$f^{(k)}(a)$', meaning: 'The $k$-th derivative of $f$ at $a$; $f^{(0)} = f$.' },
-    { term: '$k!$', meaning: '$1 \\cdot 2 \\cdots k$, with $0! = 1$.' },
-    { term: '$P_n(x) = \\sum_{k=0}^{n} \\dfrac{f^{(k)}(a)}{k!}(x - a)^k$', meaning: 'The degree-$n$ Taylor polynomial centred at $a$ (Maclaurin when $a = 0$).' },
-    { term: '$R_n(x) = f(x) - P_n(x)$', meaning: 'The remainder: the error of the approximation.' },
+    { term: '$f^{(k)}(a)$', say: 'the k-th derivative of f at a', meaning: 'The $k$-th derivative of $f$ at $a$; $f^{(0)} = f$.' },
+    { term: '$k!$', say: 'k factorial', meaning: '$1 \\cdot 2 \\cdots k$, with $0! = 1$.' },
+    { term: '$P_n(x) = \\sum_{k=0}^{n} \\dfrac{f^{(k)}(a)}{k!}(x - a)^k$', say: 'P sub n of x equals the sum from k equals zero to n of the k-th derivative of f at a over k factorial, times x minus a to the k', meaning: 'The degree-$n$ Taylor polynomial centred at $a$ (Maclaurin when $a = 0$).' },
+    { term: '$R_n(x) = f(x) - P_n(x)$', say: 'R sub n of x equals f of x minus P sub n of x', meaning: 'The remainder: the error of the approximation.' },
   ],
 
   priorCheck: [

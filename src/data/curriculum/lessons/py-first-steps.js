@@ -20,10 +20,10 @@ export default {
   },
 
   glossary: [
-    { term: '`times = [42, 35, 51]`', meaning: 'A **list**: values in order. `len(times)` is 3; `times[0]` is 42.' },
-    { term: '`for t in times:`', meaning: 'Run the indented block once for each value, calling the current one `t`.' },
-    { term: '`/` and `//`', meaning: '`/` divides exactly (`7 / 2` is 3.5); `//` is floor division (`7 // 2` is 3).' },
-    { term: '`None`', meaning: 'Python’s value for “nothing here” — often a missing measurement. It is not 0, and arithmetic with it fails.' },
+    { term: '`times = [42, 35, 51]`', say: 'times is set to the list 42, 35, 51', meaning: 'A **list**: values in order. `len(times)` is 3; `times[0]` is 42.' },
+    { term: '`for t in times:`', say: 'for t in times', meaning: 'Run the indented block once for each value, calling the current one `t`.' },
+    { term: '`/` and `//`', say: 'slash, and double slash', meaning: '`/` divides exactly (`7 / 2` is 3.5); `//` is floor division (`7 // 2` is 3).' },
+    { term: '`None`', say: 'None', meaning: 'Python’s value for “nothing here” — often a missing measurement. It is not 0, and arithmetic with it fails.' },
   ],
 
   priorCheck: [

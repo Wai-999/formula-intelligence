@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: 'prior $P(D)$', meaning: 'How likely the hypothesis is before the evidence (here, the base rate 1%).' },
-    { term: 'sensitivity $P(+ \\mid D)$', meaning: 'Chance of a positive result if you have the condition.' },
-    { term: 'false-positive rate $P(+ \\mid \\bar D)$', meaning: 'Chance of a positive result if you do not (1 − specificity).' },
-    { term: 'posterior $P(D \\mid +)$', meaning: 'How likely the hypothesis is after seeing the evidence.' },
+    { term: 'prior $P(D)$', say: 'prior, P of D', meaning: 'How likely the hypothesis is before the evidence (here, the base rate 1%).' },
+    { term: 'sensitivity $P(+ \\mid D)$', say: 'sensitivity, P of positive given D', meaning: 'Chance of a positive result if you have the condition.' },
+    { term: 'false-positive rate $P(+ \\mid \\bar D)$', say: 'false-positive rate, P of positive given not D', meaning: 'Chance of a positive result if you do not (1 − specificity).' },
+    { term: 'posterior $P(D \\mid +)$', say: 'posterior, P of D given positive', meaning: 'How likely the hypothesis is after seeing the evidence.' },
     { term: 'likelihood ratio', meaning: '$P(+ \\mid D)/P(+ \\mid \\bar D)$: how much more likely the evidence is under the hypothesis.' },
   ],
 

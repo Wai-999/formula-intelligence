@@ -1,0 +1,49 @@
+/* A formula's symbols, one row each (FormulaBreakdown.jsx). Cells wrap
+   rather than scroll, so the table fits a phone without a scrolling box. */
+.formula-symbols-wrap {
+  margin-top: 10px;
+}
+
+.formula-symbols {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.formula-symbols caption {
+  text-align: left;
+  padding-bottom: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.formula-symbols th,
+.formula-symbols td {
+  padding: 6px 12px 6px 0;
+  border-top: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.formula-symbols thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-top: 0;
+}
+
+.formula-symbols tbody th {
+  font-weight: 400;
+}
+
+.formula-symbols td:last-child {
+  color: var(--text-muted);
+}
+
+.formula-symbols-units {
+  color: var(--text-faint);
+}

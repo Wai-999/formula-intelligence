@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$\\Delta x = \\dfrac{b - a}{n}$', meaning: 'The width of each of $n$ equal strips on $[a, b]$.' },
-    { term: '$x_i^*$', meaning: 'The sample point in strip $i$: its left end, right end or midpoint.' },
-    { term: '$\\sum_{i=1}^{n} f(x_i^*)\\,\\Delta x$', meaning: 'A Riemann sum: heights times widths, added up.' },
-    { term: '$\\int_a^b f(x)\\,dx$', meaning: 'The definite integral: the limit of Riemann sums as $n \\to \\infty$ — signed area.' },
+    { term: '$\\Delta x = \\dfrac{b - a}{n}$', say: 'delta x equals b minus a, over n', meaning: 'The width of each of $n$ equal strips on $[a, b]$.' },
+    { term: '$x_i^*$', say: 'x sub i star', meaning: 'The sample point in strip $i$: its left end, right end or midpoint.' },
+    { term: '$\\sum_{i=1}^{n} f(x_i^*)\\,\\Delta x$', say: 'the sum from i equals one to n of f of x sub i star, times delta x', meaning: 'A Riemann sum: heights times widths, added up.' },
+    { term: '$\\int_a^b f(x)\\,dx$', say: 'the integral from a to b of f of x, d x', meaning: 'The definite integral: the limit of Riemann sums as $n \\to \\infty$ — signed area.' },
   ],
 
   priorCheck: [

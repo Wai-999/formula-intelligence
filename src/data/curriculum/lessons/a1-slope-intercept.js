@@ -10,9 +10,9 @@ export default {
   },
 
   glossary: [
-    { term: '$y = mx + b$', meaning: 'Slope–intercept form of a line.' },
-    { term: '$m$', meaning: 'The slope: change in y per unit of x.' },
-    { term: '$b$', meaning: 'The y-intercept: the value of y when $x = 0$; the line passes through $(0, b)$.' },
+    { term: '$y = mx + b$', say: 'y equals m x plus b', meaning: 'Slope–intercept form of a line.' },
+    { term: '$m$', say: 'm', meaning: 'The slope: change in y per unit of x.' },
+    { term: '$b$', say: 'b', meaning: 'The y-intercept: the value of y when $x = 0$; the line passes through $(0, b)$.' },
     { term: 'x-intercept', meaning: 'Where the line crosses the x-axis ($y = 0$). For $m \\ne 0$ it is $x = -b/m$.' },
     { term: 'parallel', meaning: 'Two different lines with the same slope never meet.' },
   ],

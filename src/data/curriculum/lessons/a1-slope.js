@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$(x_1, y_1)$, $(x_2, y_2)$', meaning: 'Two points on the line. The subscripts only name them; they are not exponents.' },
-    { term: '$\\Delta y = y_2 - y_1$', meaning: 'The rise: the change in the output. Δ (delta) means “change in”.' },
-    { term: '$\\Delta x = x_2 - x_1$', meaning: 'The run: the change in the input.' },
-    { term: '$m$', meaning: 'The slope, $\\Delta y / \\Delta x$, in units of y per unit of x.' },
+    { term: '$(x_1, y_1)$, $(x_2, y_2)$', say: 'the points x sub one, y sub one and x sub two, y sub two', meaning: 'Two points on the line. The subscripts only name them; they are not exponents.' },
+    { term: '$\\Delta y = y_2 - y_1$', say: 'delta y equals y sub two minus y sub one', meaning: 'The rise: the change in the output. Δ (delta) means “change in”.' },
+    { term: '$\\Delta x = x_2 - x_1$', say: 'delta x equals x sub two minus x sub one', meaning: 'The run: the change in the input.' },
+    { term: '$m$', say: 'm', meaning: 'The slope, $\\Delta y / \\Delta x$, in units of y per unit of x.' },
   ],
 
   priorCheck: [

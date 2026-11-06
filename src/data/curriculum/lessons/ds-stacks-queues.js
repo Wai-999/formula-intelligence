@@ -28,10 +28,10 @@ export default {
   },
 
   glossary: [
-    { term: '**stack** (LIFO)', meaning: 'Add with `push`, look with `top`, remove with `pop` — always at the same end. In C++: `std::stack`.' },
-    { term: '**queue** (FIFO)', meaning: 'Add at the back with `push`, look at the `front`, remove from the front with `pop`. In C++: `std::queue`.' },
-    { term: '$O(1)$', meaning: 'Constant time: the cost of one operation does not grow with the number of items stored.' },
-    { term: '**amortized** $O(1)$', meaning: 'Constant on average over many operations, even if an occasional one is slow (a vector growing its storage).' },
+    { term: '**stack** (LIFO)', say: 'stack, L I F O: last in, first out', meaning: 'Add with `push`, look with `top`, remove with `pop` — always at the same end. In C++: `std::stack`.' },
+    { term: '**queue** (FIFO)', say: 'queue (said like the letter Q), F I F O: first in, first out', meaning: 'Add at the back with `push`, look at the `front`, remove from the front with `pop`. In C++: `std::queue`.' },
+    { term: '$O(1)$', say: 'big O of one', meaning: 'Constant time: the cost of one operation does not grow with the number of items stored.' },
+    { term: '**amortized** $O(1)$', say: 'amortized big O of one', meaning: 'Constant on average over many operations, even if an occasional one is slow (a vector growing its storage).' },
   ],
 
   priorCheck: [

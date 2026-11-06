@@ -21,10 +21,10 @@ export default {
 
   glossary: [
     { term: '**parameter**, **argument**', meaning: 'The parameter is the name in the function’s definition; the argument is the value passed in a call.' },
-    { term: 'pass by value: `T x`', meaning: 'The function gets its own copy of the argument. Changing `x` does not affect the caller.' },
-    { term: 'pass by reference: `T& x`', meaning: 'The function works on the caller’s object itself, under another name.' },
-    { term: '`const T& x`', meaning: 'A read-only reference: no copy is made, and the compiler rejects any change to `x`.' },
-    { term: '`return`', meaning: 'Ends the function and hands one value back to the caller. A non-`void` function must return on every path.' },
+    { term: 'pass by value: `T x`', say: 'T x', meaning: 'The function gets its own copy of the argument. Changing `x` does not affect the caller.' },
+    { term: 'pass by reference: `T& x`', say: 'T reference x', meaning: 'The function works on the caller’s object itself, under another name.' },
+    { term: '`const T& x`', say: 'const T reference x', meaning: 'A read-only reference: no copy is made, and the compiler rejects any change to `x`.' },
+    { term: '`return`', say: 'return', meaning: 'Ends the function and hands one value back to the caller. A non-`void` function must return on every path.' },
   ],
 
   priorCheck: [

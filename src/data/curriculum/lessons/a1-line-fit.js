@@ -10,11 +10,11 @@ export default {
   },
 
   glossary: [
-    { term: '$\\hat y = mx + b$', meaning: 'The fitted line; $\\hat y$ (“y-hat”) is a prediction, not an observation.' },
-    { term: '$e_i = y_i - \\hat y_i$', meaning: 'The residual of point $i$: positive above the line, negative below.' },
-    { term: '$\\bar x, \\bar y$', meaning: 'The means of the x-values and of the y-values.' },
-    { term: '$S_{xy} = \\sum (x_i - \\bar x)(y_i - \\bar y)$', meaning: 'How x and y move together around their means.' },
-    { term: '$S_{xx} = \\sum (x_i - \\bar x)^2$', meaning: 'How spread out the x-values are.' },
+    { term: '$\\hat y = mx + b$', say: 'y hat equals m x plus b', meaning: 'The fitted line; $\\hat y$ (“y-hat”) is a prediction, not an observation.' },
+    { term: '$e_i = y_i - \\hat y_i$', say: 'e sub i equals y sub i minus y hat sub i', meaning: 'The residual of point $i$: positive above the line, negative below.' },
+    { term: '$\\bar x, \\bar y$', say: 'x bar, y bar', meaning: 'The means of the x-values and of the y-values.' },
+    { term: '$S_{xy} = \\sum (x_i - \\bar x)(y_i - \\bar y)$', say: 'S sub x y equals the sum of x sub i minus x bar, times y sub i minus y bar', meaning: 'How x and y move together around their means.' },
+    { term: '$S_{xx} = \\sum (x_i - \\bar x)^2$', say: 'S sub x x equals the sum of x sub i minus x bar, squared', meaning: 'How spread out the x-values are.' },
   ],
 
   priorCheck: [

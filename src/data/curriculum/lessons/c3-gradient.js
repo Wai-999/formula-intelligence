@@ -10,11 +10,11 @@ export default {
   },
 
   glossary: [
-    { term: "$f'(x)$, $\\dfrac{df}{dx}$", meaning: 'Single-variable derivative (straight $d$): $f$ has one input.' },
-    { term: '$\\dfrac{\\partial f}{\\partial x}$, $f_x$', meaning: 'Partial derivative (curly $\\partial$): differentiate in $x$ while **holding $y$ fixed**.' },
-    { term: '$\\nabla f = \\left(\\dfrac{\\partial f}{\\partial x}, \\dfrac{\\partial f}{\\partial y}\\right)$', meaning: 'The gradient: a vector, one partial per input.' },
-    { term: '$D_{\\mathbf u} f = \\nabla f\\cdot\\mathbf u$', meaning: 'The directional derivative: the rate of change moving in the unit direction $\\mathbf u$.' },
-    { term: '$H = \\begin{bmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy}\\end{bmatrix}$', meaning: 'The Hessian: second partial derivatives, describing curvature.' },
+    { term: "$f'(x)$, $\\dfrac{df}{dx}$", say: 'f prime of x; d f d x', meaning: 'Single-variable derivative (straight $d$): $f$ has one input.' },
+    { term: '$\\dfrac{\\partial f}{\\partial x}$, $f_x$', say: 'partial f, partial x; f sub x', meaning: 'Partial derivative (curly $\\partial$): differentiate in $x$ while **holding $y$ fixed**.' },
+    { term: '$\\nabla f = \\left(\\dfrac{\\partial f}{\\partial x}, \\dfrac{\\partial f}{\\partial y}\\right)$', say: 'grad f equals partial f partial x, partial f partial y', meaning: 'The gradient: a vector, one partial per input.' },
+    { term: '$D_{\\mathbf u} f = \\nabla f\\cdot\\mathbf u$', say: 'D sub u of f equals grad f dot u', meaning: 'The directional derivative: the rate of change moving in the unit direction $\\mathbf u$.' },
+    { term: '$H = \\begin{bmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy}\\end{bmatrix}$', say: 'H is the matrix with rows f sub x x, f sub x y and f sub y x, f sub y y', meaning: 'The Hessian: second partial derivatives, describing curvature.' },
   ],
 
   priorCheck: [
