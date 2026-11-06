@@ -75,8 +75,8 @@ export const COURSES = [
         objectives: ['Evaluate expressions with the order of operations', 'Use exponent rules and square roots', 'Write numbers in scientific notation'],
         exitCompetencies: ['arith.order-ops', 'arith.exponents'],
         prerequisites: ['c.integers'],
-        lessons: [],
-        planned: ['Order of operations', 'Exponents and radicals', 'Scientific notation'],
+        lessons: ['pa-exponents'],
+        planned: ['Order of operations', 'Scientific notation'],
       },
       {
         id: 'pa-equations',
@@ -379,8 +379,8 @@ export const COURSES = [
     prerequisites: ['algebra-1'],
     diagnosticDomains: ['statistics'],
     units: [
-      { id: 'ps-descriptive', title: 'Describing data', objectives: ['Summarize center, spread and position', 'Choose a summary that suits the data'], exitCompetencies: ['stats.descriptive'], prerequisites: ['c.fractions'], lessons: [], planned: ['Center and spread (see Formula map chapters 2–3)'] },
-      { id: 'ps-probability', title: 'Probability and counting', objectives: ['Apply addition, multiplication and complement rules', 'Count with permutations and combinations', 'Use conditional probability'], exitCompetencies: ['stats.probability'], prerequisites: ['c.fractions'], lessons: [], planned: ['Probability rules (see Formula map chapter 4)'] },
+      { id: 'ps-descriptive', title: 'Describing data', objectives: ['Summarize center, spread and position', 'Choose a summary that suits the data'], exitCompetencies: ['stats.descriptive'], prerequisites: ['c.fractions'], lessons: ['ps-center-spread'], planned: ['Position: percentiles, z-scores and box plots'] },
+      { id: 'ps-probability', title: 'Probability and counting', objectives: ['Apply addition, multiplication and complement rules', 'Count with permutations and combinations', 'Use conditional probability'], exitCompetencies: ['stats.probability'], prerequisites: ['c.fractions'], lessons: ['ps-probability-rules'], planned: ['Counting: permutations and combinations'] },
       {
         id: 'ps-bayes',
         title: 'Conditional probability and Bayes’ theorem',
@@ -454,7 +454,7 @@ export const COURSES = [
     prerequisites: [],
     diagnosticDomains: ['python'],
     units: [
-      { id: 'py-basics', title: 'Python basics', objectives: ['Values, variables, functions and control flow', 'Trace a loop over a list and handle missing values on purpose'], exitCompetencies: ['py.basics'], prerequisites: [], lessons: ['py-first-steps'], planned: ['Functions', 'Conditions and control flow'], labs: ['code-trace'] },
+      { id: 'py-basics', title: 'Python basics', objectives: ['Values, variables, functions and control flow', 'Trace a loop over a list and handle missing values on purpose'], exitCompetencies: ['py.basics'], prerequisites: [], lessons: ['py-first-steps', 'py-functions'], planned: ['Conditions and control flow'], labs: ['code-trace'] },
       { id: 'py-collections', title: 'Lists and dictionaries', objectives: ['Store and transform collections'], exitCompetencies: ['py.collections'], prerequisites: ['c.py-basics'], lessons: [], planned: ['Lists', 'Dictionaries'] },
       { id: 'py-debugging', title: 'Debugging', objectives: ['Read a traceback and fix the bug it points at'], exitCompetencies: ['py.debugging'], prerequisites: ['c.py-basics'], lessons: [], planned: ['Reading tracebacks'] },
       { id: 'py-numpy', title: 'NumPy arrays and broadcasting', objectives: ['Vectorize computations', 'Understand broadcasting and floating-point precision'], exitCompetencies: ['py.numpy'], prerequisites: ['c.py-collections'], lessons: [], planned: ['Arrays', 'Broadcasting', 'Floating-point precision'] },

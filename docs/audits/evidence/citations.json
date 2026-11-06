@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-06T02:54:38.719Z",
+  "checkedAt": "2026-11-06T19:11:17.202Z",
   "results": [
     {
       "url": "https://openstax.org/books/prealgebra-2e/pages/5-6-ratios-and-rate",
@@ -22,6 +22,39 @@
       "citedBy": [
         "lesson pa-ratios-rates: Solve Proportions and their Applications (§6.5)",
         "formula f.proportion"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/prealgebra-2e/pages/10-2-use-multiplication-properties-of-exponents",
+      "finalUrl": "https://openstax.org/books/prealgebra-2e/pages/10-2-use-multiplication-properties-of-exponents",
+      "status": 200,
+      "title": "10.2 Use Multiplication Properties of Exponents - Prealgebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson pa-exponents: 10.2 Use Multiplication Properties of Exponents",
+        "formula f.exponent-rules"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/prealgebra-2e/pages/10-5-integer-exponents-and-scientific-notation",
+      "finalUrl": "https://openstax.org/books/prealgebra-2e/pages/10-5-integer-exponents-and-scientific-notation",
+      "status": 200,
+      "title": "10.5 Integer Exponents and Scientific Notation - Prealgebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson pa-exponents: 10.5 Integer Exponents and Scientific Notation",
+        "formula f.negative-exponent"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/prealgebra-2e/pages/5-7-simplify-and-use-square-roots",
+      "finalUrl": "https://openstax.org/books/prealgebra-2e/pages/5-7-simplify-and-use-square-roots",
+      "status": 200,
+      "title": "5.7 Simplify and Use Square Roots - Prealgebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson pa-exponents: 5.7 Simplify and Use Square Roots",
+        "formula f.fractional-exponent"
       ]
     },
     {
@@ -259,9 +292,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=fa",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=pl",
       "status": 200,
-      "title": "داده های عددی: عادی سازی &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Dane liczbowe: normalizacja &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson la-matrix-scores: Numerical data: Normalization"
@@ -492,6 +525,72 @@
       ]
     },
     {
+      "url": "https://openstax.org/books/introductory-statistics-2e/pages/2-5-measures-of-the-center-of-the-data",
+      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/2-5-measures-of-the-center-of-the-data",
+      "status": 200,
+      "title": "2.5 Measures of the Center of the Data - Introductory Statistics 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ps-center-spread: 2.5 Measures of the Center of the Data",
+        "formula f.mean"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/introductory-statistics-2e/pages/2-7-measures-of-the-spread-of-the-data",
+      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/2-7-measures-of-the-spread-of-the-data",
+      "status": 200,
+      "title": "2.7 Measures of the Spread of the Data - Introductory Statistics 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ps-center-spread: 2.7 Measures of the Spread of the Data",
+        "formula f.sample-sd"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/introductory-statistics-2e/pages/2-3-measures-of-the-location-of-the-data",
+      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/2-3-measures-of-the-location-of-the-data",
+      "status": 200,
+      "title": "2.3 Measures of the Location of the Data - Introductory Statistics 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ps-center-spread: 2.3 Measures of the Location of the Data"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/introductory-statistics-2e/pages/3-1-terminology",
+      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/3-1-terminology",
+      "status": 200,
+      "title": "3.1 Terminology - Introductory Statistics 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ps-probability-rules: 3.1 Terminology",
+        "formula f.complement-rule"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/introductory-statistics-2e/pages/3-2-independent-and-mutually-exclusive-events",
+      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/3-2-independent-and-mutually-exclusive-events",
+      "status": 200,
+      "title": "3.2 Independent and Mutually Exclusive Events - Introductory Statistics 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ps-probability-rules: 3.2 Independent and Mutually Exclusive Events",
+        "lesson st-bayes: Independent and Mutually Exclusive Events (§3.2)",
+        "formula f.multiplication-rule"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/introductory-statistics-2e/pages/3-3-two-basic-rules-of-probability",
+      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/3-3-two-basic-rules-of-probability",
+      "status": 200,
+      "title": "3.3 Two Basic Rules of Probability - Introductory Statistics 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson ps-probability-rules: 3.3 Two Basic Rules of Probability",
+        "formula f.addition-rule"
+      ]
+    },
+    {
       "url": "https://openstax.org/books/introductory-statistics-2e/pages/7-1-the-central-limit-theorem-for-sample-means-averages",
       "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/7-1-the-central-limit-theorem-for-sample-means-averages",
       "status": 200,
@@ -521,16 +620,6 @@
       "citedBy": [
         "lesson st-bayes: Seeing Theory — Bayesian Inference",
         "formula f.bayes"
-      ]
-    },
-    {
-      "url": "https://openstax.org/books/introductory-statistics-2e/pages/3-2-independent-and-mutually-exclusive-events",
-      "finalUrl": "https://openstax.org/books/introductory-statistics-2e/pages/3-2-independent-and-mutually-exclusive-events",
-      "status": 200,
-      "title": "3.2 Independent and Mutually Exclusive Events - Introductory Statistics 2e | OpenStax",
-      "verdict": "OK",
-      "citedBy": [
-        "lesson st-bayes: Independent and Mutually Exclusive Events (§3.2)"
       ]
     },
     {
@@ -566,9 +655,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=it",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=es-419",
       "status": 200,
-      "title": "Classificazione: accuratezza, richiamo, precisione e metriche correlate &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Clasificación: Exactitud, recuperación, precisión y métricas relacionadas &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: Accuracy, recall, precision, and related metrics"
@@ -576,9 +665,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=ko",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=fa",
       "status": 200,
-      "title": "분류: ROC 및 AUC &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "طبقه بندی: ROC و AUC &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: ROC and AUC"
@@ -665,6 +754,26 @@
       "verdict": "OK",
       "citedBy": [
         "lesson py-first-steps: More Control Flow Tools"
+      ]
+    },
+    {
+      "url": "https://docs.python.org/3/tutorial/controlflow.html#defining-functions",
+      "finalUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+      "status": 200,
+      "title": "4. More Control Flow Tools &#8212; Python 3.15.2 documentation",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson py-functions: Defining Functions"
+      ]
+    },
+    {
+      "url": "https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions",
+      "finalUrl": "https://docs.python.org/3/tutorial/controlflow.html",
+      "status": 200,
+      "title": "4. More Control Flow Tools &#8212; Python 3.15.2 documentation",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson py-functions: More on Defining Functions"
       ]
     },
     {

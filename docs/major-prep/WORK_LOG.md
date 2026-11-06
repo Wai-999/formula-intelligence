@@ -59,3 +59,8 @@ Factual record of what was done, in order. Newer entries go at the bottom; earli
 ## 2026-11-05 — 80/20 phase 5: two prerequisite lessons
 
 - After PR #8 shipped the 80/20 upgrade, phase 5 of the brief on `feat/learning-8020-phase5-prereq-lessons`: *What is a function?* (Algebra I) and *Power, product and quotient rules* (Calculus I), chosen by graph centrality, placement items with no lesson behind them, and the dead ends the engine named. Both meet the professor contract (the contract test now covers `CONTRACT_LESSONS`), with three applied problems each (four on project cases), explain-backs and three new formulas. The C++ *Functions and vectors* bridge is pinned to *Loops you can trace* so the new algebra lesson does not take it over. Details: docs/learning-8020/PHASE5_PREREQUISITES.md.
+
+## 2026-11-06 — Notation readings, then 80/20 phase 6: four lessons
+
+- The owner asked for the name of each notation. PR #12 (merged `eb89a63`, deployed and checked live): a reading for every symbol in lesson glossaries, formula symbol tables and the Formula map, with a speaker button using the browser's own voice. Details: docs/learning-8020/NOTATION_READINGS.md.
+- Phase 6 on `content/phase6-lessons`: *Exponents and roots* (Prealgebra), *Center and spread* and *Probability rules* (Probability & Statistics), and Python *Functions*, each to the professor contract, with three applied problems each (six on project cases), two new labs (center and spread, two dice) and eight formulas. Bayes’ theorem and the CLT lesson gain bridges; PCA and validation keep theirs. Details: docs/learning-8020/PHASE6_LESSONS.md.

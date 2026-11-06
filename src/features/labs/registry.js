@@ -37,4 +37,7 @@ export const LABS = {
   'stack-queue': { title: 'Stack and queue, side by side', required: null, load: () => import('./StackQueueLab.jsx') },
   'truth-table': { title: 'Truth tables', required: null, load: () => import('./TruthTableLab.jsx') },
   induction: { title: 'Induction: one more layer', required: null, load: () => import('./InductionLab.jsx') },
+  // Phase 6 of the 80/20 upgrade (docs/learning-8020/PHASE6_LESSONS.md).
+  'center-spread': { title: 'Center and spread', required: null, load: () => import('./CenterSpreadLab.jsx') },
+  'dice-grid': { title: 'Two dice: counting outcomes', required: null, load: () => import('./DiceGridLab.jsx') },
 };

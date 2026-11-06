@@ -4,7 +4,7 @@ Generated from `src/data/curriculum/catalog.js` by `npm run docs:curriculum` —
 
 **Status words.** *Authored* means the lesson's content exists in `src/data/curriculum/lessons/` with all ten §6 elements. *Planned* means only a title exists. A course is **partial** when some of its lessons are authored and **outline** when none are; no course is complete. Every authored lesson is an **AI draft awaiting independent human math review** (`review.status: 'awaiting-human-review'`, reviewer `null`) — content-complete for this slice, not review-complete.
 
-**Totals:** 10 subjects · 15 courses · 96 units · **37 authored lessons** · 170 planned lesson titles · 58 competencies in 9 domains · 31 interactive labs.
+**Totals:** 10 subjects · 15 courses · 96 units · **41 authored lessons** · 168 planned lesson titles · 58 competencies in 9 domains · 33 interactive labs.
 
 **Algebra and Linear Algebra are separate subjects** (§5): Algebra I/II build symbolic fluency with one-variable functions; Linear Algebra starts from vectors and matrices and lists Algebra I as a prerequisite, never the other way round.
 
@@ -16,7 +16,7 @@ The order in which the app recommends courses, and what it says at each course c
 
 | Course | Subject | Status | Units | Authored lessons | Planned titles | Prerequisites |
 |---|---|---|---|---|---|---|
-| Prealgebra | Mathematics Foundations | partial | 6 | 2 | 13 | — |
+| Prealgebra | Mathematics Foundations | partial | 6 | 3 | 12 | — |
 | Algebra I | Algebra | partial | 7 | 5 | 12 | prealgebra |
 | Algebra II | Algebra | partial | 8 | 2 | 11 | algebra-1 |
 | Geometry, Trigonometry & Precalculus | Precalculus | partial | 8 | 2 | 9 | algebra-2 |
@@ -24,9 +24,9 @@ The order in which the app recommends courses, and what it says at each course c
 | Calculus I — Limits and Derivatives | Calculus | partial | 4 | 4 | 6 | precalculus |
 | Calculus II — Integrals and Series | Calculus | partial | 3 | 2 | 8 | calculus-1 |
 | Calculus III — Multivariable Calculus and Optimization | Calculus | partial | 4 | 2 | 9 | calculus-2, linear-algebra |
-| Probability & Statistics | Probability & Statistics | partial | 8 | 2 | 14 | algebra-1 |
+| Probability & Statistics | Probability & Statistics | partial | 8 | 4 | 14 | algebra-1 |
 | Machine Learning & Data Science | Machine Learning | partial | 8 | 3 | 14 | prob-stats, linear-algebra |
-| Python for Data Science | Python for Data Science | partial | 6 | 1 | 14 | — |
+| Python for Data Science | Python for Data Science | partial | 6 | 2 | 13 | — |
 | C++ Programming Fundamentals | Computer Science (C++) | partial | 7 | 2 | 12 | — |
 | Object-Oriented Programming in C++ | Computer Science (C++) | partial | 6 | 1 | 9 | cpp-fundamentals |
 | Data Structures and Algorithms | Computer Science (C++) | partial | 6 | 1 | 10 | cpp-oop |
@@ -45,7 +45,7 @@ Integers, fractions, ratios, expressions and the balance idea behind every equat
 | Number systems and integer operations | outline | — | Number systems and the number line; Operations with integers; Estimation and checking | arith.integers |
 | Fractions, decimals and percentages | outline | — | Equivalent fractions; Operations with fractions; Decimals and percentages | arith.fractions |
 | Ratios, rates and proportional reasoning | partial | **Ratios, rates and unit rates** | Units and unit conversion | arith.ratios |
-| Expressions, exponents and radicals | outline | — | Order of operations; Exponents and radicals; Scientific notation | arith.order-ops, arith.exponents |
+| Expressions, exponents and radicals | partial | **Exponents and roots** | Order of operations; Scientific notation | arith.order-ops, arith.exponents |
 | Equations and inequalities | partial | **Solving equations by keeping balance** | Inequalities on the number line | arith.equations |
 | The coordinate plane and word problems | outline | — | The coordinate plane; From words to equations | arith.equations |
 
@@ -167,8 +167,8 @@ Built on the 94 formulas of Bluman’s Elementary Statistics in the Formula map,
 
 | Unit | Status | Authored lessons | Planned lessons | Exit competencies |
 |---|---|---|---|---|
-| Describing data | outline | — | Center and spread (see Formula map chapters 2–3) | stats.descriptive |
-| Probability and counting | outline | — | Probability rules (see Formula map chapter 4) | stats.probability |
+| Describing data | partial | **Center and spread: mean, median and standard deviation** | Position: percentiles, z-scores and box plots | stats.descriptive |
+| Probability and counting | partial | **Probability rules: not, or, and** | Counting: permutations and combinations | stats.probability |
 | Conditional probability and Bayes’ theorem | authored | **Bayes’ theorem as updating** | — | stats.bayes |
 | Random variables and distributions | outline | — | Discrete distributions (Formula map chapter 5); The normal distribution (chapter 6) | stats.probability |
 | Sampling, the LLN and the CLT | authored | **Sampling distributions and the central limit theorem** | — | stats.sampling |
@@ -205,7 +205,7 @@ Python from first principles to NumPy, with graded exercises that run in your br
 
 | Unit | Status | Authored lessons | Planned lessons | Exit competencies |
 |---|---|---|---|---|
-| Python basics | partial | **Python first steps: lists, loops and an honest average** | Functions; Conditions and control flow | py.basics |
+| Python basics | partial | **Python first steps: lists, loops and an honest average**<br>**Functions: name a step, test it, reuse it** | Conditions and control flow | py.basics |
 | Lists and dictionaries | outline | — | Lists; Dictionaries | py.collections |
 | Debugging | outline | — | Reading tracebacks | py.debugging |
 | NumPy arrays and broadcasting | outline | — | Arrays; Broadcasting; Floating-point precision | py.numpy |
@@ -274,6 +274,7 @@ Logic, sets, functions and relations, proof techniques, induction, counting, gra
 | Lesson | Course | Competencies | Labs | Minutes | Review |
 |---|---|---|---|---|---|
 | Ratios, rates and unit rates (`pa-ratios-rates`) | Prealgebra | arith.ratios | ratio | 30 | awaiting-human-review |
+| Exponents and roots (`pa-exponents`) | Prealgebra | arith.exponents | log-scale | 35 | awaiting-human-review |
 | Solving equations by keeping balance (`pa-equation-balance`) | Prealgebra | arith.equations, alg.linear-eq | equation-balance | 35 | awaiting-human-review |
 | Break-even: when does a business cover its costs? (`a1-break-even`) | Algebra I | alg.linear-eq | break-even | 35 | awaiting-human-review |
 | Slope as rate of change (`a1-slope`) | Algebra I | alg.slope | slope | 35 | awaiting-human-review |
@@ -298,12 +299,15 @@ Logic, sets, functions and relations, proof techniques, induction, counting, gra
 | Taylor polynomials (`c2-taylor`) | Calculus II — Integrals and Series | calc.series | taylor | 45 | awaiting-human-review |
 | Partial derivatives and the gradient (`c3-gradient`) | Calculus III — Multivariable Calculus and Optimization | calc.gradient, calc.optimization | gradient-hessian | 50 | awaiting-human-review |
 | Gradient descent (`c3-gradient-descent`) | Calculus III — Multivariable Calculus and Optimization | calc.optimization | gradient-descent | 45 | awaiting-human-review |
+| Center and spread: mean, median and standard deviation (`ps-center-spread`) | Probability & Statistics | stats.descriptive | center-spread | 40 | awaiting-human-review |
+| Probability rules: not, or, and (`ps-probability-rules`) | Probability & Statistics | stats.probability | dice-grid | 40 | awaiting-human-review |
 | Sampling distributions and the central limit theorem (`st-sampling-clt`) | Probability & Statistics | stats.sampling | sampling | 45 | awaiting-human-review |
 | Bayes’ theorem as updating (`st-bayes`) | Probability & Statistics | stats.bayes | bayes | 40 | awaiting-human-review |
 | Validation, cross-validation and leakage (`ml-validation`) | Machine Learning & Data Science | ml.validation | cross-validation | 45 | awaiting-human-review |
 | Confusion matrix, precision, recall and ROC (`ml-classification-metrics`) | Machine Learning & Data Science | ml.classification-metrics | decision-boundary | 50 | awaiting-human-review |
 | Calibration and fairness checks (`ml-calibration-fairness`) | Machine Learning & Data Science | ml.calibration-fairness | calibration | 45 | awaiting-human-review |
 | Python first steps: lists, loops and an honest average (`py-first-steps`) | Python for Data Science | py.basics, py.collections, py.debugging | code-trace | 40 | awaiting-human-review |
+| Functions: name a step, test it, reuse it (`py-functions`) | Python for Data Science | py.basics, py.debugging | code-trace | 40 | awaiting-human-review |
 | Loops you can trace (`cpp-loops-trace`) | C++ Programming Fundamentals | cpp.basics, cpp.debugging | code-trace | 45 | awaiting-human-review |
 | Functions and vectors: copies versus references (`cpp-functions-vectors`) | C++ Programming Fundamentals | cpp.functions, cpp.debugging | code-trace | 45 | awaiting-human-review |
 | Classes that keep their promises (`cpp-classes-invariants`) | Object-Oriented Programming in C++ | cpp.oop | code-trace | 45 | awaiting-human-review |

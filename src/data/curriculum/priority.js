@@ -21,5 +21,15 @@ export const PHASE5_LESSONS = [
   { id: 'c1-power-rules', area: 'Calculus I', why: 'The chain rule lesson used the power rule without teaching it; placement items dx.c7 and dx.c9 test it; and it was the gap a learner finishing Calculus I met first.' },
 ];
 
+// Lessons written in phase 6 (docs/learning-8020/PHASE6_LESSONS.md): the most
+// depended-on topics left without a lesson, and the thinnest course on the
+// route, each written to the same contract.
+export const PHASE6_LESSONS = [
+  { id: 'pa-exponents', area: 'Mathematics foundations', why: '15 written lessons build on exponents and roots (exponentials, polynomials, norms, big-O, the standard error); placement items dx.a11–a13 test them.' },
+  { id: 'ps-center-spread', area: 'Statistics', why: 'Six written lessons build on describing data, including the sampling-distribution priority lesson, which had no bridge to fall back on; placement items dx.s1 and dx.s2 test it.' },
+  { id: 'ps-probability-rules', area: 'Probability', why: 'Bayes’ theorem, random variables and discrete probability build on the three rules, the Bayes lesson had no bridge to fall back on, and placement items dx.s3 and dx.s4 test them.' },
+  { id: 'py-functions', area: 'Python', why: 'Python for Data Science had 1 of its 15 lessons written, and “Functions” was the gap the site named to a learner who had finished the first three courses on the route.' },
+];
+
 /** Every lesson held to the professor contract. */
-export const CONTRACT_LESSONS = [...PRIORITY_LESSONS, ...PHASE5_LESSONS];
+export const CONTRACT_LESSONS = [...PRIORITY_LESSONS, ...PHASE5_LESSONS, ...PHASE6_LESSONS];

@@ -75,3 +75,19 @@ On `feat/learning-8020-phase5-prereq-lessons`, from `main` at `37e23e3` (docs/le
 | `npm run check:citations` | **PASS** — 77 OK, 1 unverified (doi.org), 0 broken | three new OpenStax links |
 | `npm run e2e` | 311 passed, 1 skipped, **2 failed**, then fixed | `study-continuity` D seeded “the other three” Algebra I lessons and expected “3 of 4”: it now takes the lessons from the catalog (re-run: 69 / 69 with legacy-routes). `legacy-routes #ml/macro` read lazy page content once and saw 8 characters — the same timing failure as `#maps/models` in §2, so the check now waits for the content (`expect.poll`); legacy-routes passed 138 / 138 over three repeats. |
 | Browser check (local production build) | **PASS** | both lessons open with no console errors and no KaTeX errors; a wrong faded-example answer shows “Not yet. … Where to look: …” and a bridge to *The derivative from first principles*; the three applied problems list under *Use it* |
+
+## 6. Phase 6: four more lessons (2026-11-06)
+
+On `content/phase6-lessons`, from `main` with PR #12 (notation readings) merged (docs/learning-8020/PHASE6_LESSONS.md).
+
+| Command | Result | Notes |
+|---|---|---|
+| `npm run lint` | **PASS** — 0 warnings | |
+| `npm test` | **PASS** — 673 / 673 in 44 files | the contract test now runs on eleven lessons; new lab-math cases for quartiles, outliers and the 36 dice outcomes; one new lab test caught a wrong claim (with 5 values the IQR follows the largest value), fixed in the lab and the lesson |
+| `npm run validate:content` | **PASS** | |
+| `npm run verify:python` | **PASS** — 98 / 98 | four new lesson blocks and the 8-step `tip-function` trace |
+| `npm run build`, `npm run budget` | **PASS** — 72.4 KB of 90 KB | lesson bodies and the two new labs are separate chunks |
+| `npm run a11y`, `a11y:light` | **PASS** — no WCAG A/AA violations across 84 pages in each theme | four more lesson pages |
+| `npm run check:citations` | **PASS** — 87 OK, 1 unverified (doi.org), 0 broken | one new link was wrong (square roots: OpenStax Prealgebra 2e 5.7, not 9.1) and was fixed |
+| `npm run e2e` | **PASS** — 323 passed, 1 skipped | no test needed changing: counts come from the catalog since phase 5 |
+| Browser check (local production build) | **PASS** | *Center and spread*: the largest trip at 120 minutes gives mean 40.6, median 30, IQR 16. *Probability rules*: the grid marks 2 squares in both events; readout 15 = 6 + 11 − 2. *Functions*: the trace prints `46.0 88.0`. No KaTeX errors. |
