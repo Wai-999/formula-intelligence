@@ -757,3 +757,18 @@
     order: -1;
   }
 }
+
+/* Dice-grid lab: squares in both events get a stronger fill and outline;
+   every marked square is also labelled A, B or A B, so colour is never the
+   only cue. */
+.dice-both {
+  fill: rgba(139, 92, 246, 0.36);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.dice-none {
+  fill: transparent;
+  stroke: var(--border-solid);
+  stroke-width: 1;
+}

@@ -498,6 +498,29 @@ export const FORMULAS = [
   }),
 
   // ——— Probability & statistics ———
+  F('f.mean', 'Sample mean', '\\bar x = \\frac{1}{n} \\sum_{i=1}^{n} x_i', {
+    say: 'x bar equals one over n times the sum from i equals one to n of x sub i',
+    variables: [v('x_i', 'the data values', 'the data’s units', 'x sub i'), v('n', 'how many values', '', 'n')],
+    assumptions: ['The values are measurements on a numeric scale.'],
+    interpretation: 'The balance point of the data: the deviations from it add to zero.',
+    pitfalls: ['Reporting a mean for skewed data or data with an outlier, where the median describes a typical value better.'],
+    application: 'Average waiting times, daily sales, test scores.',
+    python: 'statistics.mean(xs)',
+    concept: 'c.descriptive', lesson: 'ps-center-spread', claim: 'definition',
+    references: ['https://openstax.org/books/introductory-statistics-2e/pages/2-5-measures-of-the-center-of-the-data'],
+  }),
+  F('f.sample-sd', 'Sample standard deviation', 's = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar x)^2}{n - 1}}', {
+    say: 's equals the square root of the sum of x sub i minus x bar, squared, over n minus one',
+    variables: [v('x_i - \\bar x', 'each value’s deviation from the mean', 'the data’s units', 'x sub i minus x bar'), v('n - 1', 'the degrees of freedom', '', 'n minus one'), v('s^2', 'the variance', 'squared units', 's squared')],
+    assumptions: ['The data are a sample; for a whole population, divide by $N$ and write $\\sigma$.'],
+    domain: ['$n \\ge 2$.'],
+    interpretation: 'Roughly the typical distance of a value from the mean, in the data’s own units.',
+    pitfalls: ['Averaging the deviations without squaring them: they always add to 0.', 'Dividing by $n$ for a sample, which comes out slightly small.'],
+    application: 'How much trips, prices or measurements vary; the $\\sigma$ in the standard error.',
+    python: 'statistics.stdev(xs)',
+    concept: 'c.descriptive', lesson: 'ps-center-spread', claim: 'definition',
+    references: ['https://openstax.org/books/introductory-statistics-2e/pages/2-7-measures-of-the-spread-of-the-data'],
+  }),
   F('f.standard-error', 'Standard error of the mean', '\\sigma_{\\bar X} = \\frac{\\sigma}{\\sqrt n}', {
     say: 'sigma sub X bar equals sigma over the square root of n',
     variables: [v('\\sigma', 'population standard deviation', '', 'sigma'), v('n', 'sample size', '', 'n')],

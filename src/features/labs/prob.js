@@ -54,3 +54,32 @@ export function brier(probs, outcomes) {
 export function ppv(baseRate, tpr, fpr) {
   return (baseRate * tpr) / (baseRate * tpr + (1 - baseRate) * fpr);
 }
+
+/** The 36 equally likely outcomes of two fair dice, as [first, second]. */
+export const DICE = Array.from({ length: 36 }, (_, i) => [Math.floor(i / 6) + 1, (i % 6) + 1]);
+
+/** Events on two dice (the dice-grid lab), each a test on [first, second]. */
+export const DICE_EVENTS = {
+  sum7: { label: 'Sum is 7', test: ([a, b]) => a + b === 7 },
+  six: { label: 'At least one six', test: ([a, b]) => a === 6 || b === 6 },
+  doubles: { label: 'Doubles', test: ([a, b]) => a === b },
+  firstEven: { label: 'First die even', test: ([a]) => a % 2 === 0 },
+  sum10: { label: 'Sum is 10 or more', test: ([a, b]) => a + b >= 10 },
+};
+
+/** Outcomes in A, in B, in both and in either, out of the 36. */
+export function diceCounts(inA, inB) {
+  let a = 0;
+  let b = 0;
+  let both = 0;
+  let either = 0;
+  for (const o of DICE) {
+    const x = inA(o);
+    const y = inB(o);
+    if (x) a += 1;
+    if (y) b += 1;
+    if (x && y) both += 1;
+    if (x || y) either += 1;
+  }
+  return { a, b, both, either, total: DICE.length };
+}

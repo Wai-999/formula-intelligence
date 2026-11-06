@@ -379,8 +379,8 @@ export const COURSES = [
     prerequisites: ['algebra-1'],
     diagnosticDomains: ['statistics'],
     units: [
-      { id: 'ps-descriptive', title: 'Describing data', objectives: ['Summarize center, spread and position', 'Choose a summary that suits the data'], exitCompetencies: ['stats.descriptive'], prerequisites: ['c.fractions'], lessons: [], planned: ['Center and spread (see Formula map chapters 2–3)'] },
-      { id: 'ps-probability', title: 'Probability and counting', objectives: ['Apply addition, multiplication and complement rules', 'Count with permutations and combinations', 'Use conditional probability'], exitCompetencies: ['stats.probability'], prerequisites: ['c.fractions'], lessons: [], planned: ['Probability rules (see Formula map chapter 4)'] },
+      { id: 'ps-descriptive', title: 'Describing data', objectives: ['Summarize center, spread and position', 'Choose a summary that suits the data'], exitCompetencies: ['stats.descriptive'], prerequisites: ['c.fractions'], lessons: ['ps-center-spread'], planned: ['Position: percentiles, z-scores and box plots'] },
+      { id: 'ps-probability', title: 'Probability and counting', objectives: ['Apply addition, multiplication and complement rules', 'Count with permutations and combinations', 'Use conditional probability'], exitCompetencies: ['stats.probability'], prerequisites: ['c.fractions'], lessons: ['ps-probability-rules'], planned: ['Counting: permutations and combinations'] },
       {
         id: 'ps-bayes',
         title: 'Conditional probability and Bayes’ theorem',

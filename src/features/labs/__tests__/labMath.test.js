@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { riemann, taylorValue, numericGradient, contour } from '../calc.js';
 import { eigen2, covariance2, nextEliminationStep, analyzeEchelon } from '../linalg.js';
-import { posterior, confusionAt, rocAuc, rocCurve, brier, ppv } from '../prob.js';
+import { posterior, confusionAt, rocAuc, rocCurve, brier, ppv, DICE, DICE_EVENTS, diceCounts } from '../prob.js';
+import { mean, median, sampleSD, quartiles, summarize } from '../describe.js';
 import { descend } from '../optimize.js';
 import { leastSquares } from '../fit.js';
 import { breakEven, profitAt, cost, marginalCost, differenceQuotient, matVec, standardize } from '../business.js';
@@ -299,5 +300,53 @@ describe('growth and the unit circle (V5)', () => {
     close(x, -Math.sqrt(3) / 2, 1e-12);
     close(y, 0.5, 1e-12);
     for (let d = 0; d < 360; d += 15) { const [c, s] = circlePoint(toRadians(d)); close(c * c + s * s, 1, 1e-12); }
+  });
+});
+
+describe('center and spread (phase 6)', () => {
+  it('mean, median and sample SD match hand-worked cases', () => {
+    close(mean([28, 30, 31, 29, 32]), 30);
+    expect(median([28, 30, 31, 29, 32])).toBe(30);
+    expect(median([3, 8, 1, 10, 7, 5])).toBe(6);
+    close(sampleSD([28, 30, 31, 29, 32]), Math.sqrt(2.5));
+    close(sampleSD([2, 4, 6]), 2);
+    close(sampleSD([15, 22, 30, 33, 55]), Math.sqrt(229.5));
+  });
+
+  it('quartiles are the medians of the halves, without the middle value for an odd count', () => {
+    expect(quartiles([12, 15, 17, 18, 20, 22, 25, 40])).toEqual([16, 23.5]);
+    expect(quartiles([42, 45, 47, 48, 50, 51, 53, 55, 110])).toEqual([46, 54]);
+    const s = summarize([9, 11, 12, 12, 13, 14, 15, 16, 18, 40]);
+    expect([s.mean, s.median, s.q1, s.q3, s.iqr]).toEqual([16, 13.5, 12, 16, 4]);
+  });
+
+  it('an outlier moves the mean and SD but not the median or (with enough values) the IQR', () => {
+    const a = summarize([15, 22, 26, 30, 33, 38, 55]);
+    const b = summarize([15, 22, 26, 30, 33, 38, 95]);
+    close(b.mean - a.mean, 40 / 7);
+    expect(b.median).toBe(a.median);
+    expect(b.iqr).toBe(a.iqr);
+    expect(b.sd).toBeGreaterThan(a.sd);
+    // With only five values, Q3 is the middle of the top two, so it follows the outlier.
+    expect(summarize([15, 22, 30, 33, 95]).iqr).toBeGreaterThan(summarize([15, 22, 30, 33, 55]).iqr);
+    expect(summarize([15, 22, 30, 33, 95]).median).toBe(30);
+  });
+});
+
+describe('two dice (phase 6)', () => {
+  it('has 36 distinct outcomes', () => {
+    expect(new Set(DICE.map(String)).size).toBe(36);
+  });
+
+  it('counts known events and obeys the addition rule', () => {
+    const e = DICE_EVENTS;
+    expect(diceCounts(e.sum7.test, e.six.test)).toEqual({ a: 6, b: 11, both: 2, either: 15, total: 36 });
+    expect(diceCounts(e.sum7.test, e.doubles.test)).toMatchObject({ both: 0, either: 12 });
+    expect(diceCounts(e.six.test, e.sum10.test)).toMatchObject({ a: 11, b: 6, both: 5, either: 12 });
+    expect(diceCounts(e.firstEven.test, e.doubles.test)).toMatchObject({ a: 18, both: 3, either: 21 });
+    for (const x of Object.values(e)) for (const y of Object.values(e)) {
+      const c = diceCounts(x.test, y.test);
+      expect(c.either).toBe(c.a + c.b - c.both);
+    }
   });
 });
