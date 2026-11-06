@@ -58,3 +58,20 @@ Updated end-to-end tests: `continuous-learning` A, B, D, E now expect the honest
 | Real-learner sessions | No participants; no analytics may be added. Protocol in USABILITY_TEST_REPORT.md. |
 | Lighthouse | Not part of this change’s risk (no new heavy dependency; the budget gate passed). The last Lighthouse evidence is in `docs/audits/evidence/lighthouse/`. |
 | Live-site tests after deployment | Depend on the merge being approved; see RELEASE_REPORT.md. |
+
+## 5. Phase 5: two prerequisite lessons (2026-11-05)
+
+On `feat/learning-8020-phase5-prereq-lessons`, from `main` at `37e23e3` (docs/learning-8020/PHASE5_PREREQUISITES.md).
+
+| Command | Result | Notes |
+|---|---|---|
+| `npm run lint` | **PASS** — 0 warnings | |
+| `npm test` | **PASS** — 607 / 607 in 41 files | the contract test now runs on seven lessons (74 tests in the file); two unit tests that hard-coded “4” Algebra I lessons now count them from the catalog |
+| `npm run validate:content`, `validate:college` | **PASS** | |
+| `npm run verify:python` | **PASS** — 92 / 92 | two new Python blocks |
+| `npm run verify:cpp` | **PASS** — 20 / 20 | no C++ changed |
+| `npm run build`, `npm run budget` | **PASS** — 72.1 KB of 90 KB | lesson bodies are separate chunks |
+| `npm run a11y`, `a11y:light` | **PASS** — no WCAG A/AA violations across 80 pages in each theme | two more lesson pages than before |
+| `npm run check:citations` | **PASS** — 77 OK, 1 unverified (doi.org), 0 broken | three new OpenStax links |
+| `npm run e2e` | 311 passed, 1 skipped, **2 failed**, then fixed | `study-continuity` D seeded “the other three” Algebra I lessons and expected “3 of 4”: it now takes the lessons from the catalog (re-run: 69 / 69 with legacy-routes). `legacy-routes #ml/macro` read lazy page content once and saw 8 characters — the same timing failure as `#maps/models` in §2, so the check now waits for the content (`expect.poll`); legacy-routes passed 138 / 138 over three repeats. |
+| Browser check (local production build) | **PASS** | both lessons open with no console errors and no KaTeX errors; a wrong faded-example answer shows “Not yet. … Where to look: …” and a bridge to *The derivative from first principles*; the three applied problems list under *Use it* |

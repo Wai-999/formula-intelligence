@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T07:42:29.589Z",
+  "checkedAt": "2026-11-06T02:54:38.719Z",
   "results": [
     {
       "url": "https://openstax.org/books/prealgebra-2e/pages/5-6-ratios-and-rate",
@@ -108,6 +108,26 @@
       "citedBy": [
         "lesson a1-line-fit: numpy.polyfit",
         "formula f.ls-slope"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/3-1-functions-and-function-notation",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/3-1-functions-and-function-notation",
+      "status": 200,
+      "title": "3.1 Functions and Function Notation - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a1-functions: 3.1 Functions and Function Notation"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/college-algebra-2e/pages/3-2-domain-and-range",
+      "finalUrl": "https://openstax.org/books/college-algebra-2e/pages/3-2-domain-and-range",
+      "status": 200,
+      "title": "3.2 Domain and Range - College Algebra 2e | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson a1-functions: 3.2 Domain and Range"
       ]
     },
     {
@@ -239,9 +259,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=id",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/numerical-data/normalization?hl=fa",
       "status": 200,
-      "title": "Data numerik: Normalisasi &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "داده های عددی: عادی سازی &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson la-matrix-scores: Numerical data: Normalization"
@@ -359,6 +379,19 @@
       "citedBy": [
         "lesson c1-marginal-cost: 3.4 Derivatives as Rates of Change — “Changes in Cost and Revenue”",
         "formula f.marginal-cost"
+      ]
+    },
+    {
+      "url": "https://openstax.org/books/calculus-volume-1/pages/3-3-differentiation-rules",
+      "finalUrl": "https://openstax.org/books/calculus-volume-1/pages/3-3-differentiation-rules",
+      "status": 200,
+      "title": "3.3 Differentiation Rules - Calculus Volume 1 | OpenStax",
+      "verdict": "OK",
+      "citedBy": [
+        "lesson c1-power-rules: 3.3 Differentiation Rules",
+        "formula f.power-rule",
+        "formula f.product-rule",
+        "formula f.quotient-rule"
       ]
     },
     {
@@ -533,9 +566,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=es-419",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall?hl=it",
       "status": 200,
-      "title": "Clasificación: Exactitud, recuperación, precisión y métricas relacionadas &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "Classificazione: accuratezza, richiamo, precisione e metriche correlate &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: Accuracy, recall, precision, and related metrics"
@@ -543,9 +576,9 @@
     },
     {
       "url": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc",
-      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc",
+      "finalUrl": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=ko",
       "status": 200,
-      "title": "Classification: ROC and AUC &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
+      "title": "분류: ROC 및 AUC &nbsp;|&nbsp; Machine Learning &nbsp;|&nbsp; Google for Developers",
       "verdict": "OK",
       "citedBy": [
         "lesson ml-classification-metrics: Classification: ROC and AUC"
