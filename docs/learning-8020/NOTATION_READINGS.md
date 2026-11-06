@@ -12,8 +12,8 @@ Every place the app breaks notation down now gives each symbol a reading. Each r
 
 | Where | What it shows | Source of the readings |
 |---|---|---|
-| Every lesson, **Understand → Notation** | *Say “f of x”* under each term written in math or code: 124 terms in 36 lessons | `say` on each glossary entry (`src/data/curriculum/lessons/*.js`) |
-| Every lesson's formula box (**The result**) and the concept map | The whole formula read aloud, then a table: symbol, how to say it, meaning, units. The registry's symbol meanings and units were stored before, but never shown. | `say` on each of the 49 curriculum formulas and its 88 symbols (`src/data/curriculum/formulas.js`) |
+| Every lesson, **Understand → Notation** | *Say “f of x”* under each term written in math or code: 137 terms in 40 lessons | `say` on each glossary entry (`src/data/curriculum/lessons/*.js`) |
+| Every lesson's formula box (**The result**) and the concept map | The whole formula read aloud, then a table: symbol, how to say it, meaning, units. The registry's symbol meanings and units were stored before, but never shown. | `say` on each of the 57 curriculum formulas and its 104 symbols (`src/data/curriculum/formulas.js`) |
 | Formula map, **Researcher depth → Notation**, and Apply → Python library, **Formula → Variables** | The reading under each symbol: 197 readings, covering every symbol that is not a plain word (“Range” and “threshold” read as themselves) | `src/data/notation/spoken.js`, keyed by the symbol as written |
 
 The speaker button (`src/components/math/SayIt.jsx`):

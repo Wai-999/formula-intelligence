@@ -46,18 +46,18 @@ export default function CenterSpreadLab({ preset: initial = 'bus' }) {
     <svg viewBox={`0 0 ${W} 210`} className="lab-svg" style={{ color: 'var(--text-muted)' }}>
       {showMean && (
         <g>
-          <rect className="lab-fill" x={sx(Math.max(0, s.mean - s.sd))} y={22} width={sx(s.mean + s.sd) - sx(Math.max(0, s.mean - s.sd))} height={16} />
-          <text className="lab-label-muted" x={sx(s.mean)} y={16} textAnchor="middle">mean ± 1 SD</text>
-          <line className="lab-curve" x1={sx(s.mean)} x2={sx(s.mean)} y1={22} y2={AXIS} />
-          <text className="lab-label" x={sx(s.mean) + 4} y={AXIS - 62}>mean {fmt(s.mean, 1)}</text>
+          <text className="lab-label-muted" x={sx(Math.max(0, s.mean - s.sd))} y={20}>mean ± 1 SD</text>
+          <rect className="lab-fill" x={sx(Math.max(0, s.mean - s.sd))} y={25} width={sx(s.mean + s.sd) - sx(Math.max(0, s.mean - s.sd))} height={14} />
+          <line className="lab-curve" x1={sx(s.mean)} x2={sx(s.mean)} y1={25} y2={AXIS} />
+          <text className="lab-label" x={sx(s.mean) + 5} y={104}>mean {fmt(s.mean, 1)}</text>
         </g>
       )}
       {showMedian && (
         <g>
-          <rect className="lab-fill-2" x={sx(s.q1)} y={46} width={Math.max(1, sx(s.q3) - sx(s.q1))} height={16} />
-          <text className="lab-label-muted" x={sx(s.q1)} y={76}>middle half (IQR)</text>
-          <line className="lab-curve-2" x1={sx(s.median)} x2={sx(s.median)} y1={46} y2={AXIS} />
-          <text className="lab-label" x={sx(s.median) + 4} y={AXIS - 40}>median {fmt(s.median, 1)}</text>
+          <text className="lab-label-muted" x={sx(s.q1)} y={56}>middle half (IQR)</text>
+          <rect className="lab-fill-2" x={sx(s.q1)} y={61} width={Math.max(1, sx(s.q3) - sx(s.q1))} height={14} />
+          <line className="lab-curve-2" x1={sx(s.median)} x2={sx(s.median)} y1={61} y2={AXIS} />
+          <text className="lab-label" x={sx(s.median) + 5} y={126}>median {fmt(s.median, 1)}</text>
         </g>
       )}
       <line x1={sx(0)} x2={sx(hi)} y1={AXIS} y2={AXIS} stroke="currentColor" strokeWidth="1.5" />
