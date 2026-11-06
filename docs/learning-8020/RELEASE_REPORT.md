@@ -29,18 +29,31 @@ All gates pass locally (TEST_RESULTS.md §2): lint, 587 unit tests, content and 
 
 The pull request runs `.github/workflows/ci.yml` (lint, unit tests, content and college validation, Python and C++ verification, build, budget, e2e with axe). Its result is shown on the pull request; this file is part of the pull request, so it cannot record the final CI run of the commit that contains it.
 
-## Merge and deployment — needs the owner’s decision
+## Merge and deployment
 
-Merging to `main` deploys to GitHub Pages automatically (`deploy.yml`, on push to `main`). The 80/20 brief allows the merge “when permitted by current branch protection and required approvals”, and nothing on `main` forbids it. But this merge also ships the V5.1 content, whose brief said: “Do not merge to `main`, trigger production deployment … without explicit owner approval for this run.” So the merge is **asked for, not assumed**.
+| | |
+|---|---|
+| Approval | The owner approved the merge in the working session on 2026-11-05, after CI passed (asked explicitly, because this merge also shipped the V5.1 content, whose brief required the owner's go-ahead). |
+| CI on the merged head `fc35a9e` | [run 41990432506](https://github.com/Wai-999/formula-intelligence/actions/runs/41990432506) — success: 587 unit tests, budget 72.1 KB, e2e 309 passed, e2e:python 5 passed |
+| Merge commit | `37e23e3` (merged 2026-11-05 14:21 UTC) |
+| Deploy | [run 42044247031](https://github.com/Wai-999/formula-intelligence/actions/runs/42044247031) — build success, deploy success, finished 2026-11-05 14:41 UTC |
+| Live bundle | `assets/index-DFAulqer.js` (was `index-SpsVOSNA.js`); identical to the local build of the merged code |
 
-After a merge, the release is verified by:
+## Production verification (2026-11-05)
 
-1. the “Deploy to GitHub Pages” run for the merge commit succeeding;
-2. a Playwright pass on `https://wai-999.github.io/formula-intelligence/#home`: Home → Learn/Courses → a lesson → Apply → My Progress → Save my place → reload → Resume → next action (and the six persona journeys re-run against the live site: `node scripts/learning-journeys.mjs https://wai-999.github.io/formula-intelligence/ docs/learning-8020/evidence/after-live`);
-3. the live bundle name changing from `assets/index-SpsVOSNA.js`.
+`node scripts/learning-live-smoke.mjs https://wai-999.github.io/formula-intelligence/ docs/learning-8020/evidence/after-live` — a fresh Chromium profile on the live site, **10 / 10 steps passed, 0 page errors** (`evidence/after-live/smoke.json`, screenshots `smoke-01` … `smoke-10`):
 
-Until those three have happened, this release is **not deployed**.
+1. Home loads (bundle `index-DFAulqer.js`) and offers a starting point
+2. Learn → Courses lists C++ Programming Fundamentals
+3. The course page opens *Loops you can trace*
+4. “Try a question now”, a wrong answer, and feedback that explains (“Not yet. … Where to look: …”)
+5. Save my place — “Saved on this device: Step 4 of 6 — Try it”
+6. Apply → Projects
+7. My Progress shows “Your next step”
+8. After a reload, Home offers to resume *Loops you can trace* at Step 4
+9. Resume opens the lesson at Try it
+10. The next action leads to a real lesson: *Functions and vectors: copies versus references*
 
-## If the merge is declined or postponed
+The six persona journeys were also re-run against production (`evidence/after-live/journeys.json`) and match the local “after” results in USABILITY_TEST_REPORT.md: C++ reachable in 3 decisions, wrong answers explained with a bridge link, Home offering a bridge after errors, and the Calculus I gap named instead of a silent jump to Calculus II.
 
-The pull request stays open with everything above. To release later: approve and merge PR #8 on GitHub (or `gh pr merge 8 --repo Wai-999/formula-intelligence --merge`), wait for the deploy run, then run step 2.
+**Status: deployed and verified.**
