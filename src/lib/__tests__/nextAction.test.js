@@ -48,40 +48,43 @@ describe('hard case 1: a first-time learner with no evidence', () => {
 describe('hard case 2: the last written lesson is done but the course has planned lessons', () => {
   const state = S({ lessons: done(calc1), placement: { course: 'calculus-1', source: 'manual', at: T - 1 } });
 
-  it('names the unwritten next lesson instead of jumping silently to the next course', () => {
+  // The owner's direction (2026-11-05): a finished course moves on to the next
+  // level by itself — never "practise the same course" as the main action.
+  it('moves on to the next course, and names the unwritten lessons in a visible notice', () => {
     const a = act(state);
-    expect(a.kind).toBe(ACTION.GAP);
+    expect(a.kind).toBe(ACTION.TRANSITION);
     expect(a.evidence.ruleId).toBe('content-gap');
-    expect(a.headline).toBe(`Next lesson not written yet: ${firstGap(cur.courseById['calculus-1']).title}`);
+    expect(a.target.page).toBe('learn/lesson');
+    expect(cur.courseOf[a.target.params.lessonId]).not.toBe('calculus-1');
+    expect(a.headline).toBe(`Next course: ${cur.courseById[cur.courseOf[a.target.params.lessonId]].title}`);
+    expect(a.notice).toContain(`“${firstGap(cur.courseById['calculus-1']).title}”`);
+    expect(a.notice).toMatch(/not complete/);
     expect(a.reasons.join(' ')).toMatch(/planned but not written yet/);
-    expect(a.reasons.join(' ')).toMatch(/not complete/);
     reachable(a);
   });
 
-  it('while the course’s skills are not yet shown, the primary action is applied practice; going on is offered with a warning', () => {
+  it('offers practice on the course’s skills as another choice, not the main one', () => {
     const a = act(state);
-    expect(a.kind).toBe(ACTION.GAP);
-    expect(a.target).toMatchObject({ page: 'learn/lesson', sectionId: 'use' });
-    expect(calc1).toContain(a.target.params.lessonId);
-    expect(a.alternatives[0].kind).toBe(ACTION.TRANSITION);
-    expect(a.reasons.join(' ')).toMatch(/may assume the unwritten lessons/);
+    const practice = a.alternatives.find((x) => x.kind === ACTION.PRACTICE);
+    expect(practice.target).toMatchObject({ page: 'learn/lesson', sectionId: 'use' });
+    expect(calc1).toContain(practice.target.params.lessonId);
   });
 
-  it('once the skills are shown at proficient, the next written course is the primary action — still labelled as a gap', () => {
+  it('with the skills already shown, moves on the same way, with no practice offered', () => {
     const a = act({ ...state, status: proficient(calc1Skills) });
-    expect(a.kind).toBe(ACTION.GAP);
-    expect(a.target.page).toBe('learn/lesson');
+    expect(a.kind).toBe(ACTION.TRANSITION);
     expect(cur.courseOf[a.target.params.lessonId]).not.toBe('calculus-1');
-    expect(a.headline).toMatch(/^Next lesson not written yet/);
+    expect(a.alternatives.some((x) => x.kind === ACTION.PRACTICE)).toBe(false);
   });
 
-  it('the end of the last written lesson says the same, before its checkpoint is answered', () => {
+  it('the end of the last written lesson and the course page say the same', () => {
     const last = calc1.at(-1);
     const a = act(S({ lessons: done(calc1.slice(0, -1)) }), { from: { lessonId: last } });
-    expect(a.kind).toBe(ACTION.GAP);
+    expect(a.kind).toBe(ACTION.TRANSITION);
     const c = act(S({ lessons: done(calc1) }), { from: { courseId: 'calculus-1' } });
-    expect(c.kind).toBe(ACTION.GAP);
+    expect(c.kind).toBe(ACTION.TRANSITION);
     expect(c.headline).toBe(a.headline);
+    expect(c.target).toEqual(a.target);
   });
 
   it('the course is complete as far as written, and nothing more', () => {
@@ -280,5 +283,69 @@ describe('properties', () => {
       }
     }
     expect(bridgeFor(cur, 'c1-chain-rule').lessonId).toBe('a2-composition');
+  });
+});
+
+// The owner's direction (2026-11-05): "I wanna learn any course and any steps
+// I want and after I have finished one course, it should be able to move to
+// next level automatically or able to choose manually."
+describe('the learner leads', () => {
+  const route = cur.pathById[cur.defaultPath].courses.filter((c) => cur.courseLessons[c].length);
+
+  it('finishing course after course, Home always moves on — to the next course, never back, never to practice as the main action', () => {
+    route.forEach((c, i) => {
+      const lessons = done(route.slice(0, i + 1).flatMap((x) => cur.courseLessons[x]));
+      const a = act(S({ lessons }));
+      reachable(a);
+      if (i === route.length - 1) {
+        expect(a.kind, c).toBe(ACTION.FINISHED);
+        return;
+      }
+      expect(a.kind, c).toBe(ACTION.TRANSITION);
+      expect(cur.courseOf[a.target.params.lessonId], c).toBe(route[i + 1]);
+      expect(a.target.sectionId ?? null, c).toBeNull();
+    });
+  });
+
+  it('a lesson the learner marked finished counts for moving on, like an answered checkpoint', () => {
+    const [first, second] = cur.courseLessons[route[0]];
+    const a = act(S({ lessons: { [first]: { opened: T, completed: T, marked: true } } }));
+    expect(a.target.params.lessonId).toBe(second);
+  });
+
+  it('a lesson skipped in a course never returns as the main action; it is offered', () => {
+    const c = route.find((x) => cur.courseLessons[x].length >= 3);
+    const [first, ...rest] = cur.courseLessons[c];
+    const a = act(S({ lessons: done(rest) }));
+    expect(cur.courseOf[a.target.params.lessonId]).not.toBe(c);
+    expect(a.alternatives.map((x) => x.target.params?.lessonId)).toContain(first);
+  });
+
+  it('an unfinished prerequisite is offered as a bridge, and the next course stays the main action', () => {
+    // Every course on the route whose prerequisite is left unfinished when only the course before it is done.
+    for (const [i, c] of route.entries()) {
+      if (!i) continue;
+      const a = act(S({ lessons: done(cur.courseLessons[route[i - 1]]) }), { from: { lessonId: cur.courseLessons[route[i - 1]].at(-1) } });
+      if (a.kind === ACTION.FINISHED) continue;
+      expect(a.kind, c).toBe(ACTION.TRANSITION);
+      expect(cur.courseOf[a.target.params.lessonId], c).toBe(c);
+    }
+  });
+
+  it('wherever a finished course moves on, the learner can also choose: the courses page is one link away', () => {
+    const a = act(S({ lessons: done(cur.courseLessons[route[0]]) }));
+    expect(a.kind).toBe(ACTION.TRANSITION);
+    expect(pages.has('learn/courses')).toBe(true);
+  });
+});
+
+describe('resuming a lesson', () => {
+  it('never offers the lesson being resumed a second time as “next”', () => {
+    const [first, second] = cur.courseLessons[cur.pathById[cur.defaultPath].courses[0]];
+    const state = S({ lessons: { ...done([first]), [second]: { opened: T + 10, visited: T + 10 } } });
+    const resume = primaryTarget({ pinned: null, current: { courseId: cur.courseOf[second], lessonId: second, sectionId: 'see', fraction: 0, at: T + 20, source: 'auto' }, recent: [] }, { lessonById, lastLesson: second });
+    const a = act(state, { resume });
+    expect(a.evidence.ruleId).toBe('resume-recent');
+    expect(a.alternatives.some((x) => x.target.params?.lessonId === second)).toBe(false);
   });
 });

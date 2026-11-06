@@ -93,13 +93,15 @@ describe('Next moves through a course, unit by unit', () => {
     }
   });
 
-  it('a skipped earlier lesson is offered before leaving the course', () => {
+  it('Next only goes forward: a skipped earlier lesson is offered, not imposed', () => {
     const c = writtenCourses.find((x) => cur.courseLessons[x].length >= 3);
     const [first, ...rest] = cur.courseLessons[c];
     const rec = recommend(cur, { lessons: done(rest) }, { lessonId: rest.at(-1) });
-    expect(rec.nextLessonId).toBe(first);
-    expect(rec.status).toBe(STATUS.CONTINUE);
+    expect(rec.nextLessonId).not.toBe(first);
+    expect([STATUS.TRANSITION, STATUS.END]).toContain(rec.status);
     expect(rec.courseComplete).toBe(false);
+    expect(rec.alternatives.find((a) => a.kind === 'earlier').target.params.lessonId).toBe(first);
+    expect(rec.reasons.join(' ')).toMatch(/You skipped 1 of its written lessons/);
   });
 
   it('neighbours cross units but not courses', () => {
@@ -225,11 +227,21 @@ describe('Home: where the learner stands', () => {
     expect(rec.nextCourseId).toBe(writtenCourses[3]);
   });
 
-  it('reopening and finishing an old lesson does not drag the recommendation back', () => {
+  it('answering an old lesson’s checkpoint again does not drag the recommendation back', () => {
+    // `completed` is a lesson's first finish; `checkpoint.at` its latest answer.
     const late = writtenCourses[3];
-    const lessons = { ...done(cur.courseLessons[late].slice(0, 1), 10), ...done(cur.courseLessons[writtenCourses[0]].slice(0, 1), 50) };
+    const old = cur.courseLessons[writtenCourses[0]][0];
+    const lessons = { ...done(cur.courseLessons[late].slice(0, 1), 50), [old]: { opened: 1, completed: 10, checkpoint: { correct: 3, total: 3, at: 60 } } };
     expect(anchorCourse(cur, { lessons }, route).courseId).toBe(late);
     expect(cur.courseOf[recommend(cur, { lessons }).target.params.lessonId]).toBe(late);
+  });
+
+  it('finishing a lesson in a course the learner chose moves Home on from there', () => {
+    const late = writtenCourses[3];
+    const chosen = writtenCourses.find((c) => cur.courseLessons[c].length >= 2);
+    const lessons = { ...done(cur.courseLessons[late], 10), ...done(cur.courseLessons[chosen].slice(0, 1), 50) };
+    expect(anchorCourse(cur, { lessons }, route)).toMatchObject({ courseId: chosen, why: 'progress' });
+    expect(recommend(cur, { lessons }).target.params.lessonId).toBe(cur.courseLessons[chosen][1]);
   });
 
   it('a starting point chosen after the latest finished lesson is respected', () => {
@@ -291,12 +303,13 @@ describe('bridges and readiness', () => {
     expect(atC.bridgeCourseId).toBeNull();
   });
 
-  it('weak answers on a prerequisite’s skill bridge to an unfinished lesson that teaches it…', () => {
+  it('weak answers on a prerequisite’s skill offer a bridge to an unfinished lesson that teaches it — the next course stays the main action…', () => {
     const f = fixture();
     const rec = recommend(f, { lessons: done(['a-1', 'b-1']), weak: ['s.a'] }, { lessonId: 'b-1' });
-    expect(rec.status).toBe(STATUS.BRIDGE);
-    expect(rec.target.params.lessonId).toBe('a-2');
-    expect(rec.alternatives.find((a) => a.kind === 'skip-ahead').target.params.lessonId).toBe('c-1');
+    expect(rec.status).toBe(STATUS.TRANSITION);
+    expect(rec.target.params.lessonId).toBe('c-1');
+    expect(rec.alternatives[0]).toMatchObject({ kind: 'bridge', target: { params: { lessonId: 'a-2' } } });
+    expect(rec.warnings.join(' ')).toMatch(/nothing is locked/);
   });
 
   it('…and to review, not a repeated lesson, when those lessons are done', () => {

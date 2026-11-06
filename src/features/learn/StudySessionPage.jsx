@@ -86,7 +86,9 @@ export default function StudySessionPage() {
           )}
           <div>
             <dt>Checkpoint</dt>
-            <dd>{checkpoint ? `Answered: ${checkpoint.correct} of ${checkpoint.total} correct on the first try` : 'Not answered yet — finishing a session does not complete a lesson'}</dd>
+            <dd>{checkpoint ? `Answered: ${checkpoint.correct} of ${checkpoint.total} correct on the first try`
+              : lessons[lesson.id]?.marked ? 'Not answered — you marked this lesson finished; answer it any time'
+                : 'Not answered yet — finishing a session does not complete a lesson'}</dd>
           </div>
         </dl>
 

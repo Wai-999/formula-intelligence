@@ -266,7 +266,7 @@ function CheckpointSection({ meta, items }) {
  * action (src/lib/nextAction.js) — the next lesson, a bridge, an honest gap,
  * the next course, or the end. Completing pages is never called mastery here.
  */
-function LessonComplete({ meta, action, checkpoint }) {
+function LessonComplete({ meta, action, checkpoint, marked = false }) {
   const projects = PROJECTS.filter((p) => p.lessons.includes(meta.id));
   const missed = checkpoint ? checkpoint.total - checkpoint.correct : 0;
   const evidence = useLearningStore((s) => s.evidence);
@@ -279,7 +279,7 @@ function LessonComplete({ meta, action, checkpoint }) {
   const nextReview = meta.competencies.map((c) => cards[c]?.due).filter(Boolean).sort((a, b) => a - b)[0];
   return (
     <section className="lesson-complete" aria-labelledby={`lesson-${meta.id}-complete`}>
-      <h3 id={`lesson-${meta.id}-complete`} className="studio-h3">Lesson complete: what now?</h3>
+      <h3 id={`lesson-${meta.id}-complete`} className="studio-h3">{marked ? 'Marked finished' : 'Lesson complete'}: what now?</h3>
       <dl className="lesson-complete-facts">
         <div>
           <dt>You practised</dt>
@@ -292,9 +292,11 @@ function LessonComplete({ meta, action, checkpoint }) {
         <div>
           <dt>Needs review</dt>
           <dd>
-            {missed > 0
-              ? <>{missed} of {checkpoint.total} checkpoint answers were not right the first time. <a href={hashFor('practice/review')}>Practice → Review</a> brings those skills back sooner.</>
-              : 'Nothing from the checkpoint. One sitting is not mastery, so a short review is scheduled anyway.'}
+            {marked
+              ? 'You marked this lesson finished without its checkpoint. Answer the checkpoint above whenever you like: it shows what has stuck, and your skill levels come only from answers.'
+              : missed > 0
+                ? <>{missed} of {checkpoint.total} checkpoint answers were not right the first time. <a href={hashFor('practice/review')}>Practice → Review</a> brings those skills back sooner.</>
+                : 'Nothing from the checkpoint. One sitting is not mastery, so a short review is scheduled anyway.'}
             {stillWrong > 0 && <> {stillWrong} question{stillWrong === 1 ? ' in this lesson is' : 's in this lesson are'} still not right on your latest try.</>}
           </dd>
         </div>
@@ -313,7 +315,7 @@ function LessonComplete({ meta, action, checkpoint }) {
           </dd>
         </div>
       </dl>
-      <p className="visually-hidden" role="status">Lesson complete. {action.headline ? `${action.headline}. ` : ''}{action.label}.</p>
+      <p className="visually-hidden" role="status">{marked ? 'Lesson marked finished.' : 'Lesson complete.'} {action.headline ? `${action.headline}. ` : ''}{action.label}.</p>
       <NextActionCard action={action} compact={false} />
     </section>
   );
@@ -612,8 +614,7 @@ export default function LessonPage({ lessonId }) {
   // The pager's last button: the next lesson of the course or, at its end, the path's next step.
   const finishLabel = action.kind === 'course-transition'
     ? `Finish course & continue: ${courseById[action.rec.nextCourseId].title}`
-    : action.kind === 'content-gap' ? `Next lesson not written yet — ${action.label}`
-      : action.kind === 'path-finished' ? `${action.headline}: ${action.label}` : action.label;
+    : action.kind === 'path-finished' ? `${action.headline}: ${action.label}` : action.label;
 
   return (
     <div className="studio-scroll lesson-scroll" ref={rootRef}>
@@ -872,10 +873,18 @@ export default function LessonPage({ lessonId }) {
             <ExplainBack lessonId={meta.id} />
             <CheckpointSection meta={meta} items={body.checkpoint} />
             {lessonRecord?.completed
-              ? <LessonComplete meta={meta} action={action} checkpoint={lessonRecord.checkpoint} />
-              : action.kind === 'content-gap'
-                ? <p className="lesson-next studio-muted">After the checkpoint: {action.headline.charAt(0).toLowerCase()}{action.headline.slice(1)}, so you will be offered practice on this course’s skills or the next written course — your choice.</p>
-                : <p className="lesson-next studio-muted">After the checkpoint, your path continues with: <ActionLink target={action.target}>{action.label}</ActionLink>.</p>}
+              ? <LessonComplete meta={meta} action={action} checkpoint={lessonRecord.checkpoint} marked={!!lessonRecord.marked} />
+              : (
+                <div className="lesson-next">
+                  <p className="studio-muted">After this lesson, your path continues with: <ActionLink target={action.target}>{action.label}</ActionLink>.</p>
+                  <p className="studio-muted">
+                    Done with it without the checkpoint?{' '}
+                    <button type="button" className="studio-btn studio-btn-small lesson-mark-finished" onClick={() => useLearningStore.getState().markFinished(meta.id)}>
+                      <i className="ti ti-circle-check" aria-hidden="true" /> Mark this lesson finished
+                    </button>
+                  </p>
+                </div>
+              )}
             <div className="studio-row lesson-end" role="group" aria-label="When you are done here">
               <button type="button" className="studio-btn" onClick={() => jump('matters')}>Review this lesson from Step 1</button>
               <button type="button" className="studio-btn" onClick={finishSession}>Save &amp; finish for today</button>

@@ -106,10 +106,30 @@ export const useLearningStore = create((set, get) => ({
     writeVersioned(STORAGE_KEYS.lessons, { schemaVersion: LESSONS.version, lessons, last: get().lastLesson });
   },
 
-  /** A lesson is complete when its checkpoint has been answered — not when it was scrolled through. */
+  /**
+   * A lesson is complete when its checkpoint has been answered — not when it
+   * was scrolled through — or when the learner marks it finished
+   * (markFinished). `completed` keeps the first finish, so answering an old
+   * checkpoint again never moves "where you are" back (src/lib/learningPath.js
+   * anchorCourse); `checkpoint.at` records the latest answer.
+   */
   completeLesson(lessonId, { correct, total }, now = Date.now()) {
+    // An answered checkpoint replaces a "marked finished".
+    const { marked: _marked, ...prev } = get().lessons[lessonId] ?? { sections: [] };
+    const lessons = { ...get().lessons, [lessonId]: { ...prev, completed: prev.completed ?? now, checkpoint: { correct, total, at: now } } };
+    set({ lessons });
+    writeVersioned(STORAGE_KEYS.lessons, { schemaVersion: LESSONS.version, lessons, last: get().lastLesson });
+  },
+
+  /**
+   * The learner's own "I'm done with this lesson", without the checkpoint:
+   * the path moves on, and the lesson says it was marked, not checked. Skill
+   * levels still come only from answers.
+   */
+  markFinished(lessonId, now = Date.now()) {
     const prev = get().lessons[lessonId] ?? { sections: [] };
-    const lessons = { ...get().lessons, [lessonId]: { ...prev, completed: now, checkpoint: { correct, total, at: now } } };
+    if (prev.completed) return;
+    const lessons = { ...get().lessons, [lessonId]: { ...prev, completed: now, marked: true } };
     set({ lessons });
     writeVersioned(STORAGE_KEYS.lessons, { schemaVersion: LESSONS.version, lessons, last: get().lastLesson });
   },

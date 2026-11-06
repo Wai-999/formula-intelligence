@@ -42,7 +42,7 @@ for (const [i, id] of route.courses.entries()) {
   const lessons = Object.fromEntries(written.map((l, k) => [l, { completed: k + 1 }]));
   const a = written.length ? getNextLearningAction(cur, { state: { lessons, status: {} }, from: { courseId: id } }) : null;
   const after = !a ? 'No written lesson yet'
-    : a.kind === 'content-gap' ? `Gap named: “${firstGap(course)?.title}”; practise first, then “${a.alternatives.find((x) => x.kind === 'course-transition')?.label ?? a.alternatives[0]?.label ?? '—'}”`
+    : a.evidence.ruleId === 'content-gap' ? `Moves on: “${a.label}”; gap named: “${firstGap(course)?.title}”${a.alternatives.some((x) => x.kind === 'practice') ? '; practice offered' : ''}`
       : a.kind === 'path-finished' ? 'End of the written path (named as such)'
         : `${a.kind}: ${a.label}`;
   const empty = course.units.filter((u) => !u.lessons.length).length;

@@ -8,21 +8,21 @@ Route: **Data Science Foundations → Advanced Applications** (15 courses). “W
 
 | # | Course | Builds on | Written | Planned | Units with no lesson | When the written lessons are done |
 |---|---|---|---|---|---|---|
-| 1 | Prealgebra | — | 2 | 13 | 4 of 6 | Gap named: “Inequalities on the number line”; practise first, then “Continue to Algebra I: Break-even: when does a business cover its costs?” |
-| 2 | Algebra I | Prealgebra | 5 | 12 | 4 of 7 | Gap named: “Domain and range”; practise first, then “Continue to Python for Data Science: Python first steps: lists, loops and an honest average” |
-| 3 | Python for Data Science | — | 1 | 14 | 5 of 6 | Gap named: “Functions”; practise first, then “Continue to C++ Programming Fundamentals: Loops you can trace” |
-| 4 | C++ Programming Fundamentals | — | 2 | 12 | 5 of 7 | Gap named: “Strings and text processing”; practise first, then “Continue to Algebra II: Exponentials and logarithms: growth and how to undo it” |
-| 5 | Algebra II | Algebra I | 2 | 11 | 6 of 8 | Gap named: “Graphs of inverses and restricted domains”; practise first, then “Continue to Probability & Statistics: Bayes’ theorem as updating” |
-| 6 | Probability & Statistics | Algebra I | 2 | 14 | 6 of 8 | Gap named: “Confidence intervals (chapter 7)”; practise first, then “Continue to Object-Oriented Programming in C++: Classes that keep their promises” |
-| 7 | Object-Oriented Programming in C++ | C++ Programming Fundamentals | 1 | 9 | 5 of 6 | Gap named: “const correctness”; practise first, then “Continue to Discrete Structures: Logic you can compute: truth tables and De Morgan” |
-| 8 | Discrete Structures | C++ Programming Fundamentals | 2 | 10 | 4 of 6 | Gap named: “Recursive definitions and strong induction”; practise first, then “Continue to Geometry, Trigonometry & Precalculus: Radians and the unit circle” |
-| 9 | Geometry, Trigonometry & Precalculus | Algebra II | 2 | 9 | 6 of 8 | Gap named: “Similarity and the Pythagorean theorem”; practise first, then “Continue to Data Structures and Algorithms: Stacks and queues: who gets served next?” |
-| 10 | Data Structures and Algorithms | Object-Oriented Programming in C++ | 1 | 10 | 5 of 6 | Gap named: “Linked lists”; practise first, then “Continue to Linear Algebra: Vectors and the dot product” |
-| 11 | Linear Algebra | Algebra I | 6 | 19 | 5 of 9 | Gap named: “The pseudoinverse”; practise first, then “Continue to Calculus I — Limits and Derivatives: The derivative from first principles” |
-| 12 | Calculus I — Limits and Derivatives | Geometry, Trigonometry & Precalculus | 4 | 6 | 2 of 4 | Gap named: “Implicit differentiation and related rates”; practise first, then “Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums” |
-| 13 | Calculus II — Integrals and Series | Calculus I — Limits and Derivatives | 2 | 8 | 1 of 3 | Gap named: “Convergence tests”; practise first, then “Continue to Machine Learning & Data Science: Validation, cross-validation and leakage” |
-| 14 | Machine Learning & Data Science | Probability & Statistics, Linear Algebra | 3 | 14 | 6 of 8 | Gap named: “Regularization”; practise first, then “Continue to Calculus III — Multivariable Calculus and Optimization: Partial derivatives and the gradient” |
-| 15 | Calculus III — Multivariable Calculus and Optimization | Calculus II — Integrals and Series, Linear Algebra | 2 | 9 | 2 of 4 | Gap named: “Lagrange multipliers”; practise first, then “See your whole path” |
+| 1 | Prealgebra | — | 2 | 13 | 4 of 6 | Moves on: “Continue to Algebra I: Break-even: when does a business cover its costs?”; gap named: “Inequalities on the number line”; practice offered |
+| 2 | Algebra I | Prealgebra | 5 | 12 | 4 of 7 | Moves on: “Continue to Python for Data Science: Python first steps: lists, loops and an honest average”; gap named: “Domain and range”; practice offered |
+| 3 | Python for Data Science | — | 1 | 14 | 5 of 6 | Moves on: “Continue to C++ Programming Fundamentals: Loops you can trace”; gap named: “Functions”; practice offered |
+| 4 | C++ Programming Fundamentals | — | 2 | 12 | 5 of 7 | Moves on: “Continue to Algebra II: Exponentials and logarithms: growth and how to undo it”; gap named: “Strings and text processing”; practice offered |
+| 5 | Algebra II | Algebra I | 2 | 11 | 6 of 8 | Moves on: “Continue to Probability & Statistics: Bayes’ theorem as updating”; gap named: “Graphs of inverses and restricted domains”; practice offered |
+| 6 | Probability & Statistics | Algebra I | 2 | 14 | 6 of 8 | Moves on: “Continue to Object-Oriented Programming in C++: Classes that keep their promises”; gap named: “Confidence intervals (chapter 7)”; practice offered |
+| 7 | Object-Oriented Programming in C++ | C++ Programming Fundamentals | 1 | 9 | 5 of 6 | Moves on: “Continue to Discrete Structures: Logic you can compute: truth tables and De Morgan”; gap named: “const correctness”; practice offered |
+| 8 | Discrete Structures | C++ Programming Fundamentals | 2 | 10 | 4 of 6 | Moves on: “Continue to Geometry, Trigonometry & Precalculus: Radians and the unit circle”; gap named: “Recursive definitions and strong induction”; practice offered |
+| 9 | Geometry, Trigonometry & Precalculus | Algebra II | 2 | 9 | 6 of 8 | Moves on: “Continue to Data Structures and Algorithms: Stacks and queues: who gets served next?”; gap named: “Similarity and the Pythagorean theorem”; practice offered |
+| 10 | Data Structures and Algorithms | Object-Oriented Programming in C++ | 1 | 10 | 5 of 6 | Moves on: “Continue to Linear Algebra: Vectors and the dot product”; gap named: “Linked lists”; practice offered |
+| 11 | Linear Algebra | Algebra I | 6 | 19 | 5 of 9 | Moves on: “Continue to Calculus I — Limits and Derivatives: The derivative from first principles”; gap named: “The pseudoinverse”; practice offered |
+| 12 | Calculus I — Limits and Derivatives | Geometry, Trigonometry & Precalculus | 4 | 6 | 2 of 4 | Moves on: “Continue to Calculus II — Integrals and Series: Area as a limit of Riemann sums”; gap named: “Implicit differentiation and related rates”; practice offered |
+| 13 | Calculus II — Integrals and Series | Calculus I — Limits and Derivatives | 2 | 8 | 1 of 3 | Moves on: “Continue to Machine Learning & Data Science: Validation, cross-validation and leakage”; gap named: “Convergence tests”; practice offered |
+| 14 | Machine Learning & Data Science | Probability & Statistics, Linear Algebra | 3 | 14 | 6 of 8 | Moves on: “Continue to Calculus III — Multivariable Calculus and Optimization: Partial derivatives and the gradient”; gap named: “Regularization”; practice offered |
+| 15 | Calculus III — Multivariable Calculus and Optimization | Calculus II — Integrals and Series, Linear Algebra | 2 | 9 | 2 of 4 | End of the written path (named as such) |
 
 **Totals:** 37 written lessons, 170 planned. Every course on the route has at least one written lesson; none has every planned lesson written.
 

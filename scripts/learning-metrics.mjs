@@ -43,8 +43,11 @@ const courses = COURSES.map((c) => {
     unitsWithNoLesson: c.units.filter((u) => !u.lessons.some((id) => bodies[id])).length,
     afterWrittenLessons: rec ? {
       status: action ? action.kind : rec.status,
+      rule: action?.evidence.ruleId ?? null,
       label: action ? action.label : rec.label,
       headline: action?.headline ?? null,
+      // Since the owner's 2026-11-05 direction the course moves on; the gap is named in a visible notice.
+      notice: action?.notice ?? null,
       saysNotComplete: [...rec.warnings, ...(action?.reasons ?? [])].some((w) => /not complete|not written yet/.test(w)),
     } : null,
   };
@@ -104,7 +107,9 @@ const metrics = {
     lessonsWithFadedExample: perLesson.filter((l) => l.fadedExample).length,
     projects: PROJECTS.length,
     // Courses with planned lessons whose primary action, once the written ones are done, moves on without naming the gap.
-    coursesThatMoveOnWithoutNamingTheGap: courses.filter((c) => c.afterWrittenLessons && c.planned > 0 && !['content-gap', 'path-finished'].includes(c.afterWrittenLessons.status)).length,
+    coursesThatMoveOnWithoutNamingTheGap: courses.filter((c) => c.afterWrittenLessons && c.planned > 0 && !c.afterWrittenLessons.notice && !['content-gap', 'path-finished'].includes(c.afterWrittenLessons.status)).length,
+    // Courses whose primary action, once the written lessons are done, is not the next course or the path's end (the owner's "move to next level").
+    coursesThatHoldTheLearnerBack: courses.filter((c) => c.afterWrittenLessons && !['course-transition', 'path-finished'].includes(c.afterWrittenLessons.status)).length,
   },
   perLesson,
 };

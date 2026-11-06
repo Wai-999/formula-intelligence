@@ -63,6 +63,7 @@ function PathTrail({ pathTitle, lessonId, sectionId = null }) {
 function ResumeHero({ target, lessons, pathState, pathTitle, action }) {
   const requestResume = useStudyResumeStore((s) => s.requestResume);
   const removePin = useStudyResumeStore((s) => s.removePin);
+  const markFinished = useLearningStore((s) => s.markFinished);
   const lessonId = target.kind === 'missing' ? null : target.lesson.id;
   const after = useMemo(() => (lessonId ? recommend(CURRICULUM, pathState, { lessonId }) : null), [lessonId, pathState]);
 
@@ -107,7 +108,7 @@ function ResumeHero({ target, lessons, pathState, pathTitle, action }) {
         {!step && <div><dt>{pinned ? 'You left off at' : 'You were at'}</dt><dd>You opened this lesson; no step has been saved yet</dd></div>}
         {when && <div><dt>{pinned ? 'Saved' : 'Last studied'}</dt><dd>{when}</dd></div>}
       </dl>
-      {done && <p className="studio-muted">You have answered this lesson’s checkpoint. Review it from your saved place, or go on: {after.label}.</p>}
+      {done && <p className="studio-muted">{lessons[lesson.id]?.marked ? 'You marked this lesson finished.' : 'You have answered this lesson’s checkpoint.'} Review it from your saved place, or go on: {after.label}.</p>}
       {!done && action?.kind === 'resume' && <p className="studio-muted home-why">{action.reason}</p>}
       <div className="studio-row">
         <button type="button" className="studio-btn studio-btn-primary" onClick={() => requestResume(loc)}>
@@ -117,6 +118,11 @@ function ResumeHero({ target, lessons, pathState, pathTitle, action }) {
         {done
           ? <a className="studio-btn" href={hrefFor(after.target)}>{after.label}</a>
           : <a className="studio-btn" href={hashFor('learn/course', { courseId: course.id })}>Open course outline</a>}
+        {!done && (
+          <button type="button" className="studio-btn home-mark-finished" onClick={() => markFinished(lesson.id)}>
+            <i className="ti ti-circle-check" aria-hidden="true" /> Mark it finished and move on
+          </button>
+        )}
       </div>
       {!done && action?.kind === 'resume' && action.alternatives.length > 0 && (
         <div className="studio-row" role="group" aria-label="Other choices">
