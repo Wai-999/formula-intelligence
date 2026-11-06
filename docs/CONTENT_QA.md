@@ -6,26 +6,26 @@ What has been checked about the curriculum content, how, and what has **not** be
 
 | | Count | Status |
 |---|---|---|
-| Authored lessons | **35** (of 207 planned + authored titles): the 23 of V3.1/V4 and 12 added in V5 (Algebra II ×2, Precalculus ×2, Calculus I ×1, C++ ×3, Data Structures ×1, Discrete Structures ×2, Python ×1) | **content-complete** for these 35 · **review-complete: 0** |
-| Assessable items in lessons (practice, Use it tasks, checkpoints) | 385, plus 70 readiness checks and 12 faded-example blanks | machine-checked; choice options shown in a fixed per-question shuffle (`src/lib/choiceOrder.js`) |
+| Authored lessons | **37** (of 207 planned + authored titles): the 23 of V3.1/V4, 12 added in V5 (Algebra II ×2, Precalculus ×2, Calculus I ×1, C++ ×3, Data Structures ×1, Discrete Structures ×2, Python ×1) and 2 prerequisite lessons in phase 5 of the 80/20 upgrade (Algebra I, Calculus I; docs/learning-8020/PHASE5_PREREQUISITES.md) | **content-complete** for these 37 · **review-complete: 0** |
+| Assessable items in lessons (practice, Use it tasks, checkpoints) | 413, plus 74 readiness checks and 18 faded-example blanks | machine-checked; choice options shown in a fixed per-question shuffle (`src/lib/choiceOrder.js`) |
 | Diagnostic (placement) items | 96, bank `dx-2026.11-1` (46 of 58 competencies, nine areas; the 12 left out are past what placement decides) | machine-checked, **uncalibrated**; the items added in `dx-2026.10-2` and `dx-2026.11-1` are AI drafts awaiting the same review as the lessons |
-| Curriculum formulas | 46 | LaTeX parses; claim type stated; references checked |
-| Concepts / knowledge graph | 98 concepts; graph 340 nodes, 528 edges | acyclic, no dangling ids; **pedagogy unreviewed** |
+| Curriculum formulas | 49 | LaTeX parses; claim type stated; references checked |
+| Concepts / knowledge graph | 98 concepts; graph 345 nodes, 538 edges | acyclic, no dangling ids; **pedagogy unreviewed** |
 | Code exercises / projects | 30 Python (27 with a verified no-code path) and 5 C++ / 10 projects (7 featured) | Python and C++ reference solutions pass, starters fail; no-code outputs verified |
 | C++ programs | 9 lesson and trace programs, 5 exercises | compiled and run in CI (`npm run verify:cpp`, C++17, warnings as errors, sanitizers on Linux) |
 | Datasets | 11: 4 real (Anscombe, Palmer Penguins, HadCET, Breast Cancer Wisconsin), 7 synthetic and labelled | provenance and licence recorded; Anscombe checked against its published statistics (`projects.test.js`) |
 | Labs | 31 | math helpers checked against closed-form cases (`labMath.test.js`); trace-lab steps verified against instrumented runs; numbers view on every `LabFrame` lab |
 | Academic data (Ohlone, CSU, UC, ASSIST) | 86 records, 12 sources | `npm run validate:college`; see `docs/major-prep/ACADEMIC_EVIDENCE.md` |
 
-**Every lesson is an AI draft** (author: "AI-drafted (Claude) for the project owner", 2026-10-24) with `reviewer: null` and `status: 'awaiting-human-review'`. Each lesson page shows a *Draft: awaiting independent math review* label. A test fails if any lesson claims a reviewer it does not have.
+**Every lesson is an AI draft** (author: "AI-drafted (Claude) for the project owner", 2026-10-24; the two phase 5 lessons 2026-11-05) with `reviewer: null` and `status: 'awaiting-human-review'`. Each lesson page shows a *Draft: awaiting independent math review* label. A test fails if any lesson claims a reviewer it does not have.
 
 ### Real-world problems and explain-back prompts (2026-10-28)
 
-`src/data/curriculum/problems.js`: 38 applied problems (154 graded steps) and 28 "Explain it back" prompts with model answers, for the first and last written lesson of every written course (16 problems from 2026-10-28; 12 added with the V5 lessons and 10 more on the five priority lessons on 2026-11-04, 13 of them linked to a project's running case). The five priority lessons also meet the professor teaching contract (`src/data/curriculum/__tests__/professorContract.test.js`; docs/learning-8020/TEACHING_RUBRIC.md). AI-drafted, `reviewedStatus: 'awaiting-human-review'`, and labelled as drafts on the page. All numbers are invented and labelled so. Machine checks in `src/data/curriculum/__tests__/problems.test.js`: every numeric answer recomputed independently (`compute`) within rounding-only tolerances, every formula parsed, feedback on every wrong choice, references to real lessons, courses and competencies. Coverage and decisions: `docs/CONTINUOUS_LEARNING_UPGRADE.md`.
+`src/data/curriculum/problems.js`: 44 applied problems (178 graded steps) and 30 "Explain it back" prompts with model answers, for the first and last written lesson of every written course (16 problems from 2026-10-28; 12 added with the V5 lessons and 10 more on the five priority lessons on 2026-11-04, 13 of them linked to a project's running case; 6 more with the two phase 5 lessons on 2026-11-05, 4 of them linked to a project). The five priority lessons and the two phase 5 lessons also meet the professor teaching contract (`src/data/curriculum/__tests__/professorContract.test.js`; docs/learning-8020/TEACHING_RUBRIC.md). AI-drafted, `reviewedStatus: 'awaiting-human-review'`, and labelled as drafts on the page. All numbers are invented and labelled so. Machine checks in `src/data/curriculum/__tests__/problems.test.js`: every numeric answer recomputed independently (`compute`) within rounding-only tolerances, every formula parsed, feedback on every wrong choice, references to real lessons, courses and competencies. Coverage and decisions: `docs/CONTINUOUS_LEARNING_UPGRADE.md`.
 
 ## Independent human math review — BLOCKED
 
-§5 (and V4 §11: "math reviewer sign-off required … mark unreviewed content as draft") requires review by someone other than the author. No such reviewer was available in this environment, so **review-complete is 0 of 35** and stays so until one signs off. Machine checks below catch arithmetic, syntax and broken links; they cannot catch a misleading explanation, a wrong emphasis, a missing assumption or a prerequisite edge that is technically valid but pedagogically wrong.
+§5 (and V4 §11: "math reviewer sign-off required … mark unreviewed content as draft") requires review by someone other than the author. No such reviewer was available in this environment, so **review-complete is 0 of 37** and stays so until one signs off. Machine checks below catch arithmetic, syntax and broken links; they cannot catch a misleading explanation, a wrong emphasis, a missing assumption or a prerequisite edge that is technically valid but pedagogically wrong.
 
 ### How a reviewer signs off
 

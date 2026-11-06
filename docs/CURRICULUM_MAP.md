@@ -4,7 +4,7 @@ Generated from `src/data/curriculum/catalog.js` by `npm run docs:curriculum` —
 
 **Status words.** *Authored* means the lesson's content exists in `src/data/curriculum/lessons/` with all ten §6 elements. *Planned* means only a title exists. A course is **partial** when some of its lessons are authored and **outline** when none are; no course is complete. Every authored lesson is an **AI draft awaiting independent human math review** (`review.status: 'awaiting-human-review'`, reviewer `null`) — content-complete for this slice, not review-complete.
 
-**Totals:** 10 subjects · 15 courses · 96 units · **35 authored lessons** · 172 planned lesson titles · 58 competencies in 9 domains · 31 interactive labs.
+**Totals:** 10 subjects · 15 courses · 96 units · **37 authored lessons** · 170 planned lesson titles · 58 competencies in 9 domains · 31 interactive labs.
 
 **Algebra and Linear Algebra are separate subjects** (§5): Algebra I/II build symbolic fluency with one-variable functions; Linear Algebra starts from vectors and matrices and lists Algebra I as a prerequisite, never the other way round.
 
@@ -17,11 +17,11 @@ The order in which the app recommends courses, and what it says at each course c
 | Course | Subject | Status | Units | Authored lessons | Planned titles | Prerequisites |
 |---|---|---|---|---|---|---|
 | Prealgebra | Mathematics Foundations | partial | 6 | 2 | 13 | — |
-| Algebra I | Algebra | partial | 7 | 4 | 13 | prealgebra |
+| Algebra I | Algebra | partial | 7 | 5 | 12 | prealgebra |
 | Algebra II | Algebra | partial | 8 | 2 | 11 | algebra-1 |
 | Geometry, Trigonometry & Precalculus | Precalculus | partial | 8 | 2 | 9 | algebra-2 |
 | Linear Algebra | Linear Algebra | partial | 9 | 6 | 19 | algebra-1 |
-| Calculus I — Limits and Derivatives | Calculus | partial | 4 | 3 | 7 | precalculus |
+| Calculus I — Limits and Derivatives | Calculus | partial | 4 | 4 | 6 | precalculus |
 | Calculus II — Integrals and Series | Calculus | partial | 3 | 2 | 8 | calculus-1 |
 | Calculus III — Multivariable Calculus and Optimization | Calculus | partial | 4 | 2 | 9 | calculus-2, linear-algebra |
 | Probability & Statistics | Probability & Statistics | partial | 8 | 2 | 14 | algebra-1 |
@@ -61,7 +61,7 @@ Linear equations and relationships, functions, systems, polynomials and quadrati
 |---|---|---|---|---|
 | Linear equations and inequalities | partial | **Break-even: when does a business cover its costs?** | Variables on both sides; Linear inequalities | alg.linear-eq |
 | Linear relationships | authored | **Slope as rate of change**<br>**Slope–intercept form**<br>**Fitting a line to data** | — | alg.slope, alg.slope-intercept, alg.line-fit |
-| Functions and graph interpretation | outline | — | What is a function?; Domain and range; Reading graphs | func.notation |
+| Functions and graph interpretation | partial | **What is a function?** | Domain and range; Reading graphs | func.notation |
 | Systems of linear equations | outline | — | Solving by graphing; Substitution and elimination | alg.systems |
 | Polynomials and factoring | outline | — | Polynomial arithmetic; Factoring | alg.quadratics |
 | Quadratic functions and equations | outline | — | Solving quadratics; Graphs of quadratics | alg.quadratics |
@@ -133,7 +133,7 @@ Limits, continuity, the derivative from first principles, derivative rules, and 
 |---|---|---|---|---|
 | Limits and continuity | outline | — | Limits; Continuity | calc.limits |
 | The derivative | authored | **The derivative from first principles**<br>**Marginal cost: what does one more unit cost?** | — | calc.derivative |
-| Derivative rules | partial | **The chain rule: rates that multiply** | Power, product and quotient rules; Implicit differentiation and related rates | calc.rules |
+| Derivative rules | partial | **Power, product and quotient rules**<br>**The chain rule: rates that multiply** | Implicit differentiation and related rates | calc.rules |
 | Applications of derivatives | outline | — | Extrema; Curve sketching; Optimization | calc.optimization (no diagnostic item) |
 
 ### Calculus II — Integrals and Series — partial
@@ -279,6 +279,7 @@ Logic, sets, functions and relations, proof techniques, induction, counting, gra
 | Slope as rate of change (`a1-slope`) | Algebra I | alg.slope | slope | 35 | awaiting-human-review |
 | Slope–intercept form (`a1-slope-intercept`) | Algebra I | alg.slope-intercept | function-transformations | 35 | awaiting-human-review |
 | Fitting a line to data (`a1-line-fit`) | Algebra I | alg.line-fit | least-squares | 45 | awaiting-human-review |
+| What is a function? (`a1-functions`) | Algebra I | func.notation | function-transformations | 40 | awaiting-human-review |
 | Composite and inverse functions (`a2-composition`) | Algebra II | func.compose-inverse | composition-chain | 40 | awaiting-human-review |
 | Exponentials and logarithms: growth and how to undo it (`a2-exp-log`) | Algebra II | alg.exp-log | log-scale | 45 | awaiting-human-review |
 | Radians and the unit circle (`pc-unit-circle`) | Geometry, Trigonometry & Precalculus | trig.unit-circle | unit-circle | 45 | awaiting-human-review |
@@ -291,6 +292,7 @@ Logic, sets, functions and relations, proof techniques, induction, counting, gra
 | Principal components and the SVD (`la-svd-pca`) | Linear Algebra | la.svd-pca | svd-pca | 50 | awaiting-human-review |
 | The derivative from first principles (`c1-derivative`) | Calculus I — Limits and Derivatives | calc.derivative | slope | 45 | awaiting-human-review |
 | Marginal cost: what does one more unit cost? (`c1-marginal-cost`) | Calculus I — Limits and Derivatives | calc.derivative | marginal-cost | 40 | awaiting-human-review |
+| Power, product and quotient rules (`c1-power-rules`) | Calculus I — Limits and Derivatives | calc.rules | slope | 45 | awaiting-human-review |
 | The chain rule: rates that multiply (`c1-chain-rule`) | Calculus I — Limits and Derivatives | calc.rules | composition-chain | 45 | awaiting-human-review |
 | Area as a limit of Riemann sums (`c2-riemann`) | Calculus II — Integrals and Series | calc.integral | riemann | 45 | awaiting-human-review |
 | Taylor polynomials (`c2-taylor`) | Calculus II — Integrals and Series | calc.series | taylor | 45 | awaiting-human-review |

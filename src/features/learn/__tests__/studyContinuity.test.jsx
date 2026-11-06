@@ -21,6 +21,8 @@ import { courseById } from '../../../data/curriculum/catalog.js';
 vi.mock('../../labs/LabHost.jsx', () => ({ default: () => null }));
 
 const NOW = Date.now();
+// Counted from the catalog, so writing a new Algebra I lesson does not break the test.
+const ALGEBRA_1_WRITTEN = courseById['algebra-1'].units.flatMap((u) => u.lessons).length;
 const place = (lessonId, courseId, sectionId, extra = {}) => ({ courseId, lessonId, sectionId, fraction: 0, at: NOW - 60_000, source: 'auto', ...extra });
 
 function reset() {
@@ -169,7 +171,7 @@ describe('Course page', () => {
   it('with no place in the course, keeps the first-unfinished-lesson start', () => {
     render(<CoursePage courseId="algebra-1" />);
     expect(screen.getByRole('link', { name: /^Start: Break-even/ })).toBeInTheDocument();
-    expect(screen.getByText('0 of 4 checked (checkpoint answered)')).toBeInTheDocument();
+    expect(screen.getByText(`0 of ${ALGEBRA_1_WRITTEN} checked (checkpoint answered)`)).toBeInTheDocument();
   });
 
   it('after the last written lesson: an honest end, the planned lessons still listed as not written', () => {
@@ -194,7 +196,7 @@ describe('My Progress and the session summary', () => {
     useStudyResumeStore.setState({ pinned: place('a1-slope', 'algebra-1', 'use', { source: 'manual' }), recent: [place('a1-slope', 'algebra-1', 'use')] });
     render(<StudyJourney />);
     expect(screen.getAllByText(/Step 5 of 6 — Use it/).length).toBe(2); // the saved place, and the course's line
-    expect(screen.getByText('1 of 4 written lessons checked')).toBeInTheDocument();
+    expect(screen.getByText(`1 of ${ALGEBRA_1_WRITTEN} written lessons checked`)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Remove saved place' }));
     expect(screen.getByText(/Saved place removed\. Your answers, checkpoints and notes are unchanged\./)).toBeInTheDocument();
     expect(useStudyResumeStore.getState().pinned).toBeNull();
