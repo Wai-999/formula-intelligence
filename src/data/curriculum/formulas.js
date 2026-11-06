@@ -80,7 +80,7 @@ export const FORMULAS = [
     application: 'Side lengths from areas, and the square roots in the standard deviation and the standard error.',
     python: 'a ** (1 / n)',
     concept: 'c.exponents', lesson: 'pa-exponents', claim: 'definition',
-    references: ['https://openstax.org/books/prealgebra-2e/pages/9-1-simplify-and-use-square-roots'],
+    references: ['https://openstax.org/books/prealgebra-2e/pages/5-7-simplify-and-use-square-roots'],
   }),
   F('f.linear-solution', 'Solution of a one-variable linear equation', 'ax + b = c \\;\\Rightarrow\\; x = \\frac{c - b}{a}', {
     say: 'a x plus b equals c, so x equals c minus b, over a',

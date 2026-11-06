@@ -307,6 +307,58 @@ snap(5, times=times, total=total, t=t, average=average)
 print(round(average, 1))
 snap(6, times=times, total=total, t=t, average=average)`,
   },
+  // Phase 6 (py-functions): one function, called twice.
+  'tip-function': {
+    language: 'python',
+    title: 'One function, two calls',
+    file: 'tips.py',
+    code: `def with_tip(bill, rate):
+    tip = bill * rate
+    return bill + tip
+
+lunch = with_tip(40, 0.15)
+dinner = with_tip(80, 0.1)
+print(lunch, dinner)`,
+    output: '46.0 88.0',
+    notes: {
+      1: 'def creates the function. Its body does not run yet.',
+      2: 'Inside a call: the parameters hold this call’s arguments, and tip is a new local variable.',
+      3: 'return hands the value back and ends the call; bill, rate and tip disappear.',
+      5: 'The call is replaced by the value it returned.',
+      6: 'The second call starts again with fresh local variables.',
+      7: 'print shows both results.',
+    },
+    annotations: [
+      'Each call gets its own bill, rate and tip: nothing from the first call is left over in the second.',
+      'Outside the function only with_tip, lunch and dinner exist; the local variables never appear there.',
+    ],
+    trace: [
+      'L1 with_tip=function',
+      'L2 bill=40 rate=0.15 tip=6.0',
+      'L3 bill=40 rate=0.15 tip=6.0 returns=46.0',
+      'L5 with_tip=function lunch=46.0',
+      'L2 bill=80 rate=0.1 tip=8.0',
+      'L3 bill=80 rate=0.1 tip=8.0 returns=88.0',
+      'L6 with_tip=function lunch=46.0 dinner=88.0',
+      'L7 with_tip=function lunch=46.0 dinner=88.0 | 46.0 88.0',
+    ],
+    instrumented: `def snap(line, **kv):
+    print("@L%d " % line + " ".join(k + "=" + str(v) for k, v in kv.items()))
+
+def with_tip(bill, rate):
+    tip = bill * rate
+    snap(2, bill=bill, rate=rate, tip=tip)
+    snap(3, bill=bill, rate=rate, tip=tip, returns=bill + tip)
+    return bill + tip
+
+snap(1, with_tip="function")
+lunch = with_tip(40, 0.15)
+snap(5, with_tip="function", lunch=lunch)
+dinner = with_tip(80, 0.1)
+snap(6, with_tip="function", lunch=lunch, dinner=dinner)
+print(lunch, dinner)
+snap(7, with_tip="function", lunch=lunch, dinner=dinner)`,
+  },
 };
 
 /**

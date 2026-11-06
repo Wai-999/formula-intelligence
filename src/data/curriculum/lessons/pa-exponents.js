@@ -242,6 +242,6 @@ print("(3 + 4) ** 2 =", (3 + 4) ** 2, "but 3**2 + 4**2 =", 3 ** 2 + 4 ** 2)`,
   reading: [
     { title: '10.2 Use Multiplication Properties of Exponents', source: 'OpenStax, Prealgebra 2e', url: 'https://openstax.org/books/prealgebra-2e/pages/10-2-use-multiplication-properties-of-exponents', note: 'The product and power rules, with many worked examples.' },
     { title: '10.5 Integer Exponents and Scientific Notation', source: 'OpenStax, Prealgebra 2e', url: 'https://openstax.org/books/prealgebra-2e/pages/10-5-integer-exponents-and-scientific-notation', note: 'Zero and negative exponents, and powers of 10.' },
-    { title: '9.1 Simplify and Use Square Roots', source: 'OpenStax, Prealgebra 2e', url: 'https://openstax.org/books/prealgebra-2e/pages/9-1-simplify-and-use-square-roots', note: 'Square roots and estimating them.' },
+    { title: '5.7 Simplify and Use Square Roots', source: 'OpenStax, Prealgebra 2e', url: 'https://openstax.org/books/prealgebra-2e/pages/5-7-simplify-and-use-square-roots', note: 'Square roots and estimating them.' },
   ],
 };

@@ -454,7 +454,7 @@ export const COURSES = [
     prerequisites: [],
     diagnosticDomains: ['python'],
     units: [
-      { id: 'py-basics', title: 'Python basics', objectives: ['Values, variables, functions and control flow', 'Trace a loop over a list and handle missing values on purpose'], exitCompetencies: ['py.basics'], prerequisites: [], lessons: ['py-first-steps'], planned: ['Functions', 'Conditions and control flow'], labs: ['code-trace'] },
+      { id: 'py-basics', title: 'Python basics', objectives: ['Values, variables, functions and control flow', 'Trace a loop over a list and handle missing values on purpose'], exitCompetencies: ['py.basics'], prerequisites: [], lessons: ['py-first-steps', 'py-functions'], planned: ['Conditions and control flow'], labs: ['code-trace'] },
       { id: 'py-collections', title: 'Lists and dictionaries', objectives: ['Store and transform collections'], exitCompetencies: ['py.collections'], prerequisites: ['c.py-basics'], lessons: [], planned: ['Lists', 'Dictionaries'] },
       { id: 'py-debugging', title: 'Debugging', objectives: ['Read a traceback and fix the bug it points at'], exitCompetencies: ['py.debugging'], prerequisites: ['c.py-basics'], lessons: [], planned: ['Reading tracebacks'] },
       { id: 'py-numpy', title: 'NumPy arrays and broadcasting', objectives: ['Vectorize computations', 'Understand broadcasting and floating-point precision'], exitCompetencies: ['py.numpy'], prerequisites: ['c.py-collections'], lessons: [], planned: ['Arrays', 'Broadcasting', 'Floating-point precision'] },
