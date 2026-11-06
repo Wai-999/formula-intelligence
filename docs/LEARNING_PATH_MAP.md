@@ -36,7 +36,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 2. Solving equations by keeping balance (`pa-equation-balance`, finish-unit)
 
 **Algebra I** — course transition
-> You have answered the checkpoint of every written lesson in Prealgebra.
+> You have finished every written lesson in Prealgebra.
 > Algebra I comes next on “Data Science Foundations → Advanced Applications”. It lists Prealgebra as a prerequisite.
 > Its first lesson, “Break-even: when does a business cover its costs?”, builds on: Equations and the balance principle.
 > ⚠ Prealgebra has 13 more planned lessons that are not written yet, so the full course is not complete.
@@ -48,7 +48,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 6. Fitting a line to data (`a1-line-fit`, continue-lesson)
 
 **Python for Data Science** — course transition
-> You have answered the checkpoint of every written lesson in Algebra I.
+> You have finished every written lesson in Algebra I.
 > Python for Data Science comes next on “Data Science Foundations → Advanced Applications”.
 > ⚠ Algebra I has 13 more planned lessons that are not written yet, so the full course is not complete.
 > ⚠ “Python first steps: lists, loops and an honest average” assumes: Expressions and order of operations — not taught in a written lesson here yet.
@@ -56,7 +56,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 7. Python first steps: lists, loops and an honest average (`py-first-steps`, transition-course)
 
 **C++ Programming Fundamentals** — course transition
-> You have answered the checkpoint of every written lesson in Python for Data Science.
+> You have finished every written lesson in Python for Data Science.
 > C++ Programming Fundamentals comes next on “Data Science Foundations → Advanced Applications”.
 > ⚠ Python for Data Science has 14 more planned lessons that are not written yet, so the full course is not complete.
 > ⚠ “Loops you can trace” assumes: C++ types, expressions and input/output and Inequalities — not taught in a written lesson here yet.
@@ -65,7 +65,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 9. Functions and vectors: copies versus references (`cpp-functions-vectors`, finish-unit)
 
 **Algebra II** — course transition
-> You have answered the checkpoint of every written lesson in C++ Programming Fundamentals.
+> You have finished every written lesson in C++ Programming Fundamentals.
 > Algebra II comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “Exponentials and logarithms: growth and how to undo it”, builds on: Composite and inverse functions.
 > ⚠ C++ Programming Fundamentals has 12 more planned lessons that are not written yet, so the full course is not complete.
@@ -75,7 +75,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 11. Composite and inverse functions (`a2-composition`, finish-unit)
 
 **Probability & Statistics** — course transition
-> You have answered the checkpoint of every written lesson in Algebra II.
+> You have finished every written lesson in Algebra II.
 > Probability & Statistics comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “Bayes’ theorem as updating”, builds on: Conditional probability.
 > ⚠ Algebra II has 11 more planned lessons that are not written yet, so the full course is not complete.
@@ -84,7 +84,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 13. Sampling distributions and the central limit theorem (`st-sampling-clt`, finish-unit)
 
 **Object-Oriented Programming in C++** — course transition
-> You have answered the checkpoint of every written lesson in Probability & Statistics.
+> You have finished every written lesson in Probability & Statistics.
 > Object-Oriented Programming in C++ comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “Classes that keep their promises”, builds on: Functions, references and vectors in C++.
 > ⚠ Probability & Statistics has 14 more planned lessons that are not written yet, so the full course is not complete.
@@ -92,7 +92,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 14. Classes that keep their promises (`cpp-classes-invariants`, transition-course)
 
 **Discrete Structures** — course transition
-> You have answered the checkpoint of every written lesson in Object-Oriented Programming in C++.
+> You have finished every written lesson in Object-Oriented Programming in C++.
 > Discrete Structures comes next on “Data Science Foundations → Advanced Applications”.
 > ⚠ Object-Oriented Programming in C++ has 9 more planned lessons that are not written yet, so the full course is not complete.
 
@@ -100,7 +100,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 16. Proof by induction (`dm-induction`, finish-unit)
 
 **Geometry, Trigonometry & Precalculus** — course transition
-> You have answered the checkpoint of every written lesson in Discrete Structures.
+> You have finished every written lesson in Discrete Structures.
 > Geometry, Trigonometry & Precalculus comes next on “Data Science Foundations → Advanced Applications”.
 > ⚠ Discrete Structures has 10 more planned lessons that are not written yet, so the full course is not complete.
 > ⚠ “Radians and the unit circle” assumes: Essential geometry — not taught in a written lesson here yet.
@@ -109,7 +109,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 18. Limits: what a function approaches (`pc-limits`, finish-unit)
 
 **Data Structures and Algorithms** — course transition
-> You have answered the checkpoint of every written lesson in Geometry, Trigonometry & Precalculus.
+> You have finished every written lesson in Geometry, Trigonometry & Precalculus.
 > Data Structures and Algorithms comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “Stacks and queues: who gets served next?”, builds on: Functions, references and vectors in C++.
 > ⚠ Geometry, Trigonometry & Precalculus has 9 more planned lessons that are not written yet, so the full course is not complete.
@@ -117,7 +117,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 19. Stacks and queues: who gets served next? (`ds-stacks-queues`, transition-course)
 
 **Linear Algebra** — course transition
-> You have answered the checkpoint of every written lesson in Data Structures and Algorithms.
+> You have finished every written lesson in Data Structures and Algorithms.
 > Linear Algebra comes next on “Data Science Foundations → Advanced Applications”.
 > ⚠ Data Structures and Algorithms has 10 more planned lessons that are not written yet, so the full course is not complete.
 > ⚠ “Vectors and the dot product” assumes: Vectors in the plane and The coordinate plane — not taught in a written lesson here yet.
@@ -130,7 +130,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 25. Principal components and the SVD (`la-svd-pca`, finish-unit)
 
 **Calculus I — Limits and Derivatives** — course transition
-> You have answered the checkpoint of every written lesson in Linear Algebra.
+> You have finished every written lesson in Linear Algebra.
 > Calculus I — Limits and Derivatives comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “The derivative from first principles”, builds on: Slope as rate of change and Limits and continuity.
 > ⚠ Linear Algebra has 19 more planned lessons that are not written yet, so the full course is not complete.
@@ -140,7 +140,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 28. The chain rule: rates that multiply (`c1-chain-rule`, finish-unit)
 
 **Calculus II — Integrals and Series** — course transition
-> You have answered the checkpoint of every written lesson in Calculus I — Limits and Derivatives.
+> You have finished every written lesson in Calculus I — Limits and Derivatives.
 > Calculus II — Integrals and Series comes next on “Data Science Foundations → Advanced Applications”. It lists Calculus I — Limits and Derivatives as a prerequisite.
 > Its first lesson, “Area as a limit of Riemann sums”, builds on: Limits and continuity.
 > ⚠ Calculus I — Limits and Derivatives has 7 more planned lessons that are not written yet, so the full course is not complete.
@@ -150,7 +150,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 30. Taylor polynomials (`c2-taylor`, finish-unit)
 
 **Machine Learning & Data Science** — course transition
-> You have answered the checkpoint of every written lesson in Calculus II — Integrals and Series.
+> You have finished every written lesson in Calculus II — Integrals and Series.
 > Machine Learning & Data Science comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “Validation, cross-validation and leakage”, builds on: Fitting a line to data.
 > ⚠ Calculus II — Integrals and Series has 8 more planned lessons that are not written yet, so the full course is not complete.
@@ -161,7 +161,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 33. Calibration and fairness checks (`ml-calibration-fairness`, continue-lesson)
 
 **Calculus III — Multivariable Calculus and Optimization** — course transition
-> You have answered the checkpoint of every written lesson in Machine Learning & Data Science.
+> You have finished every written lesson in Machine Learning & Data Science.
 > Calculus III — Multivariable Calculus and Optimization comes next on “Data Science Foundations → Advanced Applications”.
 > Its first lesson, “Partial derivatives and the gradient”, builds on: The derivative and The dot product.
 > ⚠ Machine Learning & Data Science has 14 more planned lessons that are not written yet, so the full course is not complete.
@@ -170,7 +170,7 @@ A learner who starts at the beginning and always takes the primary action sees t
 35. Gradient descent (`c3-gradient-descent`, finish-unit)
 
 **End of the route** — pathway-end.
-> You have answered the checkpoint of every written lesson in Calculus III — Multivariable Calculus and Optimization.
+> You have finished every written lesson in Calculus III — Multivariable Calculus and Optimization.
 > You have answered the checkpoint of every written lesson on “Data Science Foundations → Advanced Applications”.
 > ⚠ Calculus III — Multivariable Calculus and Optimization has 9 more planned lessons that are not written yet, so the full course is not complete.
 > ⚠ 172 planned lessons on this path are not written yet; the path is finished only as far as it is written.

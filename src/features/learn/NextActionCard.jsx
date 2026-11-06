@@ -22,6 +22,9 @@ export function ActionLink({ target, className, children }) {
 
 const minutes = (m) => (m ? <span className="next-minutes">about {m} min</span> : null);
 
+// Where a learner who would rather choose for themselves goes: every course, none locked.
+const CHOOSE = new Set(['course-transition', 'path-finished', 'content-gap']);
+
 /**
  * One next action, rendered the same way wherever it appears: an optional
  * headline (a gap or a bridge says so before the button), the primary action
@@ -45,6 +48,7 @@ export default function NextActionCard({ action, primary = true, compact = true,
     <div className="path-next next-action" data-kind={action.kind} data-rule={action.evidence.ruleId}>
       {headline && flagged && action.headline && <p className="next-headline"><strong>{action.headline}</strong></p>}
       {headline && flagged && <p className="next-reason">{action.reason}</p>}
+      {action.notice && <p className="next-notice"><i className="ti ti-info-circle" aria-hidden="true" /> {action.notice}</p>}
       <div className="studio-row">
         <ActionLink target={action.target} className={`studio-btn${primary ? ' studio-btn-primary' : ''} path-next-go`}>{action.label}</ActionLink>
         {minutes(action.estimatedMinutes)}
@@ -58,6 +62,9 @@ export default function NextActionCard({ action, primary = true, compact = true,
         </div>
       )}
       {!action.alternatives.length && extra && <div className="studio-row">{extra}</div>}
+      {CHOOSE.has(action.kind) && (
+        <p className="next-choose"><a href={hashFor('learn/courses')}>Or choose any course yourself</a> — nothing is locked.</p>
+      )}
       {compact && (action.reasons.length || action.warnings.length) ? (
         <details className="path-why">
           <summary>Why this?</summary>

@@ -97,18 +97,19 @@ test('the faded example: blanks are questions, and the finished example appears 
   await expect(page.locator(`${VISIBLE}.lesson-tempting`).first()).toContainText('The tempting shortcut');
 });
 
-test('finishing the written lessons of Calculus I: Home names the unwritten lesson, offers practice and the next course, and the course page keeps four statuses apart', async ({ page }) => {
+test('finishing the written lessons of Calculus I: Home moves on to Calculus II, names the unwritten lesson, offers practice, and the course page keeps four statuses apart', async ({ page }) => {
   await seed(page, { completed: calc1, placement: { course: 'calculus-1', source: 'manual', at: T - 10 } });
   await page.goto('./#home', { waitUntil: 'networkidle' });
   const gap = firstGap(cur.courseById['calculus-1']).title;
-  await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('You finished the written lessons');
-  await expect(page.locator(`${VISIBLE}.home-hero-title`)).toHaveText(`Next lesson not written yet: ${gap}`);
-  await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).toContainText('Practise Calculus I');
-  await expect(page.locator(`${VISIBLE}.home-hero a`, { hasText: /^Continue to Calculus II/ })).toBeVisible();
+  await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('Next course on your path');
+  await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).toContainText(/^Continue to Calculus II/);
+  await expect(page.locator(`${VISIBLE}.home-hero .next-notice`)).toContainText(`Not written yet in Calculus I — Limits and Derivatives: “${gap}”`);
+  await expect(page.locator(`${VISIBLE}.home-hero a`, { hasText: /^Practise Calculus I/ })).toBeVisible();
 
   await page.goto('./#learn/course/calculus-1', { waitUntil: 'networkidle' });
   const finish = page.locator(`${VISIBLE}.course-finish`);
-  await expect(finish).toContainText(`Next lesson not written yet: ${gap}`);
+  await expect(finish).toContainText(`“${gap}”`);
+  await expect(finish.locator('.studio-btn-primary')).toContainText(/^Continue to Calculus II/);
   const done = page.locator(`${VISIBLE}.course-completion`);
   await done.locator('summary').click();
   // (The colon after each term is drawn by CSS, so it is not in the text.)
@@ -120,7 +121,7 @@ test('finishing the written lessons of Calculus I: Home names the unwritten less
   // My Progress gives the same next step as Home.
   await page.goto('./#progress/overview', { waitUntil: 'networkidle' });
   const next = page.locator(`${VISIBLE}[aria-labelledby="prog-next"]`);
-  await expect(next.locator('.studio-btn-primary')).toContainText('Practise Calculus I');
+  await expect(next.locator('.studio-btn-primary')).toContainText(/^Continue to Calculus II/);
   await expect(next).toContainText(/Before Calculus I .* counts as ready/);
 });
 

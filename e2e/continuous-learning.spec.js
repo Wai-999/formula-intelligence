@@ -77,9 +77,11 @@ test.describe('A: Next, lesson by lesson, through a course', () => {
     }
     const done = Object.fromEntries([...lessonsOf(...before), ...order.slice(0, -1)].map((id, i) => [id, { completed: i + 1 }]));
     const expected = getNextLearningAction(cur, { state: { lessons: done, status: {} }, from: { lessonId: order.at(-1) } });
-    expect(expected.kind).toBe('content-gap');
-    const finish = page.locator(`${VISIBLE}.lesson-pager a`, { hasText: /^Next lesson not written yet/ });
-    await expect(finish).toContainText(expected.label);
+    // The course's unwritten lessons are named, and the path moves on to the next course.
+    expect(expected.kind).toBe('course-transition');
+    expect(expected.evidence.ruleId).toBe('content-gap');
+    const finish = page.locator(`${VISIBLE}.lesson-pager a`, { hasText: /^Finish course & continue/ });
+    await expect(finish).toContainText(courseTitle(cur.courseOf[expected.target.params.lessonId]));
     await expect(finish).toHaveAttribute('href', `#learn/lesson/${expected.target.params.lessonId}`);
   });
 
@@ -98,7 +100,7 @@ test.describe('A: Next, lesson by lesson, through a course', () => {
   });
 });
 
-test('B: answering the last checkpoint of a course names the unwritten next lesson, and the next course is one click away', async ({ page }) => {
+test('B: answering the last checkpoint of a course moves on to the next course and names the unwritten next lesson', async ({ page }) => {
   const [first, second] = written;
   const order = cur.courseLessons[first];
   await seed(page, { completed: order.slice(0, -1) });
@@ -106,8 +108,9 @@ test('B: answering the last checkpoint of a course names the unwritten next less
   await answerCheckpoint(page, order.at(-1));
   const done = page.locator(`${VISIBLE}.lesson-complete`);
   await expect(done).toBeVisible();
-  await expect(done).toContainText('Next lesson not written yet');
+  await expect(done.locator('.next-notice')).toContainText(`Not written yet in ${courseTitle(first)}`);
   await expect(done).toContainText(`written lessons of ${courseTitle(first)}`);
+  await expect(done.locator('.path-next-go')).toContainText(new RegExp(`^Continue to ${escape(courseTitle(second))}: `));
   await expect(done).toContainText('so the course is not complete'); // planned lessons remain
   await expect(done).not.toContainText(/mastered|course complete/i);
   const go = done.getByRole('link', { name: new RegExp(`^Continue to ${escape(courseTitle(second))}: `) });
@@ -143,12 +146,12 @@ test('D: the last written course ends the path honestly, with useful next choice
   const done = page.locator(`${VISIBLE}.lesson-complete`);
   await expect(done).toContainText('every written lesson on');
   await expect(done).toContainText('planned lessons on this path are not written yet');
-  await expect(done).toContainText('Next lesson not written yet');
+  await expect(done).toContainText('Not written yet in');
   await done.getByRole('link', { name: 'See your whole path' }).click();
   await expect(page.locator('h1.page-title')).toHaveText('Your learning path');
 });
 
-test('E: Home after finishing any course names what is not written and offers the next course — never back to the start', async ({ browser }) => {
+test('E: Home after finishing any course moves on to the next course, naming what is not written — never back to the start', async ({ browser }) => {
   for (const [i, c] of written.slice(0, -1).entries()) {
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -156,17 +159,13 @@ test('E: Home after finishing any course names what is not written and offers th
     await page.goto('./#home', { waitUntil: 'networkidle' });
     const action = getNextLearningAction(cur, { state: { lessons: Object.fromEntries(lessonsOf(c).map((id, k) => [id, { completed: k + 1 }])), status: {} } });
     const next = cur.courseLessons[written[i + 1]][0];
-    if (action.kind === 'content-gap') {
-      await expect(heroTitle(page), `after ${c}`).toHaveText(action.headline);
-      await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('You finished the written lessons');
-      await expect(page.locator(`${VISIBLE}.home-hero a[href="#learn/lesson/${next}"]`), `after ${c}: next course offered`).toHaveCount(1);
-    } else {
-      await expect(heroTitle(page), `after ${c}`).toHaveText(title(next));
-      await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('Next course on your path');
-    }
+    expect(action.kind, `after ${c}`).toBe('course-transition');
+    await expect(heroTitle(page), `after ${c}`).toHaveText(title(next));
+    await expect(page.locator(`${VISIBLE}#home-continue`)).toHaveText('Next course on your path');
     await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).toHaveCount(1);
-    // Practising the course just finished is not "back to the start"; a jump to the route's first lesson from a later course would be.
-    if (c !== route.courses[0]) await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`)).not.toHaveAttribute('href', `#learn/lesson/${cur.courseLessons[route.courses[0]][0]}`);
+    await expect(page.locator(`${VISIBLE}.home-hero .studio-btn-primary`), `after ${c}: the next course is the main action`).toHaveAttribute('href', `#learn/lesson/${next}`);
+    if (action.notice) await expect(page.locator(`${VISIBLE}.home-hero .next-notice`), `after ${c}: the gap is named`).toContainText(`Not written yet in ${courseTitle(c)}`);
+    await expect(page.locator(`${VISIBLE}.home-hero .next-choose a`)).toHaveAttribute('href', '#learn/courses');
     await context.close();
   }
 });

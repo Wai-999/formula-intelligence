@@ -65,6 +65,23 @@
   max-width: 68ch;
 }
 
+/* What a finished course still lacks: visible beside the button, not only under "Why this?". */
+.next-notice {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--warning);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 68ch;
+}
+
+.next-choose {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
 .next-minutes {
   color: var(--text-muted);
   font-size: 13px;

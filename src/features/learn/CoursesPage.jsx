@@ -76,7 +76,7 @@ export default function CoursesPage() {
                         {placement?.course === c.id && <span className="studio-chip studio-chip-accent">Your starting point</span>}
                       </span>
                       {total > 0 && (
-                        <span className="studio-muted">{done} of {total} written lessons completed</span>
+                        <span className="studio-muted">{done} of {total} written lessons finished</span>
                       )}
                     </a>
                   );

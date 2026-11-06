@@ -71,7 +71,7 @@ const YES_NO = (v) => (v ? 'Yes' : 'Not yet');
  */
 function CompletionStatus({ completion: c }) {
   const rows = [
-    ['Written lessons finished', c.availableContentComplete, `${c.checked} of ${c.written} checkpoints answered`],
+    ['Written lessons finished', c.availableContentComplete, `${c.checked - c.marked} of ${c.written} checkpoints answered${c.marked ? `, ${c.marked} marked finished by you` : ''}`],
     ['Whole course written', c.courseCurriculumComplete, c.planned ? `${c.planned} planned lessons are not written yet` : 'every planned lesson is written'],
     ['Ready for what comes next', c.courseReady, `${c.shown} of ${c.exitSkills} exit skills shown at proficient or above`],
     ['Mastery of its exit skills', c.mastered, `${c.masteredSkills} of ${c.exitSkills} at the mastery level (right on different days, without hints)`],
@@ -175,7 +175,9 @@ export default function CoursePage({ courseId }) {
           <dl className="course-signals" aria-label="Your progress in this course">
             <div>
               <dt>Written lessons</dt>
-              <dd>{authored.length ? `${done} of ${authored.length} checked (checkpoint answered)` : 'No written lessons available yet'}</dd>
+              <dd>{!authored.length ? 'No written lessons available yet'
+                : journey.marked.length ? `${done} of ${authored.length} finished (${done - journey.marked.length} with the checkpoint answered, ${journey.marked.length} marked finished by you)`
+                  : `${done} of ${authored.length} checked (checkpoint answered)`}</dd>
             </div>
             <div>
               <dt>Course content</dt>
@@ -197,7 +199,9 @@ export default function CoursePage({ courseId }) {
           <section className="studio-callout studio-callout-ok course-finish" aria-labelledby="course-finish-h">
             <h2 id="course-finish-h" className="studio-h3">You finished the available lessons in this course</h2>
             <p>
-              All {authored.length} written lesson{authored.length === 1 ? '' : 's'} have their checkpoint answered.{' '}
+              {journey.marked.length
+                ? `All ${authored.length} written lesson${authored.length === 1 ? ' is' : 's are'} finished (${journey.marked.length} marked finished by you without the checkpoint).`
+                : `All ${authored.length} written lesson${authored.length === 1 ? '' : 's'} have their checkpoint answered.`}{' '}
               {journey.planned > 0
                 ? `More lessons are planned (${journey.planned}, listed below as “Not written yet”); the full course is not yet complete.`
                 : 'Every planned lesson of this course is written.'}{' '}
@@ -273,7 +277,7 @@ export default function CoursePage({ courseId }) {
                           </span>
                         )}
                         {rec?.completed
-                          ? <span className="studio-chip studio-chip-ok"><i className="ti ti-check" aria-hidden="true" /> Checkpoint {rec.checkpoint.correct}/{rec.checkpoint.total}</span>
+                          ? <span className="studio-chip studio-chip-ok"><i className="ti ti-check" aria-hidden="true" /> {rec.checkpoint ? `Checkpoint ${rec.checkpoint.correct}/${rec.checkpoint.total}` : 'Marked finished'}</span>
                           : rec?.opened ? (target?.loc.lessonId === id ? null : <span className="studio-chip studio-chip-accent">In progress</span>) : <span className="studio-chip">Not started</span>}
                       </span>
                     </li>

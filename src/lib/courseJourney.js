@@ -20,6 +20,8 @@ export function courseJourney(course, lessons, status = {}) {
   const authored = course.units.flatMap((u) => u.lessons);
   const planned = course.units.reduce((n, u) => n + u.planned.length, 0);
   const checked = authored.filter((id) => lessons[id]?.completed);
+  // Finished by the learner's own mark, without the checkpoint: counted as finished, said separately.
+  const marked = checked.filter((id) => lessons[id]?.marked);
   const skills = [...new Set(course.units.flatMap((u) => u.exitCompetencies))];
   const assessed = skills.filter((c) => status[c] && status[c].level !== 'not-started');
   const demonstrated = skills.filter((c) => SHOWN_AS_DEMONSTRATED.has(status[c]?.level));
@@ -33,6 +35,7 @@ export function courseJourney(course, lessons, status = {}) {
   return {
     authored,
     checked,
+    marked,
     planned,
     // Every written lesson's checkpoint answered. Says nothing about planned
     // lessons or about mastery: those are reported separately.

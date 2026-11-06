@@ -14,15 +14,18 @@
 //   bridge-after-errors    recent wrong answers in a lesson that names a
 //                          short bridge to what it builds on
 //   resume-recent          the last automatically saved step, unfinished
-//   next-authored-lesson   the next written lesson on the path
-//   prerequisite-bridge    a written prerequisite course left unfinished
-//   content-gap            the next lesson of this course is planned, not
-//                          written: say so, and offer practice or the next
-//                          written course — never skip it silently
+//   next-authored-lesson   the next written lesson, forward from where the
+//                          learner is
+//   content-gap            this course's written lessons are done but more are
+//                          planned: move on to the next course, and say in a
+//                          visible notice what is not written yet
 //   outline-course         a course with no written lessons at all
-//   next-authored-course   the next written course, after a fully written one
+//   next-authored-course   the next written course
 //   path-finished          nothing written is left on the path
-// Reviews that are due never block progress: they are offered alongside.
+// The learner leads (the owner's direction, 2026-11-05): a finished course
+// moves on by itself; practice, an unfinished prerequisite and a skipped
+// lesson are offered as other choices, never put in the way. Reviews that are
+// due never block progress either.
 
 import { STATUS, recommend, buildsOn, pathFor } from './learningPath.js';
 
@@ -149,6 +152,18 @@ function skillsNotYetShown(cur, state, courseId) {
   return skills.filter((c) => !DEMONSTRATED.has(state.status?.[c]?.level));
 }
 
+/** What a course still lacks, said where the learner sees it (not only under "Why this?"). */
+export function gapNotice(course) {
+  const gap = firstGap(course);
+  const planned = plannedIn(course);
+  if (!planned) return null;
+  const more = planned - 1;
+  return `Not written yet in ${course.title}: ${gap ? `“${gap.title}”` : 'its next lesson'}${more > 0 ? ` and ${more} more planned lesson${more === 1 ? '' : 's'}` : ''}, so the full course is not complete. Your progress moves on; the course will be here when they are written.`;
+}
+
+/** A path-engine alternative as an action choice. */
+const altFromRec = (x) => ({ kind: x.kind === 'bridge' ? ACTION.BRIDGE : x.kind === 'review' ? ACTION.REVIEW : ACTION.LESSON, label: x.label, target: x.target });
+
 const reviewAction = (due) => ({
   kind: ACTION.REVIEW,
   label: `Review ${due.length} skill${due.length === 1 ? '' : 's'} due today`,
@@ -257,12 +272,14 @@ export function getNextLearningAction(cur, { state, from = {}, resume = null, du
     a.headline = resumable.lesson.title;
     a.estimatedMinutes = minutesLeft(cur, resumable.lesson.id, resumable.loc.sectionId);
     a.reasons.push(`The lesson you studied last, “${resumable.lesson.title}”, is not finished yet.`);
-    return finish(a, [rec.target ? { kind: ACTION.LESSON, label: rec.label, target: rec.target } : null], due);
+    // The path's next step, unless it is the lesson being resumed.
+    const onward = rec.target && rec.target.params?.lessonId !== resumable.lesson.id ? { kind: ACTION.LESSON, label: rec.label, target: rec.target } : null;
+    return finish(a, [onward], due);
   }
 
   // 4. What the learning path says, made honest about unwritten lessons.
   const fromCourse = rec.currentCourseId ? cur.courseById[rec.currentCourseId] : null;
-  const leavingCourse = [STATUS.TRANSITION, STATUS.BRIDGE, STATUS.END].includes(rec.status)
+  const leavingCourse = [STATUS.TRANSITION, STATUS.END].includes(rec.status)
     && fromCourse && (cur.courseLessons[fromCourse.id] ?? []).length > 0
     && (cur.courseLessons[fromCourse.id] ?? []).every((id) => isDone(state, id) || id === from.lessonId);
 
@@ -285,18 +302,6 @@ export function getNextLearningAction(cur, { state, from = {}, resume = null, du
     return finish(a, extra, due);
   }
 
-  if (rec.status === STATUS.BRIDGE) {
-    const a = base(ACTION.BRIDGE, 'prerequisite-bridge', rec);
-    a.warnings.push(...notes);
-    a.label = rec.label;
-    a.target = lessonTarget(rec.target.params.lessonId);
-    a.headline = titleOf(cur, rec.target.params.lessonId);
-    a.estimatedMinutes = cur.lessonById[rec.target.params.lessonId]?.minutes ?? null;
-    a.reasons.push(...rec.reasons);
-    a.evidence = { ruleId: 'prerequisite-bridge', prerequisiteIds: [rec.bridgeCourseId] };
-    return finish(a, rec.alternatives.map((x) => ({ kind: ACTION.LESSON, label: x.label, target: x.target })), due);
-  }
-
   if (rec.status === STATUS.UNAVAILABLE) {
     const a = base(ACTION.GAP, 'outline-course', rec);
     a.warnings.push(...notes);
@@ -317,63 +322,55 @@ export function getNextLearningAction(cur, { state, from = {}, resume = null, du
     a.headline = `Next course: ${courseTitle(cur, rec.nextCourseId)}`;
     a.estimatedMinutes = cur.lessonById[lessonId]?.minutes ?? null;
     a.reasons.push(...rec.reasons);
-    return finish(a, rec.alternatives.map((x) => ({ kind: ACTION.LESSON, label: x.label, target: x.target })), due);
+    if (fromCourse && plannedIn(fromCourse) > 0) a.notice = gapNotice(fromCourse);
+    return finish(a, rec.alternatives.map(altFromRec), due);
   }
 
   return finish(...pathFinished(cur, state, rec, notes, due), due);
 }
 
 /**
- * The written lessons of `course` are done but more are planned. The next
- * lesson is named as not written; the primary action is to make this
- * course's skills independent (applied problems on its lessons) while any is
- * not yet shown, and otherwise the next written step on the path — stated
- * as a choice, with what it assumes.
+ * The written lessons of `course` are done but more are planned. The learner
+ * moves on: the next course on the path is the primary action, and a visible
+ * notice names what is not written yet. Practising this course's skills, a
+ * bridge to an unfinished prerequisite and a skipped lesson are other
+ * choices. At the end of the path, the finished state names the gap too.
  */
 function contentGap(cur, state, rec, course, notes, due) {
   const gap = firstGap(course);
   const written = cur.courseLessons[course.id];
   const planned = plannedIn(course);
-  const gapReason = `You have done the ${written.length} written lesson${written.length === 1 ? '' : 's'} of ${course.title}. The next one${gap ? `, “${gap.title}” (${gap.unitTitle})` : ''}, is planned but not written yet — ${planned} planned lesson${planned === 1 ? '' : 's'} in all, so the course is not complete.`;
+  const gapReason = `You have finished the ${written.length} written lesson${written.length === 1 ? '' : 's'} of ${course.title}. The next one${gap ? `, “${gap.title}” (${gap.unitTitle})` : ''}, is planned but not written yet — ${planned} planned lesson${planned === 1 ? '' : 's'} in all, so the course is not complete.`;
   const notYet = skillsNotYetShown(cur, state, course.id);
   const practiceLesson = written.find((l) => cur.lessonById[l].competencies.some((c) => notYet.includes(c))) ?? null;
-  // The end of the path, with nothing left to practise: the finished state, which names the gap too.
-  if (!practiceLesson && rec.status === STATUS.END) {
-    const [end, extra] = pathFinished(cur, state, rec, notes, due);
-    end.reasons.unshift(gapReason);
-    end.evidence = { ruleId: 'path-finished', courseId: course.id, gapIds: gap ? [gap.unitId] : [] };
-    return [end, extra];
-  }
-  const a = base(ACTION.GAP, 'content-gap', rec);
-  a.warnings = [...notes, ...rec.warnings.filter((w) => !w.includes('full course is not complete'))];
-  a.headline = `Next lesson not written yet: ${gap?.title ?? 'more lessons are planned'}`;
-  a.evidence = { ruleId: 'content-gap', courseId: course.id, gapIds: gap ? [gap.unitId] : [] };
-  a.reasons.push(gapReason);
-  const onward = rec.target ? { kind: rec.status === STATUS.END ? ACTION.FINISHED : ACTION.TRANSITION, label: rec.label, target: rec.target.page === 'learn/lesson' ? lessonTarget(rec.target.params.lessonId) : rec.target, estimatedMinutes: rec.target.page === 'learn/lesson' ? cur.lessonById[rec.target.params.lessonId]?.minutes ?? null : null } : null;
   const practice = practiceLesson ? {
     kind: ACTION.PRACTICE,
-    label: `Practise ${course.title} skills: “${titleOf(cur, practiceLesson)}” — Use it`,
+    label: `Practise ${course.title} first: “${titleOf(cur, practiceLesson)}” — Use it`,
     target: lessonTarget(practiceLesson, 'use'),
     estimatedMinutes: 15,
   } : null;
-  const outline = { kind: ACTION.LESSON, label: `See what is planned in ${course.title}`, target: { page: 'learn/course', params: { courseId: course.id } } };
-  if (practice) {
-    Object.assign(a, { label: practice.label, target: practice.target, estimatedMinutes: practice.estimatedMinutes });
-    a.reasons.push(`Until it is written, the most useful step is to make what you learned work without help: ${notYet.length} of this course’s skills ${notYet.length === 1 ? 'is' : 'are'} not yet shown at proficient (3 different questions right, one of them harder).`);
-    if (onward) {
-      a.reasons.push(`Or go on: ${onward.label}. It may assume the unwritten lessons, so expect gaps.`);
-      a.reasons.push(...rec.reasons.filter((r) => !r.startsWith(`You have answered the checkpoint of every written lesson in ${course.title}`)));
-    }
-    return [a, [onward, outline]];
+  const others = [...rec.alternatives.map(altFromRec), practice];
+  if (rec.status === STATUS.END || !rec.target || rec.target.page !== 'learn/lesson') {
+    const [end, extra] = pathFinished(cur, state, rec, notes, due);
+    end.reasons.unshift(gapReason);
+    end.notice = gapNotice(course);
+    end.evidence = { ruleId: 'path-finished', courseId: course.id, gapIds: gap ? [gap.unitId] : [] };
+    // At the path's end the main action is already practice or review; keep the project and the whole path.
+    return [end, extra];
   }
-  if (onward) {
-    Object.assign(a, { label: onward.label, target: onward.target, estimatedMinutes: onward.estimatedMinutes });
-    a.reasons.push(`Your answers already show this course’s written skills at proficient or above, so the next written step on your path is: ${onward.label}.`);
-    a.reasons.push(...rec.reasons.filter((r) => !r.startsWith(`You have answered the checkpoint of every written lesson in ${course.title}`)));
-  } else {
-    Object.assign(a, outline);
-  }
-  return [a, [outline]];
+  const lessonId = rec.target.params.lessonId;
+  const a = base(ACTION.TRANSITION, 'content-gap', rec);
+  a.warnings = [...notes, ...rec.warnings.filter((w) => !w.includes('full course is not complete'))];
+  a.headline = `Next course: ${courseTitle(cur, rec.nextCourseId)}`;
+  a.label = rec.label;
+  a.target = lessonTarget(lessonId);
+  a.estimatedMinutes = cur.lessonById[lessonId]?.minutes ?? null;
+  a.notice = gapNotice(course);
+  a.evidence = { ruleId: 'content-gap', courseId: course.id, gapIds: gap ? [gap.unitId] : [] };
+  a.reasons.push(gapReason);
+  a.reasons.push(...rec.reasons.filter((r) => !r.startsWith(`You have finished every written lesson in ${course.title}`)));
+  if (practice) a.reasons.push(`If you would like to make ${course.title}’s skills stick first, practise them: ${notYet.length} ${notYet.length === 1 ? 'is' : 'are'} not yet shown at proficient (3 different questions right, one of them harder).`);
+  return [a, others];
 }
 
 /** Nothing written is left on the path: say so, with what is not written and a sensible next action. */
@@ -417,6 +414,7 @@ export function courseCompletion(cur, state, courseId) {
     written: written.length,
     planned: plannedIn(course),
     checked: written.filter((id) => isDone(state, id)).length,
+    marked: written.filter((id) => isDone(state, id) && state.lessons?.[id]?.marked).length,
     exitSkills: exit.length,
     shown: shown.length,
     masteredSkills: masteredSkills.length,

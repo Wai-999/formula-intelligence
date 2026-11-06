@@ -14,14 +14,19 @@
 //   pathId     the learner's chosen path, or null for the default
 //   weak       competency ids whose answers are under half right (optional)
 //
-// "Done" means a lesson's checkpoint was answered: the app's only completion
-// signal. Nothing here measures or claims mastery.
+// "Done" means a lesson's checkpoint was answered, or the learner marked the
+// lesson finished themselves. Nothing here measures or claims mastery.
+//
+// The learner leads: "next" always moves forward from where they are, a
+// finished course moves on to the next course, and an unfinished
+// prerequisite or a skipped lesson is offered, never imposed (the owner's
+// direction, 2026-11-05: "learn any course and any steps I want").
 
 export const STATUS = {
   CONTINUE: 'continue-lesson', // the next lesson is in the same unit, or this lesson is unfinished
   NEXT_UNIT: 'finish-unit', // the next lesson starts a later unit of the same course
   TRANSITION: 'transition-course', // this course's written lessons are done; on to the next course
-  BRIDGE: 'bridge', // a prerequisite needs attention first (skipping ahead stays possible)
+  BRIDGE: 'bridge', // kept for stored and test states; recommendations offer bridges as alternatives
   END: 'pathway-end', // no written lesson left on this path
   UNAVAILABLE: 'content-unavailable', // the course asked about has no written lessons
 };
@@ -239,11 +244,19 @@ function blank(pathId) {
 function fromFinishedCourse(cur, state, path, courseId, rec, pending = null) {
   const route = routeFor(cur, path);
   const course = cur.courseById[courseId];
-  rec.courseComplete = !pending;
+  const skipped = (cur.courseLessons[courseId] ?? []).filter((id) => !isDone(state, id) && id !== pending);
+  rec.courseComplete = !pending && !skipped.length;
   const planned = plannedCount(cur, courseId);
-  rec.reasons.push(pending
-    ? `This is the last written lesson of ${course.title} you have not finished; after its checkpoint, the course moves on.`
-    : `You have answered the checkpoint of every written lesson in ${course.title}.`);
+  rec.reasons.push(skipped.length
+    ? `You have reached the end of the written lessons of ${course.title}.`
+    : pending
+      ? `This is the last written lesson of ${course.title} you have not finished; after it, the course moves on.`
+      : `You have finished every written lesson in ${course.title}.`);
+  if (skipped.length) {
+    rec.skippedLessons = skipped;
+    rec.reasons.push(`You skipped ${skipped.length} of its written lessons (${listText(skipped.map((id) => `“${lessonTitle(cur, id)}”`))}); ${skipped.length === 1 ? 'it is' : 'they are'} there whenever you want ${skipped.length === 1 ? 'it' : 'them'}.`);
+    rec.alternatives.push({ kind: 'earlier', target: lessonTarget(skipped[0]), label: `Go back to a lesson you skipped: ${lessonTitle(cur, skipped[0])}` });
+  }
   if (planned > 0) {
     rec.warnings.push(`${course.title} has ${planned} more planned lesson${planned === 1 ? '' : 's'} that ${planned === 1 ? 'is' : 'are'} not written yet, so the full course is not complete.`);
   }
@@ -266,16 +279,14 @@ function fromFinishedCourse(cur, state, path, courseId, rec, pending = null) {
     rec.reasons.push(`Some answers on skills ${target.title} uses are under half right; a short review in Practice would help first.`);
     rec.alternatives.push({ kind: 'review', target: { page: 'practice/review', params: {} }, label: 'Review weak skills in Practice', skills: ready.review });
   }
+  // An unfinished prerequisite is offered first among the other choices,
+  // never put in the way: the next course is the primary action.
   if (ready.bridge) {
-    rec.status = STATUS.BRIDGE;
     rec.bridgeCourseId = ready.bridge.courseId;
-    rec.target = lessonTarget(ready.bridge.lessonId);
-    rec.label = `Bridge: ${lessonTitle(cur, ready.bridge.lessonId)}`;
-    rec.reasons.push(ready.bridge.why === 'weak'
-      ? `Your answers on ${courseTitle(cur, ready.bridge.courseId)} skills that ${target.title} uses are under half right, so a short bridge comes first.`
-      : `${target.title} builds on ${courseTitle(cur, ready.bridge.courseId)}, which still has unfinished written lessons.`);
-    rec.alternatives.push({ kind: 'skip-ahead', target: lessonTarget(next.lessonId), label: `Skip ahead to ${target.title}` });
-    return rec;
+    rec.alternatives.unshift({ kind: 'bridge', target: lessonTarget(ready.bridge.lessonId), label: `Bridge first: ${courseTitle(cur, ready.bridge.courseId)} — ${lessonTitle(cur, ready.bridge.lessonId)}` });
+    rec.warnings.push(ready.bridge.why === 'weak'
+      ? `Some of your answers on ${courseTitle(cur, ready.bridge.courseId)} skills that ${target.title} uses are under half right. A short bridge is offered; nothing is locked.`
+      : `${target.title} builds on ${courseTitle(cur, ready.bridge.courseId)}, which still has unfinished written lessons. A bridge is offered; nothing is locked.`);
   }
   rec.status = STATUS.TRANSITION;
   rec.target = lessonTarget(next.lessonId);
@@ -372,26 +383,26 @@ function setCurrent(cur, rec, lessonId) {
   rec.currentUnitId = cur.unitOf[lessonId]?.id ?? null;
 }
 
-/** Next unfinished written lesson in the same course after `lessonId`, else an earlier unfinished one. */
+/**
+ * Next unfinished written lesson in the same course after `lessonId`. Never
+ * an earlier one: going back is the learner's choice, offered as an
+ * alternative when the course ends (fromFinishedCourse).
+ */
 function withinCourse(cur, state, lessonId) {
   const order = cur.courseLessons[cur.courseOf[lessonId]] ?? [];
   const i = order.indexOf(lessonId);
   const after = order.slice(i + 1).find((id) => !isDone(state, id));
-  if (after) return { lessonId: after, earlier: false };
-  const before = order.slice(0, Math.max(0, i)).find((id) => !isDone(state, id));
-  return before ? { lessonId: before, earlier: true } : null;
+  return after ? { lessonId: after, earlier: false } : null;
 }
 
 function sameCourseStep(cur, from, step, rec) {
   const unitChange = cur.unitOf[step.lessonId].id !== cur.unitOf[from].id;
-  rec.status = unitChange && !step.earlier ? STATUS.NEXT_UNIT : STATUS.CONTINUE;
+  rec.status = unitChange ? STATUS.NEXT_UNIT : STATUS.CONTINUE;
   rec.nextLessonId = step.lessonId;
   rec.target = lessonTarget(step.lessonId);
   rec.label = `Next lesson: ${lessonTitle(cur, step.lessonId)}`;
   const course = cur.courseById[cur.courseOf[from]];
-  if (step.earlier) {
-    rec.reasons.push(`“${lessonTitle(cur, step.lessonId)}” is the written lesson of ${course.title} whose checkpoint you have not answered yet.`);
-  } else if (unitChange) {
+  if (unitChange) {
     const n = course.units.findIndex((u) => u.id === cur.unitOf[step.lessonId].id) + 1;
     rec.reasons.push(`Next written lesson in ${course.title}, starting Unit ${n}: ${cur.unitOf[step.lessonId].title}.`);
   } else {
@@ -444,7 +455,9 @@ function forCourse(cur, state, path, courseId) {
     return rec;
   }
   const order = cur.courseLessons[courseId];
-  const first = order.find((id) => !isDone(state, id));
+  // Onward from the furthest lesson finished here; a lesson skipped before it only when nothing is left after it.
+  const furthest = order.reduce((k, id, i) => (isDone(state, id) ? i : k), -1);
+  const first = order.slice(furthest + 1).find((id) => !isDone(state, id)) ?? order.find((id) => !isDone(state, id));
   if (!first) {
     rec.currentLessonId = order[order.length - 1];
     rec.currentUnitId = cur.unitOf[rec.currentLessonId].id;
@@ -456,7 +469,9 @@ function forCourse(cur, state, path, courseId) {
   rec.target = lessonTarget(first);
   const started = order.some((id) => isDone(state, id));
   rec.label = `${started ? 'Continue' : 'Start'}: ${lessonTitle(cur, first)}`;
-  rec.reasons.push(started ? `The first written lesson of ${course.title} whose checkpoint you have not answered yet.` : `The first written lesson of ${course.title}.`);
+  rec.reasons.push(!started ? `The first written lesson of ${course.title}.`
+    : order.indexOf(first) > furthest ? `The next written lesson of ${course.title} after the ones you have finished.`
+      : `The written lesson of ${course.title} you skipped; the ones after it are finished.`);
   if (!started) {
     const ready = readiness(cur, state, route, courseId);
     outlineWarning(cur, course, ready.outline, rec);
@@ -490,21 +505,22 @@ function trackStep(cur, state, path, rec, fromLessonId = null) {
 }
 
 /**
- * Where the learner stands on the route, for Home: a starting point chosen or
- * placed more recently than any finished lesson wins (their choice is
- * respected); otherwise the furthest course with a finished lesson, so
- * reviewing an old lesson never drags the recommendation back; otherwise the
- * placement; otherwise the start of the route.
+ * Where the learner stands, for Home. Their latest choice wins: a starting
+ * point chosen (or placed) after the most recently finished lesson; else that
+ * lesson, so Home moves on from where they actually are — in whatever course
+ * they chose — rather than from the furthest course or the first gap (a
+ * lesson's `completed` is its first finish, so re-answering an old
+ * checkpoint never drags Home back); else the placement; else the start of
+ * the route.
  */
 export function anchorCourse(cur, state, route) {
-  const latest = Object.values(state.lessons ?? {}).reduce((t, r) => Math.max(t, r?.completed ?? 0), 0);
-  const p = state.placement;
-  if (p && cur.courseById[p.course] && (!latest || (p.at ?? 0) >= latest)) return { courseId: p.course, why: 'placement' };
-  let best = -1;
-  for (const id of Object.keys(state.lessons ?? {})) {
-    if (isDone(state, id) && cur.courseOf[id]) best = Math.max(best, routeIndex(route, cur.courseOf[id]));
+  let latest = null;
+  for (const [id, r] of Object.entries(state.lessons ?? {})) {
+    if (r?.completed && cur.courseOf[id] && (!latest || r.completed > latest.at)) latest = { lessonId: id, at: r.completed };
   }
-  if (best >= 0) return { courseId: route.courses[best], why: 'progress' };
+  const p = state.placement;
+  if (p && cur.courseById[p.course] && (!latest || (p.at ?? 0) >= latest.at)) return { courseId: p.course, why: 'placement' };
+  if (latest) return { courseId: cur.courseOf[latest.lessonId], lessonId: latest.lessonId, why: 'progress' };
   return { courseId: route.courses[0], why: 'start' };
 }
 
@@ -512,6 +528,12 @@ function forStart(cur, state, path, rec) {
   if (path.kind === 'track') return trackStep(cur, state, path, rec);
   const route = routeFor(cur, path);
   const anchor = anchorCourse(cur, state, route);
+  if (anchor.lessonId) {
+    // Onward from the lesson finished last: its course's next lesson, or the next course.
+    const out = afterLesson(cur, state, path, anchor.lessonId);
+    out.anchor = anchor;
+    return out;
+  }
   const out = forCourse(cur, state, path, anchor.courseId);
   if (anchor.why === 'placement' && out.status === STATUS.UNAVAILABLE && state.placement) {
     out.reasons.unshift(`Your starting point, ${courseTitle(cur, anchor.courseId)}, has no written lessons yet.`);
