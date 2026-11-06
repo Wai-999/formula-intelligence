@@ -27,6 +27,7 @@ export const PHASE5_LESSONS = [
 export const PHASE6_LESSONS = [
   { id: 'pa-exponents', area: 'Mathematics foundations', why: '15 written lessons build on exponents and roots (exponentials, polynomials, norms, big-O, the standard error); placement items dx.a11–a13 test them.' },
   { id: 'ps-center-spread', area: 'Statistics', why: 'Six written lessons build on describing data, including the sampling-distribution priority lesson, which had no bridge to fall back on; placement items dx.s1 and dx.s2 test it.' },
+  { id: 'ps-probability-rules', area: 'Probability', why: 'Bayes’ theorem, random variables and discrete probability build on the three rules, the Bayes lesson had no bridge to fall back on, and placement items dx.s3 and dx.s4 test them.' },
 ];
 
 /** Every lesson held to the professor contract. */
