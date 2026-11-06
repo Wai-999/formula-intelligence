@@ -75,8 +75,8 @@ export const COURSES = [
         objectives: ['Evaluate expressions with the order of operations', 'Use exponent rules and square roots', 'Write numbers in scientific notation'],
         exitCompetencies: ['arith.order-ops', 'arith.exponents'],
         prerequisites: ['c.integers'],
-        lessons: [],
-        planned: ['Order of operations', 'Exponents and radicals', 'Scientific notation'],
+        lessons: ['pa-exponents'],
+        planned: ['Order of operations', 'Scientific notation'],
       },
       {
         id: 'pa-equations',

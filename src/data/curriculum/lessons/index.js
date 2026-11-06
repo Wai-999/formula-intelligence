@@ -21,6 +21,7 @@ const AI_DRAFT = {
 
 // Lessons added in phase 5 of the 80/20 upgrade carry their own date.
 const PHASE5_DRAFT = { ...AI_DRAFT, authored: '2026-11-05' };
+const PHASE6_DRAFT = { ...AI_DRAFT, authored: '2026-11-06' };
 
 export const LESSONS = [
   {
@@ -41,6 +42,26 @@ export const LESSONS = [
     models: [],
     review: AI_DRAFT,
     load: () => import('./pa-ratios-rates.js'),
+  },
+  {
+    id: 'pa-exponents',
+    title: 'Exponents and roots',
+    course: 'prealgebra',
+    unit: 'pa-expressions',
+    minutes: 35,
+    difficulty: 'introductory',
+    summary: 'Powers as repeated multiplication, the rules that follow from counting factors, what zero and negative exponents mean, and roots as fractional powers — with the sums that break every rule.',
+    competencies: ['arith.exponents'],
+    concepts: ['c.exponents'],
+    prerequisites: ['c.expressions', 'c.integers'],
+    formulas: ['f.exponent-rules', 'f.negative-exponent', 'f.fractional-exponent'],
+    labs: ['log-scale'],
+    next: ['pa-equation-balance', 'a2-exp-log'],
+    formulaMap: [],
+    models: [],
+    review: PHASE6_DRAFT,
+    applied: true,
+    load: () => import('./pa-exponents.js'),
   },
   {
     id: 'pa-equation-balance',
