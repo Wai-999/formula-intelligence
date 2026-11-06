@@ -21,7 +21,7 @@ export default {
   glossary: [
     { term: '**radian**', meaning: 'An angle measured by arc length on a circle of radius 1. $2\\pi$ radians $= 360^\\circ$; one radian $\\approx 57.3^\\circ$.' },
     { term: '**unit circle**', meaning: 'The circle of radius 1 centred at the origin: $x^2 + y^2 = 1$.' },
-    { term: '$(\\cos\\theta, \\sin\\theta)$', meaning: 'The point on the unit circle at angle $\\theta$ from the positive $x$-axis, anticlockwise.' },
+    { term: '$(\\cos\\theta, \\sin\\theta)$', say: 'cosine theta, sine theta', meaning: 'The point on the unit circle at angle $\\theta$ from the positive $x$-axis, anticlockwise.' },
     { term: '**period**', meaning: 'How far the input moves before a function repeats. Sine and cosine have period $2\\pi$.' },
   ],
 

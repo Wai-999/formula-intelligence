@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$L(\\mathbf w)$', meaning: 'The loss: a number measuring how wrong the model is with weights $\\mathbf w$.' },
-    { term: '$\\eta$', meaning: 'The learning rate (step size), a positive number.' },
-    { term: '$\\mathbf w_{k+1} = \\mathbf w_k - \\eta\\,\\nabla L(\\mathbf w_k)$', meaning: 'One step of gradient descent.' },
-    { term: '$\\kappa = \\lambda_{\\max}/\\lambda_{\\min}$', meaning: 'The condition number of a quadratic loss: how much steeper the steepest direction is than the flattest.' },
+    { term: '$L(\\mathbf w)$', say: 'L of w', meaning: 'The loss: a number measuring how wrong the model is with weights $\\mathbf w$.' },
+    { term: '$\\eta$', say: 'eta', meaning: 'The learning rate (step size), a positive number.' },
+    { term: '$\\mathbf w_{k+1} = \\mathbf w_k - \\eta\\,\\nabla L(\\mathbf w_k)$', say: 'w sub k plus one equals w sub k minus eta times grad L of w sub k', meaning: 'One step of gradient descent.' },
+    { term: '$\\kappa = \\lambda_{\\max}/\\lambda_{\\min}$', say: 'kappa equals lambda max over lambda min', meaning: 'The condition number of a quadratic loss: how much steeper the steepest direction is than the flattest.' },
   ],
 
   priorCheck: [

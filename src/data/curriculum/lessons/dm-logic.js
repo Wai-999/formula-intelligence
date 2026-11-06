@@ -27,11 +27,11 @@ export default {
   },
 
   glossary: [
-    { term: '$p \\wedge q$ (`p && q`)', meaning: '**and**: true only when both are true.' },
-    { term: '$p \\vee q$ (`p || q`)', meaning: '**or**: true when at least one is true.' },
-    { term: '$\\neg p$ (`!p`)', meaning: '**not**: true exactly when $p$ is false.' },
-    { term: '$p \\to q$', meaning: '**implies** (“if $p$ then $q$”): false only when $p$ is true and $q$ is false.' },
-    { term: '$\\equiv$', meaning: '**equivalent**: true in exactly the same rows of the truth table.' },
+    { term: '$p \\wedge q$ (`p && q`)', say: 'p and q', meaning: '**and**: true only when both are true.' },
+    { term: '$p \\vee q$ (`p || q`)', say: 'p or q', meaning: '**or**: true when at least one is true.' },
+    { term: '$\\neg p$ (`!p`)', say: 'not p', meaning: '**not**: true exactly when $p$ is false.' },
+    { term: '$p \\to q$', say: 'if p then q', meaning: '**implies** (“if $p$ then $q$”): false only when $p$ is true and $q$ is false.' },
+    { term: '$\\equiv$', say: 'is equivalent to', meaning: '**equivalent**: true in exactly the same rows of the truth table.' },
   ],
 
   priorCheck: [

@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$\\operatorname{proj}_{\\mathbf v}\\mathbf u$', meaning: 'The projection of $\\mathbf u$ onto the line through $\\mathbf v$: a vector along $\\mathbf v$.' },
-    { term: '$c = \\dfrac{\\mathbf u\\cdot\\mathbf v}{\\mathbf v\\cdot\\mathbf v}$', meaning: 'How many copies of $\\mathbf v$ the projection is; negative means it points opposite to $\\mathbf v$.' },
-    { term: '$\\dfrac{\\mathbf u\\cdot\\mathbf v}{\\lVert\\mathbf v\\rVert}$', meaning: 'The scalar projection: the signed length of the shadow.' },
-    { term: '$\\mathbf u - \\operatorname{proj}_{\\mathbf v}\\mathbf u$', meaning: 'The remainder, perpendicular to $\\mathbf v$.' },
+    { term: '$\\operatorname{proj}_{\\mathbf v}\\mathbf u$', say: 'the projection of u onto v', meaning: 'The projection of $\\mathbf u$ onto the line through $\\mathbf v$: a vector along $\\mathbf v$.' },
+    { term: '$c = \\dfrac{\\mathbf u\\cdot\\mathbf v}{\\mathbf v\\cdot\\mathbf v}$', say: 'c equals u dot v over v dot v', meaning: 'How many copies of $\\mathbf v$ the projection is; negative means it points opposite to $\\mathbf v$.' },
+    { term: '$\\dfrac{\\mathbf u\\cdot\\mathbf v}{\\lVert\\mathbf v\\rVert}$', say: 'u dot v over the norm of v', meaning: 'The scalar projection: the signed length of the shadow.' },
+    { term: '$\\mathbf u - \\operatorname{proj}_{\\mathbf v}\\mathbf u$', say: 'u minus the projection of u onto v', meaning: 'The remainder, perpendicular to $\\mathbf v$.' },
   ],
 
   priorCheck: [

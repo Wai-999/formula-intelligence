@@ -10,10 +10,10 @@ export default {
   },
 
   glossary: [
-    { term: '$A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$', meaning: 'A 2×2 matrix: rows across, columns down.' },
-    { term: '$A\\mathbf x$', meaning: 'The matrix applied to the vector $\\mathbf x$; each entry is a row of $A$ dotted with $\\mathbf x$.' },
-    { term: '$\\mathbf e_1 = (1, 0),\\ \\mathbf e_2 = (0, 1)$', meaning: 'The standard basis; $A\\mathbf e_1$ and $A\\mathbf e_2$ are the columns of $A$.' },
-    { term: '$\\det A = ad - bc$', meaning: 'The factor by which $A$ multiplies areas; negative if it flips orientation.' },
+    { term: '$A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$', say: 'A equals the matrix with rows a, b and c, d', meaning: 'A 2×2 matrix: rows across, columns down.' },
+    { term: '$A\\mathbf x$', say: 'A times x', meaning: 'The matrix applied to the vector $\\mathbf x$; each entry is a row of $A$ dotted with $\\mathbf x$.' },
+    { term: '$\\mathbf e_1 = (1, 0),\\ \\mathbf e_2 = (0, 1)$', say: 'e sub one equals one, zero; e sub two equals zero, one', meaning: 'The standard basis; $A\\mathbf e_1$ and $A\\mathbf e_2$ are the columns of $A$.' },
+    { term: '$\\det A = ad - bc$', say: 'the determinant of A equals a d minus b c', meaning: 'The factor by which $A$ multiplies areas; negative if it flips orientation.' },
     { term: 'linear', meaning: '$A(\\mathbf u + \\mathbf v) = A\\mathbf u + A\\mathbf v$ and $A(c\\mathbf u) = cA\\mathbf u$.' },
   ],
 

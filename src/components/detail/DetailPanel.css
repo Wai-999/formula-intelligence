@@ -303,3 +303,11 @@
     border-left: none;
   }
 }
+
+/* How to say the symbol (SayIt), on its own line under it. */
+.detail-var-sym .say-it {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-sans, inherit);
+  white-space: normal;
+}

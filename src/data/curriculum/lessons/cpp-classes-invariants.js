@@ -27,10 +27,10 @@ export default {
 
   glossary: [
     { term: '**class**, **object**', meaning: 'A class is a type you define (data plus member functions); an object is one value of that type.' },
-    { term: '`public:` / `private:`', meaning: 'Public members can be used anywhere; private members only inside the class’s own member functions.' },
+    { term: '`public:` / `private:`', say: 'public, private', meaning: 'Public members can be used anywhere; private members only inside the class’s own member functions.' },
     { term: '**invariant**', meaning: 'A condition on an object’s data that is true whenever code outside the class can look at it.' },
     { term: '**constructor**, **destructor**', meaning: 'Special member functions run automatically when an object is created (`Inventory(int)`) and destroyed (`~Inventory()`).' },
-    { term: '`int count() const`', meaning: 'A `const` member function promises not to change the object, so it can be called on read-only objects.' },
+    { term: '`int count() const`', say: 'int count, const', meaning: 'A `const` member function promises not to change the object, so it can be called on read-only objects.' },
   ],
 
   priorCheck: [

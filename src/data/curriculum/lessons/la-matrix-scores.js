@@ -17,11 +17,11 @@ export default {
   },
 
   glossary: [
-    { term: '$X$', meaning: 'The **data matrix**, $n \\times d$: one row per observation (customer), one column per feature.' },
-    { term: '$x_{ij}$', meaning: 'Row $i$, column $j$: customer $i$’s value of feature $j$.' },
-    { term: '$w$', meaning: 'The **weight vector**: one weight per feature (length $d$).' },
-    { term: '$Xw$', meaning: 'The scores: entry $i$ is the dot product of row $i$ with $w$ (length $n$).' },
-    { term: '$(n \\times d)(d \\times 1)$', meaning: 'The **shape rule**: the inner sizes must match; the result is $n \\times 1$.' },
+    { term: '$X$', say: 'capital X', meaning: 'The **data matrix**, $n \\times d$: one row per observation (customer), one column per feature.' },
+    { term: '$x_{ij}$', say: 'x sub i j', meaning: 'Row $i$, column $j$: customer $i$’s value of feature $j$.' },
+    { term: '$w$', say: 'w', meaning: 'The **weight vector**: one weight per feature (length $d$).' },
+    { term: '$Xw$', say: 'capital X times w', meaning: 'The scores: entry $i$ is the dot product of row $i$ with $w$ (length $n$).' },
+    { term: '$(n \\times d)(d \\times 1)$', say: 'n by d, times d by one', meaning: 'The **shape rule**: the inner sizes must match; the result is $n \\times 1$.' },
     { term: 'standardize', meaning: 'Replace each value by $(x - \\bar{x})/s$ for its column, so every column has mean 0 and standard deviation 1.' },
   ],
 

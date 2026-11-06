@@ -358,6 +358,9 @@
 
 .lesson-glossary dt {
   font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .lesson-glossary dd {

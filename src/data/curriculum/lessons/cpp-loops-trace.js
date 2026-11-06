@@ -27,10 +27,10 @@ export default {
   ],
 
   glossary: [
-    { term: '`for (init; condition; update)`', meaning: 'Run `init` once; then, while `condition` is true, run the body and then `update`.' },
+    { term: '`for (init; condition; update)`', say: 'for: init, condition, update', meaning: 'Run `init` once; then, while `condition` is true, run the body and then `update`.' },
     { term: '**trace table**', meaning: 'One row per step, one column per variable: each variable’s value after that step.' },
     { term: '**off-by-one error**', meaning: 'A loop that runs once too often or once too few — usually `<` versus `<=`, or a wrong starting index.' },
-    { term: '`std::vector<int>`', meaning: 'A resizable list of `int`s. `v.size()` is its length and `v[i]` is element `i`, counting from 0.' },
+    { term: '`std::vector<int>`', say: 'standard vector of int', meaning: 'A resizable list of `int`s. `v.size()` is its length and `v[i]` is element `i`, counting from 0.' },
   ],
 
   priorCheck: [

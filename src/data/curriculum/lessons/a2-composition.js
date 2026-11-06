@@ -27,9 +27,9 @@ export default {
   ],
 
   glossary: [
-    { term: '$(f \\circ g)(x)$', meaning: 'The **composite** “$f$ after $g$”: apply $g$ to $x$ first, then apply $f$ to the result, $f(g(x))$.' },
+    { term: '$(f \\circ g)(x)$', say: 'f composed with g, of x', meaning: 'The **composite** “$f$ after $g$”: apply $g$ to $x$ first, then apply $f$ to the result, $f(g(x))$.' },
     { term: 'inner, outer', meaning: 'In $f(g(x))$ the **inner** function $g$ acts first; its output is the input of the **outer** function $f$.' },
-    { term: '$f^{-1}$', meaning: 'The **inverse** of $f$: the function that undoes it, so $f^{-1}(f(x)) = x$. It is not $1/f(x)$.' },
+    { term: '$f^{-1}$', say: 'f inverse', meaning: 'The **inverse** of $f$: the function that undoes it, so $f^{-1}(f(x)) = x$. It is not $1/f(x)$.' },
     { term: 'domain', meaning: 'The inputs a function accepts. $f(g(x))$ needs every value $g(x)$ to be an allowed input of $f$.' },
   ],
 

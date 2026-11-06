@@ -17,10 +17,10 @@ export default {
   },
 
   glossary: [
-    { term: '$C(q)$', meaning: 'Total cost, in dollars, of producing $q$ units in a day.' },
-    { term: "$C'(q)$", meaning: '**Marginal cost**: the rate at which cost grows per extra unit, at output $q$ (dollars per unit).' },
-    { term: '$\\dfrac{C(q + h) - C(q)}{h}$', meaning: '**Difference quotient**: average cost per unit of the next $h$ units. With $h = 1$, the exact cost of the next unit.' },
-    { term: '$C(q)/q$', meaning: '**Average cost** per unit — a different quantity from marginal cost.' },
+    { term: '$C(q)$', say: 'C of q', meaning: 'Total cost, in dollars, of producing $q$ units in a day.' },
+    { term: "$C'(q)$", say: 'C prime of q', meaning: '**Marginal cost**: the rate at which cost grows per extra unit, at output $q$ (dollars per unit).' },
+    { term: '$\\dfrac{C(q + h) - C(q)}{h}$', say: 'C of q plus h, minus C of q, all over h', meaning: '**Difference quotient**: average cost per unit of the next $h$ units. With $h = 1$, the exact cost of the next unit.' },
+    { term: '$C(q)/q$', say: 'C of q over q', meaning: '**Average cost** per unit — a different quantity from marginal cost.' },
   ],
 
   priorCheck: [

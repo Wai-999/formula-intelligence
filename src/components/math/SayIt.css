@@ -1,0 +1,61 @@
+/* How to say a piece of notation (SayIt.jsx): a quiet line under the symbol,
+   never louder than the meaning beside it. Inline, so a long reading wraps
+   like a sentence with its label in front. */
+.say-it {
+  display: inline;
+  font-size: 13.5px;
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.say-it-label {
+  margin-right: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.say-it-text {
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.say-it-btn {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 6px;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border-solid);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.say-it-btn:hover {
+  border-color: var(--primary);
+  color: var(--text-primary);
+}
+
+.say-it.is-compact {
+  font-size: 12px;
+}
+
+.say-it.is-compact .say-it-label {
+  font-size: 9.5px;
+}
+
+/* 24px: the smallest target WCAG 2.2 (2.5.8) allows. */
+.say-it.is-compact .say-it-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}

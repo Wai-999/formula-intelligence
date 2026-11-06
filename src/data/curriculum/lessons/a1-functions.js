@@ -30,7 +30,7 @@ export default {
   ],
 
   glossary: [
-    { term: '$f(x)$', meaning: 'The output of the function $f$ for the input $x$. Read “$f$ of $x$”; it is not $f$ times $x$.' },
+    { term: '$f(x)$', say: 'f of x', meaning: 'The output of the function $f$ for the input $x$. Read “$f$ of $x$”; it is not $f$ times $x$.' },
     { term: 'Domain', meaning: 'The inputs the function accepts. A formula can rule some out ($\\sqrt{x}$ needs $x \\ge 0$, $1/x$ needs $x \\ne 0$), and so can the situation (a ride cannot be $-2$ km).' },
     { term: 'Range', meaning: 'The outputs the function actually produces as the input runs over the domain.' },
     { term: 'Vertical line test', meaning: 'A graph is a function of $x$ when no vertical line crosses it more than once: each $x$ has at most one $y$.' },

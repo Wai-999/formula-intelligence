@@ -29,10 +29,10 @@ export default {
   ],
 
   glossary: [
-    { term: '$\\dfrac{d}{dx} f(g(x))$', meaning: 'The rate of change of the composite with respect to $x$.' },
-    { term: "$g'(x)$", meaning: '**Inner rate**: how fast the inner value $u = g(x)$ changes per unit of $x$.' },
-    { term: "$f'(g(x))$", meaning: '**Outer rate**: how fast $f$ changes per unit of its own input, read at $u = g(x)$ — not at $x$.' },
-    { term: '$\\dfrac{dy}{dx} = \\dfrac{dy}{du} \\cdot \\dfrac{du}{dx}$', meaning: 'The chain rule in Leibniz notation. The $du$s appear to cancel, which is a good memory aid but not a proof.' },
+    { term: '$\\dfrac{d}{dx} f(g(x))$', say: 'd by d x of f of g of x', meaning: 'The rate of change of the composite with respect to $x$.' },
+    { term: "$g'(x)$", say: 'g prime of x', meaning: '**Inner rate**: how fast the inner value $u = g(x)$ changes per unit of $x$.' },
+    { term: "$f'(g(x))$", say: 'f prime of g of x', meaning: '**Outer rate**: how fast $f$ changes per unit of its own input, read at $u = g(x)$ — not at $x$.' },
+    { term: '$\\dfrac{dy}{dx} = \\dfrac{dy}{du} \\cdot \\dfrac{du}{dx}$', say: 'd y d x equals d y d u times d u d x', meaning: 'The chain rule in Leibniz notation. The $du$s appear to cancel, which is a good memory aid but not a proof.' },
   ],
 
   priorCheck: [

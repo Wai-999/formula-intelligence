@@ -10,7 +10,7 @@ export default {
   },
 
   glossary: [
-    { term: '$a : b$ or $\\dfrac{a}{b}$', meaning: 'The ratio of $a$ to $b$ ($b \\ne 0$).' },
+    { term: '$a : b$ or $\\dfrac{a}{b}$', say: 'a to b, or a over b', meaning: 'The ratio of $a$ to $b$ ($b \\ne 0$).' },
     { term: 'rate', meaning: 'A ratio of two quantities measured in different units, such as dollars per kilogram.' },
     { term: 'unit rate', meaning: 'A rate per one unit of the second quantity: $\\$2.70$ per 1 kg.' },
     { term: 'proportion', meaning: 'An equation between two ratios, $\\dfrac{a}{b} = \\dfrac{c}{d}$.' },

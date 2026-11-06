@@ -10,12 +10,12 @@ export default {
   },
 
   glossary: [
-    { term: 'TP, FP, FN, TN', meaning: 'True positives, false positives, false negatives, true negatives.' },
-    { term: 'precision $= \\dfrac{TP}{TP + FP}$', meaning: '$P(\\text{actually positive} \\mid \\text{flagged})$.' },
-    { term: 'recall (sensitivity, TPR) $= \\dfrac{TP}{TP + FN}$', meaning: '$P(\\text{flagged} \\mid \\text{actually positive})$.' },
-    { term: 'FPR $= \\dfrac{FP}{FP + TN}$', meaning: 'False-positive rate: $P(\\text{flagged} \\mid \\text{actually negative})$; specificity is $1 - $ FPR.' },
-    { term: '$F_1 = \\dfrac{2PR}{P + R}$', meaning: 'Harmonic mean of precision and recall.' },
-    { term: 'ROC AUC', meaning: 'Area under the TPR-against-FPR curve; the chance a random positive outscores a random negative.' },
+    { term: 'TP, FP, FN, TN', say: 'T P, F P, F N, T N: true positives, false positives, false negatives, true negatives', meaning: 'True positives, false positives, false negatives, true negatives.' },
+    { term: 'precision $= \\dfrac{TP}{TP + FP}$', say: 'precision equals T P over T P plus F P', meaning: '$P(\\text{actually positive} \\mid \\text{flagged})$.' },
+    { term: 'recall (sensitivity, TPR) $= \\dfrac{TP}{TP + FN}$', say: 'recall equals T P over T P plus F N', meaning: '$P(\\text{flagged} \\mid \\text{actually positive})$.' },
+    { term: 'FPR $= \\dfrac{FP}{FP + TN}$', say: 'F P R equals F P over F P plus T N', meaning: 'False-positive rate: $P(\\text{flagged} \\mid \\text{actually negative})$; specificity is $1 - $ FPR.' },
+    { term: '$F_1 = \\dfrac{2PR}{P + R}$', say: 'F one equals two P R over P plus R', meaning: 'Harmonic mean of precision and recall.' },
+    { term: 'ROC AUC', say: 'R O C, A U C: the area under the R O C curve', meaning: 'Area under the TPR-against-FPR curve; the chance a random positive outscores a random negative.' },
   ],
 
   priorCheck: [

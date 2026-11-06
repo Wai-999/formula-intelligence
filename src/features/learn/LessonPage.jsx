@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MathText, { MathBlock } from '../../components/math/MathText.jsx';
+import SayIt from '../../components/math/SayIt.jsx';
+import FormulaBreakdown from '../../components/math/FormulaBreakdown.jsx';
 import LabHost from '../labs/LabHost.jsx';
 import ItemCard from './lesson/ItemCard.jsx';
 import PredictCard from './lesson/PredictCard.jsx';
@@ -739,7 +741,7 @@ export default function LessonPage({ lessonId }) {
             <dl className="lesson-glossary">
               {body.glossary.map((g) => (
                 <div key={g.term}>
-                  <dt><MathText text={g.term} /></dt>
+                  <dt><MathText text={g.term} />{g.say && <SayIt text={g.say} />}</dt>
                   <dd><MathText text={g.meaning} /></dd>
                 </div>
               ))}
@@ -771,7 +773,7 @@ export default function LessonPage({ lessonId }) {
             {meta.formulas.map((fid) => formulaById[fid] && (
               <div key={fid} className="lesson-formula">
                 <p className="studio-eyebrow">The result · {formulaById[fid].claim}</p>
-                <MathBlock tex={formulaById[fid].latex} label={formulaById[fid].title} />
+                <FormulaBreakdown formula={formulaById[fid]} />
               </div>
             ))}
             {body.counterexample && (

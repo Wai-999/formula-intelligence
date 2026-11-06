@@ -337,3 +337,11 @@
   .pyhub { flex-direction: column !important; }
   .pyhub-nav { position: static; flex: none; width: 100%; max-height: 300px; }
 }
+
+/* How to say the symbol (SayIt), on its own line under it. */
+.pyentry-var-sym .say-it {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-sans, inherit);
+  white-space: normal;
+}

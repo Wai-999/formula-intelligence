@@ -20,10 +20,10 @@ export default {
   ],
 
   glossary: [
-    { term: '$\\mu$, $\\sigma$', meaning: 'Population mean and standard deviation (parameters — usually unknown).' },
-    { term: '$\\bar X$', meaning: 'The mean of one random sample of size $n$ (a statistic — it varies from sample to sample).' },
+    { term: '$\\mu$, $\\sigma$', say: 'mu, sigma', meaning: 'Population mean and standard deviation (parameters — usually unknown).' },
+    { term: '$\\bar X$', say: 'X bar', meaning: 'The mean of one random sample of size $n$ (a statistic — it varies from sample to sample).' },
     { term: 'sampling distribution', meaning: 'The distribution of $\\bar X$ over all possible samples.' },
-    { term: '$\\sigma_{\\bar X} = \\sigma/\\sqrt n$', meaning: 'The standard error of the mean (Bluman: “Std Error of Mean”).' },
+    { term: '$\\sigma_{\\bar X} = \\sigma/\\sqrt n$', say: 'sigma sub X bar equals sigma over the square root of n', meaning: 'The standard error of the mean (Bluman: “Std Error of Mean”).' },
   ],
 
   priorCheck: [

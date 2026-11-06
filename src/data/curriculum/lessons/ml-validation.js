@@ -13,7 +13,7 @@ export default {
     { term: 'training set', meaning: 'Data the model’s parameters are fitted to.' },
     { term: 'validation set', meaning: 'Held-out data used to compare models and tune settings.' },
     { term: 'test set', meaning: 'Held-out data used once, at the end, to report performance.' },
-    { term: '$k$-fold cross-validation', meaning: 'Split into $k$ folds; each fold is held out once; report the mean and spread of the $k$ scores.' },
+    { term: '$k$-fold cross-validation', say: 'k-fold cross-validation', meaning: 'Split into $k$ folds; each fold is held out once; report the mean and spread of the $k$ scores.' },
     { term: 'leakage', meaning: 'Information from outside the training data reaching the model, inflating its score.' },
     { term: 'baseline', meaning: 'The score of a trivial model (predict the mean, or the most common class).' },
   ],

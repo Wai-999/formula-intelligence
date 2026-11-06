@@ -13,7 +13,7 @@ import { useMLUIStore } from '../../store/useMLUIStore.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
 import { assessCompetency, LEVEL_LABEL } from '../../lib/mastery.js';
 import { hashFor } from '../../app/pages.js';
-import { MathBlock } from '../../components/math/MathText.jsx';
+import FormulaBreakdown from '../../components/math/FormulaBreakdown.jsx';
 import '../../styles/studio.css';
 import './maps.css';
 
@@ -117,7 +117,7 @@ function Detail({ id, onSelect }) {
           {formulas.map((f) => (
             <div key={f.id} className="cmap-formula">
               <p className="studio-muted">{f.title} <span className="studio-chip">{f.claim}</span></p>
-              <MathBlock tex={f.latex} label={f.title} />
+              <FormulaBreakdown formula={f} />
               <p className="studio-muted">{f.interpretation}</p>
             </div>
           ))}
