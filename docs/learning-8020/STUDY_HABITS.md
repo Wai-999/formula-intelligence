@@ -37,6 +37,12 @@ This page records what the research says, what was built from it, and what was d
 - **Push notifications, e-mail, accounts, analytics**: they would need a server and tracking. The calendar file gives a reminder the learner controls.
 - **Red marks for missed days**: a missed planned day looks no worse than a free day.
 
+## Found on the way: two stylesheets that had stopped working
+
+Building the week view showed that its styles never applied. `src/features/home/home.css` had lost a closing `}` in a merge (`c17f789`, 2026-11-04). Browsers read everything after an unclosed rule as nested inside it, so Home's time-box choices and today's steps had been unstyled on the live site since then. `src/features/progress/progress.css` had the same fault from the same merge, which unstyled My Progress's skill-evidence section.
+
+Both are fixed. A new test, `src/styles/__tests__/cssBraces.test.js`, checks that every stylesheet in `src/` opens and closes evenly.
+
 ## Checks
 
 - `src/lib/__tests__/studyHabit.test.js` covers:
@@ -48,7 +54,10 @@ This page records what the research says, what was built from it, and what was d
   - pace in weeks;
   - the calendar file: weekly rule, start time, escaping.
 - `src/store/__tests__/studyPlan.test.js` checks that the habit is cleaned on the way in, keeps its start date, needs at least one day, and survives a progress reset.
-- `e2e/v5-journeys.spec.js` walks through it in a real browser: make a plan, see this week and today's steps, change the session length, download the calendar file, reload, and check that Home still has one primary action.
+- The browser tests run it end to end:
+  - `e2e/v5-journeys.spec.js`: make a plan, see this week and today's steps, change the session length, download the calendar file, reload, and check that Home still has one primary action;
+  - `e2e/study-habit.spec.js`: the welcome back after ten days away, with no scolding words; the course page's pace at the plan; and the invitation to make one.
+- `rhythmMessage` is tested for every case: a first session, how many more keep the week on track, the spare day, the whole plan, the end of a short week, a one-day plan, and never “missed”, “failed” or “broken”.
 
 ## Status and limits
 

@@ -169,7 +169,14 @@ export function icsForPlan(plan, minutes, url, now = Date.now()) {
  */
 export function rhythmMessage(week, plannedCount) {
   const done = week.filter((d) => d.studied).length;
-  // TODO(human): return the sentence for this week, using `done`,
-  // `plannedCount` and the days left in `week` (d.future).
-  return `${done} of ${plannedCount} planned sessions this week.`;
+  // Days still open this week: the ones to come, and today if no session yet.
+  const left = week.filter((d) => d.future || (d.today && !d.studied)).length;
+  // One spare day, except for a one-day plan, which has nothing to spare.
+  const onTrack = plannedCount > 1 ? plannedCount - 1 : plannedCount;
+  const days = (n) => `${n} day${n === 1 ? '' : 's'}`;
+  if (done >= plannedCount) return `${done} of ${plannedCount} planned sessions this week: the whole plan. Anything more is extra, not a new target.`;
+  if (done >= onTrack) return `${done} of ${plannedCount} planned sessions this week: on track, with your spare day still there if you need it.`;
+  if (done === 0 && left > 0) return `No session yet this week, and ${days(left)} to go. One short session is a good start.`;
+  if (left > 0) return `${done} of ${plannedCount} planned sessions this week, with ${days(left)} to go. ${onTrack - done} more keeps you on track.`;
+  return `${done} of ${plannedCount} planned sessions this week. A new week starts on Monday, and this one does not count against it.`;
 }

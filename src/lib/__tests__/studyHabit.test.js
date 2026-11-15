@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  dateKey, studyDays, weekView, daysAway, daysPhrase, planSentence, nextPlannedDay, paceWeeks, icsForPlan,
+  dateKey, studyDays, weekView, daysAway, daysPhrase, planSentence, nextPlannedDay, paceWeeks, icsForPlan, rhythmMessage,
 } from '../studyHabit.js';
 
 // The study-habit rules (docs/learning-8020/STUDY_HABITS.md), on fixed local
@@ -63,6 +63,41 @@ describe('time away, and the plan in words', () => {
     expect(nextPlannedDay(plan, new Set(['2025-11-12']), NOW)).toBe('Friday');
     expect(nextPlannedDay({ days: [4] }, new Set(), NOW)).toBe('tomorrow');
     expect(nextPlannedDay({ days: [3] }, new Set(['2025-11-12']), NOW)).toBe('next Wednesday');
+  });
+});
+
+describe('how the week is going, with one spare day and no scolding', () => {
+  const plan = [1, 3, 5];
+  const msg = (keys, now) => rhythmMessage(weekView(new Set(keys), plan, now), plan.length);
+
+  it('invites a first session while days are left', () => {
+    expect(msg([], NOW)).toBe('No session yet this week, and 5 days to go. One short session is a good start.');
+  });
+
+  it('says how many more keep the week on track', () => {
+    expect(msg(['2025-11-10'], NOW)).toBe('1 of 3 planned sessions this week, with 5 days to go. 1 more keeps you on track.');
+  });
+
+  it('counts N − 1 sessions as on track: the spare day', () => {
+    expect(msg(['2025-11-10', '2025-11-12'], NOW)).toMatch(/^2 of 3 .*on track, with your spare day/);
+  });
+
+  it('recognises the whole plan without making more a new target', () => {
+    expect(msg(['2025-11-10', '2025-11-11', '2025-11-12'], NOW)).toMatch(/the whole plan\. Anything more is extra/);
+  });
+
+  it('ends a short week calmly, pointing at the next one', () => {
+    const sundayNight = at(2025, 11, 16, 22);
+    expect(msg(['2025-11-10', '2025-11-16'], sundayNight)).toMatch(/on track/);
+    expect(msg(['2025-11-16'], sundayNight)).toBe('1 of 3 planned sessions this week. A new week starts on Monday, and this one does not count against it.');
+  });
+
+  it('gives a one-day plan no spare day, and never says “missed”, “failed” or “broken”', () => {
+    expect(rhythmMessage(weekView(new Set(), [3], NOW), 1)).toMatch(/No session yet/);
+    for (let n = 0; n <= 4; n += 1) {
+      const keys = ['2025-11-10', '2025-11-11', '2025-11-12', '2025-11-13'].slice(0, n);
+      for (const now of [NOW, at(2025, 11, 16, 22)]) expect(msg(keys, now)).not.toMatch(/miss|fail|broke|streak|lost/i);
+    }
   });
 });
 

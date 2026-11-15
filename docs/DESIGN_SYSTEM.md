@@ -56,7 +56,7 @@ Focus mode (`f`, or the header button) hides all navigation for reading.
 
 `.studio-scroll` (the page's scroll container) · `.studio-page` · `.studio-section` · `.studio-read` · `.studio-lede` · `.studio-h2` · `.studio-h3` · `.studio-eyebrow` · `.studio-muted` · `.studio-grid` · `.studio-card` / `.studio-card-link` · `.studio-row` · `.studio-btn` (40 px tall) / `.studio-btn-primary` / `.studio-btn-small` (32 px) · `.studio-chip` (+ `-ok`, `-warn`, `-bad`, `-accent`) · `.studio-callout` (+ variants) · `.studio-meter` · `.studio-list` · `.studio-fieldset` / `.studio-choice` · `.studio-input` / `.studio-textarea` · `.studio-table-wrap` / `.studio-table`.
 
-Rules: one primary button per view; no streaks, points, badges or confetti (V4 §1, §4); links look like links (underlined); buttons say what happens ("Check", "Start a new mixed set"); `aria-pressed` for toggles; every control at least 24 × 24 px (WCAG 2.5.8), most 32–40 px.
+Rules: one primary button per view; no streaks, points, badges or confetti (V4 §1, §4) — habit support counts sessions within a week, never consecutive days, and a missed planned day never looks worse than a free one (docs/learning-8020/STUDY_HABITS.md); links look like links (underlined); buttons say what happens ("Check", "Start a new mixed set"); `aria-pressed` for toggles; every control at least 24 × 24 px (WCAG 2.5.8), most 32–40 px.
 
 ## Focus
 
