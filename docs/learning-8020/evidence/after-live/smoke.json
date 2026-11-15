@@ -1,0 +1,69 @@
+{
+  "base": "https://wai-999.github.io/formula-intelligence/",
+  "ranAt": "2026-11-05T14:42:44.812Z",
+  "passed": 10,
+  "total": 10,
+  "pageErrors": [],
+  "steps": [
+    {
+      "n": 1,
+      "name": "Home loads and offers a starting point",
+      "ok": true,
+      "detail": "bundle index-DFAulqer.js"
+    },
+    {
+      "n": 2,
+      "name": "Learn → Courses lists the C++ course",
+      "ok": true,
+      "detail": "C++ Programming Fundamentals present"
+    },
+    {
+      "n": 3,
+      "name": "A course page opens its first written lesson",
+      "ok": true,
+      "detail": "Loops you can trace"
+    },
+    {
+      "n": 4,
+      "name": "“Try a question now”, a wrong answer, and feedback that explains",
+      "ok": true,
+      "detail": " Not yet. That is not the expected value. Where to look: Three passes, each adding 2. Try again, or "
+    },
+    {
+      "n": 5,
+      "name": "Save my place",
+      "ok": true,
+      "detail": "Saved on this device: Step 4 of 6 — Try it, today, 6:42 AM."
+    },
+    {
+      "n": 6,
+      "name": "Apply → Projects",
+      "ok": true,
+      "detail": "Projects"
+    },
+    {
+      "n": 7,
+      "name": "My Progress shows the next step",
+      "ok": true,
+      "detail": "Your next step"
+    },
+    {
+      "n": 8,
+      "name": "Reload, then Home offers to resume the saved step",
+      "ok": true,
+      "detail": "CONTINUE LEARNING Loops you can trace Data Science Foundations → Advanced Applications C++ Programmi"
+    },
+    {
+      "n": 9,
+      "name": "Resume opens the lesson at the saved step",
+      "ok": true,
+      "detail": "Step 4 of 6 · Try it"
+    },
+    {
+      "n": 10,
+      "name": "The next action leads to a real lesson",
+      "ok": true,
+      "detail": "Next lesson: Functions and vectors: copies versus references → → #learn/lesson/cpp-functions-vectors (Functions and vectors: copies versus references)"
+    }
+  ]
+}

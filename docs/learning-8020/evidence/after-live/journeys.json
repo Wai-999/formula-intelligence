@@ -1,0 +1,126 @@
+{
+  "base": "https://wai-999.github.io/formula-intelligence/",
+  "ranAt": "2026-11-05T14:42:50.051Z",
+  "personas": [
+    {
+      "id": "P1 absolute beginner",
+      "steps": [
+        "Home (first run)",
+        "Start from Prealgebra",
+        "#learn/course/prealgebra",
+        "Start: Ratios, rates and unit rates",
+        "#learn/lesson/pa-ratios-rates"
+      ],
+      "measures": {
+        "decisionsToFirstLesson": 2,
+        "lesson": "#learn/lesson/pa-ratios-rates",
+        "firstQuestion": {
+          "wordsBefore": 704,
+          "pxFromTop": 3313,
+          "screensAt900": 3.7
+        },
+        "oneClickToFirstQuestion": true,
+        "homeOffersStartingPoint": true
+      }
+    },
+    {
+      "id": "P2 algebra-ready calculus learner",
+      "steps": [
+        "Home (first run)",
+        "Explore first",
+        "Calculus I",
+        "Start: The derivative from first principles",
+        "#learn/lesson/c1-derivative"
+      ],
+      "measures": {
+        "decisionsToFirstLesson": 3,
+        "lesson": "#learn/lesson/c1-derivative",
+        "coursePageWarnsAboutPrerequisites": true,
+        "coursesPageWordCount": 816
+      }
+    },
+    {
+      "id": "P3 novice C++ programmer",
+      "steps": [
+        "Home (first run)",
+        "Explore first",
+        "C++ course",
+        "Start: Loops you can trace",
+        "#learn/lesson/cpp-loops-trace"
+      ],
+      "measures": {
+        "cppCourseExists": true,
+        "decisionsToFirstLesson": 3,
+        "lesson": "#learn/lesson/cpp-loops-trace",
+        "searchResultsForCpp": 40
+      }
+    },
+    {
+      "id": "P4 returning learner with a saved step",
+      "steps": [
+        "Home",
+        "Resume where I stopped",
+        "#learn/lesson/a1-slope"
+      ],
+      "measures": {
+        "decisionsToResume": 1,
+        "lesson": "#learn/lesson/a1-slope",
+        "progressText": "Step 4 of 6 · Try it",
+        "savedStepInView": true,
+        "heroNamesStep": true
+      }
+    },
+    {
+      "id": "P5 learner who failed two questions",
+      "steps": [
+        "Calculus I first lesson",
+        "two wrong answers in Try it",
+        "Home"
+      ],
+      "measures": {
+        "lesson": "#learn/lesson/c1-derivative",
+        "feedback": [
+          {
+            "wrong": true,
+            "feedbackWords": 45,
+            "explainsBeyondVerdict": true,
+            "solutionOffered": true,
+            "linksFromFeedback": [
+              "Limits: what a function approaches — the worked examples → #learn/lesson/pc-limits"
+            ],
+            "feedbackText": "Not yet. That is not the expected value. Where to look: 2.1 2 = 4.41 2.1 2 =4.41. Try again, or open the solution to see the reasoning step by step. Still unsure? A 5-minute bridge: Limits: what a function approaches — the worked examples."
+          },
+          {
+            "wrong": true,
+            "feedbackWords": 35,
+            "explainsBeyondVerdict": true,
+            "solutionOffered": true,
+            "linksFromFeedback": [
+              "Limits: what a function approaches — the worked examples → #learn/lesson/pc-limits"
+            ],
+            "feedbackText": "Not yet. That is not the expected value. Try again, or open the solution to see the reasoning step by step. Still unsure? A 5-minute bridge: Limits: what a function approaches — the worked examples."
+          }
+        ],
+        "homeAfterErrors": "A SHORT BRIDGE FIRST Limits: what a function approaches Data Science Foundations → Advanced Applications Geometry, Trigonometry & Precalculus Limit intuition Limits: what a function approaches Step 2 of 6 — Understand Geometry, Trigonometry & Precalculus · about 5 minutes. A 5-minute bridge before y",
+        "homeOffersBridgeOrReview": true
+      }
+    },
+    {
+      "id": "P6 finished the written lessons of a partly written course",
+      "steps": [
+        "Calculus I: every written lesson done",
+        "Course page",
+        "Home"
+      ],
+      "measures": {
+        "writtenLessonsInCourse": 4,
+        "courseSaysNotComplete": true,
+        "courseClaimsCompleted": false,
+        "homePrimary": "Practise Calculus I — Limits and Derivatives skills: “The derivative from first principles” — Use it",
+        "homeJumpsToNextCourse": false,
+        "homeNamesGap": true,
+        "homeExcerpt": "YOU FINISHED THE WRITTEN LESSONS Next lesson not written yet: Power, product and quotient rules Data Science Foundations → Advanced Applications Calculus I — Limits and Derivatives The derivative The derivative from first principles Step 5 of 6 — Use it Practise Calculus I — Limits and Derivatives skills: “The derivative from first principles” — Use it about 15 min Continue to Calculus II — Integr"
+      }
+    }
+  ]
+}
