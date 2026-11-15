@@ -94,16 +94,29 @@ test.describe('V5 journeys', () => {
     await expectNoCrash(page);
   });
 
-  test('a working student picks a session length and gets a short plan that is remembered', async ({ page }) => {
+  test('a working student makes a study plan, sized to their time, that is remembered', async ({ page }) => {
     await page.goto(`./${hashFor('learn/lesson', { lessonId: 'a2-composition' })}`, { waitUntil: 'networkidle' });
     await page.goto('./#home', { waitUntil: 'networkidle' });
-    await page.getByRole('radio', { name: '15 minutes' }).check();
-    await expect(page.locator('.home-timebox-steps li')).toHaveCount(1);
-    await page.getByRole('radio', { name: '60–90 minutes' }).check();
-    await expect(page.locator('.home-timebox-steps')).toContainText('real-world project');
-    await expect(page.getByText(/No streaks and no daily quota/)).toBeVisible();
+    const plan = page.locator(VISIBLE + 'section.habit');
+    await plan.getByRole('checkbox', { name: 'Mon' }).check();
+    await plan.getByRole('checkbox', { name: 'Thu' }).check();
+    await plan.getByLabel('After what everyday moment?').selectOption('After dinner');
+    await plan.getByRole('radio', { name: '15 minutes' }).check();
+    await plan.getByRole('button', { name: 'Save my plan' }).click();
+    await expect(plan.locator('.habit-sentence')).toHaveText('Mon and Thu, after dinner — 15 minutes');
+    await expect(plan.locator('.habit-week li')).toHaveCount(7);
+    await expect(plan.locator('.home-timebox-steps li')).toHaveCount(1);
+    await expect(plan.locator('.home-timebox-steps')).toContainText('Start small');
+    await plan.getByRole('button', { name: 'Change plan' }).click();
+    await plan.getByRole('radio', { name: '60–90 minutes' }).check();
+    await plan.getByRole('button', { name: 'Save my plan' }).click();
+    await expect(plan.locator('.home-timebox-steps')).toContainText('real-world project');
+    await expect(page.getByText(/No streaks, no daily quota/)).toBeVisible();
+    // The calendar file is made in the browser, with the planned days in it.
+    const [download] = await Promise.all([page.waitForEvent('download'), plan.getByRole('button', { name: 'Add to my calendar' }).click()]);
+    expect(download.suggestedFilename()).toBe('study-plan.ics');
     await page.reload({ waitUntil: 'networkidle' });
-    await expect(page.getByRole('radio', { name: '60–90 minutes' })).toBeChecked();
+    await expect(page.locator(VISIBLE + '.habit-sentence')).toHaveText('Mon and Thu, after dinner — 75 minutes');
     // Still one primary action on Home.
     await expect(page.locator(VISIBLE + '.studio-btn-primary')).toHaveCount(1);
   });
