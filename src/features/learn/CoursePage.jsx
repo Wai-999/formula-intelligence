@@ -18,6 +18,8 @@ import NextActionCard from './NextActionCard.jsx';
 import { useNextAction } from './useNextAction.js';
 import { courseCompletion } from '../../lib/nextAction.js';
 import { usePathState } from './usePathState.js';
+import { useStudyPlanStore } from '../../store/useStudyPlanStore.js';
+import { paceWeeks, planSentence, BOX_MINUTES } from '../../lib/studyHabit.js';
 // Registers course and lesson titles for the page header and breadcrumbs.
 import '../../data/curriculum/index.js';
 import '../../styles/studio.css';
@@ -103,6 +105,8 @@ export default function CoursePage({ courseId }) {
   const rec = useMemo(() => (course ? recommend(CURRICULUM, pathState, { courseId }) : null), [course, pathState, courseId]);
   // What to do next from here (src/lib/nextAction.js): the same answer the end of its last lesson gives.
   const action = useNextAction({ courseId });
+  const habit = useStudyPlanStore((s) => s.habit);
+  const timebox = useStudyPlanStore((s) => s.timebox);
 
   if (!course) {
     return (
@@ -115,6 +119,9 @@ export default function CoursePage({ courseId }) {
 
   const authored = course.units.flatMap((u) => u.lessons);
   const done = authored.filter((id) => lessons[id]?.completed).length;
+  // How long the rest takes at the learner's own plan: a horizon, not a deadline.
+  const minutesLeft = authored.filter((id) => !lessons[id]?.completed).reduce((m, id) => m + lessonById[id].minutes, 0);
+  const weeks = paceWeeks(minutesLeft, habit, timebox ?? '15');
   // Their place in THIS course: a saved place elsewhere never takes over here.
   const target = courseTarget({ pinned, current, recent }, course.id, lessonById);
   const journey = courseJourney(course, lessons, status);
@@ -187,6 +194,14 @@ export default function CoursePage({ courseId }) {
                     : `Outline only — ${journey.planned} planned lessons, none written yet`}
               </dd>
             </div>
+            {minutesLeft > 0 && (
+              <div>
+                <dt>At your study plan</dt>
+                <dd>{weeks
+                  ? `About ${weeks} week${weeks === 1 ? '' : 's'} for the ${authored.filter((id) => !lessons[id]?.completed).length} written lessons left (${planSentence(habit, BOX_MINUTES[timebox ?? '15'])})`
+                  : <>About {minutesLeft} minutes of written lessons left. <a href={hashFor('home')}>Make a study plan</a> to see how many weeks that is.</>}</dd>
+              </div>
+            )}
             <div>
               <dt>Skills shown in your answers</dt>
               <dd>{journey.skills.assessed ? `${journey.skills.demonstrated} of ${journey.skills.total} exit skills proficient or mastered` : 'Not assessed yet'}</dd>

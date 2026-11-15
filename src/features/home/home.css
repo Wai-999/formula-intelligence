@@ -248,3 +248,156 @@
 .home-timebox-note {
   max-width: 70ch;
 }
+
+/* The study plan (StudyRhythm.jsx). The week is seven days in a row, never a
+   count of consecutive days: a ticked day is a session, a ring is a planned
+   day still to come, and an unfilled planned day in the past looks no worse
+   than a free one. Shape and text, not only colour, carry each state. */
+.habit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.habit-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.habit-days legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+  font-weight: 600;
+}
+
+.habit-days label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  min-width: 64px;
+  padding: 0 10px;
+  border: 1px solid var(--border-solid-2);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.habit-days label.on {
+  border-color: var(--primary);
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.habit-days input {
+  accent-color: var(--primary);
+}
+
+.habit-days label:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.habit-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.habit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.habit-field select,
+.habit-field input {
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--border-solid-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 400;
+}
+
+.habit-sentence {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.habit-week {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 420px;
+}
+
+.habit-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+  border-radius: var(--radius-sm);
+}
+
+.habit-day.is-today {
+  outline: 2px solid var(--border-strong);
+  outline-offset: -2px;
+}
+
+.habit-day-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.habit-day-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-solid);
+  font-size: 15px;
+}
+
+.habit-day.is-studied .habit-day-mark {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.16);
+  color: var(--success);
+}
+
+.habit-day.is-planned .habit-day-mark {
+  border-color: var(--primary);
+  color: var(--primary-text);
+}
+
+/* A planned day that passed without a session: neutral, never red. */
+.habit-day.is-open .habit-day-mark {
+  color: var(--text-faint);
+}
+
+.habit-welcome {
+  margin: 0;
+}
+
+.habit-today-h {
+  margin-top: 4px;
+}

@@ -2,6 +2,8 @@ import { courseById } from '../../data/curriculum/catalog.js';
 import { lessonById } from '../../data/curriculum/lessons/index.js';
 import { useStudyResumeStore } from '../../store/useStudyResumeStore.js';
 import { useLearningStore } from '../../store/useLearningStore.js';
+import { useStudyPlanStore } from '../../store/useStudyPlanStore.js';
+import { studyDays, nextPlannedDay, planSentence, BOX_MINUTES } from '../../lib/studyHabit.js';
 import { competencyById } from '../../data/curriculum/competencies.js';
 import NextActionCard from './NextActionCard.jsx';
 import { useNextAction } from './useNextAction.js';
@@ -22,6 +24,8 @@ export default function StudySessionPage() {
   const lessons = useLearningStore((s) => s.lessons);
   const evidence = useLearningStore((s) => s.evidence);
   const action = useNextAction();
+  const habit = useStudyPlanStore((s) => s.habit);
+  const timebox = useStudyPlanStore((s) => s.timebox);
   // After a reload the summary is gone (it was never stored); the saved place is not.
   const loc = lastSession?.loc ?? pinned;
   const place = resolveLocation(loc, lessonById);
@@ -91,6 +95,14 @@ export default function StudySessionPage() {
                 : 'Not answered yet — finishing a session does not complete a lesson'}</dd>
           </div>
         </dl>
+
+        {/* Ending at a natural stopping point with the next session already
+            decided is what makes the next start easy (docs/learning-8020/STUDY_HABITS.md). */}
+        <p className="session-habit">
+          {habit
+            ? <>Next planned session: <strong>{nextPlannedDay(habit, studyDays(evidence, lessons))}</strong> — {planSentence(habit, BOX_MINUTES[timebox ?? '15'])}. <a href={hashFor('home')}>Change the plan</a></>
+            : <>Want this to become a habit? <a href={hashFor('home')}>Make a study plan on Home</a>: pick the days and an everyday moment to study after.</>}
+        </p>
 
         <section aria-labelledby="session-next">
           <h2 id="session-next" className="studio-h3">Next useful step</h2>
